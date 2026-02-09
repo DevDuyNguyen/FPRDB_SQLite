@@ -1,0 +1,76 @@
+name: .NET Framework CI (Split Jobs)
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # --- JOB 1: CHUYÊN ĐỂ BUILD ---
+  build_core:
+    name: Build Solution
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore Packages
+      run: nuget restore FPRDB_SQLite.sln
+
+    - name: Build
+      # Build xong thì sinh ra file DLL trong thư mục bin/Release
+      run: dotnet build FPRDB_SQLite.sln --configuration Release --no-restore
+
+    # QUAN TRỌNG: Gửi "hàng" (Artifacts) lên kho
+    # Chúng ta cần lưu lại thư mục bin để Job sau dùng
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: built-binaries
+        # Upload tất cả thư mục bin/Release tìm thấy trong dự án
+        path: |
+          **/bin/Release/**
+        # Giữ lại cấu trúc thư mục để Job sau đặt vào đúng chỗ cũ
+        if-no-files-found: error
+
+  # --- JOB 2: CHUYÊN ĐỂ TEST ---
+  run_tests:
+    name: Run Unit Tests
+    runs-on: windows-latest
+    needs: build_core  # Bắt buộc: Phải đợi ông Build xong mới được chạy
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Vẫn phải setup môi trường để chạy lệnh dotnet test
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    # Vẫn phải Setup Nuget để tải Test Adapter (nếu project cũ cần)
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+      
+    # Vẫn phải Restore để lấy về MSTest Adapter (cái file props bị thiếu hồi nãy)
+    # Bước này nhanh vì không build, chỉ tải tool test về thôi
+    - name: Restore Tools
+      run: nuget restore FPRDB_SQLite.sln
+
+    # QUAN TRỌNG: Tải "hàng" về máy này
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: built-binaries
+        # GitHub tự động giải nén vào đúng cấu trúc thư mục cũ
+
+    - name: Execute Tests
+      # --no-build: Tuyệt đối không build lại (vì đã lấy hàng từ Job trên rồi)
+      run: dotnet test FPRDB_SQLite.sln --configuration Release --no-build --verbosity normal
