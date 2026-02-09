@@ -1,0 +1,42 @@
+# =========================
+# Standard Visual Studio / .NET
+# =========================
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+*.xproj
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Nuget
+packages/
+*.nupkg
+*.snupkg
+
+# Tests
+TestResult.xml
+*.VisualState.xml
+
+# =========================
+# DevExpress Specifics
+# =========================
+# DevExpress Project Converter backups
+Backup*/
+*_Backup/
+*_UpgradeReport_Files/
+UpgradeLog*.XML
+UpgradeLog*.htm
+
+# CodeRush (DevExpress IDE Tool) settings
+.cr/
+*.css_rewrite
+
+# DevExtreme / Web specific (if applicable)
+node_modules/
+package-lock.json
+yarn.lock
