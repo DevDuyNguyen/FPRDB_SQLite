@@ -1,6 +1,6 @@
 ﻿namespace FPRDB_SQLite
 {
-    partial class Form1
+    partial class FrmMain
     {
         /// <summary>
         /// Required designer variable.
