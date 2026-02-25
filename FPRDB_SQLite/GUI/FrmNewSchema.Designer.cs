@@ -1,6 +1,6 @@
 ﻿namespace FPRDB_SQLite
 {
-    partial class FrmNewSchema
+    partial class frmNewSchema
     {
         /// <summary>
         /// Required designer variable.
@@ -28,230 +28,201 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmNewSchema));
-            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
-            this.groupControl_NameSchema = new DevExpress.XtraEditors.GroupControl();
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.txtSchemaName = new DevExpress.XtraEditors.TextEdit();
-            this.panelControl_BtnNewSchema = new DevExpress.XtraEditors.PanelControl();
-            this.btnSave = new DevExpress.XtraEditors.SimpleButton();
-            this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
-            this.groupControl_SchemaAttr = new DevExpress.XtraEditors.GroupControl();
-            this.gridControl_NewSchema = new DevExpress.XtraGrid.GridControl();
-            this.gridView_NewSchema = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.gridColumn_PK = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn_Attr = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn_DataType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn_Desc = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn_Domain = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
-            this.panelControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl_NameSchema)).BeginInit();
-            this.groupControl_NameSchema.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtSchemaName.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl_BtnNewSchema)).BeginInit();
-            this.panelControl_BtnNewSchema.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl_SchemaAttr)).BeginInit();
-            this.groupControl_SchemaAttr.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl_NewSchema)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView_NewSchema)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNewSchema));
+            pnlNewSchema = new DevExpress.XtraEditors.PanelControl();
+            grpSchemaAttribute = new DevExpress.XtraEditors.GroupControl();
+            grdcSchemaAttribute = new DevExpress.XtraGrid.GridControl();
+            grdvSchemaAttribute = new DevExpress.XtraGrid.Views.Grid.GridView();
+            grdcolPK = new DevExpress.XtraGrid.Columns.GridColumn();
+            repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            grdcolAttr = new DevExpress.XtraGrid.Columns.GridColumn();
+            grdcolDataType = new DevExpress.XtraGrid.Columns.GridColumn();
+            pnlButtonNewSchema = new DevExpress.XtraEditors.PanelControl();
+            btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            btnSave = new DevExpress.XtraEditors.SimpleButton();
+            grpSchemaName = new DevExpress.XtraEditors.GroupControl();
+            txtSchemaName = new DevExpress.XtraEditors.TextEdit();
+            lblSchemaName = new DevExpress.XtraEditors.LabelControl();
+            ((System.ComponentModel.ISupportInitialize)pnlNewSchema).BeginInit();
+            pnlNewSchema.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grpSchemaAttribute).BeginInit();
+            grpSchemaAttribute.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grdcSchemaAttribute).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grdvSchemaAttribute).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemCheckEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pnlButtonNewSchema).BeginInit();
+            pnlButtonNewSchema.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grpSchemaName).BeginInit();
+            grpSchemaName.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)txtSchemaName.Properties).BeginInit();
+            SuspendLayout();
             // 
-            // panelControl1
+            // pnlNewSchema
             // 
-            this.panelControl1.Controls.Add(this.groupControl_SchemaAttr);
-            this.panelControl1.Controls.Add(this.panelControl_BtnNewSchema);
-            this.panelControl1.Controls.Add(this.groupControl_NameSchema);
-            this.panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelControl1.Location = new System.Drawing.Point(0, 0);
-            this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(738, 523);
-            this.panelControl1.TabIndex = 0;
+            pnlNewSchema.Controls.Add(grpSchemaAttribute);
+            pnlNewSchema.Controls.Add(pnlButtonNewSchema);
+            pnlNewSchema.Controls.Add(grpSchemaName);
+            pnlNewSchema.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlNewSchema.Location = new System.Drawing.Point(0, 0);
+            pnlNewSchema.Name = "pnlNewSchema";
+            pnlNewSchema.Size = new System.Drawing.Size(738, 523);
+            pnlNewSchema.TabIndex = 0;
             // 
-            // groupControl_NameSchema
+            // grpSchemaAttribute
             // 
-            this.groupControl_NameSchema.Controls.Add(this.txtSchemaName);
-            this.groupControl_NameSchema.Controls.Add(this.labelControl1);
-            this.groupControl_NameSchema.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupControl_NameSchema.Location = new System.Drawing.Point(2, 2);
-            this.groupControl_NameSchema.Name = "groupControl_NameSchema";
-            this.groupControl_NameSchema.Size = new System.Drawing.Size(734, 100);
-            this.groupControl_NameSchema.TabIndex = 0;
-            this.groupControl_NameSchema.Text = "Table Name";
+            grpSchemaAttribute.Controls.Add(grdcSchemaAttribute);
+            grpSchemaAttribute.Dock = System.Windows.Forms.DockStyle.Fill;
+            grpSchemaAttribute.Location = new System.Drawing.Point(2, 102);
+            grpSchemaAttribute.Name = "grpSchemaAttribute";
+            grpSchemaAttribute.Size = new System.Drawing.Size(734, 364);
+            grpSchemaAttribute.TabIndex = 2;
+            grpSchemaAttribute.Text = "Schema Attribute";
             // 
-            // labelControl1
+            // grdcSchemaAttribute
             // 
-            this.labelControl1.Location = new System.Drawing.Point(58, 54);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(74, 16);
-            this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "Table Name:";
+            grdcSchemaAttribute.Dock = System.Windows.Forms.DockStyle.Fill;
+            grdcSchemaAttribute.Location = new System.Drawing.Point(2, 28);
+            grdcSchemaAttribute.MainView = grdvSchemaAttribute;
+            grdcSchemaAttribute.Name = "grdcSchemaAttribute";
+            grdcSchemaAttribute.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCheckEdit1 });
+            grdcSchemaAttribute.Size = new System.Drawing.Size(730, 334);
+            grdcSchemaAttribute.TabIndex = 0;
+            grdcSchemaAttribute.UseEmbeddedNavigator = true;
+            grdcSchemaAttribute.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { grdvSchemaAttribute });
             // 
-            // txtSchemaName
+            // grdvSchemaAttribute
             // 
-            this.txtSchemaName.Location = new System.Drawing.Point(174, 51);
-            this.txtSchemaName.Name = "txtSchemaName";
-            this.txtSchemaName.Size = new System.Drawing.Size(395, 22);
-            this.txtSchemaName.TabIndex = 1;
+            grdvSchemaAttribute.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolPK, grdcolAttr, grdcolDataType });
+            grdvSchemaAttribute.GridControl = grdcSchemaAttribute;
+            grdvSchemaAttribute.Name = "grdvSchemaAttribute";
+            grdvSchemaAttribute.OptionsView.ShowGroupPanel = false;
             // 
-            // panelControl_BtnNewSchema
+            // grdcolPK
             // 
-            this.panelControl_BtnNewSchema.Controls.Add(this.btnCancel);
-            this.panelControl_BtnNewSchema.Controls.Add(this.btnSave);
-            this.panelControl_BtnNewSchema.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl_BtnNewSchema.Location = new System.Drawing.Point(2, 466);
-            this.panelControl_BtnNewSchema.Name = "panelControl_BtnNewSchema";
-            this.panelControl_BtnNewSchema.Size = new System.Drawing.Size(734, 55);
-            this.panelControl_BtnNewSchema.TabIndex = 1;
-            // 
-            // btnSave
-            // 
-            this.btnSave.Location = new System.Drawing.Point(475, 16);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(94, 29);
-            this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "&Save";
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(610, 16);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(94, 29);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "&Cancel";
-            // 
-            // groupControl_SchemaAttr
-            // 
-            this.groupControl_SchemaAttr.Controls.Add(this.gridControl_NewSchema);
-            this.groupControl_SchemaAttr.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupControl_SchemaAttr.Location = new System.Drawing.Point(2, 102);
-            this.groupControl_SchemaAttr.Name = "groupControl_SchemaAttr";
-            this.groupControl_SchemaAttr.Size = new System.Drawing.Size(734, 364);
-            this.groupControl_SchemaAttr.TabIndex = 2;
-            this.groupControl_SchemaAttr.Text = "Table Attribute";
-            // 
-            // gridControl_NewSchema
-            // 
-            this.gridControl_NewSchema.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl_NewSchema.Location = new System.Drawing.Point(2, 28);
-            this.gridControl_NewSchema.MainView = this.gridView_NewSchema;
-            this.gridControl_NewSchema.Name = "gridControl_NewSchema";
-            this.gridControl_NewSchema.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemCheckEdit1});
-            this.gridControl_NewSchema.Size = new System.Drawing.Size(730, 334);
-            this.gridControl_NewSchema.TabIndex = 0;
-            this.gridControl_NewSchema.UseEmbeddedNavigator = true;
-            this.gridControl_NewSchema.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView_NewSchema});
-            // 
-            // gridView_NewSchema
-            // 
-            this.gridView_NewSchema.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.gridColumn_PK,
-            this.gridColumn_Attr,
-            this.gridColumn_DataType,
-            this.gridColumn_Desc,
-            this.gridColumn_Domain});
-            this.gridView_NewSchema.GridControl = this.gridControl_NewSchema;
-            this.gridView_NewSchema.Name = "gridView_NewSchema";
-            this.gridView_NewSchema.OptionsView.ShowGroupPanel = false;
-            // 
-            // gridColumn_PK
-            // 
-            this.gridColumn_PK.Caption = "Primary Key";
-            this.gridColumn_PK.ColumnEdit = this.repositoryItemCheckEdit1;
-            this.gridColumn_PK.MinWidth = 25;
-            this.gridColumn_PK.Name = "gridColumn_PK";
-            this.gridColumn_PK.Visible = true;
-            this.gridColumn_PK.VisibleIndex = 0;
-            this.gridColumn_PK.Width = 94;
-            // 
-            // gridColumn_Attr
-            // 
-            this.gridColumn_Attr.Caption = "Attribute Name";
-            this.gridColumn_Attr.MinWidth = 25;
-            this.gridColumn_Attr.Name = "gridColumn_Attr";
-            this.gridColumn_Attr.Visible = true;
-            this.gridColumn_Attr.VisibleIndex = 1;
-            this.gridColumn_Attr.Width = 94;
-            // 
-            // gridColumn_DataType
-            // 
-            this.gridColumn_DataType.Caption = "Data Type";
-            this.gridColumn_DataType.MinWidth = 25;
-            this.gridColumn_DataType.Name = "gridColumn_DataType";
-            this.gridColumn_DataType.Visible = true;
-            this.gridColumn_DataType.VisibleIndex = 2;
-            this.gridColumn_DataType.Width = 94;
-            // 
-            // gridColumn_Desc
-            // 
-            this.gridColumn_Desc.Caption = "Description";
-            this.gridColumn_Desc.MinWidth = 25;
-            this.gridColumn_Desc.Name = "gridColumn_Desc";
-            this.gridColumn_Desc.Visible = true;
-            this.gridColumn_Desc.VisibleIndex = 3;
-            this.gridColumn_Desc.Width = 94;
-            // 
-            // gridColumn_Domain
-            // 
-            this.gridColumn_Domain.Caption = "Domain";
-            this.gridColumn_Domain.MinWidth = 25;
-            this.gridColumn_Domain.Name = "gridColumn_Domain";
-            this.gridColumn_Domain.Visible = true;
-            this.gridColumn_Domain.VisibleIndex = 4;
-            this.gridColumn_Domain.Width = 94;
+            grdcolPK.Caption = "Primary Key";
+            grdcolPK.ColumnEdit = repositoryItemCheckEdit1;
+            grdcolPK.MinWidth = 25;
+            grdcolPK.Name = "grdcolPK";
+            grdcolPK.Visible = true;
+            grdcolPK.VisibleIndex = 0;
+            grdcolPK.Width = 94;
             // 
             // repositoryItemCheckEdit1
             // 
-            this.repositoryItemCheckEdit1.AutoHeight = false;
-            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
+            repositoryItemCheckEdit1.AutoHeight = false;
+            repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             // 
-            // FrmNewSchema
+            // grdcolAttr
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(738, 523);
-            this.Controls.Add(this.panelControl1);
-            this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("FrmNewSchema.IconOptions.Image")));
-            this.Name = "FrmNewSchema";
-            this.Text = "New Table";
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
-            this.panelControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl_NameSchema)).EndInit();
-            this.groupControl_NameSchema.ResumeLayout(false);
-            this.groupControl_NameSchema.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtSchemaName.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl_BtnNewSchema)).EndInit();
-            this.panelControl_BtnNewSchema.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl_SchemaAttr)).EndInit();
-            this.groupControl_SchemaAttr.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl_NewSchema)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView_NewSchema)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
-            this.ResumeLayout(false);
+            grdcolAttr.Caption = "Attribute Name";
+            grdcolAttr.MinWidth = 25;
+            grdcolAttr.Name = "grdcolAttr";
+            grdcolAttr.Visible = true;
+            grdcolAttr.VisibleIndex = 1;
+            grdcolAttr.Width = 94;
+            // 
+            // grdcolDataType
+            // 
+            grdcolDataType.Caption = "Data Type";
+            grdcolDataType.MinWidth = 25;
+            grdcolDataType.Name = "grdcolDataType";
+            grdcolDataType.Visible = true;
+            grdcolDataType.VisibleIndex = 2;
+            grdcolDataType.Width = 94;
+            // 
+            // pnlButtonNewSchema
+            // 
+            pnlButtonNewSchema.Controls.Add(btnCancel);
+            pnlButtonNewSchema.Controls.Add(btnSave);
+            pnlButtonNewSchema.Dock = System.Windows.Forms.DockStyle.Bottom;
+            pnlButtonNewSchema.Location = new System.Drawing.Point(2, 466);
+            pnlButtonNewSchema.Name = "pnlButtonNewSchema";
+            pnlButtonNewSchema.Size = new System.Drawing.Size(734, 55);
+            pnlButtonNewSchema.TabIndex = 1;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Location = new System.Drawing.Point(610, 16);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(94, 29);
+            btnCancel.TabIndex = 1;
+            btnCancel.Text = "&Cancel";
+            // 
+            // btnSave
+            // 
+            btnSave.Location = new System.Drawing.Point(475, 16);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(94, 29);
+            btnSave.TabIndex = 0;
+            btnSave.Text = "&Save";
+            // 
+            // grpSchemaName
+            // 
+            grpSchemaName.Controls.Add(txtSchemaName);
+            grpSchemaName.Controls.Add(lblSchemaName);
+            grpSchemaName.Dock = System.Windows.Forms.DockStyle.Top;
+            grpSchemaName.Location = new System.Drawing.Point(2, 2);
+            grpSchemaName.Name = "grpSchemaName";
+            grpSchemaName.Size = new System.Drawing.Size(734, 100);
+            grpSchemaName.TabIndex = 0;
+            grpSchemaName.Text = "Schema Name";
+            // 
+            // txtSchemaName
+            // 
+            txtSchemaName.Location = new System.Drawing.Point(174, 51);
+            txtSchemaName.Name = "txtSchemaName";
+            txtSchemaName.Size = new System.Drawing.Size(395, 22);
+            txtSchemaName.TabIndex = 1;
+            // 
+            // lblSchemaName
+            // 
+            lblSchemaName.Location = new System.Drawing.Point(58, 54);
+            lblSchemaName.Name = "lblSchemaName";
+            lblSchemaName.Size = new System.Drawing.Size(88, 16);
+            lblSchemaName.TabIndex = 0;
+            lblSchemaName.Text = "Schema Name:";
+            // 
+            // frmNewSchema
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(738, 523);
+            Controls.Add(pnlNewSchema);
+            IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmNewSchema.IconOptions.Image");
+            Name = "frmNewSchema";
+            Text = "New Schema";
+            ((System.ComponentModel.ISupportInitialize)pnlNewSchema).EndInit();
+            pnlNewSchema.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)grpSchemaAttribute).EndInit();
+            grpSchemaAttribute.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)grdcSchemaAttribute).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grdvSchemaAttribute).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemCheckEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pnlButtonNewSchema).EndInit();
+            pnlButtonNewSchema.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)grpSchemaName).EndInit();
+            grpSchemaName.ResumeLayout(false);
+            grpSchemaName.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)txtSchemaName.Properties).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private DevExpress.XtraEditors.PanelControl panelControl1;
-        private DevExpress.XtraEditors.GroupControl groupControl_SchemaAttr;
-        private DevExpress.XtraGrid.GridControl gridControl_NewSchema;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView_NewSchema;
-        private DevExpress.XtraEditors.PanelControl panelControl_BtnNewSchema;
+        private DevExpress.XtraEditors.PanelControl pnlNewSchema;
+        private DevExpress.XtraEditors.GroupControl grpSchemaAttribute;
+        private DevExpress.XtraGrid.GridControl grdcSchemaAttribute;
+        private DevExpress.XtraGrid.Views.Grid.GridView grdvSchemaAttribute;
+        private DevExpress.XtraEditors.PanelControl pnlButtonNewSchema;
         private DevExpress.XtraEditors.SimpleButton btnCancel;
         private DevExpress.XtraEditors.SimpleButton btnSave;
-        private DevExpress.XtraEditors.GroupControl groupControl_NameSchema;
+        private DevExpress.XtraEditors.GroupControl grpSchemaName;
         private DevExpress.XtraEditors.TextEdit txtSchemaName;
-        private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn_PK;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn_Attr;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn_DataType;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn_Desc;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn_Domain;
+        private DevExpress.XtraEditors.LabelControl lblSchemaName;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolPK;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolAttr;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolDataType;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
     }
 }

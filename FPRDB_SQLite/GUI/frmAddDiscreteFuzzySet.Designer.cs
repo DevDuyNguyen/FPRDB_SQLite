@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddDiscreteFuzzySet));
             pnlAddDiscreteFuzzySet = new DevExpress.XtraEditors.PanelControl();
+            discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
             btnCancel = new DevExpress.XtraEditors.SimpleButton();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
-            discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
             ((System.ComponentModel.ISupportInitialize)pnlAddDiscreteFuzzySet).BeginInit();
             pnlAddDiscreteFuzzySet.SuspendLayout();
             SuspendLayout();
@@ -47,6 +47,13 @@
             pnlAddDiscreteFuzzySet.Name = "pnlAddDiscreteFuzzySet";
             pnlAddDiscreteFuzzySet.Size = new System.Drawing.Size(541, 374);
             pnlAddDiscreteFuzzySet.TabIndex = 0;
+            // 
+            // discreteFuzzySetInfo
+            // 
+            discreteFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
+            discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
+            discreteFuzzySetInfo.Size = new System.Drawing.Size(541, 306);
+            discreteFuzzySetInfo.TabIndex = 5;
             // 
             // btnCancel
             // 
@@ -63,13 +70,6 @@
             btnSave.Size = new System.Drawing.Size(75, 25);
             btnSave.TabIndex = 3;
             btnSave.Text = "&Save";
-            // 
-            // discreteFuzzySetInfo
-            // 
-            discreteFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
-            discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
-            discreteFuzzySetInfo.Size = new System.Drawing.Size(541, 306);
-            discreteFuzzySetInfo.TabIndex = 5;
             // 
             // frmAddDiscreteFuzzySet
             // 

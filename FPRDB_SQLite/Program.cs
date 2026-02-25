@@ -17,7 +17,7 @@ namespace FPRDB_SQLite
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            Application.Run(new frmMain());
         }
     }
 }

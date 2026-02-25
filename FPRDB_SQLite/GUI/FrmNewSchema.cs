@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace FPRDB_SQLite
 {
-    public partial class FrmNewSchema : DevExpress.XtraEditors.XtraForm
+    public partial class frmNewSchema : DevExpress.XtraEditors.XtraForm
     {
-        public FrmNewSchema()
+        public frmNewSchema()
         {
             InitializeComponent();
         }

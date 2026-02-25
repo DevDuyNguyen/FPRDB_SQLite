@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace FPRDB_SQLite
 {
-    public partial class FrmMain : DevExpress.XtraBars.Ribbon.RibbonForm
+    public partial class frmMain : DevExpress.XtraBars.Ribbon.RibbonForm
     {
-        public FrmMain()
+        public frmMain()
         {
             InitializeComponent();
         }
