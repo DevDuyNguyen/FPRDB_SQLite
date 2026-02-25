@@ -28,11 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "frmAddDiscreteFuzzySet";
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddDiscreteFuzzySet));
+            pnlAddDiscreteFuzzySet = new DevExpress.XtraEditors.PanelControl();
+            btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            btnSave = new DevExpress.XtraEditors.SimpleButton();
+            discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
+            ((System.ComponentModel.ISupportInitialize)pnlAddDiscreteFuzzySet).BeginInit();
+            pnlAddDiscreteFuzzySet.SuspendLayout();
+            SuspendLayout();
+            // 
+            // pnlAddDiscreteFuzzySet
+            // 
+            pnlAddDiscreteFuzzySet.Controls.Add(discreteFuzzySetInfo);
+            pnlAddDiscreteFuzzySet.Controls.Add(btnCancel);
+            pnlAddDiscreteFuzzySet.Controls.Add(btnSave);
+            pnlAddDiscreteFuzzySet.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlAddDiscreteFuzzySet.Location = new System.Drawing.Point(0, 0);
+            pnlAddDiscreteFuzzySet.Name = "pnlAddDiscreteFuzzySet";
+            pnlAddDiscreteFuzzySet.Size = new System.Drawing.Size(541, 374);
+            pnlAddDiscreteFuzzySet.TabIndex = 0;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Location = new System.Drawing.Point(454, 324);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 25);
+            btnCancel.TabIndex = 4;
+            btnCancel.Text = "&Cancel";
+            // 
+            // btnSave
+            // 
+            btnSave.Location = new System.Drawing.Point(360, 324);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(75, 25);
+            btnSave.TabIndex = 3;
+            btnSave.Text = "&Save";
+            // 
+            // discreteFuzzySetInfo
+            // 
+            discreteFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
+            discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
+            discreteFuzzySetInfo.Size = new System.Drawing.Size(541, 306);
+            discreteFuzzySetInfo.TabIndex = 5;
+            // 
+            // frmAddDiscreteFuzzySet
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(541, 374);
+            Controls.Add(pnlAddDiscreteFuzzySet);
+            IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmAddDiscreteFuzzySet.IconOptions.Image");
+            Name = "frmAddDiscreteFuzzySet";
+            Text = "Discrete FuzzySet";
+            ((System.ComponentModel.ISupportInitialize)pnlAddDiscreteFuzzySet).EndInit();
+            pnlAddDiscreteFuzzySet.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private DevExpress.XtraEditors.PanelControl pnlAddDiscreteFuzzySet;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.SimpleButton btnSave;
+        private UserControls.DiscreteFuzzySet discreteFuzzySetInfo;
     }
 }
