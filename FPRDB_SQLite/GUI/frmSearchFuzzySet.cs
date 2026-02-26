@@ -35,7 +35,7 @@ namespace FPRDB_SQLite.GUI
 
                 // Open the form to edit the selected fuzzy set (extend: type of fuzzy set, pass the fuzzy set info)
                 // if...else...
-                new frmAddDiscreteFuzzySet().ShowDialog();
+                new frmManageDiscreteFuzzySet().ShowDialog();
             }
         }
     }

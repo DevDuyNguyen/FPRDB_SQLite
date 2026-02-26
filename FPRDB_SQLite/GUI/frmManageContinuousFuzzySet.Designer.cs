@@ -30,16 +30,18 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmManageContinuousFuzzySet));
             pnlManageContinuousFuzzySet = new DevExpress.XtraEditors.PanelControl();
-            continuosFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.ContinuosFuzzySet();
             btnDelete = new DevExpress.XtraEditors.SimpleButton();
             btnView = new DevExpress.XtraEditors.SimpleButton();
             btnUpdate = new DevExpress.XtraEditors.SimpleButton();
+            continuosFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.ContinuosFuzzySet();
+            btnCancel = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)pnlManageContinuousFuzzySet).BeginInit();
             pnlManageContinuousFuzzySet.SuspendLayout();
             SuspendLayout();
             // 
             // pnlManageContinuousFuzzySet
             // 
+            pnlManageContinuousFuzzySet.Controls.Add(btnCancel);
             pnlManageContinuousFuzzySet.Controls.Add(btnDelete);
             pnlManageContinuousFuzzySet.Controls.Add(btnView);
             pnlManageContinuousFuzzySet.Controls.Add(btnUpdate);
@@ -47,8 +49,32 @@
             pnlManageContinuousFuzzySet.Dock = System.Windows.Forms.DockStyle.Fill;
             pnlManageContinuousFuzzySet.Location = new System.Drawing.Point(0, 0);
             pnlManageContinuousFuzzySet.Name = "pnlManageContinuousFuzzySet";
-            pnlManageContinuousFuzzySet.Size = new System.Drawing.Size(426, 285);
+            pnlManageContinuousFuzzySet.Size = new System.Drawing.Size(438, 285);
             pnlManageContinuousFuzzySet.TabIndex = 0;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Location = new System.Drawing.Point(271, 242);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new System.Drawing.Size(75, 25);
+            btnDelete.TabIndex = 6;
+            btnDelete.Text = "&Delete";
+            // 
+            // btnView
+            // 
+            btnView.Location = new System.Drawing.Point(190, 242);
+            btnView.Name = "btnView";
+            btnView.Size = new System.Drawing.Size(75, 25);
+            btnView.TabIndex = 5;
+            btnView.Text = "&View";
+            // 
+            // btnUpdate
+            // 
+            btnUpdate.Location = new System.Drawing.Point(109, 242);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new System.Drawing.Size(75, 25);
+            btnUpdate.TabIndex = 4;
+            btnUpdate.Text = "&Update";
             // 
             // continuosFuzzySetInfo
             // 
@@ -57,35 +83,19 @@
             continuosFuzzySetInfo.Size = new System.Drawing.Size(429, 224);
             continuosFuzzySetInfo.TabIndex = 0;
             // 
-            // btnDelete
+            // btnCancel
             // 
-            btnDelete.Location = new System.Drawing.Point(339, 242);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Size = new System.Drawing.Size(75, 25);
-            btnDelete.TabIndex = 6;
-            btnDelete.Text = "&Delete";
-            // 
-            // btnView
-            // 
-            btnView.Location = new System.Drawing.Point(258, 242);
-            btnView.Name = "btnView";
-            btnView.Size = new System.Drawing.Size(75, 25);
-            btnView.TabIndex = 5;
-            btnView.Text = "&View";
-            // 
-            // btnUpdate
-            // 
-            btnUpdate.Location = new System.Drawing.Point(177, 242);
-            btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new System.Drawing.Size(75, 25);
-            btnUpdate.TabIndex = 4;
-            btnUpdate.Text = "&Update";
+            btnCancel.Location = new System.Drawing.Point(351, 242);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 25);
+            btnCancel.TabIndex = 7;
+            btnCancel.Text = "&Cancel";
             // 
             // frmManageContinuousFuzzySet
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(426, 285);
+            ClientSize = new System.Drawing.Size(438, 285);
             Controls.Add(pnlManageContinuousFuzzySet);
             IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmManageContinuousFuzzySet.IconOptions.Image");
             Name = "frmManageContinuousFuzzySet";
@@ -102,5 +112,6 @@
         private DevExpress.XtraEditors.SimpleButton btnDelete;
         private DevExpress.XtraEditors.SimpleButton btnView;
         private DevExpress.XtraEditors.SimpleButton btnUpdate;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
     }
 }

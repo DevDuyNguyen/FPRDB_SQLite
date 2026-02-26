@@ -34,12 +34,14 @@
             btnView = new DevExpress.XtraEditors.SimpleButton();
             btnUpdate = new DevExpress.XtraEditors.SimpleButton();
             discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
+            btnCancel = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)pnlManageDiscreteFuzzySet).BeginInit();
             pnlManageDiscreteFuzzySet.SuspendLayout();
             SuspendLayout();
             // 
             // pnlManageDiscreteFuzzySet
             // 
+            pnlManageDiscreteFuzzySet.Controls.Add(btnCancel);
             pnlManageDiscreteFuzzySet.Controls.Add(btnDelete);
             pnlManageDiscreteFuzzySet.Controls.Add(btnView);
             pnlManageDiscreteFuzzySet.Controls.Add(btnUpdate);
@@ -52,7 +54,7 @@
             // 
             // btnDelete
             // 
-            btnDelete.Location = new System.Drawing.Point(458, 338);
+            btnDelete.Location = new System.Drawing.Point(379, 339);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new System.Drawing.Size(75, 25);
             btnDelete.TabIndex = 3;
@@ -60,7 +62,7 @@
             // 
             // btnView
             // 
-            btnView.Location = new System.Drawing.Point(377, 338);
+            btnView.Location = new System.Drawing.Point(298, 339);
             btnView.Name = "btnView";
             btnView.Size = new System.Drawing.Size(75, 25);
             btnView.TabIndex = 2;
@@ -68,7 +70,7 @@
             // 
             // btnUpdate
             // 
-            btnUpdate.Location = new System.Drawing.Point(296, 338);
+            btnUpdate.Location = new System.Drawing.Point(217, 339);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new System.Drawing.Size(75, 25);
             btnUpdate.TabIndex = 1;
@@ -80,6 +82,14 @@
             discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
             discreteFuzzySetInfo.Size = new System.Drawing.Size(545, 327);
             discreteFuzzySetInfo.TabIndex = 0;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Location = new System.Drawing.Point(458, 339);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 25);
+            btnCancel.TabIndex = 4;
+            btnCancel.Text = "&Cancel";
             // 
             // frmManageDiscreteFuzzySet
             // 
@@ -102,5 +112,6 @@
         private DevExpress.XtraEditors.SimpleButton btnDelete;
         private DevExpress.XtraEditors.SimpleButton btnView;
         private DevExpress.XtraEditors.SimpleButton btnUpdate;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
     }
 }
