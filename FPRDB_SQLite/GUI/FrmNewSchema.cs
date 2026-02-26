@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FPRDB_SQLite
+namespace FPRDB_SQLite.GUI
 {
     public partial class frmNewSchema : DevExpress.XtraEditors.XtraForm
     {
