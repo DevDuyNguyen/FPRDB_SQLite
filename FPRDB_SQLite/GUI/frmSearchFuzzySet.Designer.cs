@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchFuzzySet));
             panelControl1 = new DevExpress.XtraEditors.PanelControl();
-            lblNameFuzzySet = new DevExpress.XtraEditors.LabelControl();
-            txtNameFuzzySet = new DevExpress.XtraEditors.TextEdit();
             lstFuzzySets = new DevExpress.XtraEditors.ListBoxControl();
+            txtNameFuzzySet = new DevExpress.XtraEditors.TextEdit();
+            lblNameFuzzySet = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)panelControl1).BeginInit();
             panelControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)txtNameFuzzySet.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lstFuzzySets).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)txtNameFuzzySet.Properties).BeginInit();
             SuspendLayout();
             // 
             // panelControl1
@@ -50,13 +50,13 @@
             panelControl1.Size = new System.Drawing.Size(477, 277);
             panelControl1.TabIndex = 0;
             // 
-            // lblNameFuzzySet
+            // lstFuzzySets
             // 
-            lblNameFuzzySet.Location = new System.Drawing.Point(45, 21);
-            lblNameFuzzySet.Name = "lblNameFuzzySet";
-            lblNameFuzzySet.Size = new System.Drawing.Size(91, 16);
-            lblNameFuzzySet.TabIndex = 0;
-            lblNameFuzzySet.Text = "Linguistic Label:";
+            lstFuzzySets.Location = new System.Drawing.Point(45, 61);
+            lstFuzzySets.Name = "lstFuzzySets";
+            lstFuzzySets.Size = new System.Drawing.Size(377, 190);
+            lstFuzzySets.TabIndex = 2;
+            lstFuzzySets.MouseDoubleClick += lstFuzzySets_MouseDoubleClick;
             // 
             // txtNameFuzzySet
             // 
@@ -65,12 +65,13 @@
             txtNameFuzzySet.Size = new System.Drawing.Size(280, 22);
             txtNameFuzzySet.TabIndex = 1;
             // 
-            // lstFuzzySets
+            // lblNameFuzzySet
             // 
-            lstFuzzySets.Location = new System.Drawing.Point(45, 61);
-            lstFuzzySets.Name = "lstFuzzySets";
-            lstFuzzySets.Size = new System.Drawing.Size(377, 190);
-            lstFuzzySets.TabIndex = 2;
+            lblNameFuzzySet.Location = new System.Drawing.Point(45, 21);
+            lblNameFuzzySet.Name = "lblNameFuzzySet";
+            lblNameFuzzySet.Size = new System.Drawing.Size(91, 16);
+            lblNameFuzzySet.TabIndex = 0;
+            lblNameFuzzySet.Text = "Linguistic Label:";
             // 
             // frmSearchFuzzySet
             // 
@@ -84,8 +85,8 @@
             ((System.ComponentModel.ISupportInitialize)panelControl1).EndInit();
             panelControl1.ResumeLayout(false);
             panelControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)txtNameFuzzySet.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)lstFuzzySets).EndInit();
+            ((System.ComponentModel.ISupportInitialize)txtNameFuzzySet.Properties).EndInit();
             ResumeLayout(false);
         }
 
