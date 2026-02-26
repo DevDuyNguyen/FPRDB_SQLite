@@ -62,6 +62,7 @@
             btnCancel.Size = new System.Drawing.Size(75, 25);
             btnCancel.TabIndex = 4;
             btnCancel.Text = "&Cancel";
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnSave
             // 
@@ -70,6 +71,7 @@
             btnSave.Size = new System.Drawing.Size(75, 25);
             btnSave.TabIndex = 3;
             btnSave.Text = "&Save";
+            btnSave.Click += btnSave_Click;
             // 
             // frmAddDiscreteFuzzySet
             // 

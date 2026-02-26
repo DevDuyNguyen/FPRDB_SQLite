@@ -17,5 +17,29 @@ namespace FPRDB_SQLite.GUI
         {
             InitializeComponent();
         }
+
+        // Click "Cancel" button
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        // Click "Update" button
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Click "View" button
+        private void btnView_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Click "Delete" button
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

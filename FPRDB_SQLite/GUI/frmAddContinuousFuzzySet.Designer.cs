@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddContinuousFuzzySet));
             pnlAddContinuousFuzzySet = new DevExpress.XtraEditors.PanelControl();
+            continuosFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.ContinuosFuzzySet();
             btnCancel = new DevExpress.XtraEditors.SimpleButton();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
-            continuosFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.ContinuosFuzzySet();
             ((System.ComponentModel.ISupportInitialize)pnlAddContinuousFuzzySet).BeginInit();
             pnlAddContinuousFuzzySet.SuspendLayout();
             SuspendLayout();
@@ -48,6 +48,13 @@
             pnlAddContinuousFuzzySet.Size = new System.Drawing.Size(436, 298);
             pnlAddContinuousFuzzySet.TabIndex = 0;
             // 
+            // continuosFuzzySetInfo
+            // 
+            continuosFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
+            continuosFuzzySetInfo.Name = "continuosFuzzySetInfo";
+            continuosFuzzySetInfo.Size = new System.Drawing.Size(436, 231);
+            continuosFuzzySetInfo.TabIndex = 13;
+            // 
             // btnCancel
             // 
             btnCancel.Location = new System.Drawing.Point(340, 249);
@@ -55,6 +62,7 @@
             btnCancel.Size = new System.Drawing.Size(75, 25);
             btnCancel.TabIndex = 12;
             btnCancel.Text = "&Cancel";
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnSave
             // 
@@ -63,13 +71,7 @@
             btnSave.Size = new System.Drawing.Size(75, 25);
             btnSave.TabIndex = 11;
             btnSave.Text = "&Save";
-            // 
-            // continuosFuzzySetInfo
-            // 
-            continuosFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
-            continuosFuzzySetInfo.Name = "continuosFuzzySetInfo";
-            continuosFuzzySetInfo.Size = new System.Drawing.Size(436, 231);
-            continuosFuzzySetInfo.TabIndex = 13;
+            btnSave.Click += btnSave_Click;
             // 
             // frmAddContinuousFuzzySet
             // 

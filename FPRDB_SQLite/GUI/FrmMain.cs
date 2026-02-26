@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace FPRDB_SQLite
+namespace FPRDB_SQLite.GUI
 {
     public partial class frmMain : DevExpress.XtraBars.Ribbon.RibbonForm
     {
