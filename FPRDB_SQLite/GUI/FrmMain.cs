@@ -15,5 +15,15 @@ namespace FPRDB_SQLite.GUI
         {
             InitializeComponent();
         }
+
+        private void buttonAdd_groupDis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new frmAddDiscreteFuzzySet().ShowDialog();
+        }
+
+        private void buttonAdd_groupCont_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new frmAddContinuousFuzzySet().ShowDialog();
+        }
     }
 }
