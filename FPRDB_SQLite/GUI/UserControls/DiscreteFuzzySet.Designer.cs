@@ -36,16 +36,19 @@
             repositoryItemMembership = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             txtNameDiscFuzzy = new DevExpress.XtraEditors.TextEdit();
             lblNameDiscFuzzy = new DevExpress.XtraEditors.LabelControl();
+            lblDataType = new DevExpress.XtraEditors.LabelControl();
+            cboDataType = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)grdcDiscFuzzy).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grdvDiscFuzzy).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemValue).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemMembership).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtNameDiscFuzzy.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cboDataType.Properties).BeginInit();
             SuspendLayout();
             // 
             // grdcDiscFuzzy
             // 
-            grdcDiscFuzzy.Location = new System.Drawing.Point(25, 39);
+            grdcDiscFuzzy.Location = new System.Drawing.Point(25, 72);
             grdcDiscFuzzy.MainView = grdvDiscFuzzy;
             grdcDiscFuzzy.Name = "grdcDiscFuzzy";
             grdcDiscFuzzy.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemValue, repositoryItemMembership });
@@ -106,20 +109,39 @@
             lblNameDiscFuzzy.TabIndex = 3;
             lblNameDiscFuzzy.Text = "Linguistic Label:";
             // 
+            // lblDataType
+            // 
+            lblDataType.Location = new System.Drawing.Point(25, 41);
+            lblDataType.Name = "lblDataType";
+            lblDataType.Size = new System.Drawing.Size(63, 16);
+            lblDataType.TabIndex = 6;
+            lblDataType.Text = "Data Type:";
+            // 
+            // cboDataType
+            // 
+            cboDataType.Location = new System.Drawing.Point(122, 38);
+            cboDataType.Name = "cboDataType";
+            cboDataType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cboDataType.Size = new System.Drawing.Size(171, 22);
+            cboDataType.TabIndex = 7;
+            // 
             // DiscreteFuzzySet
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(cboDataType);
+            Controls.Add(lblDataType);
             Controls.Add(grdcDiscFuzzy);
             Controls.Add(txtNameDiscFuzzy);
             Controls.Add(lblNameDiscFuzzy);
             Name = "DiscreteFuzzySet";
-            Size = new System.Drawing.Size(549, 305);
+            Size = new System.Drawing.Size(549, 342);
             ((System.ComponentModel.ISupportInitialize)grdcDiscFuzzy).EndInit();
             ((System.ComponentModel.ISupportInitialize)grdvDiscFuzzy).EndInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemValue).EndInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemMembership).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtNameDiscFuzzy.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cboDataType.Properties).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -134,5 +156,7 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemMembership;
         private DevExpress.XtraEditors.TextEdit txtNameDiscFuzzy;
         private DevExpress.XtraEditors.LabelControl lblNameDiscFuzzy;
+        private DevExpress.XtraEditors.LabelControl lblDataType;
+        private DevExpress.XtraEditors.ComboBoxEdit cboDataType;
     }
 }

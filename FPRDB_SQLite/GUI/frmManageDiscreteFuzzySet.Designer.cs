@@ -30,10 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmManageDiscreteFuzzySet));
             pnlManageDiscreteFuzzySet = new DevExpress.XtraEditors.PanelControl();
-            discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
-            btnUpdate = new DevExpress.XtraEditors.SimpleButton();
-            btnView = new DevExpress.XtraEditors.SimpleButton();
             btnDelete = new DevExpress.XtraEditors.SimpleButton();
+            btnView = new DevExpress.XtraEditors.SimpleButton();
+            btnUpdate = new DevExpress.XtraEditors.SimpleButton();
+            discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
             ((System.ComponentModel.ISupportInitialize)pnlManageDiscreteFuzzySet).BeginInit();
             pnlManageDiscreteFuzzySet.SuspendLayout();
             SuspendLayout();
@@ -47,45 +47,45 @@
             pnlManageDiscreteFuzzySet.Dock = System.Windows.Forms.DockStyle.Fill;
             pnlManageDiscreteFuzzySet.Location = new System.Drawing.Point(0, 0);
             pnlManageDiscreteFuzzySet.Name = "pnlManageDiscreteFuzzySet";
-            pnlManageDiscreteFuzzySet.Size = new System.Drawing.Size(545, 348);
+            pnlManageDiscreteFuzzySet.Size = new System.Drawing.Size(545, 369);
             pnlManageDiscreteFuzzySet.TabIndex = 0;
-            // 
-            // discreteFuzzySetInfo
-            // 
-            discreteFuzzySetInfo.Location = new System.Drawing.Point(0, 5);
-            discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
-            discreteFuzzySetInfo.Size = new System.Drawing.Size(545, 295);
-            discreteFuzzySetInfo.TabIndex = 0;
-            // 
-            // btnUpdate
-            // 
-            btnUpdate.Location = new System.Drawing.Point(296, 307);
-            btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new System.Drawing.Size(75, 25);
-            btnUpdate.TabIndex = 1;
-            btnUpdate.Text = "&Update";
-            // 
-            // btnView
-            // 
-            btnView.Location = new System.Drawing.Point(377, 307);
-            btnView.Name = "btnView";
-            btnView.Size = new System.Drawing.Size(75, 25);
-            btnView.TabIndex = 2;
-            btnView.Text = "&View";
             // 
             // btnDelete
             // 
-            btnDelete.Location = new System.Drawing.Point(458, 307);
+            btnDelete.Location = new System.Drawing.Point(458, 338);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new System.Drawing.Size(75, 25);
             btnDelete.TabIndex = 3;
             btnDelete.Text = "&Delete";
             // 
+            // btnView
+            // 
+            btnView.Location = new System.Drawing.Point(377, 338);
+            btnView.Name = "btnView";
+            btnView.Size = new System.Drawing.Size(75, 25);
+            btnView.TabIndex = 2;
+            btnView.Text = "&View";
+            // 
+            // btnUpdate
+            // 
+            btnUpdate.Location = new System.Drawing.Point(296, 338);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new System.Drawing.Size(75, 25);
+            btnUpdate.TabIndex = 1;
+            btnUpdate.Text = "&Update";
+            // 
+            // discreteFuzzySetInfo
+            // 
+            discreteFuzzySetInfo.Location = new System.Drawing.Point(0, 5);
+            discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
+            discreteFuzzySetInfo.Size = new System.Drawing.Size(545, 327);
+            discreteFuzzySetInfo.TabIndex = 0;
+            // 
             // frmManageDiscreteFuzzySet
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(545, 348);
+            ClientSize = new System.Drawing.Size(545, 369);
             Controls.Add(pnlManageDiscreteFuzzySet);
             IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmManageDiscreteFuzzySet.IconOptions.Image");
             Name = "frmManageDiscreteFuzzySet";

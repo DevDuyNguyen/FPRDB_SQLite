@@ -52,12 +52,12 @@
             // 
             discreteFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
             discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
-            discreteFuzzySetInfo.Size = new System.Drawing.Size(541, 306);
+            discreteFuzzySetInfo.Size = new System.Drawing.Size(541, 326);
             discreteFuzzySetInfo.TabIndex = 5;
             // 
             // btnCancel
             // 
-            btnCancel.Location = new System.Drawing.Point(454, 324);
+            btnCancel.Location = new System.Drawing.Point(454, 344);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(75, 25);
             btnCancel.TabIndex = 4;
@@ -65,7 +65,7 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new System.Drawing.Point(360, 324);
+            btnSave.Location = new System.Drawing.Point(358, 344);
             btnSave.Name = "btnSave";
             btnSave.Size = new System.Drawing.Size(75, 25);
             btnSave.TabIndex = 3;
