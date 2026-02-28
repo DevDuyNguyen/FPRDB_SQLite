@@ -16,26 +16,29 @@ namespace FPRDB_SQLite.GUI
         public frmSearchFuzzySet()
         {
             InitializeComponent();
-            lstFuzzySets.Items.Add("Very Low");
+            cboNameFuzzySet.Properties.Items.Add("Discrete");
+            cboNameFuzzySet.Properties.Items.Add("Continuous");
+            pnlResult.Visible = false;
         }
 
-        private void lstFuzzySets_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-            if (e.Button != MouseButtons.Left) return;
-
-            // Click position
-            var index = lstFuzzySets.IndexFromPoint(e.Location);
-
-            if (index >= 0)
+            string selectedType = cboNameFuzzySet.Text;
+            switch (selectedType)
             {
-                // Update SelectedIndex after double-click
-                lstFuzzySets.SelectedIndex = index;
-
-                // Get fuzzy set info based on the selected item
-
-                // Open the form to edit the selected fuzzy set (extend: type of fuzzy set, pass the fuzzy set info)
-                // if...else...
-                new frmManageDiscreteFuzzySet().ShowDialog();
+                case "Discrete":
+                    pnlResult.Visible = true;
+                    discreteFuzzySetInfo.Visible = true;
+                    continuosFuzzySetInfo.Visible = false;
+                    break;
+                case "Continuous":
+                    pnlResult.Visible = true;
+                    continuosFuzzySetInfo.Visible = true;
+                    discreteFuzzySetInfo.Visible = false;
+                    break;
+                default:
+                    XtraMessageBox.Show("Please select a valid fuzzy set type.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
             }
         }
     }

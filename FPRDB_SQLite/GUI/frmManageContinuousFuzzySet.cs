@@ -27,7 +27,7 @@ namespace FPRDB_SQLite.GUI
         // Click "Update" button
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         // Click "View" button

@@ -29,72 +29,182 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchFuzzySet));
-            panelControl1 = new DevExpress.XtraEditors.PanelControl();
-            lstFuzzySets = new DevExpress.XtraEditors.ListBoxControl();
-            txtNameFuzzySet = new DevExpress.XtraEditors.TextEdit();
+            pnlSearch = new DevExpress.XtraEditors.PanelControl();
+            cboNameFuzzySet = new DevExpress.XtraEditors.ComboBoxEdit();
+            btnClear = new DevExpress.XtraEditors.SimpleButton();
+            btnSearch = new DevExpress.XtraEditors.SimpleButton();
             lblNameFuzzySet = new DevExpress.XtraEditors.LabelControl();
-            ((System.ComponentModel.ISupportInitialize)panelControl1).BeginInit();
-            panelControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)lstFuzzySets).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)txtNameFuzzySet.Properties).BeginInit();
+            pnlResult = new DevExpress.XtraEditors.PanelControl();
+            pnlButton = new DevExpress.XtraEditors.PanelControl();
+            btnUpdate = new DevExpress.XtraEditors.SimpleButton();
+            btnView = new DevExpress.XtraEditors.SimpleButton();
+            btnDelete = new DevExpress.XtraEditors.SimpleButton();
+            btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            continuosFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.ContinuosFuzzySet();
+            discreteFuzzySetInfo = new FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet();
+            ((System.ComponentModel.ISupportInitialize)pnlSearch).BeginInit();
+            pnlSearch.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cboNameFuzzySet.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pnlResult).BeginInit();
+            pnlResult.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pnlButton).BeginInit();
+            pnlButton.SuspendLayout();
             SuspendLayout();
             // 
-            // panelControl1
+            // pnlSearch
             // 
-            panelControl1.Controls.Add(lstFuzzySets);
-            panelControl1.Controls.Add(txtNameFuzzySet);
-            panelControl1.Controls.Add(lblNameFuzzySet);
-            panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            panelControl1.Location = new System.Drawing.Point(0, 0);
-            panelControl1.Name = "panelControl1";
-            panelControl1.Size = new System.Drawing.Size(477, 277);
-            panelControl1.TabIndex = 0;
+            pnlSearch.Controls.Add(cboNameFuzzySet);
+            pnlSearch.Controls.Add(btnClear);
+            pnlSearch.Controls.Add(btnSearch);
+            pnlSearch.Controls.Add(lblNameFuzzySet);
+            pnlSearch.Dock = System.Windows.Forms.DockStyle.Top;
+            pnlSearch.Location = new System.Drawing.Point(0, 0);
+            pnlSearch.Name = "pnlSearch";
+            pnlSearch.Size = new System.Drawing.Size(609, 55);
+            pnlSearch.TabIndex = 0;
             // 
-            // lstFuzzySets
+            // cboNameFuzzySet
             // 
-            lstFuzzySets.Location = new System.Drawing.Point(45, 61);
-            lstFuzzySets.Name = "lstFuzzySets";
-            lstFuzzySets.Size = new System.Drawing.Size(377, 190);
-            lstFuzzySets.TabIndex = 2;
-            lstFuzzySets.MouseDoubleClick += lstFuzzySets_MouseDoubleClick;
+            cboNameFuzzySet.Location = new System.Drawing.Point(120, 19);
+            cboNameFuzzySet.Name = "cboNameFuzzySet";
+            cboNameFuzzySet.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cboNameFuzzySet.Size = new System.Drawing.Size(282, 22);
+            cboNameFuzzySet.TabIndex = 6;
             // 
-            // txtNameFuzzySet
+            // btnClear
             // 
-            txtNameFuzzySet.Location = new System.Drawing.Point(142, 18);
-            txtNameFuzzySet.Name = "txtNameFuzzySet";
-            txtNameFuzzySet.Size = new System.Drawing.Size(280, 22);
-            txtNameFuzzySet.TabIndex = 1;
+            btnClear.Location = new System.Drawing.Point(522, 17);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new System.Drawing.Size(75, 25);
+            btnClear.TabIndex = 5;
+            btnClear.Text = "&Clear";
+            // 
+            // btnSearch
+            // 
+            btnSearch.Location = new System.Drawing.Point(423, 17);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new System.Drawing.Size(75, 25);
+            btnSearch.TabIndex = 4;
+            btnSearch.Text = "&Search";
+            btnSearch.Click += btnSearch_Click;
             // 
             // lblNameFuzzySet
             // 
-            lblNameFuzzySet.Location = new System.Drawing.Point(45, 21);
+            lblNameFuzzySet.Location = new System.Drawing.Point(23, 21);
             lblNameFuzzySet.Name = "lblNameFuzzySet";
-            lblNameFuzzySet.Size = new System.Drawing.Size(91, 16);
+            lblNameFuzzySet.Size = new System.Drawing.Size(82, 16);
             lblNameFuzzySet.TabIndex = 0;
-            lblNameFuzzySet.Text = "Linguistic Label:";
+            lblNameFuzzySet.Text = "Search Name:";
+            // 
+            // pnlResult
+            // 
+            pnlResult.Controls.Add(pnlButton);
+            pnlResult.Controls.Add(continuosFuzzySetInfo);
+            pnlResult.Controls.Add(discreteFuzzySetInfo);
+            pnlResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlResult.Location = new System.Drawing.Point(0, 55);
+            pnlResult.Name = "pnlResult";
+            pnlResult.Size = new System.Drawing.Size(609, 380);
+            pnlResult.TabIndex = 1;
+            pnlResult.Visible = false;
+            // 
+            // pnlButton
+            // 
+            pnlButton.Controls.Add(btnUpdate);
+            pnlButton.Controls.Add(btnView);
+            pnlButton.Controls.Add(btnDelete);
+            pnlButton.Controls.Add(btnCancel);
+            pnlButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            pnlButton.Location = new System.Drawing.Point(2, 333);
+            pnlButton.Name = "pnlButton";
+            pnlButton.Size = new System.Drawing.Size(605, 45);
+            pnlButton.TabIndex = 10;
+            // 
+            // btnUpdate
+            // 
+            btnUpdate.Location = new System.Drawing.Point(281, 10);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new System.Drawing.Size(75, 25);
+            btnUpdate.TabIndex = 5;
+            btnUpdate.Text = "&Update";
+            // 
+            // btnView
+            // 
+            btnView.Location = new System.Drawing.Point(362, 10);
+            btnView.Name = "btnView";
+            btnView.Size = new System.Drawing.Size(75, 25);
+            btnView.TabIndex = 6;
+            btnView.Text = "&View";
+            // 
+            // btnDelete
+            // 
+            btnDelete.Location = new System.Drawing.Point(443, 10);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new System.Drawing.Size(75, 25);
+            btnDelete.TabIndex = 7;
+            btnDelete.Text = "&Delete";
+            // 
+            // btnCancel
+            // 
+            btnCancel.Location = new System.Drawing.Point(524, 10);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 25);
+            btnCancel.TabIndex = 8;
+            btnCancel.Text = "&Cancel";
+            // 
+            // continuosFuzzySetInfo
+            // 
+            continuosFuzzySetInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            continuosFuzzySetInfo.Location = new System.Drawing.Point(2, 2);
+            continuosFuzzySetInfo.Name = "continuosFuzzySetInfo";
+            continuosFuzzySetInfo.Size = new System.Drawing.Size(605, 376);
+            continuosFuzzySetInfo.TabIndex = 9;
+            continuosFuzzySetInfo.Visible = false;
+            // 
+            // discreteFuzzySetInfo
+            // 
+            discreteFuzzySetInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            discreteFuzzySetInfo.Location = new System.Drawing.Point(2, 2);
+            discreteFuzzySetInfo.Name = "discreteFuzzySetInfo";
+            discreteFuzzySetInfo.Size = new System.Drawing.Size(605, 376);
+            discreteFuzzySetInfo.TabIndex = 1;
+            discreteFuzzySetInfo.Visible = false;
             // 
             // frmSearchFuzzySet
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(477, 277);
-            Controls.Add(panelControl1);
+            ClientSize = new System.Drawing.Size(609, 435);
+            Controls.Add(pnlResult);
+            Controls.Add(pnlSearch);
             IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmSearchFuzzySet.IconOptions.Image");
             Name = "frmSearchFuzzySet";
             Text = "Search FuzzySet";
-            ((System.ComponentModel.ISupportInitialize)panelControl1).EndInit();
-            panelControl1.ResumeLayout(false);
-            panelControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)lstFuzzySets).EndInit();
-            ((System.ComponentModel.ISupportInitialize)txtNameFuzzySet.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pnlSearch).EndInit();
+            pnlSearch.ResumeLayout(false);
+            pnlSearch.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cboNameFuzzySet.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pnlResult).EndInit();
+            pnlResult.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pnlButton).EndInit();
+            pnlButton.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DevExpress.XtraEditors.PanelControl panelControl1;
-        private DevExpress.XtraEditors.TextEdit txtNameFuzzySet;
+        private DevExpress.XtraEditors.PanelControl pnlSearch;
         private DevExpress.XtraEditors.LabelControl lblNameFuzzySet;
-        private DevExpress.XtraEditors.ListBoxControl lstFuzzySets;
+        private DevExpress.XtraEditors.SimpleButton btnSearch;
+        private DevExpress.XtraEditors.PanelControl pnlResult;
+        private UserControls.DiscreteFuzzySet discreteFuzzySetInfo;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.SimpleButton btnDelete;
+        private DevExpress.XtraEditors.SimpleButton btnView;
+        private DevExpress.XtraEditors.SimpleButton btnUpdate;
+        private UserControls.ContinuosFuzzySet continuosFuzzySetInfo;
+        private DevExpress.XtraEditors.SimpleButton btnClear;
+        private DevExpress.XtraEditors.ComboBoxEdit cboNameFuzzySet;
+        private DevExpress.XtraEditors.PanelControl pnlButton;
     }
 }
