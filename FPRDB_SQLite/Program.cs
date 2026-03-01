@@ -17,12 +17,12 @@ namespace FPRDB_SQLite
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new Form1());
 
-            //Lexer lexer = new Lexer(" select true \"asdf\" 1⇒2  ⨂");
-            //lexer.printAllToken();
+            Lexer lexer = new Lexer(" select true \"asdf\" 1⇒2  ⨂");
+            lexer.printAllToken();
             //lexer.eatKeyword("select");
             //Debug.WriteLine(lexer.eatBooleanConstant());
             //Debug.WriteLine(lexer.eatStringConstant());

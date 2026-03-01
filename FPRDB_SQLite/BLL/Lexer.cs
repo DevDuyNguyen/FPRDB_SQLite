@@ -153,7 +153,6 @@ namespace FPRDB_SQLite.BLL
             {
                 this.currentToken = null;
             }
-
         }
         public bool matchDelimiter(string delimiter)
         {
@@ -198,6 +197,7 @@ namespace FPRDB_SQLite.BLL
             }
             return false; 
         }
+        
         public bool matchNumberConstant()
         {
             if (this.currentToken.Terminal.Name == "unary operator")
