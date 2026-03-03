@@ -1,19 +1,24 @@
-﻿using System;
+﻿using DevExpress.XtraEditors;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using BLL;
 
 namespace FPRDB_SQLite
 {
     public partial class Form1 : DevExpress.XtraBars.Ribbon.RibbonForm
     {
-        public Form1()
+        private DatabaseService databaseService;
+        public Form1(DatabaseService databaseService)
         {
-            InitializeComponent();
+            this.databaseService = databaseService;
+;            InitializeComponent();
         }
         private void LoadDatabaseTree()
         {
@@ -22,15 +27,9 @@ namespace FPRDB_SQLite
 
             // Lấy tên file Database để hiển thị (ví dụ từ C:\Data\SimpleDatabase.pdb -> SIMPLEDATABASE)
             string dbName = "DATABASE";
-            if (!string.IsNullOrEmpty(Resource.ConnectionString))
+            if (!string.IsNullOrEmpty(this.databaseService.getDatabaseName()))
             {
-                // Trích xuất đường dẫn từ chuỗi kết nối
-                var match = System.Text.RegularExpressions.Regex.Match(Resource.ConnectionString, @"Data Source=([^;]+)");
-                if (match.Success)
-                {
-                    // Lấy tên file không kèm đuôi và in hoa lên
-                    dbName = System.IO.Path.GetFileNameWithoutExtension(match.Groups[1].Value).ToUpper();
-                }
+                dbName = this.databaseService.getDatabaseName();
             }
 
             // 2. Tạo Node Root (Tên Database - Icon số 3)
@@ -46,7 +45,7 @@ namespace FPRDB_SQLite
             rootNode.Nodes.Add(tablesFolderNode); // Thêm thư mục Tables vào Root
 
             // 4. Lấy dữ liệu
-            var relations = CompositionRoot.databaseService.getFPRDBRelations();
+            var relations = this.databaseService.getFPRDBRelations();
 
             // Xử lý nếu DB trống
             if (relations == null || relations.Count == 0)
@@ -77,7 +76,7 @@ namespace FPRDB_SQLite
                 if (fields != null && fields.Count > 0)
                 {
                     // Lấy danh sách khóa chính của cái Bảng (Schema) này ra
-                    var primaryKeys = schema.PrimaryKeys; // (Hoặc schema.getPrimaryKeys())
+                    List<string> primaryKeys = schema.getPrimarykey();
 
                     foreach (var field in fields)
                     {
@@ -107,23 +106,67 @@ namespace FPRDB_SQLite
             // Mở rộng tất cả các nhánh để hiển thị giống hình mẫu
             treeView1.ExpandAll();
         }
-
+        private string GetRootPath(string path)
+        {
+            // Hàm này tự động hiểu và lấy ra "C:\", "D:\"... một cách an toàn
+            return System.IO.Path.GetPathRoot(path);
+        }
         private void newDB_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            CompositionRoot.databaseService.SaveDB();
-            LoadDatabaseTree();
+            //CompositionRoot.databaseService.SaveDB();
+            try
+            {
+                SaveFileDialog DialogNew = new SaveFileDialog();
+                DialogNew.Title = "Create New Fuzzy Probabilistic Relational Database (FPRDB)";
+                DialogNew.Filter = "Database file (*.db)|*.db";
+                DialogNew.DefaultExt = "db";
+                DialogNew.AddExtension = true;
+                DialogNew.RestoreDirectory = true;
+                DialogNew.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
+                DialogNew.SupportMultiDottedExtensions = true;
+
+                if (DialogNew.ShowDialog() == DialogResult.OK)
+                {
+                    this.databaseService.createDB(DialogNew.FileName);
+                    XtraMessageBox.Show("Create new database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadDatabaseTree();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                XtraMessageBox.Show($"Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (IOException ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void OpenDB_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            bool isOpenSuccess = CompositionRoot.databaseService.openDB();
+            OpenFileDialog DialogOpen = new OpenFileDialog();
+            DialogOpen.Title = "Open Fuzzy Probabilistic Relational Database (FPRDB)";
+            // Chỉ lọc ra các file có đuôi .pdb hoặc .sqlite
+            DialogOpen.Filter = "Database file (*.db)|*.db";
+            DialogOpen.DefaultExt = "db";
+            DialogOpen.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
 
-            // 2. Nếu người dùng chọn file thành công, tiến hành nạp dữ liệu lên TreeView
-            if (isOpenSuccess)
+            if (DialogOpen.ShowDialog() == DialogResult.OK)
             {
-                // Gọi hàm LoadDatabaseTree() mà mình đã hướng dẫn bạn viết ở câu trước
-                LoadDatabaseTree();
+                try
+                {
+                    this.databaseService.loadDB(DialogOpen.FileName);
+                    XtraMessageBox.Show("Open database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadDatabaseTree();
+                }
+                catch(IOException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+            
         }
     }
 }

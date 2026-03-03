@@ -4,12 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FPRDB_SQLite
+namespace BLL
 {
     public class Field
     {
         private String fieldName;
         private FieldInfo fieldInfo;
+
+        public Field(string fieldName, FieldInfo fieldInfo)
+        {
+            this.fieldName = fieldName;
+            this.fieldInfo = fieldInfo;
+        }
         public String getFieldName()
         {
             return fieldName;

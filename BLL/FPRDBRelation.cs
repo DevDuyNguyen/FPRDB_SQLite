@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FPRDB_SQLite
+namespace BLL
 {
     public class FPRDBRelation
     {
         private String relName;
         private FPRDBSchema schema;
+        public FPRDBRelation(String relName, FPRDBSchema schema)
+        {
+            this.relName = relName;
+            this.schema = schema;
+        }
         public String getRelName()
         {
             return relName;

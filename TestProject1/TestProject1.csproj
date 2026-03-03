@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FPRDB_SQLite\FPRDB_SQLite.csproj" />
+    <ProjectReference Include="..\BLL\BLL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
