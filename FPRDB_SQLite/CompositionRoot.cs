@@ -8,8 +8,8 @@ namespace FPRDB_SQLite
 {
     public static class CompositionRoot
     {
-        public static DatabseManager dbMgr;
-        public static DatabseService databaseService;
+        private static DatabseManager dbMgr;
+        private static DatabseService databaseService;
         static CompositionRoot()
         {
             dbMgr = new DatabseManager();

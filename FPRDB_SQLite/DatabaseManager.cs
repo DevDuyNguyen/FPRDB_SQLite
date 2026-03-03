@@ -7,11 +7,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data;
+using System.IO;
 
 namespace FPRDB_SQLite
 {
-    public class DatabseManager
+    public class DatabaseManager
     {
+        private string connectionString;
+        private IDbConnection connection;
+
+        public void createDB(string filePath)
+        {
+            string directoryPath = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directoryPath))
+                throw new FileNotFoundException();
+            if (File.Exists(filePath))
+                throw new IOException("File already exists");
+            this.connectionString = $"Data Source={filePath};Version=3;";
+            this.connection = new SQLiteConnection(this.connectionString);
+            try
+            {
+                this.connection.Open();
+            }
+            catch (Exception e)
+            {
+                throw new IOException("Unable to create database");
+            }
+        }
+
+
+
         private string GetRootPath(string path)
         {
             // Hàm này tự động hiểu và lấy ra "C:\", "D:\"... một cách an toàn
