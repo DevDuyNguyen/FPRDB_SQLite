@@ -34,6 +34,10 @@ namespace FPRDB_SQLite
             {
                 throw new IOException("Unable to create database");
             }
+            finally
+            {
+                this.connection.Close();
+            }
         }
 
 

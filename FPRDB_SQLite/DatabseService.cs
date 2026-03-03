@@ -11,7 +11,7 @@ namespace FPRDB_SQLite
 {
     public class DatabseService
     {
-        private DatabseManager dbMgr = new DatabseManager();
+        private DatabaseManager dbMgr = new DatabaseManager();
         #region *New Database
         public void SaveDB()
         {
