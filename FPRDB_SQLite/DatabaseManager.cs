@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
+using System.Diagnostics;
 
 namespace FPRDB_SQLite
 {
@@ -29,6 +30,8 @@ namespace FPRDB_SQLite
             try
             {
                 this.connection.Open();
+                this.connection.Close();
+                createSystemCatalog();
             }
             catch (Exception e)
             {
@@ -36,10 +39,100 @@ namespace FPRDB_SQLite
             }
             finally
             {
+                
                 this.connection.Close();
             }
         }
+        public void createSystemCatalog()
+        {
+            string create_fprdb_RelationSchema = "CREATE TABLE fprdb_RelationSchema(" +
+                    "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "relschema_name TEXT NOT NULL" +
+                    ");";
+            string create_fprdb_Relation = "CREATE TABLE fprdb_Relation(" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "rel_name TEXT NOT NULL," +
+                "rel_relation_schema INTEGER NOT NULL," +
+                "FOREIGN KEY (rel_relation_schema) REFERENCES fprdb_RelationSchema (oid)" +
+                ");";
+            string create_fprdb_Type = "CREATE TABLE fprdb_Type(" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "type_name TEXT NOT NULL," +
+                "type_type TEXT NOT NULL" +
+                ");";
+            string create_fprdb_Attribute = "CREATE TABLE fprdb_Attribute(" +
+                "att_relschema_id INTEGER," +
+                "att_number INTEGER," +
+                "att_name TEXT NOT NULL," +
+                "att_type_id INTEGER NOT NULL," +
+                "att_type_mod INTEGER," +
+                "att_not_null BOOLEAN," +
+                "PRIMARY KEY(att_relschema_id, att_number)," +
+                "FOREIGN KEY (att_relschema_id) REFERENCES fprdb_RelationSchema (oid)," +
+                "FOREIGN KEY (att_type_id) REFERENCES fprdb_Type (oid)" +
+                ");";
+            string create_fprdb_FuzzySet = "CREATE TABLE fprdb_FuzzySet(" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "fuzzset_name TEXT NOT NULL," +
+                "fuzzset_type_id INTEGER NOT NULL," +
+                "FOREIGN KEY (fuzzset_type_id) REFERENCES fprdb_Type (oid)" +
+                ");";
+            string create_fprdb_DiscreteFuzzySet = "CREATE TABLE fprdb_DiscreteFuzzySet(" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "fuzzset_x TEXT NOT NULL," +
+                "fuzzset_membership_degree TEXT NOT NULL," +
+                "FOREIGN KEY (oid) REFERENCES fprdb_FuzzySet (oid)" +
+                ");";
+            string create_fprdb_ContinousFuzzySet = "CREATE TABLE fprdb_ContinousFuzzySet(" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "fuzzset_bottom_left REAL NOT NULL," +
+                "fuzzset_top_left REAL NOT NULL," +
+                "fuzzset_top_right REAL NOT NULL," +
+                "fuzzset_bottom_right REAL NOT NULL," +
+                "FOREIGN KEY (oid) REFERENCES fprdb_FuzzySet (oid)" +
+                ");";
+            string create_fprdb_Relation_Fuzzyset = "CREATE TABLE FPRDB_Rel_FuzzSet (" +
+                "rel_oid INTEGER," +
+                "fuzzset_oid INTEGER," +
+                "no INTEGER NOT NULL," +
+                "PRIMARY KEY (rel_oid, fuzzset_oid)," +
+                "FOREIGN KEY (rel_oid) REFERENCES fprdb_Relation (oid)," +
+                "FOREIGN KEY (fuzzset_oid) REFERENCES fprdb_FuzzySet (oid)" +
+                ");";
+            string create_fprdb_Constraint = "CREATE TABLE fprdb_Constraint(" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "con_name TEXT NOT NULL," +
+                "con_type TEXT NOT NULL," +
+                "con_relation_id INTEGER NOT NULL," +
+                "con_referenced_relation_id INTEGER NOT NULL," +
+                "con_attributes TEXT NOT NULL," +
+                "con_referenced_attributes TEXT," +
+                "con_relschema_id INTEGER," +
+                "FOREIGN KEY (con_relation_id) REFERENCES fprdb_Relation (oid)," +
+                "FOREIGN KEY (con_referenced_relation_id) REFERENCES fprdb_Relation (oid)," +
+                "FOREIGN KEY (con_relschema_id) REFERENCES fprdb_RelationSchema (oid)" +
+                ");";
 
+            string statemt = create_fprdb_RelationSchema + create_fprdb_Relation + create_fprdb_Type +
+                create_fprdb_Attribute + create_fprdb_FuzzySet + create_fprdb_DiscreteFuzzySet
+                + create_fprdb_ContinousFuzzySet + create_fprdb_Relation_Fuzzyset + create_fprdb_Constraint;
+
+            try
+            {
+                this.connection.Open();
+                IDbCommand command = new SQLiteCommand(statemt, (SQLiteConnection)this.connection);
+                command.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.StackTrace);
+                throw ex;
+            }
+            finally
+            {
+                this.connection.Close();
+            }
+        }
 
 
         private string GetRootPath(string path)

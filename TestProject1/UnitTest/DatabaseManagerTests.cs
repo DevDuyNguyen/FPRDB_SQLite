@@ -65,6 +65,9 @@ namespace TestProject1.UnitTest
             Assert.Equal(true, File.Exists(filePath));
         }
 
+        //not done:check if database has correct system catalog
+        //not done: check if file is FPRDB database
+
         public void Dispose()
         {
             if (Directory.Exists(directory))
