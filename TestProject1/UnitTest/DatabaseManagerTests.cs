@@ -16,7 +16,7 @@ namespace TestProject1.UnitTest
         public DatabaseManagerTests()
         {
             this.dbMgr= new DatabaseManager();
-            this.directory = "C:\\Users\\Phung\\Downloads\\DatabaseManagerTest";
+            this.directory = ".\\DatabaseManagerTest";
             this.filePath = directory + "\\dbTest.db";
         }
 
