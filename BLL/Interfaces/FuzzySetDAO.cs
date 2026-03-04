@@ -8,6 +8,6 @@ namespace BLL.Interfaces
 {
     public interface FuzzySetDAO
     {
-        public DiscreteFuzzySet createDiscreteFuzzySet(fuzzySet:DiscreteFuzzySetDTO);
+        //public DiscreteFuzzySet createDiscreteFuzzySet(fuzzySet:DiscreteFuzzySetDTO);
     }
 }

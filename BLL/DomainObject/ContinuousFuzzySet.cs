@@ -35,7 +35,7 @@ namespace BLL.DomainObject
             }
             else //value> rightTop && value < rightBottom
             {
-                double m = 1.0 / (rightBottom - rightTop);
+                double m = -1.0 / (rightBottom - rightTop);
                 double b = -m * rightBottom;
                 return Convert.ToSingle(m * value + b);
             }
