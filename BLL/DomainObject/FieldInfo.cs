@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BLL
+namespace BLL.DomainObject
 {
     public class FieldInfo
     {
