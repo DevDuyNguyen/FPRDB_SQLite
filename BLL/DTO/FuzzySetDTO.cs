@@ -12,6 +12,10 @@ namespace BLL.DTO
         public string fuzzySetName;
         public FieldType fuzzySetType;
 
-
+        public FuzzySetDTO(string fuzzySetName, FieldType fuzzySetType)
+        {
+            this.fuzzySetName = fuzzySetName;
+            this.fuzzySetType = fuzzySetType;
+        }
     }
 }

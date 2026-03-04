@@ -11,7 +11,7 @@ namespace BLL.DomainObject
         private List<T> valueSet;
         private List<float> membershipDegreeSet;
 
-        public DiscreteFuzzySet(List<T> valueSet, List<float> membershipDegreeSet)
+        public DiscreteFuzzySet(List<T> valueSet, List<float> membershipDegreeSet, string fuzzySetName, FieldType fuzzySetType) :base(fuzzySetName, fuzzySetType)
         {
             this.valueSet = valueSet;
             this.membershipDegreeSet = membershipDegreeSet;

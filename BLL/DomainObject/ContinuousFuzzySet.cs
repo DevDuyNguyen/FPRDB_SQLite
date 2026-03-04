@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BLL.DomainObject
 {
-    public class ContinuousFuzzySet:FuzzySet<double>
+    public class ContinuousFuzzySet:FuzzySet<float>
     {
         private float leftBottom;
         private float leftTop;
         private float rightTop;
         private float rightBottom;
 
-        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom)
+        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
         {
             this.leftBottom = leftBottom;
             this.leftTop = leftTop;
@@ -21,7 +21,7 @@ namespace BLL.DomainObject
             this.rightBottom = rightBottom;
         }
 
-        public override float getMembershipDegree(double value)
+        public override float getMembershipDegree(float value)
         {
             if (value <= leftBottom || value >= rightBottom)
                 return 0;

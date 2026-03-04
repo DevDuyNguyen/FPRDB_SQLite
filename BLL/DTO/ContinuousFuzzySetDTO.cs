@@ -12,5 +12,15 @@ namespace BLL.DTO
         public float leftTop;
         public float rightTop;
         public float rightBottom;
+
+        public ContinuousFuzzySetDTO(float leftBottom, float leftTop, float rightTop, float rightBottom,
+            string fuzzySetName, FieldType fuzzySetType) : base(fuzzySetName, fuzzySetType)
+        {
+            this.leftBottom = leftBottom;
+            this.leftTop = leftTop;
+            this.rightTop = rightTop;
+            this.rightBottom = rightBottom;
+        }
     }
+
 }

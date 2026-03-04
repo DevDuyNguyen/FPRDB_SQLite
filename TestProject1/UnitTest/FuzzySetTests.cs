@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL;
 using BLL.DomainObject;
 
 namespace TestProject1.UnitTest
@@ -10,20 +11,25 @@ namespace TestProject1.UnitTest
     public class FuzzySetTests
     {
         private FuzzySet<string> stringDistFuzzSet;
-        private FuzzySet<double> doubleDistFuzzSet;
-        private FuzzySet<double> ContFuzzSet;
+        private FuzzySet<float> doubleDistFuzzSet;
+        private FuzzySet<float> ContFuzzSet;
 
         public FuzzySetTests()
         {
+            //not done: Moq for mocking
             this.stringDistFuzzSet = new DiscreteFuzzySet<string>(
                 new List<string>() { "a", "b", "c"},
-                new List<float>() { 1, 0.5f, 0.1f}
+                new List<float>() { 1, 0.5f, 0.1f},
+                "",
+                FieldType.CHAR
                 );
-            this.doubleDistFuzzSet = new DiscreteFuzzySet<double>(
-                new List<double>() { 12,23,40 },
-                new List<float>() { 1, 0.5f, 0.1f }
+            this.doubleDistFuzzSet = new DiscreteFuzzySet<float>(
+                new List<float>() { 12,23,40 },
+                new List<float>() { 1, 0.5f, 0.1f },
+                "",
+                FieldType.CHAR
                 );
-            this.ContFuzzSet = new ContinuousFuzzySet(10,20,30,40);
+            this.ContFuzzSet = new ContinuousFuzzySet(10,20,30,40, "");
         }
 
         [Theory]
@@ -51,7 +57,7 @@ namespace TestProject1.UnitTest
         [InlineData(40, 0)]
         [InlineData(41, 0)]
         //testcase technique: boundary
-        public void ContinousFuzzySet_getMembershipDegree_returnRightMembershipDegree(double element, float membershipDegree)
+        public void ContinousFuzzySet_getMembershipDegree_returnRightMembershipDegree(float element, float membershipDegree)
         {
             //arrange
             //action

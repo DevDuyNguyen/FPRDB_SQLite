@@ -11,6 +11,12 @@ namespace BLL.DTO
         public List<TDomain> valueSet;
         public List<float> membershipDegreeSet;
 
-
+        public DiscreteFuzzySetDTO(List<TDomain> valueSet, List<float> membershipDegreeSet,
+            string fuzzySetName, FieldType fuzzySetType):base(fuzzySetName, fuzzySetType)
+        {
+            this.valueSet = valueSet;
+            this.membershipDegreeSet = membershipDegreeSet;
+        }
+        
     }
 }

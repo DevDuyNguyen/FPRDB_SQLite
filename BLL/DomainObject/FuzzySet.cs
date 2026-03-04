@@ -11,6 +11,12 @@ namespace BLL.DomainObject
         private string fuzzySetName;
         private FieldType fuzzySetType;
 
+        protected FuzzySet(string fuzzySetName, FieldType fuzzySetType)
+        {
+            this.fuzzySetName = fuzzySetName;
+            this.fuzzySetType = fuzzySetType;
+        }
+
         public abstract float getMembershipDegree(T value);
 
         public string getName() {

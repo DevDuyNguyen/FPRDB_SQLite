@@ -37,5 +37,16 @@ namespace BLL.Common
             return this.databaseService;
         }
 
+        //delete: for testing
+        public FuzzySetDAO getFuzzySetDAO()
+        {
+            return this.fuzzySetDAO;
+        }
+        //delete: for testing
+        public DatabaseManager getDBMgr()
+        {
+            return this.dbMgr;
+        }
+
     }
 }
