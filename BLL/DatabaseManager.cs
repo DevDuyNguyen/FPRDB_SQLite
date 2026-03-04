@@ -37,7 +37,6 @@ namespace BLL
                 this.connection.Open();
                 this.connection.Close();
                 createSystemCatalog();
-                insertTestData();
             }
             catch (Exception e)
             {
@@ -232,63 +231,8 @@ namespace BLL
                 this.connection.Close();
             }
         }
-        public void insertTestData()
-        {
-            // 1. Thêm Kiểu dữ liệu (Type)
-            // Giả định OID tự sinh sẽ là: 1 (INT) và 2 (VARCHAR)
-            string insertTypes = @"
-                INSERT INTO fprdb_Type (type_name, type_type) VALUES ('INT', 'b');
-                INSERT INTO fprdb_Type (type_name, type_type) VALUES ('VARCHAR', 'b');
-            ";
 
-            // 2. Thêm Lược đồ (Schema) 
-            // Giả định OID tự sinh sẽ là: 1
-            string insertSchema = @"
-                INSERT INTO fprdb_RelationSchema (relschema_name) VALUES ('PersonSchema');
-            ";
 
-            // 3. Thêm Cột (Attribute)
-            // Cột 'id': thuộc Lược đồ 1, kiểu INT (type_id = 1)
-            // Cột 'name': thuộc Lược đồ 1, kiểu VARCHAR (type_id = 2)
-            string insertAttributes = @"
-                INSERT INTO fprdb_Attribute (att_relschema_id, att_number, att_name, att_type_id, att_type_mod, att_not_null) 
-                VALUES (1, 1, 'id', 1, 0, 1);
-                
-                INSERT INTO fprdb_Attribute (att_relschema_id, att_number, att_name, att_type_id, att_type_mod, att_not_null) 
-                VALUES (1, 2, 'name', 2, 255, 0);
-            ";
 
-            // 4. Thêm Khóa chính (Constraint)
-            // con_type = 'p' (Primary Key), con_attributes = 'id', thuộc Lược đồ 1
-            string insertConstraint = @"
-                INSERT INTO fprdb_Constraint (con_name, con_type, con_attributes, con_relschema_id) 
-                VALUES ('PK_Person', 'p', 'id', 1);
-            ";
-
-            // 5. Thêm Quan hệ (Relation)
-            // American và Asian đều trỏ về rel_relation_schema = 1 (Tức là PersonSchema)
-            string insertRelations = @"
-                INSERT INTO fprdb_Relation (rel_name, rel_relation_schema) VALUES ('American', 1);
-                INSERT INTO fprdb_Relation (rel_name, rel_relation_schema) VALUES ('Asian', 1);
-            ";
-
-            string fullScript = insertTypes + insertSchema + insertAttributes + insertConstraint + insertRelations;
-
-            try
-            {
-                this.connection.Open();
-                IDbCommand command = new SQLiteCommand(fullScript, (SQLiteConnection)this.connection);
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.StackTrace);
-                throw new IOException("Lỗi khi chèn dữ liệu test: " + ex.Message);
-            }
-            finally
-            {
-                this.connection.Close();
-            }
-        }
     }
 }
