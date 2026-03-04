@@ -17,6 +17,13 @@ namespace BLL.DTO
             this.valueSet = valueSet;
             this.membershipDegreeSet = membershipDegreeSet;
         }
+        public DiscreteFuzzySetDTO(List<TDomain> valueSet, List<float> membershipDegreeSet,
+            int oid, string fuzzySetName, FieldType fuzzySetType) : base(oid, fuzzySetName, fuzzySetType)
+        {
+            this.valueSet = valueSet;
+            this.membershipDegreeSet = membershipDegreeSet;
+        }
+        
 
         public override bool isValid()
         {

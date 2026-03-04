@@ -13,7 +13,7 @@ namespace TestProject1.UnitTest
     {
         private FuzzySetService service;
 
-        public FuzzySetServiceSets(FuzzySetService server)
+        public FuzzySetServiceSets()
         {
             //not done: Moq for mocking
             this.service = new FuzzySetService();
@@ -21,7 +21,7 @@ namespace TestProject1.UnitTest
 
         [Fact]
         //test case technique: positive test, negative test
-        void FuzzySetService_checkIfFuzzySetValid_succes()
+        public void FuzzySetService_checkIfFuzzySetValid_succes()
         {
             //arrange
             FuzzySetDTO fuzz1 = new DiscreteFuzzySetDTO<int>(

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,17 @@ namespace BLL.DomainObject
                 double b = -m * rightBottom;
                 return Convert.ToSingle(m * value + b);
             }
+        }
+
+        public override FuzzySetDTO toDTO()
+        {
+            return new ContinuousFuzzySetDTO(
+                this.leftBottom,
+                this.leftTop,
+                this.rightTop,
+                this.rightBottom,
+                this.getName()
+                );
         }
 
     }

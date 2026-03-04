@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,15 @@ namespace BLL.DomainObject
                 return 0;
             else
                 return this.membershipDegreeSet[index];
+        }
+        public override FuzzySetDTO toDTO()
+        {
+            return new DiscreteFuzzySetDTO<T>(
+                this.valueSet,
+                this.membershipDegreeSet,
+                this.getName(),
+                this.getFuzzysetType()
+                );
         }
 
     }

@@ -12,7 +12,7 @@ namespace BLL
     public class Program
     {
         //not done: Moq for mocking
-        void test_createDiscreteFuzzySet()
+        static void test_createDiscreteFuzzySet()
         {
             CompositionRoot compRoot = new CompositionRoot();
             DatabaseManager dbMgr = compRoot.getDBMgr();
@@ -28,9 +28,20 @@ namespace BLL
 
             fuzzySetDAO.createDiscreteFuzzySet<int>(fuzzySet);
         }
+        static void test_createContinuousFuzzySet()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            FuzzySetDAO fuzzySetDAO = compRoot.getFuzzySetDAO();
+
+            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            ContinuousFuzzySetDTO fuzzySet = new ContinuousFuzzySetDTO(10,20,30,40,"random1" );
+
+            fuzzySetDAO.createContinuousFuzzySet(fuzzySet);
+        }
         static void Main()
         {
-            
+            //test_createContinuousFuzzySet();
         }
     }
 }

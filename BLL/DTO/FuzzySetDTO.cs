@@ -18,6 +18,13 @@ namespace BLL.DTO
             this.fuzzySetType = fuzzySetType;
         }
 
+        protected FuzzySetDTO(int oid, string fuzzySetName, FieldType fuzzySetType)
+        {
+            this.oid = oid;
+            this.fuzzySetName = fuzzySetName;
+            this.fuzzySetType = fuzzySetType;
+        }
+
         public abstract bool isValid();
     }
 }
