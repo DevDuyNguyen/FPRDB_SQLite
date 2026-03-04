@@ -25,85 +25,129 @@ namespace FPRDB_SQLite
             // 1. Xóa cây cũ
             treeView1.Nodes.Clear();
 
-            // Lấy tên file Database để hiển thị (ví dụ từ C:\Data\SimpleDatabase.pdb -> SIMPLEDATABASE)
+            // 2. Lấy tên file Database thông qua databaseService
             string dbName = "DATABASE";
             if (!string.IsNullOrEmpty(this.databaseService.getDatabaseName()))
             {
                 dbName = this.databaseService.getDatabaseName();
             }
 
-            // 2. Tạo Node Root (Tên Database - Icon số 3)
+            if (string.IsNullOrEmpty(dbName) || dbName == "DATABASE") return;
+
+            // 3. Tạo Node Root (VD: db1)
             TreeNode rootNode = new TreeNode(dbName);
-            rootNode.ImageIndex = 3;
+            rootNode.ImageIndex = 3; // Icon Database
             rootNode.SelectedImageIndex = 3;
             treeView1.Nodes.Add(rootNode);
 
-            // 3. Tạo Node Folder "Tables" (Icon số 4)
-            TreeNode tablesFolderNode = new TreeNode("Tables");
-            tablesFolderNode.ImageIndex = 4;
-            tablesFolderNode.SelectedImageIndex = 4;
-            rootNode.Nodes.Add(tablesFolderNode); // Thêm thư mục Tables vào Root
+            // ====================================================================
+            // TẠO 2 THƯ MỤC CHA: Tables VÀ Relation (Ngang hàng nhau)
+            // ====================================================================
+            TreeNode tablesRootNode = new TreeNode("FPRDB Schemas");
+            tablesRootNode.ImageIndex = 4; // Icon Folder màu vàng
+            tablesRootNode.SelectedImageIndex = 4;
+            rootNode.Nodes.Add(tablesRootNode);
 
-            // 4. Lấy dữ liệu
-            var relations = this.databaseService.getFPRDBRelations();
+            TreeNode relationRootNode = new TreeNode("Relation");
+            relationRootNode.ImageIndex = 4; // Icon Folder màu vàng
+            relationRootNode.SelectedImageIndex = 4;
+            rootNode.Nodes.Add(relationRootNode);
 
-            // Xử lý nếu DB trống
-            if (relations == null || relations.Count == 0)
+            // ====================================================================
+            // NHÁNH 1: ĐỔ DỮ LIỆU SCHEMAS VÀ LỌC TRÙNG LẶP
+            // ====================================================================
+            var schemas = this.databaseService.getFPRDBSchemas();
+
+            if (schemas != null && schemas.Count > 0)
             {
-                // Tạo một Node con để báo hiệu DB đang trống
-                TreeNode emptyNode = new TreeNode("(Chưa có bảng dữ liệu nào)");
-                emptyNode.ImageIndex = 4;         // Dùng icon folder.png của bạn
-                emptyNode.SelectedImageIndex = 4;
+                // Cuốn sổ ghi nhớ các Lược đồ đã vẽ
+                HashSet<string> addedSchemas = new HashSet<string>();
 
-                tablesFolderNode.Nodes.Add(emptyNode); // Nhét vào rootNode để nó có thể bấm xổ xuống
-                treeView1.ExpandAll();
-                return; // Dừng hàm tại đây
-            }
-
-            // 5. Duyệt qua các bảng và nhét vào thư mục "Tables"
-            foreach (var relation in relations)
-            {
-                var schema = relation.getSchema();
-                if (schema == null) continue;
-
-                string tableName = schema.getSchemaName();
-                // Node Bảng (Icon số 7 - relation.jpg)
-                TreeNode tableNode = new TreeNode(tableName);
-                tableNode.ImageIndex = 7;
-                tableNode.SelectedImageIndex = 7;
-
-                var fields = schema.getFields();
-                if (fields != null && fields.Count > 0)
+                foreach (var schema in schemas)
                 {
-                    // Lấy danh sách khóa chính của cái Bảng (Schema) này ra
-                    List<string> primaryKeys = schema.getPrimarykey();
+                    string schemaName = schema.getSchemaName();
 
-                    foreach (var field in fields)
+                    // LỌC: Nếu Lược đồ này đã vẽ rồi thì bỏ qua luôn, chuyển sang cái tiếp theo
+                    if (addedSchemas.Contains(schemaName)) continue;
+
+                    // Đánh dấu là đã vẽ
+                    addedSchemas.Add(schemaName);
+
+                    TreeNode schemaNode = new TreeNode(schemaName);
+                    schemaNode.ImageIndex = 7;
+                    schemaNode.SelectedImageIndex = 7;
+                    tablesRootNode.Nodes.Add(schemaNode);
+
+                    var fields = schema.getFields();
+                    if (fields != null)
                     {
-                        string fieldName = field.getFieldName();
-                        TreeNode fieldNode = new TreeNode(fieldName);
+                        List<string> primaryKeys = schema.getPrimarykey();
 
-                        // KIỂM TRA: Nếu tên cột này có mặt trong danh sách khóa chính của Bảng
-                        if (primaryKeys != null && primaryKeys.Contains(fieldName))
+                        foreach (var field in fields)
                         {
-                            fieldNode.ImageIndex = 5;         // Icon chìa khóa (key.png)
-                            fieldNode.SelectedImageIndex = 5;
-                        }
-                        else
-                        {
-                            fieldNode.ImageIndex = 2;         // Icon cột bình thường (attribute.png)
-                            fieldNode.SelectedImageIndex = 2;
-                        }
+                            string fieldName = field.getFieldName();
+                            bool isPrimaryKey = primaryKeys != null && primaryKeys.Contains(fieldName);
 
-                        tableNode.Nodes.Add(fieldNode); // Nhét Cột vào Bảng
+                            TreeNode fieldNode = new TreeNode(fieldName);
+                            fieldNode.ImageIndex = isPrimaryKey ? 5 : 2;
+                            fieldNode.SelectedImageIndex = isPrimaryKey ? 5 : 2;
+                            schemaNode.Nodes.Add(fieldNode);
+                        }
                     }
                 }
-
-                // Quan trọng: Nhét Bảng vào thư mục "Tables" (Thay vì nhét vào Root như trước)
-                tablesFolderNode.Nodes.Add(tableNode);
+            }
+            else
+            {
+                TreeNode emptySchemaNode = new TreeNode("(Chưa có Lược đồ nào)");
+                emptySchemaNode.ImageIndex = 4;
+                emptySchemaNode.SelectedImageIndex = 4;
+                tablesRootNode.Nodes.Add(emptySchemaNode);
             }
 
-            // Mở rộng tất cả các nhánh để hiển thị giống hình mẫu
+            // ====================================================================
+            // NHÁNH 2: ĐỔ DỮ LIỆU RELATIONS VÀ LỌC TRÙNG LẶP
+            // ====================================================================
+            var relations = this.databaseService.getFPRDBRelations();
+
+            if (relations != null && relations.Count > 0)
+            {
+                // Cuốn sổ ghi nhớ các Quan hệ đã vẽ
+                HashSet<string> addedRelations = new HashSet<string>();
+
+                foreach (var relation in relations)
+                {
+                    string relName = relation.getRelName();
+
+                    // LỌC: Nếu Quan hệ này đã vẽ rồi thì bỏ qua luôn
+                    if (addedRelations.Contains(relName)) continue;
+
+                    // Đánh dấu là đã vẽ
+                    addedRelations.Add(relName);
+
+                    TreeNode instanceNode = new TreeNode(relName);
+                    instanceNode.ImageIndex = 7;
+                    instanceNode.SelectedImageIndex = 7;
+                    relationRootNode.Nodes.Add(instanceNode);
+
+                    var refSchema = relation.getSchema();
+                    if (refSchema != null)
+                    {
+                        string refSchemaName = refSchema.getSchemaName();
+                        TreeNode refSchemaNode = new TreeNode(refSchemaName);
+                        refSchemaNode.ImageIndex = 7;
+                        refSchemaNode.SelectedImageIndex = 7;
+                        instanceNode.Nodes.Add(refSchemaNode);
+                    }
+                }
+            }
+            else
+            {
+                TreeNode emptyRelNode = new TreeNode("(Chưa có Quan hệ nào)");
+                emptyRelNode.ImageIndex = 4;
+                emptyRelNode.SelectedImageIndex = 4;
+                relationRootNode.Nodes.Add(emptyRelNode);
+            }
+
             treeView1.ExpandAll();
         }
         private string GetRootPath(string path)

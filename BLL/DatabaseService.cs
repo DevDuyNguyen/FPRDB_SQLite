@@ -47,51 +47,59 @@ namespace BLL
 
         public List<FPRDBSchema> getFPRDBSchemas()
         {
-            List<FPRDBSchema> schemas=new List<FPRDBSchema>();
+            List<FPRDBSchema> schemas = new List<FPRDBSchema>();
+            string sql = @"
+                SELECT 
+                    rsch.oid                 AS ""rsch.oid"", 
+                    rsch.relschema_name      AS ""rsch.relschema_name"",
+                    attr.att_relschema_id    AS ""attr.att_relschema_id"",
+                    attr.att_number          AS ""attr.att_number"", 
+                    attr.att_name            AS ""attr.att_name"", 
+                    attr.att_type_id         AS ""attr.att_type_id"", 
+                    attr.att_type_mod        AS ""attr.att_type_mod"", 
+                    attr.att_not_null        AS ""attr.att_not_null"",
+                    type.oid                 AS ""type.oid"", 
+                    type.type_name           AS ""type.type_name"", 
+                    type.type_type           AS ""type.type_type"",
+                    cons.con_attributes      AS ""cons.con_attributes""
+                FROM fprdb_RelationSchema AS rsch
+                JOIN fprdb_Attribute AS attr      ON rsch.oid = attr.att_relschema_id
+                JOIN fprdb_Type AS type           ON attr.att_type_id = type.oid
+                JOIN fprdb_Constraint AS cons     ON cons.con_relschema_id = rsch.oid
+                WHERE cons.con_type = 'p'
+                ORDER BY ""rsch.oid"";";
+
             try
             {
-                string sql = @"
-                    SELECT 
-                        rsch.oid                 AS ""rsch.oid"", 
-                        rsch.relschema_name      AS ""rsch.relschema_name"",
-                        attr.att_relschema_id    AS ""attr.att_relschema_id"",
-                        attr.att_number          AS ""attr.att_number"", 
-                        attr.att_name            AS ""attr.att_name"", 
-                        attr.att_type_id         AS ""attr.att_type_id"", 
-                        attr.att_type_mod        AS ""attr.att_type_mod"", 
-                        attr.att_not_null        AS ""attr.att_not_null"",
-                        type.oid                 AS ""type.oid"", 
-                        type.type_name           AS ""type.type_name"", 
-                        type.type_type           AS ""type.type_type"",
-                        cons.con_attributes      AS ""cons.con_attributes""
-                    FROM fprdb_RelationSchema AS rsch
-                    JOIN fprdb_Attribute AS attr      ON rsch.oid = attr.att_relschema_id
-                    JOIN fprdb_Type AS type           ON attr.att_type_id = type.oid
-                    JOIN fprdb_Constraint AS cons     ON cons.con_relschema_id = rsch.oid
-                    WHERE cons.con_type = ""p""
-                    ORDER BY ""rsch.oid"";";
-                IDataReader reader= this.dbMgr.executeQuery(sql);
-                bool hasNext = reader.Read();
-                while (hasNext)
+                IDataReader reader = this.dbMgr.executeQuery(sql);
+
+                if (reader.Read())
                 {
-                    int currentRelSchemaId = (int)reader["rsch.oid"];
-                    string currentSchemaName = (string)reader["rsch.relschema_name"];
-                    List<string> primaryKey = ((string)reader["cons.con_attributes"]).Split(',').ToList();
-
-                    List<Field> fields = new List<Field>();
-                    do
+                    bool hasNext = true;
+                    while (hasNext)
                     {
-                        Field field = new Field(
-                            (string)reader["attr.att_name"],
-                            new FieldInfo(
-                                (FieldType)Enum.Parse(typeof(FieldType), (string)reader["type.type_name"]),
-                                0
-                            )
-                        );
-                        fields.Add(field);
-                    } while ((hasNext=reader.Read()) && (int)reader["rsch.oid"] == currentRelSchemaId);
-                    schemas.Add(new FPRDBSchema(currentSchemaName, fields, primaryKey));
+                        // SỬA LỖI 1: Ép kiểu an toàn bằng Convert.ToInt64
+                        long currentRelSchemaId = Convert.ToInt64(reader["rsch.oid"]);
+                        string currentSchemaName = reader["rsch.relschema_name"].ToString();
+                        List<string> primaryKey = reader["cons.con_attributes"].ToString().Split(',').ToList();
 
+                        List<Field> fields = new List<Field>();
+                        do
+                        {
+                            Field field = new Field(
+                                reader["attr.att_name"].ToString(),
+                                new FieldInfo(
+                                    (FieldType)Enum.Parse(typeof(FieldType), reader["type.type_name"].ToString(), true),
+                                    0
+                                )
+                            );
+                            fields.Add(field);
+                        }
+                        // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
+                        while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
+
+                        schemas.Add(new FPRDBSchema(currentSchemaName, fields, primaryKey));
+                    }
                 }
                 this.dbMgr.closeConnection();
                 return schemas;
@@ -187,7 +195,6 @@ namespace BLL
                 throw ex;
             }
         }
-
 
     }
 }
