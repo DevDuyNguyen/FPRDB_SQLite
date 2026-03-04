@@ -253,6 +253,7 @@
             imageList1.Images.SetKeyName(5, "key.png");
             imageList1.Images.SetKeyName(6, "open.png");
             imageList1.Images.SetKeyName(7, "relation.jpg");
+            imageList1.Images.SetKeyName(8, "schema.png");
             // 
             // treeView1
             // 

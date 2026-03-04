@@ -74,8 +74,8 @@ namespace FPRDB_SQLite
                     addedSchemas.Add(schemaName);
 
                     TreeNode schemaNode = new TreeNode(schemaName);
-                    schemaNode.ImageIndex = 7;
-                    schemaNode.SelectedImageIndex = 7;
+                    schemaNode.ImageIndex = 8;
+                    schemaNode.SelectedImageIndex = 8;
                     tablesRootNode.Nodes.Add(schemaNode);
 
                     var fields = schema.getFields();
@@ -134,8 +134,8 @@ namespace FPRDB_SQLite
                     {
                         string refSchemaName = refSchema.getSchemaName();
                         TreeNode refSchemaNode = new TreeNode(refSchemaName);
-                        refSchemaNode.ImageIndex = 7;
-                        refSchemaNode.SelectedImageIndex = 7;
+                        refSchemaNode.ImageIndex = 8;
+                        refSchemaNode.SelectedImageIndex = 8;
                         instanceNode.Nodes.Add(refSchemaNode);
                     }
                 }
