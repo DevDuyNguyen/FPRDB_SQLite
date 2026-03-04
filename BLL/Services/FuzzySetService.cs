@@ -26,14 +26,20 @@ namespace BLL.Services
         {
             try
             {
+                FuzzySetDTO dto;
                 if (fuzzySet is DiscreteFuzzySetDTO<T>)
                 {
                     FuzzySet<T> fs = this.fuzzySetDAO.createDiscreteFuzzySet<T>((DiscreteFuzzySetDTO<T>)fuzzySet);
-                    FuzzySetDTO dto = fs.toDTO();
-                    return dto;
-                }
-                return null;
+                    dto = fs.toDTO();
                     
+                }
+                else
+                {
+                    FuzzySet<float> fs = this.fuzzySetDAO.createContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
+                    dto = fs.toDTO();
+                }
+                return dto;
+
             }
             catch(Exception ex)
             {

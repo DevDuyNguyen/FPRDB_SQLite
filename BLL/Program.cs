@@ -1,6 +1,7 @@
 ﻿using BLL.Common;
 using BLL.DTO;
 using BLL.Interfaces;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,28 @@ namespace BLL
 
             fuzzySetDAO.createContinuousFuzzySet(fuzzySet);
         }
+        static void test_createFuzzySet()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            FuzzySetDAO fuzzySetDAO = compRoot.getFuzzySetDAO();
+            FuzzySetService service = compRoot.getFuzzySetService();
+
+            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            DiscreteFuzzySetDTO<int> fuzzySet = new DiscreteFuzzySetDTO<int>(
+                new List<int>() { 22, 23, 24 },
+                new List<float>() { 0.5f, 1, 0.5f },
+                "about_23",
+                FieldType.INT
+                );
+
+            ContinuousFuzzySetDTO fuzzySet1 = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
+            service.createFuzzySet<int>(fuzzySet);
+            service.createFuzzySet<float>(fuzzySet1);
+        }
         static void Main()
         {
-            //test_createContinuousFuzzySet();
+            test_createFuzzySet();
         }
     }
 }
