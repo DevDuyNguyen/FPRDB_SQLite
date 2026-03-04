@@ -1,4 +1,6 @@
-﻿using BLL.Services;
+﻿using BLL.Interfaces;
+using BLL.Services;
+using BLL.DAO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,10 @@ namespace BLL.Common
     public class CompositionRoot
     {
         private DatabaseManager dbMgr;
-        public DatabaseService databaseService;
+        private DatabaseService databaseService;
+        private FuzzySetService fuzzySetService;
+        private FuzzySetDAO fuzzySetDAO;
+        private DatabaseManager databseExportImport;
 
         public CompositionRoot()
         {
@@ -21,6 +26,10 @@ namespace BLL.Common
         {
             this.dbMgr = new DatabaseManager();
             this.databaseService = new DatabaseService(this.dbMgr);
+            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
+
+
+
         }
 
         public DatabaseService getDatabaseService()

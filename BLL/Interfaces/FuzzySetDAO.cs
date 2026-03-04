@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BLL.DomainObject;
+using BLL.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,6 @@ namespace BLL.Interfaces
 {
     public interface FuzzySetDAO
     {
-        //public DiscreteFuzzySet createDiscreteFuzzySet(fuzzySet:DiscreteFuzzySetDTO);
+        public DiscreteFuzzySet<T> createDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet);
     }
 }
