@@ -1,14 +1,16 @@
 ﻿
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
+using System.Data.SqlTypes;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data;
-using System.IO;
-using System.Diagnostics;
-using System.Data.Common;
 using System.Windows.Input;
 
 namespace BLL
@@ -193,6 +195,10 @@ namespace BLL
             {
                 throw ex;
             }
+            finally
+            {
+                this.connection.Close();
+            }
         }
         public int executeNonQuery(IDbCommand sql)
         {
@@ -208,6 +214,10 @@ namespace BLL
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                this.connection.Close();
             }
         }
         public void loadDB(String filePath)
@@ -225,6 +235,24 @@ namespace BLL
             catch (Exception e)
             {
                 throw new IOException("Unable to open the database");
+            }
+            finally
+            {
+                this.connection.Close();
+            }
+        }
+        public T executeScalar<T>(string sql)
+        {
+            try
+            {
+                if (this.connection.State != ConnectionState.Open)
+                    this.connection.Open();
+                IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection);
+                return (T)command.ExecuteScalar();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
             }
             finally
             {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using BLL;
+using BLL.Services;
 
 namespace TestProject1.UnitTest
 {
