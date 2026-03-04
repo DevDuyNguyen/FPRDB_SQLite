@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.DTO
 {
-    public class FuzzySetDTO
+    public abstract class FuzzySetDTO
     {
         public int oid;
         public string fuzzySetName;
@@ -17,5 +17,7 @@ namespace BLL.DTO
             this.fuzzySetName = fuzzySetName;
             this.fuzzySetType = fuzzySetType;
         }
+
+        public abstract bool isValid();
     }
 }

@@ -17,6 +17,16 @@ namespace BLL.DTO
             this.valueSet = valueSet;
             this.membershipDegreeSet = membershipDegreeSet;
         }
-        
+
+        public override bool isValid()
+        {
+            foreach(float value in this.membershipDegreeSet)
+            {
+                if (value < 0 || value > 1)
+                    return false;
+            }
+            return true;
+        }
+
     }
 }

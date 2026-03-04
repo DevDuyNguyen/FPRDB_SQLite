@@ -27,7 +27,7 @@ namespace BLL.Common
             this.dbMgr = new DatabaseManager();
             this.databaseService = new DatabaseService(this.dbMgr);
             this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
-
+            this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
 
 
         }
@@ -35,6 +35,10 @@ namespace BLL.Common
         public DatabaseService getDatabaseService()
         {
             return this.databaseService;
+        }
+        public FuzzySetService getFuzzySetService()
+        {
+            return this.fuzzySetService;
         }
 
         //delete: for testing

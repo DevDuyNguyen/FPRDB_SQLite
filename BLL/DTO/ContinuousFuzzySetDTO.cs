@@ -14,12 +14,21 @@ namespace BLL.DTO
         public float rightBottom;
 
         public ContinuousFuzzySetDTO(float leftBottom, float leftTop, float rightTop, float rightBottom,
-            string fuzzySetName, FieldType fuzzySetType) : base(fuzzySetName, fuzzySetType)
+            string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
         {
             this.leftBottom = leftBottom;
             this.leftTop = leftTop;
             this.rightTop = rightTop;
             this.rightBottom = rightBottom;
+        }
+        public override bool isValid()
+        {
+            if (this.leftBottom <= this.leftTop
+                && this.leftTop <= this.rightTop
+                && this.rightTop <= this.rightBottom)
+                return true;
+            else
+                return false;
         }
     }
 
