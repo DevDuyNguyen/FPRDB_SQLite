@@ -26,10 +26,6 @@ jobs:
       # Lệnh này sẽ đọc file .csproj và tải Irony, DevExpress về
       run: dotnet restore FPRDB_SQLite.sln
 
-    - name: Build
-      # SỬA: Bỏ --no-restore để nếu bước trên sót gì thì bước này tự sửa lỗi
-      # Thêm --no-incremental để đảm bảo build sạch từ đầu, tránh lỗi cache
-      run: dotnet build FPRDB_SQLite.sln --configuration Release --no-incremental
 
     - name: Build
       # Build xong thì sinh ra file DLL trong thư mục bin/Release
