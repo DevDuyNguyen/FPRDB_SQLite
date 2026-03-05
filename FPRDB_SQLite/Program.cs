@@ -1,7 +1,9 @@
 ﻿using DevExpress.Skins;
 using DevExpress.UserSkins;
+using FPRDB_SQLite.BLL;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using BLL.Common;
