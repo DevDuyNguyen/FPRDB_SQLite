@@ -32,6 +32,7 @@ jobs:
       run: dotnet build FPRDB_SQLite.sln --configuration Release --no-incremental
 
 
+
     # QUAN TRỌNG: Gửi "hàng" (Artifacts) lên kho
     # Chúng ta cần lưu lại thư mục bin để Job sau dùng
     - name: Upload Build Artifacts
