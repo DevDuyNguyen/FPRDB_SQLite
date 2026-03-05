@@ -53,17 +53,17 @@ namespace BLL
         {
             string create_fprdb_RelationSchema = "CREATE TABLE fprdb_RelationSchema(" +
                     "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "relschema_name TEXT NOT NULL" +
+                    "relschema_name TEXT NOT NULL UNIQUE" +
                     ");";
             string create_fprdb_Relation = "CREATE TABLE fprdb_Relation(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "rel_name TEXT NOT NULL," +
+                "rel_name TEXT NOT NULL UNIQUE," +
                 "rel_relation_schema INTEGER NOT NULL," +
                 "FOREIGN KEY (rel_relation_schema) REFERENCES fprdb_RelationSchema (oid)" +
                 ");";
             string create_fprdb_Type = "CREATE TABLE fprdb_Type(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "type_name TEXT NOT NULL," +
+                "type_name TEXT NOT NULL UNIQUE," +
                 "type_type TEXT NOT NULL" +
                 ");";
             string create_fprdb_Attribute = "CREATE TABLE fprdb_Attribute(" +
@@ -79,7 +79,7 @@ namespace BLL
                 ");";
             string create_fprdb_FuzzySet = "CREATE TABLE fprdb_FuzzySet(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "fuzzset_name TEXT NOT NULL," +
+                "fuzzset_name TEXT NOT NULL UNIQUE," +
                 "fuzzset_type_id INTEGER NOT NULL," +
                 "FOREIGN KEY (fuzzset_type_id) REFERENCES fprdb_Type (oid)" +
                 ");";
@@ -107,7 +107,7 @@ namespace BLL
                 ");";
             string create_fprdb_Constraint = "CREATE TABLE fprdb_Constraint(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "con_name TEXT NOT NULL," +
+                "con_name TEXT NOT NULL UNIQUE," +
                 "con_type TEXT NOT NULL," +
                 "con_relation_id INTEGER," +
                 "con_referenced_relation_id INTEGER," +

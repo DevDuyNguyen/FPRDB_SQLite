@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using BLL.Common;
+using FPRDB_SQLite.GUI;
 
 namespace FPRDB_SQLite
 {
@@ -19,7 +20,8 @@ namespace FPRDB_SQLite
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             CompositionRoot composeRoot = new CompositionRoot();
-            Application.Run(new Form1(composeRoot.getDatabaseService()));
+            //Application.Run(new Form1(composeRoot.getDatabaseService()));
+            Application.Run(new frmMain());
         }
     }
 }
