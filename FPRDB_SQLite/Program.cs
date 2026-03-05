@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using BLL.Common;
+using FPRDB_SQLite.GUI;
 
 namespace FPRDB_SQLite
 {
@@ -17,19 +19,11 @@ namespace FPRDB_SQLite
         [STAThread]
         static void Main()
         {
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
-
-            Lexer lexer = new Lexer(" select true \"asdf\" 1⇒2  ⨂");
-            lexer.printAllToken();
-            //lexer.eatKeyword("select");
-            //Debug.WriteLine(lexer.eatBooleanConstant());
-            //Debug.WriteLine(lexer.eatStringConstant());
-            //Debug.WriteLine(lexer.eatNumberConstant());
-            //Debug.WriteLine(lexer.eatOperator());
-            //Debug.WriteLine(lexer.eatNumberConstant());
-            //Debug.WriteLine(lexer.eatProbabilisticCombinationStrategy());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            CompositionRoot composeRoot = new CompositionRoot();
+            //Application.Run(new Form1(composeRoot.getDatabaseService()));
+            Application.Run(new frmMain());
         }
     }
 }
