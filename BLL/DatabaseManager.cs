@@ -51,19 +51,20 @@ namespace BLL
         }
         public void createSystemCatalog()
         {
+            //create database structure
             string create_fprdb_RelationSchema = "CREATE TABLE fprdb_RelationSchema(" +
                     "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "relschema_name TEXT NOT NULL" +
+                    "relschema_name TEXT NOT NULL UNIQUE" +
                     ");";
             string create_fprdb_Relation = "CREATE TABLE fprdb_Relation(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "rel_name TEXT NOT NULL," +
+                "rel_name TEXT NOT NULL UNIQUE," +
                 "rel_relation_schema INTEGER NOT NULL," +
                 "FOREIGN KEY (rel_relation_schema) REFERENCES fprdb_RelationSchema (oid)" +
                 ");";
             string create_fprdb_Type = "CREATE TABLE fprdb_Type(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "type_name TEXT NOT NULL," +
+                "type_name TEXT NOT NULL UNIQUE," +
                 "type_type TEXT NOT NULL" +
                 ");";
             string create_fprdb_Attribute = "CREATE TABLE fprdb_Attribute(" +
@@ -79,7 +80,7 @@ namespace BLL
                 ");";
             string create_fprdb_FuzzySet = "CREATE TABLE fprdb_FuzzySet(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "fuzzset_name TEXT NOT NULL," +
+                "fuzzset_name TEXT NOT NULL UNIQUE," +
                 "fuzzset_type_id INTEGER NOT NULL," +
                 "FOREIGN KEY (fuzzset_type_id) REFERENCES fprdb_Type (oid)" +
                 ");";
@@ -107,7 +108,7 @@ namespace BLL
                 ");";
             string create_fprdb_Constraint = "CREATE TABLE fprdb_Constraint(" +
                 "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "con_name TEXT NOT NULL," +
+                "con_name TEXT NOT NULL UNIQUE," +
                 "con_type TEXT NOT NULL," +
                 "con_relation_id INTEGER," +
                 "con_referenced_relation_id INTEGER," +
@@ -119,9 +120,23 @@ namespace BLL
                 "FOREIGN KEY (con_relschema_id) REFERENCES fprdb_RelationSchema (oid)" +
                 ");";
 
+            //fill initial database content
+            string insert_fprdb_Type = @"INSERT INTO fprdb_Type (type_name, type_type)
+                VALUES 
+                ('INT', 'b'),
+                ('FLOAT', 'b'),
+                ('CHAR', 'b'),
+                ('VARCHAR', 'b'),
+                ('BOOLEAN', 'b'),
+                ('distFS_INT', 'fs'),
+                ('distFS_FLOAT', 'fs'),
+                ('distFS_TEXT', 'fs'),
+                ('contFS', 'fs');";
+
             string statemt = create_fprdb_RelationSchema + create_fprdb_Relation + create_fprdb_Type +
                 create_fprdb_Attribute + create_fprdb_FuzzySet + create_fprdb_DiscreteFuzzySet
-                + create_fprdb_ContinousFuzzySet + create_fprdb_Relation_Fuzzyset + create_fprdb_Constraint;
+                + create_fprdb_ContinousFuzzySet + create_fprdb_Relation_Fuzzyset + create_fprdb_Constraint
+                +insert_fprdb_Type;
 
             try
             {
