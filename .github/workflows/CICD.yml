@@ -1,6 +1,8 @@
 name: .NET Framework CI (Split Jobs)
 
 on:
+  push:
+      branches: [ "**" ] # Chạy bất chấp mọi nhánh mỗi khi bạn bấm push
   pull_request:
     branches: [ "main" ]
 
