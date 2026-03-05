@@ -51,6 +51,7 @@ namespace BLL
         }
         public void createSystemCatalog()
         {
+            //create database structure
             string create_fprdb_RelationSchema = "CREATE TABLE fprdb_RelationSchema(" +
                     "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "relschema_name TEXT NOT NULL UNIQUE" +
@@ -119,9 +120,23 @@ namespace BLL
                 "FOREIGN KEY (con_relschema_id) REFERENCES fprdb_RelationSchema (oid)" +
                 ");";
 
+            //fill initial database content
+            string insert_fprdb_Type = @"INSERT INTO fprdb_Type (type_name, type_type)
+                VALUES 
+                ('INT', 'b'),
+                ('FLOAT', 'b'),
+                ('CHAR', 'b'),
+                ('VARCHAR', 'b'),
+                ('BOOLEAN', 'b'),
+                ('distFS_INT', 'fs'),
+                ('distFS_FLOAT', 'fs'),
+                ('distFS_TEXT', 'fs'),
+                ('contFS', 'fs');";
+
             string statemt = create_fprdb_RelationSchema + create_fprdb_Relation + create_fprdb_Type +
                 create_fprdb_Attribute + create_fprdb_FuzzySet + create_fprdb_DiscreteFuzzySet
-                + create_fprdb_ContinousFuzzySet + create_fprdb_Relation_Fuzzyset + create_fprdb_Constraint;
+                + create_fprdb_ContinousFuzzySet + create_fprdb_Relation_Fuzzyset + create_fprdb_Constraint
+                +insert_fprdb_Type;
 
             try
             {
