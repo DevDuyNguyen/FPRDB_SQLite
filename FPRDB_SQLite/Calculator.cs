@@ -9,9 +9,9 @@ namespace FPRDB_SQLite
     public class Calculator
     {
         // Hàm cộng hai số
-        public int Add(int a, int b)
+        public int Add(int a, int c)
         {
-            return a + b;
+            return a + c;
         }
 
         // Hàm kiểm tra số chẵn
