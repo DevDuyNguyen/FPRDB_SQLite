@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             buttonHelp_groupHelp = new DevExpress.XtraBars.BarButtonItem();
@@ -62,6 +63,7 @@
             pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupHelp_pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             treeView = new System.Windows.Forms.TreeView();
+            TreeView_imageList = new System.Windows.Forms.ImageList(components);
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
             SuspendLayout();
             // 
@@ -296,10 +298,28 @@
             // 
             // treeView
             // 
+            treeView.ImageIndex = 0;
+            treeView.ImageList = TreeView_imageList;
             treeView.Location = new System.Drawing.Point(12, 200);
             treeView.Name = "treeView";
+            treeView.SelectedImageIndex = 0;
             treeView.Size = new System.Drawing.Size(201, 340);
             treeView.TabIndex = 1;
+            // 
+            // TreeView_imageList
+            // 
+            TreeView_imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            TreeView_imageList.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("TreeView_imageList.ImageStream");
+            TreeView_imageList.TransparentColor = System.Drawing.Color.Transparent;
+            TreeView_imageList.Images.SetKeyName(0, "open.jpg");
+            TreeView_imageList.Images.SetKeyName(1, "close.png");
+            TreeView_imageList.Images.SetKeyName(2, "attribute.png");
+            TreeView_imageList.Images.SetKeyName(3, "database.png");
+            TreeView_imageList.Images.SetKeyName(4, "folder.png");
+            TreeView_imageList.Images.SetKeyName(5, "key.png");
+            TreeView_imageList.Images.SetKeyName(6, "open.png");
+            TreeView_imageList.Images.SetKeyName(7, "relation.jpg");
+            TreeView_imageList.Images.SetKeyName(8, "schema.png");
             // 
             // frmMain
             // 
@@ -354,6 +374,7 @@
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private System.Windows.Forms.TreeView treeView;
+        private System.Windows.Forms.ImageList TreeView_imageList;
     }
 }
 
