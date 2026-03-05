@@ -13,27 +13,26 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
-        # QUAN TRỌNG: Nếu bạn có License Key của DevExpress, hãy điền vào đây.
-        # Nếu không, bước Restore có thể vẫn lỗi với DevExpress.
-        # source-url: https://nuget.devexpress.com/YOUR_KEY/api/v3/index.json
+          dotnet-version: 8.0.x
+            # QUAN TRỌNG: Nếu bạn có License Key của DevExpress, hãy điền vào đây.
+            # Nếu không, bước Restore có thể vẫn lỗi với DevExpress.
+            # source-url: https://nuget.devexpress.com/YOUR_KEY/api/v3/index.json
 
     - name: Restore Packages
-      # SỬA: Dùng 'dotnet restore' thay vì 'nuget restore' để đồng bộ với .NET 8 SDK
-      # Lệnh này sẽ đọc file .csproj và tải Irony, DevExpress về
+          # SỬA: Dùng 'dotnet restore' thay vì 'nuget restore' để đồng bộ với .NET 8 SDK
+          # Lệnh này sẽ đọc file .csproj và tải Irony, DevExpress về
       run: dotnet restore FPRDB_SQLite.sln
 
     - name: Build
-      # SỬA: Bỏ --no-restore để nếu bước trên sót gì thì bước này tự sửa lỗi
-      # Thêm --no-incremental để đảm bảo build sạch từ đầu, tránh lỗi cache
+          # SỬA: Bỏ --no-restore để nếu bước trên sót gì thì bước này tự sửa lỗi
+          # Thêm --no-incremental để đảm bảo build sạch từ đầu, tránh lỗi cache
       run: dotnet build FPRDB_SQLite.sln --configuration Release --no-incremental
-
-    - name: Build
-      # Build xong thì sinh ra file DLL trong thư mục bin/Release
-      run: dotnet build FPRDB_SQLite.sln --configuration Release --no-restore
 
     # QUAN TRỌNG: Gửi "hàng" (Artifacts) lên kho
     # Chúng ta cần lưu lại thư mục bin để Job sau dùng
