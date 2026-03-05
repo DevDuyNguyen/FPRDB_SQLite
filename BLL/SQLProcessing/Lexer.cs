@@ -1,5 +1,4 @@
-﻿using DevExpress.XtraRichEdit.Import.EPub;
-using Irony.Parsing;
+﻿using Irony.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
