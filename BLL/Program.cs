@@ -159,11 +159,11 @@ namespace BLL
             CompositionRoot root = new CompositionRoot();
             root.getDBMgr().loadDB(dbFile);
             SQLProcessor sqlProcessor = root.getSQLProcessor();
-            string sql = @"CREATE SCHEMA student (
+            string sql = @"CREATE SCHEMA student1 (
                 student_id int, 
                 name varchar(100), 
                 age DIST_FUZZYSET_INT,
-                CONSTRAINT pk_student primary key(student_id)
+                CONSTRAINT pk_student1 primary key(student_id)
                 )";
             sqlProcessor.executeDataDefinition(sql);
         }

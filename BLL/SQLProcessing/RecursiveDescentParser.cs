@@ -162,7 +162,7 @@ namespace BLL.SQLProcessing
         {
             try
             {
-                //lexer.eatKeyword("CREATE");
+                lexer.eatKeyword("CREATE");
                 lexer.eatKeyword("SCHEMA");
                 string schemaName = schema();
                 lexer.eatDelimiter("(");
@@ -186,8 +186,10 @@ namespace BLL.SQLProcessing
         }
         public Object create()
         {
-            lexer.eatKeyword("CREATE");
-            if (lexer.matchKeyword("SCHEMA"))
+            if (!lexer.matchKeyword("CREATE"))
+                throw createSQLSyntaxException("Not a create statement");
+            Token peekNextToken = lexer.peekNext();
+            if (peekNextToken.Terminal.Name=="identifier"&& peekNextToken.Text== "SCHEMA")
             {
                 return createSchema();
             }

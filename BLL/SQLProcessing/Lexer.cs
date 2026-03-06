@@ -139,7 +139,10 @@ namespace BLL.SQLProcessing
             {
                 token = this._scanner.VsReadToken(ref state);
                 if (token != null && token.Category == TokenCategory.Content)
+                {
+                    
                     this.tokens.Add(token);
+                }
             } while (token != null && token.Terminal.Name != "EOF");
             next();
         }
@@ -352,6 +355,15 @@ namespace BLL.SQLProcessing
             {
                 throw new IndexOutOfRangeException();
             }
+        }
+        public Token peekNext()
+        {
+            if (this.currentIndex < this.tokens.Count - 1)
+            {
+                return this.tokens[this.currentIndex + 1];
+            }
+            else
+                return null;
         }
     }
 }
