@@ -10,19 +10,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using BLL.Exceptions;
 
 namespace BLL
 {
     public class Program
     {
+        static string dbFile = "C:\\Users\\Admin\\Downloads\\test\\db1.db";
         //not done: Moq for mocking
         static void test_createDiscreteFuzzySet()
         {
+            
+
             CompositionRoot compRoot = new CompositionRoot();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             FuzzySetDAO fuzzySetDAO = compRoot.getFuzzySetDAO();
 
-            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            dbMgr.loadDB(dbFile);
             DiscreteFuzzySetDTO<int> fuzzySet = new DiscreteFuzzySetDTO<int>(
                 new List<int>() { 21, 22, 23 },
                 new List<float>() { 0.5f, 1, 0.5f },
@@ -38,7 +42,7 @@ namespace BLL
             DatabaseManager dbMgr = compRoot.getDBMgr();
             FuzzySetDAO fuzzySetDAO = compRoot.getFuzzySetDAO();
 
-            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            dbMgr.loadDB(dbFile);
             ContinuousFuzzySetDTO fuzzySet = new ContinuousFuzzySetDTO(10,20,30,40,"random1" );
 
             fuzzySetDAO.createContinuousFuzzySet(fuzzySet);
@@ -50,7 +54,7 @@ namespace BLL
             FuzzySetDAO fuzzySetDAO = compRoot.getFuzzySetDAO();
             FuzzySetService service = compRoot.getFuzzySetService();
 
-            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            dbMgr.loadDB(dbFile);
             DiscreteFuzzySetDTO<int> fuzzySet = new DiscreteFuzzySetDTO<int>(
                 new List<int>() { 22, 23, 24 },
                 new List<float>() { 0.5f, 1, 0.5f },
@@ -66,7 +70,7 @@ namespace BLL
         {
             CompositionRoot compRoot = new CompositionRoot();
             DatabaseManager dbMgr = compRoot.getDBMgr();
-            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            dbMgr.loadDB(dbFile);
             Preprocessor preprocessor = compRoot.getPreprocessor();
 
             //positive test
@@ -76,15 +80,62 @@ namespace BLL
             Debug.WriteLine($"Expected: true, Actual:{preprocessor.checkSemanticCreateSchema(data1)}");
 
             //negative test: name already belong to an existed schema
-            FPRDBSchema data1 = new FPRDBSchema("thisschemaneverexist", null,
+            FPRDBSchema data2 = new FPRDBSchema("EmployeeSchema", null,
                 new List<string>() { "attr1", "attr2", "attr3" },
                 "pk_1");
-            Debug.WriteLine($"Expected: true, Actual:{preprocessor.checkSemanticCreateSchema(data1)}");
+            try
+            {
+                Debug.WriteLine($"Expected: true,");
+                preprocessor.checkSemanticCreateSchema(data2);
+            }
+            catch(SemanticException ex)
+            {
+                Debug.WriteLine($"Actual: exception: {ex.Message}");
+            }
+
+            //negative test: Schema creation must have primary key
+            FPRDBSchema data3 = new FPRDBSchema("thisschemaneverexist", null,
+                new List<string>() { "attr1", "attr2", "attr3" },
+                "");
+            try
+            {
+                Debug.WriteLine($"Expected: true,");
+                preprocessor.checkSemanticCreateSchema(data3);
+            }
+            catch (SemanticException ex)
+            {
+                Debug.WriteLine($"Actual: exception: {ex.Message}");
+            }
+            //negative test: Schema creation must have primary key
+            FPRDBSchema data4 = new FPRDBSchema("thisschemaneverexist", null,
+                new List<string>(),
+                "pk1");
+            try
+            {
+                Debug.WriteLine($"Expected: true,");
+                preprocessor.checkSemanticCreateSchema(data4);
+            }
+            catch (SemanticException ex)
+            {
+                Debug.WriteLine($"Actual: exception: {ex.Message}");
+            }
+            //negative test: Constraint name already exists
+            FPRDBSchema data5 = new FPRDBSchema("thisschemaneverexist", null,
+                new List<string>() { "attr1"},
+                "PK_Products");
+            try
+            {
+                Debug.WriteLine($"Expected: true,");
+                preprocessor.checkSemanticCreateSchema(data5);
+            }
+            catch (SemanticException ex)
+            {
+                Debug.WriteLine($"Actual: exception: {ex.Message}");
+            }
 
         }
         static void Main()
         {
-            test_checkSemanticCreateSchema();
         }
     }
 }
