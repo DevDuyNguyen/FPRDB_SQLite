@@ -1,28 +1,4 @@
-<<<<<<< HEAD
-﻿using DevExpress.XtraEditors;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using BLL;
-
-namespace FPRDB_SQLite
-{
-    public partial class Form1 : DevExpress.XtraBars.Ribbon.RibbonForm
-    {
-        private DatabaseService databaseService;
-        public Form1(DatabaseService databaseService)
-        {
-            this.databaseService = databaseService;
-;            InitializeComponent();
-        }
-=======
-﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,9 +18,9 @@ namespace FPRDB_SQLite
         public Form1(DatabaseService databaseService)
         {
             this.databaseService = databaseService;
-;            InitializeComponent();
+            InitializeComponent();
         }
->>>>>>> f5752036df1bc8ed9e09455da3be034b6d1890ba
+
         private void LoadDatabaseTree()
         {
             // 1. Xóa cây cũ
