@@ -170,7 +170,14 @@ namespace BLL.SQLProcessing
                 throw new MismatchTokenType("delimiter", this.currentToken);
             next();
         }
-
+        public bool matchAnyKeyword()
+        {
+            if (this.currentToken != null &&  this.keywords.Contains(this.currentToken.Text.ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
         public bool matchKeyword(string w)
         {
             if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w.ToLower()))

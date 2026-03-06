@@ -122,10 +122,14 @@ namespace BLL.SQLProcessing
             while (lexer.matchDelimiter(","))
             {
                 lexer.eatDelimiter(",");
-                //this is where my code differs from Database Design and Implementation Book by Edward Sciore
-                //to reduce method invocationmy code doesn't recursively call fieldDefs
-                //as it is supposed in Recursive Descent parsing technique
-                fieldDefList.Add(fieldDef());
+                if (!lexer.matchAnyKeyword())
+                {
+                    //this is where my code differs from Database Design and Implementation Book by Edward Sciore
+                    //to reduce method invocationmy code doesn't recursively call fieldDefs
+                    //as it is supposed in Recursive Descent parsing technique
+                    fieldDefList.Add(fieldDef());
+                }
+                
             }
             return fieldDefList;
         }
@@ -141,7 +145,8 @@ namespace BLL.SQLProcessing
             }
             return fieldNames;
         }
-        private ConstraintData constraintDef()
+        //not done: mocking for private
+        public ConstraintData constraintDef()
         {
             lexer.eatKeyword("CONSTRAINT");
             string constraintName = lexer.eatIdentifier();
@@ -164,9 +169,8 @@ namespace BLL.SQLProcessing
                 List<Field> fieldDefList = fieldDefs();
                 ConstraintData constraintData=null;
 
-                if (lexer.matchDelimiter(","))
+                if (lexer.matchKeyword("CONSTRAINT"))
                 {
-                    lexer.eatDelimiter(",");
                     constraintData = constraintDef();
                 }
                 return new FPRDBSchema(schemaName

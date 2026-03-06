@@ -1,8 +1,8 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DomainObject;
+using BLL.Enums;
 using BLL.SQLProcessing;
-using DevExpress.Office.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,17 +94,87 @@ namespace TestProject1.IntegrationTest
         }
 
         [Theory]
-        [InlineData("id, name, age")]
-        public void Parser_primaryAttributes_success(string str)
+        [InlineData("id, name, age", "id", "name", "age")]
+        public void Parser_primaryAttributes_success(string str, string attr1,
+            string attr2, string attr3)
         {
             //arrange
             this.parser.parse(str);
             //act
             List<string> primaryAttributeList = this.parser.primaryAttributes();
             //assert
-            Assert.Equal("id", primaryAttributeList[0]);
-            Assert.Equal("name", primaryAttributeList[1]);
-            Assert.Equal("age", primaryAttributeList[2]);
+            Assert.Equal(attr1, primaryAttributeList[0]);
+            Assert.Equal(attr2, primaryAttributeList[1]);
+            Assert.Equal(attr3, primaryAttributeList[2]);
+
+        }
+        [Theory]
+        [InlineData("constraint pk_test primary KEY (attr1, attr2, attr3)",
+            "pk_test", ConstraintType.IDENTITY, "attr1", "attr2", "attr3")]
+        public void Parser_constraintDef_success(string str, string name,
+            ConstraintType type, string attr1, string attr2, string attr3)
+        {
+            //arrange
+            this.parser.parse(str);
+            //act
+            ConstraintData data = this.parser.constraintDef();
+            List<string> fields = data.getFields();
+            //assert
+            Assert.Equal(name, data.getName());
+            Assert.Equal(type, data.getType());
+            Assert.Equal(attr1, fields[0]);
+            Assert.Equal(attr2, fields[1]);
+            Assert.Equal(attr3, fields[2]);
+        }
+        //not done: how to transfer test data into Theory more efficient
+        //hints: Record in c#
+        [Theory]
+        [InlineData(
+            @"create schema schema1 (
+                id int,
+                name varchar(50),
+                income CONT_FUZZYSET,
+                constraint pk_test primary key (id)
+            )",
+            "schema1",
+            "id", FieldType.INT, 0,
+            "name", FieldType.VARCHAR, 50,
+            "income", FieldType.contFS, 0,
+            new object[] { "id" }
+        )]
+        public void Parser_createSchema_success(string str,
+            string name,
+            string fieldName1, FieldType type1, int txtLength1,
+            string fieldName2, FieldType type2, int txtLength2,
+            string fieldName3, FieldType type3, int txtLength3,
+            object[] primaryAttributeList)
+        {
+            //arrange
+            this.parser.parse(str);
+            //act
+            FPRDBSchema data = this.parser.createSchema();
+            List<Field> fields = data.getFields();
+            List<string> primarykey = data.getPrimarykey();
+            //assert
+            Assert.Equal(name, data.getSchemaName());
+
+            Assert.Equal(fieldName1, fields[0].getFieldName());
+            Assert.Equal(type1, fields[0].getFieldInfo().getType());
+            Assert.Equal(txtLength1, fields[0].getFieldInfo().getTXTLength());
+
+            Assert.Equal(fieldName2, fields[1].getFieldName());
+            Assert.Equal(type2, fields[1].getFieldInfo().getType());
+            Assert.Equal(txtLength2, fields[1].getFieldInfo().getTXTLength());
+
+            Assert.Equal(fieldName3, fields[2].getFieldName());
+            Assert.Equal(type3, fields[2].getFieldInfo().getType());
+            Assert.Equal(txtLength3, fields[2].getFieldInfo().getTXTLength());
+
+            Assert.Equal(primaryAttributeList.Count(), primarykey.Count);
+            for(int i=0; i< primaryAttributeList.Count(); ++i)
+            {
+                Assert.Equal(primaryAttributeList[i], primarykey[i]);
+            }
 
         }
 
