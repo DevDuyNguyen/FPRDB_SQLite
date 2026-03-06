@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Win.Design" Version="24.1.7" />
+    <PackageReference Include="Irony" Version="1.5.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
