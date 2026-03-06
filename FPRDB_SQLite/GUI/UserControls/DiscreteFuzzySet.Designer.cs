@@ -105,9 +105,9 @@
             // 
             lblNameDiscFuzzy.Location = new System.Drawing.Point(25, 6);
             lblNameDiscFuzzy.Name = "lblNameDiscFuzzy";
-            lblNameDiscFuzzy.Size = new System.Drawing.Size(91, 16);
+            lblNameDiscFuzzy.Size = new System.Drawing.Size(97, 16);
             lblNameDiscFuzzy.TabIndex = 3;
-            lblNameDiscFuzzy.Text = "Linguistic Label:";
+            lblNameDiscFuzzy.Text = "Fuzzy Set Name:";
             // 
             // lblDataType
             // 

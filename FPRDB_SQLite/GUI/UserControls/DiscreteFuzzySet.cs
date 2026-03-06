@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static FPRDB_SQLite.GUI.frmManageFuzzySet;
+using BLL.DTO;
 
 namespace FPRDB_SQLite.GUI.UserControls
 {
@@ -19,6 +20,7 @@ namespace FPRDB_SQLite.GUI.UserControls
         {
             InitializeComponent();
         }
+        // Phương thức này sẽ được gọi khi người dùng chọn một FuzzySet
         public void LoadFuzzySet(FuzzySetDTO fuzzySet)
         {
             txtNameDiscFuzzy.Text = fuzzySet.fuzzySetName;
@@ -37,26 +39,24 @@ namespace FPRDB_SQLite.GUI.UserControls
                 BindDiscrete(discreteText.valueSet, discreteText.membershipDegreeSet);
             }
         }
-        private void BindDiscrete<TDomain>(TDomain[] values, float[] memberships)
+        // Bind dữ liệu cho GridControl, sử dụng kiểu generic để tái sử dụng cho cả 3 loại dữ liệu
+        private void BindDiscrete<TDomain>(List<TDomain> valueSet, List<float> membershipDegreeSet)
         {
-            // Tạo danh sách dữ liệu gồm cả Value và Membership
-            var rows = values
-                .Select((val, idx) => new
+            // Ghép dữ liệu theo index: mỗi phần tử values[i] đi với memberships[i]
+            var rows = Enumerable.Range(0, valueSet.Count)
+                .Select(i => new
                 {
-                    Value = val,
-                    Membership = memberships[idx]
+                    value = valueSet[i],
+                    membershipDegree = membershipDegreeSet[i]
                 })
                 .ToList();
 
-            // Bind vào GridControl
+            // Gán danh sách rows vào GridControl
             grdcDiscFuzzy.DataSource = rows;
 
-            // Gán FieldName cho từng cột
-            grdcolValue.FieldName = "Value";
-            grdcolMembership.FieldName = "Membership";
-
-            // Nếu muốn GridView tự tạo lại cột
-            grdvDiscFuzzy.PopulateColumns();
+            // Map cột với thuộc tính trong object ẩn danh
+            grdcolValue.FieldName = "value";
+            grdcolMembership.FieldName = "membershipDegree";
         }
 
     }

@@ -125,9 +125,9 @@
             // 
             lblNameConsFuzzy.Location = new System.Drawing.Point(22, 13);
             lblNameConsFuzzy.Name = "lblNameConsFuzzy";
-            lblNameConsFuzzy.Size = new System.Drawing.Size(91, 16);
+            lblNameConsFuzzy.Size = new System.Drawing.Size(97, 16);
             lblNameConsFuzzy.TabIndex = 11;
-            lblNameConsFuzzy.Text = "Linguistic Label:";
+            lblNameConsFuzzy.Text = "Fuzzy Set Name:";
             // 
             // ContinuosFuzzySet
             // 
