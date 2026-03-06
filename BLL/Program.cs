@@ -134,6 +134,24 @@ namespace BLL
             }
 
         }
+        static void BasicUpdatePlanner_executeCreateSchema_success()
+        {
+            CompositionRoot root = new CompositionRoot();
+            root.getDBMgr().loadDB(dbFile);
+            UpdatePlanner updatePlanner = root.getUpdatePlanner();
+
+            List<Field> fieldDefs = new List<Field>()
+            {
+                new Field("attr1", new FieldInfo(FieldType.INT, 0)),
+                new Field("attr2", new FieldInfo(FieldType.INT, 0)),
+                new Field("attr3", new FieldInfo(FieldType.INT, 0)),
+            };
+
+            FPRDBSchema data1 = new FPRDBSchema("thisschemaneverexist", null,
+                new List<string>() { "attr1", "attr2", "attr3" },
+                "pk_1");
+
+        }
         static void Main()
         {
         }

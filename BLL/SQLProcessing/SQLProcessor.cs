@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BLL.SQLProcessing;
+
+namespace BLL.SQLProcessing
+{
+    public class SQLProcessor
+    {
+        private RecursiveDescentParser parser;
+
+
+    }
+}

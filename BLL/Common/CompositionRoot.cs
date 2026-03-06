@@ -21,7 +21,7 @@ namespace BLL.Common
         private RecursiveDescentParser parser;
         private Preprocessor preprocessor;
         private MetadataManager metadataMgr;
-
+        private BasicUpdatePlanner updatePlanner;
         public CompositionRoot()
         {
             Initialize();
@@ -37,6 +37,7 @@ namespace BLL.Common
             this.parser = new RecursiveDescentParser(this.lexer);
             this.metadataMgr = new MetadataManager(this.dbMgr);
             this.preprocessor = new Preprocessor(this.metadataMgr);
+            this.updatePlanner=new BasicUpdatePlanner(this.dbMgr);
 
         }
 
@@ -63,6 +64,7 @@ namespace BLL.Common
         public RecursiveDescentParser getParser() => this.parser;
         //delete: for testing
         public Preprocessor getPreprocessor() => this.preprocessor;
-
+        //delete: for testing
+        public UpdatePlanner getUpdatePlanner() => this.updatePlanner;
     }
 }
