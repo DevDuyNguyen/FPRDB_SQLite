@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace TestProject1.IntegrationTest
 {
+    //not done: lack negative test
     public class ParserTests
     {
         private RecursiveDescentParser parser;

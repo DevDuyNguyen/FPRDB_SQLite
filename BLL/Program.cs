@@ -1,12 +1,15 @@
 ﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Interfaces;
 using BLL.Services;
+using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace BLL
 {
@@ -59,9 +62,29 @@ namespace BLL
             service.createFuzzySet<int>(fuzzySet);
             service.createFuzzySet<float>(fuzzySet1);
         }
+        static void test_checkSemanticCreateSchema()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            Preprocessor preprocessor = compRoot.getPreprocessor();
+
+            //positive test
+            FPRDBSchema data1 = new FPRDBSchema("thisschemaneverexist", null, 
+                new List<string>() { "attr1", "attr2", "attr3" }, 
+                "pk_1");
+            Debug.WriteLine($"Expected: true, Actual:{preprocessor.checkSemanticCreateSchema(data1)}");
+
+            //negative test: name already belong to an existed schema
+            FPRDBSchema data1 = new FPRDBSchema("thisschemaneverexist", null,
+                new List<string>() { "attr1", "attr2", "attr3" },
+                "pk_1");
+            Debug.WriteLine($"Expected: true, Actual:{preprocessor.checkSemanticCreateSchema(data1)}");
+
+        }
         static void Main()
         {
-            test_createFuzzySet();
+            test_checkSemanticCreateSchema();
         }
     }
 }

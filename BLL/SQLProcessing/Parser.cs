@@ -175,7 +175,8 @@ namespace BLL.SQLProcessing
                 }
                 return new FPRDBSchema(schemaName
                     ,fieldDefList
-                    ,(constraintData!=null)?constraintData.getFields():null);
+                    ,(constraintData!=null)?constraintData.getFields():null
+                    ,(constraintData != null) ? constraintData.getName() : null);
 
             }
             catch(MismatchTokenType ex)
