@@ -18,7 +18,7 @@ namespace BLL.Common
         private FuzzySetDAO fuzzySetDAO;
         private DatabaseManager databseExportImport;
         private Lexer lexer;
-        private Parser parser;
+        private RecursiveDescentParser parser;
 
         public CompositionRoot()
         {
@@ -31,7 +31,8 @@ namespace BLL.Common
             this.databaseService = new DatabaseService(this.dbMgr);
             this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
             this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
-
+            this.lexer = new Lexer();
+            this.parser = new RecursiveDescentParser(this.lexer);
 
         }
 
@@ -54,6 +55,8 @@ namespace BLL.Common
         {
             return this.dbMgr;
         }
+        //delete: for testing
+        public RecursiveDescentParser getParser() => this.parser;
 
     }
 }

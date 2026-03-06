@@ -1,10 +1,10 @@
 ﻿using Irony.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace BLL.SQLProcessing
 {
@@ -23,12 +23,13 @@ namespace BLL.SQLProcessing
     {
         public FPRDBSQLTerminals() : base(false)
         {
-            //var comma = new KeyTerm(",", "comma");
+            var comma = new KeyTerm(",", "delimiter");
+            var dot = new KeyTerm(".", "delimiter");
             var asterisk = new KeyTerm("*", "asterisk");
-            //var openParenthesis = new KeyTerm("(", "openParenthesis");
-            //var closedParenthesis = new KeyTerm(")", "closedParenthesis");
-            //var openSquareBracket = new KeyTerm("[", "openSquareBracket");
-            //var closedSquareBracket = new KeyTerm("]", "closedSquareBracket");
+            var openParenthesis = new KeyTerm("(", "delimiter");
+            var closedParenthesis = new KeyTerm(")", "delimiter");
+            var openSquareBracket = new KeyTerm("[", "delimiter");
+            var closedSquareBracket = new KeyTerm("]", "delimiter");
 
             //var select = ToTerm("SELECT", "keyword");
             //var from = ToTerm("FROM", "keyword");
@@ -73,7 +74,8 @@ namespace BLL.SQLProcessing
             var positive = ToTerm("+", "unary operator");
 
             var any = new NonTerminal("any");
-            any.Rule =asterisk | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
+            any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket
+                | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
                 | probConjunctionStrategy | probDisjunctionStrategy | probDifferencetionStrategy
                 | negative | positive;
@@ -101,8 +103,12 @@ namespace BLL.SQLProcessing
         private int currentIndex = -1;
         private List<Token> tokens = new List<Token>();
         private int tokenListLength;
-        private List<string> keywords = new List<String>() { "select", "from", "where", "and",
-        "or", "not", "natural join", "union", "intersect", "except"};
+        private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
+            "union", "intersect", "except", "not", "and", "or",
+            "create", "schema", "int", "float", "char", "varchar", "boolean",
+            "dist_fuzzyset_int", "dist_fuzzyset_float", "dist_fuzzyset_text",
+            "cont_fuzzyset", "constraint", "primary", "key",
+            "relation", "on", "insert", "into", "values", "update", "set", "delete", "drop"};
 
         public void printAllToken()
         {
@@ -112,7 +118,7 @@ namespace BLL.SQLProcessing
                 next();
             }
         }
-
+        public Lexer() { }
         public Lexer(string s)
         {
             analyze(s);
@@ -153,7 +159,8 @@ namespace BLL.SQLProcessing
         }
         public bool matchDelimiter(string delimiter)
         {
-            if (this.currentToken.Terminal.Name == delimiter)
+            if (this.currentToken.Terminal.Name == "delimiter"
+                && this.currentToken.Text==delimiter)
                 return true;
             else
                 return false;
@@ -167,7 +174,7 @@ namespace BLL.SQLProcessing
 
         public bool matchKeyword(string w)
         {
-            if (this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w))
+            if (this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w.ToLower()))
             {
                 string tokenStr = (string)this.currentToken.Value;
                 tokenStr = tokenStr.ToLower();
@@ -302,10 +309,19 @@ namespace BLL.SQLProcessing
             next();
             return res;    
         }
-        public Object getPrevToken()
+        public Token getPrevToken()
         {
             if (this.currentIndex != 0)
                 return this.tokens[this.currentIndex - 1];
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+        public Token getCurrentToken()
+        {
+            if (this.currentIndex <= this.tokens.Count-1)
+                return this.tokens[this.currentIndex];
             else
             {
                 throw new IndexOutOfRangeException();

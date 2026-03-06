@@ -8,10 +8,15 @@ namespace BLL.Exceptions
 {
     public class SQLSyntaxException:Exception
     {
-        string nearToken;//the vinicity of syntax violation
-        public SQLSyntaxException(string nearToken, string message) : base(message)
+        public string nearToken;//the vinicity of syntax violation
+        public int line, column;
+        public SQLSyntaxException(string nearToken,
+            int line, int column,
+            string message) : base(message)
         {
             this.nearToken = nearToken;
+            this.line = line;
+            this.column = column;
         }
     }
 }
