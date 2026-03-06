@@ -35,6 +35,13 @@
             grpFKSelected = new DevExpress.XtraEditors.GroupControl();
             lstFKSelected = new DevExpress.XtraEditors.ListBoxControl();
             grpFKDetail = new DevExpress.XtraEditors.GroupControl();
+            grdMappingAttr = new DevExpress.XtraGrid.GridControl();
+            grdviewMappingAttr = new DevExpress.XtraGrid.Views.Grid.GridView();
+            grdcolPKAttr = new DevExpress.XtraGrid.Columns.GridColumn();
+            repositoryItemLookUpEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            grdcolFKAttr = new DevExpress.XtraGrid.Columns.GridColumn();
+            repositoryItemLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            txtFKRelName = new DevExpress.XtraEditors.TextEdit();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
             btnClose = new DevExpress.XtraEditors.SimpleButton();
             cboPKRelName = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -42,13 +49,6 @@
             lblFKRelName = new DevExpress.XtraEditors.LabelControl();
             lblFKName = new DevExpress.XtraEditors.LabelControl();
             txtFKName = new DevExpress.XtraEditors.TextEdit();
-            txtFKRelName = new DevExpress.XtraEditors.TextEdit();
-            gridControl1 = new DevExpress.XtraGrid.GridControl();
-            gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
-            gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            repositoryItemLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
-            repositoryItemLookUpEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
             ((System.ComponentModel.ISupportInitialize)splitcontFKRelationships).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitcontFKRelationships.Panel1).BeginInit();
             splitcontFKRelationships.Panel1.SuspendLayout();
@@ -60,13 +60,13 @@
             ((System.ComponentModel.ISupportInitialize)lstFKSelected).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grpFKDetail).BeginInit();
             grpFKDetail.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)this.cboPKRelName.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)txtFKName.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)txtFKRelName.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)gridControl1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)gridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grdMappingAttr).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grdviewMappingAttr).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)txtFKRelName.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cboPKRelName.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)txtFKName.Properties).BeginInit();
             SuspendLayout();
             // 
             // splitcontFKRelationships
@@ -126,7 +126,7 @@
             // 
             // grpFKDetail
             // 
-            grpFKDetail.Controls.Add(gridControl1);
+            grpFKDetail.Controls.Add(grdMappingAttr);
             grpFKDetail.Controls.Add(txtFKRelName);
             grpFKDetail.Controls.Add(btnSave);
             grpFKDetail.Controls.Add(btnClose);
@@ -141,6 +141,62 @@
             grpFKDetail.Size = new System.Drawing.Size(421, 345);
             grpFKDetail.TabIndex = 0;
             grpFKDetail.Text = "Foreign Key Detail";
+            // 
+            // grdMappingAttr
+            // 
+            grdMappingAttr.Location = new System.Drawing.Point(5, 127);
+            grdMappingAttr.MainView = grdviewMappingAttr;
+            grdMappingAttr.Name = "grdMappingAttr";
+            grdMappingAttr.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemLookUpEdit1, repositoryItemLookUpEdit2 });
+            grdMappingAttr.Size = new System.Drawing.Size(396, 173);
+            grdMappingAttr.TabIndex = 14;
+            grdMappingAttr.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { grdviewMappingAttr });
+            // 
+            // grdviewMappingAttr
+            // 
+            grdviewMappingAttr.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolPKAttr, grdcolFKAttr });
+            grdviewMappingAttr.GridControl = grdMappingAttr;
+            grdviewMappingAttr.Name = "grdviewMappingAttr";
+            grdviewMappingAttr.OptionsView.ShowColumnHeaders = false;
+            grdviewMappingAttr.OptionsView.ShowGroupPanel = false;
+            grdviewMappingAttr.OptionsView.ShowIndicator = false;
+            // 
+            // grdcolPKAttr
+            // 
+            grdcolPKAttr.ColumnEdit = repositoryItemLookUpEdit2;
+            grdcolPKAttr.MinWidth = 25;
+            grdcolPKAttr.Name = "grdcolPKAttr";
+            grdcolPKAttr.Visible = true;
+            grdcolPKAttr.VisibleIndex = 0;
+            grdcolPKAttr.Width = 94;
+            // 
+            // repositoryItemLookUpEdit2
+            // 
+            repositoryItemLookUpEdit2.AutoHeight = false;
+            repositoryItemLookUpEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemLookUpEdit2.Name = "repositoryItemLookUpEdit2";
+            // 
+            // grdcolFKAttr
+            // 
+            grdcolFKAttr.ColumnEdit = repositoryItemLookUpEdit1;
+            grdcolFKAttr.MinWidth = 25;
+            grdcolFKAttr.Name = "grdcolFKAttr";
+            grdcolFKAttr.Visible = true;
+            grdcolFKAttr.VisibleIndex = 1;
+            grdcolFKAttr.Width = 94;
+            // 
+            // repositoryItemLookUpEdit1
+            // 
+            repositoryItemLookUpEdit1.AutoHeight = false;
+            repositoryItemLookUpEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemLookUpEdit1.Name = "repositoryItemLookUpEdit1";
+            // 
+            // txtFKRelName
+            // 
+            txtFKRelName.Location = new System.Drawing.Point(211, 99);
+            txtFKRelName.Name = "txtFKRelName";
+            txtFKRelName.Size = new System.Drawing.Size(190, 22);
+            txtFKRelName.TabIndex = 13;
             // 
             // btnSave
             // 
@@ -197,62 +253,6 @@
             txtFKName.Size = new System.Drawing.Size(268, 22);
             txtFKName.TabIndex = 7;
             // 
-            // txtFKRelName
-            // 
-            txtFKRelName.Location = new System.Drawing.Point(211, 99);
-            txtFKRelName.Name = "txtFKRelName";
-            txtFKRelName.Size = new System.Drawing.Size(190, 22);
-            txtFKRelName.TabIndex = 13;
-            // 
-            // gridControl1
-            // 
-            gridControl1.Location = new System.Drawing.Point(5, 127);
-            gridControl1.MainView = gridView1;
-            gridControl1.Name = "gridControl1";
-            gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemLookUpEdit1, repositoryItemLookUpEdit2 });
-            gridControl1.Size = new System.Drawing.Size(396, 175);
-            gridControl1.TabIndex = 14;
-            gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView1 });
-            // 
-            // gridView1
-            // 
-            gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumn1, gridColumn2 });
-            gridView1.GridControl = gridControl1;
-            gridView1.Name = "gridView1";
-            gridView1.OptionsView.ShowColumnHeaders = false;
-            gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = false;
-            // 
-            // gridColumn1
-            // 
-            gridColumn1.ColumnEdit = repositoryItemLookUpEdit2;
-            gridColumn1.MinWidth = 25;
-            gridColumn1.Name = "gridColumn1";
-            gridColumn1.Visible = true;
-            gridColumn1.VisibleIndex = 0;
-            gridColumn1.Width = 94;
-            // 
-            // gridColumn2
-            // 
-            gridColumn2.ColumnEdit = repositoryItemLookUpEdit1;
-            gridColumn2.MinWidth = 25;
-            gridColumn2.Name = "gridColumn2";
-            gridColumn2.Visible = true;
-            gridColumn2.VisibleIndex = 1;
-            gridColumn2.Width = 94;
-            // 
-            // repositoryItemLookUpEdit1
-            // 
-            repositoryItemLookUpEdit1.AutoHeight = false;
-            repositoryItemLookUpEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            repositoryItemLookUpEdit1.Name = "repositoryItemLookUpEdit1";
-            // 
-            // repositoryItemLookUpEdit2
-            // 
-            repositoryItemLookUpEdit2.AutoHeight = false;
-            repositoryItemLookUpEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            repositoryItemLookUpEdit2.Name = "repositoryItemLookUpEdit2";
-            // 
             // frmFKRelationships
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -274,13 +274,13 @@
             ((System.ComponentModel.ISupportInitialize)grpFKDetail).EndInit();
             grpFKDetail.ResumeLayout(false);
             grpFKDetail.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)this.cboPKRelName.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)txtFKName.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)txtFKRelName.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)gridControl1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)gridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grdMappingAttr).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grdviewMappingAttr).EndInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)txtFKRelName.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cboPKRelName.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)txtFKName.Properties).EndInit();
             ResumeLayout(false);
         }
 
@@ -301,10 +301,10 @@
         private DevExpress.XtraEditors.LabelControl lblFKName;
         private DevExpress.XtraEditors.TextEdit txtFKName;
         private DevExpress.XtraEditors.TextEdit txtFKRelName;
-        private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
+        private DevExpress.XtraGrid.GridControl grdMappingAttr;
+        private DevExpress.XtraGrid.Views.Grid.GridView grdviewMappingAttr;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolPKAttr;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolFKAttr;
         private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEdit2;
         private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEdit1;
     }
