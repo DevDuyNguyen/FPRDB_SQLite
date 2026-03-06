@@ -102,7 +102,7 @@ namespace BLL.SQLProcessing
         private Scanner _scanner;
         private int currentIndex = -1;
         private List<Token> tokens = new List<Token>();
-        private int tokenListLength;
+        private int tokenListLength { get => this.tokens.Count;}
         private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
             "union", "intersect", "except", "not", "and", "or",
             "create", "schema", "int", "float", "char", "varchar", "boolean",
@@ -141,7 +141,6 @@ namespace BLL.SQLProcessing
                 if (token != null && token.Category == TokenCategory.Content)
                     this.tokens.Add(token);
             } while (token != null && token.Terminal.Name != "EOF");
-            this.tokenListLength = this.tokens.Count;
             next();
         }
 
@@ -189,7 +188,7 @@ namespace BLL.SQLProcessing
                 throw new MismatchTokenType("keyword", this.currentToken);
             next();
         }
-
+        //non-orphan unary operator: -1, -12
         public bool matchOrphanUnaryOperator()
         {
             if (this.currentToken.Terminal.Name == "unary operator")
@@ -201,7 +200,8 @@ namespace BLL.SQLProcessing
             }
             return false; 
         }
-        
+        //not done: this tokenization shouldn't be at here
+        //it should be at when you are creating field Tokens
         public bool matchNumberConstant()
         {
             if (this.currentToken.Terminal.Name == "unary operator")
@@ -216,6 +216,7 @@ namespace BLL.SQLProcessing
                     if (this.currentToken.Terminal.Name == "numberConstant")
                     {
                         this.currentToken.Value = number * Convert.ToDouble(this.currentToken.Value);
+                        //this.tokens[this.currentIndex].Value = this.currentToken.Value;
                         return true;
                     }
                 }
@@ -301,11 +302,29 @@ namespace BLL.SQLProcessing
         {
             return (this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
         }
+        //not done: this tokenization shouldn't be at here
+        //it should be at when you are creating field Tokens
         public string eatIdentifier()
         {
             if (!matchIdentifier())
                 throw new MismatchTokenType("identifier", this.currentToken);
-            string res= (string)this.currentToken.Value;
+            string res = (string)this.currentToken.Value;
+
+            Token peekNexToken = (this.currentIndex+1 <= this.tokenListLength-1) ?
+                    this.tokens[this.currentIndex + 1] : null;
+            if(peekNexToken!=null && peekNexToken.Terminal.Name=="delimiter" 
+                && peekNexToken.Text == ".")
+            {
+                Token peekNNextToken= (this.currentIndex+2 <= this.tokenListLength-1) ?
+                    this.tokens[this.currentIndex + 2] : null;
+                if(peekNNextToken != null && peekNNextToken.Terminal.Name== "numberConstant")
+                {
+                    res = res + "." + peekNNextToken.Value.ToString();
+                    this.currentToken.Value = res;
+                    this.tokens.RemoveAt(this.currentIndex+1);
+                    this.tokens.RemoveAt(this.currentIndex + 1);
+                }
+            } 
             next();
             return res;    
         }

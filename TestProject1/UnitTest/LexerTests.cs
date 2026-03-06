@@ -7,6 +7,10 @@ using BLL.SQLProcessing;
 
 namespace TestProject1.UnitTest
 {
+    //not done: lacking testing knowledge
+    //not done: lack applying test case technique
+    //not done: lacking the true essence of what testing is
+    //not done: lacking test coverage, low test coverage
     public class LexerTests
     {
         private Lexer lexer;

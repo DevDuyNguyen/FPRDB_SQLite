@@ -28,7 +28,7 @@ namespace BLL.SQLProcessing
         {
             Token nearToken;
             nearToken = this.lexer.getCurrentToken();
-            return new SQLSyntaxException(nearToken.Terminal.ToString(),
+            return new SQLSyntaxException(nearToken.Value.ToString(),
                 nearToken.Location.Line,
                 nearToken.Location.Column,
                 message
@@ -106,7 +106,8 @@ namespace BLL.SQLProcessing
             return new FieldInfo(type, txtLength);
 
         }
-        private Field fieldDef()
+        //mocking for private
+        public Field fieldDef()
         {
             string fieldName = field();
             FieldInfo fieldInfo = typeDef();
