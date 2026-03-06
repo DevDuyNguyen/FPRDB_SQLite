@@ -229,7 +229,6 @@
             IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmManageFuzzySet.IconOptions.Image");
             Name = "frmManageFuzzySet";
             Text = "Fuzzy Set Detail";
-            Load += frmManageFuzzySet_Load;
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).EndInit();
             splitContainerControl1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).EndInit();
