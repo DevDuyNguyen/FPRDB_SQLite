@@ -1,14 +1,12 @@
-﻿using DevExpress.XtraRichEdit.Import.EPub;
-using Irony.Parsing;
+﻿using Irony.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace FPRDB_SQLite.BLL
+namespace BLL.SQLProcessing
 {
     public class MismatchTokenType : Exception
     {
@@ -25,11 +23,12 @@ namespace FPRDB_SQLite.BLL
     {
         public FPRDBSQLTerminals() : base(false)
         {
-            var comma = new KeyTerm(",", "comma");
-            var openParenthesis = new KeyTerm("(", "openParenthesis");
-            var closedParenthesis = new KeyTerm(")", "closedParenthesis");
-            var openSquareBracket = new KeyTerm("[", "openSquareBracket");
-            var closedSquareBracket = new KeyTerm("]", "closedSquareBracket");
+            //var comma = new KeyTerm(",", "comma");
+            var asterisk = new KeyTerm("*", "asterisk");
+            //var openParenthesis = new KeyTerm("(", "openParenthesis");
+            //var closedParenthesis = new KeyTerm(")", "closedParenthesis");
+            //var openSquareBracket = new KeyTerm("[", "openSquareBracket");
+            //var closedSquareBracket = new KeyTerm("]", "closedSquareBracket");
 
             //var select = ToTerm("SELECT", "keyword");
             //var from = ToTerm("FROM", "keyword");
@@ -74,9 +73,7 @@ namespace FPRDB_SQLite.BLL
             var positive = ToTerm("+", "unary operator");
 
             var any = new NonTerminal("any");
-            any.Rule = comma | openParenthesis | closedParenthesis
-                | openSquareBracket | closedSquareBracket
-                | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
+            any.Rule =asterisk | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
                 | probConjunctionStrategy | probDisjunctionStrategy | probDifferencetionStrategy
                 | negative | positive;
@@ -295,7 +292,7 @@ namespace FPRDB_SQLite.BLL
 
         public bool matchIdentifier()
         {
-            return this.currentToken.Terminal.Name == "identifier";
+            return (this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
         }
         public string eatIdentifier()
         {
@@ -304,6 +301,15 @@ namespace FPRDB_SQLite.BLL
             string res= (string)this.currentToken.Value;
             next();
             return res;    
+        }
+        public Object getPrevToken()
+        {
+            if (this.currentIndex != 0)
+                return this.tokens[this.currentIndex - 1];
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.SQLProcessing;
 
 namespace BLL.Common
 {
@@ -16,6 +17,8 @@ namespace BLL.Common
         private FuzzySetService fuzzySetService;
         private FuzzySetDAO fuzzySetDAO;
         private DatabaseManager databseExportImport;
+        private Lexer lexer;
+        private Parser parser;
 
         public CompositionRoot()
         {
