@@ -22,6 +22,7 @@ namespace BLL.Common
         private Preprocessor preprocessor;
         private MetadataManager metadataMgr;
         private BasicUpdatePlanner updatePlanner;
+        private SQLProcessor sqlProcessor;
         public CompositionRoot()
         {
             Initialize();
@@ -38,6 +39,7 @@ namespace BLL.Common
             this.metadataMgr = new MetadataManager(this.dbMgr);
             this.preprocessor = new Preprocessor(this.metadataMgr);
             this.updatePlanner=new BasicUpdatePlanner(this.dbMgr);
+            this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor);
 
         }
 
@@ -49,6 +51,7 @@ namespace BLL.Common
         {
             return this.fuzzySetService;
         }
+        public SQLProcessor getSQLProcessor() => this.sqlProcessor;
 
         //delete: for testing
         public FuzzySetDAO getFuzzySetDAO()

@@ -162,7 +162,7 @@ namespace BLL.SQLProcessing
         {
             try
             {
-                lexer.eatKeyword("CREATE");
+                //lexer.eatKeyword("CREATE");
                 lexer.eatKeyword("SCHEMA");
                 string schemaName = schema();
                 lexer.eatDelimiter("(");
@@ -183,12 +183,19 @@ namespace BLL.SQLProcessing
             {
                 throw createSQLSyntaxException(ex.Message);
             }
-            catch(SQLSyntaxException ex)
+        }
+        public Object create()
+        {
+            lexer.eatKeyword("CREATE");
+            if (lexer.matchKeyword("SCHEMA"))
             {
-                throw ex;
+                return createSchema();
+            }
+            else
+            {
+                throw new NotImplementedException("create relation");
             }
         }
-
 
     }
 }

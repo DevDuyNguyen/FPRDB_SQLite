@@ -16,7 +16,7 @@ namespace BLL
 {
     public class Program
     {
-        static string dbFile = "C:\\Users\\Admin\\Downloads\\test\\db1.db";
+        static string dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
         //not done: Moq for mocking
         static void test_createDiscreteFuzzySet()
         {
@@ -142,18 +142,36 @@ namespace BLL
 
             List<Field> fieldDefs = new List<Field>()
             {
-                new Field("attr1", new FieldInfo(FieldType.INT, 0)),
-                new Field("attr2", new FieldInfo(FieldType.INT, 0)),
-                new Field("attr3", new FieldInfo(FieldType.INT, 0)),
+                new Field("id", new FieldInfo(FieldType.INT, 0)),
+                new Field("name", new FieldInfo(FieldType.VARCHAR, 50)),
+                new Field("age", new FieldInfo(FieldType.INT, 0)),
             };
 
-            FPRDBSchema data1 = new FPRDBSchema("thisschemaneverexist", null,
-                new List<string>() { "attr1", "attr2", "attr3" },
-                "pk_1");
+            FPRDBSchema data1 = new FPRDBSchema("schema15", fieldDefs,
+                new List<string>() { "id", "name"},
+                "pk_15");
+            updatePlanner.executeCreateSchema(data1);
 
+        }
+        static void SQLProcessor_executeDataDefinition_success()
+        {
+
+            CompositionRoot root = new CompositionRoot();
+            root.getDBMgr().loadDB(dbFile);
+            SQLProcessor sqlProcessor = root.getSQLProcessor();
+            string sql = @"CREATE SCHEMA student (
+                student_id int, 
+                name varchar(100), 
+                age DIST_FUZZYSET_INT,
+                CONSTRAINT pk_student primary key(student_id)
+                )";
+            sqlProcessor.executeDataDefinition(sql);
         }
         static void Main()
         {
+            //CompositionRoot root = new CompositionRoot();
+            //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
+            SQLProcessor_executeDataDefinition_success();
         }
     }
 }

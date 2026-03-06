@@ -21,27 +21,21 @@ namespace BLL.SQLProcessing
         {
             string schemaName = data.getSchemaName();
             string constraintName = data.getPrimaryConstraintName();
-            try
+            if (this.metadataMgr.isSchemaExist(schemaName))
             {
-                if (this.metadataMgr.isSchemaExist(schemaName))
-                {
-                    throw new SemanticException($"Schema {schemaName} already exists");
-                }
-                if(data.getPrimaryConstraintName()=="" || data.getPrimaryConstraintName()==null 
-                    || data.getPrimaryConstraintName() == null || data.getPrimarykey().Count == 0)
-                {
-                    throw new SemanticException($"Schema creation must have primary key");
-                }
-                if (this.metadataMgr.isConstraintExist(constraintName))
-                {
-                    throw new SemanticException($"Constraint with name {constraintName} already exists");
-                }
-                return true;
+                throw new SemanticException($"Schema {schemaName} already exists");
             }
-            catch(Exception ex)
+            if(data.getPrimaryConstraintName()=="" || data.getPrimaryConstraintName()==null 
+                || data.getPrimaryConstraintName() == null || data.getPrimarykey().Count == 0)
             {
-                throw ex;
+                throw new SemanticException($"Schema creation must have primary key");
             }
+            if (this.metadataMgr.isConstraintExist(constraintName))
+            {
+                throw new SemanticException($"Constraint with name {constraintName} already exists");
+            }
+            return true;
+
         }
 
 
