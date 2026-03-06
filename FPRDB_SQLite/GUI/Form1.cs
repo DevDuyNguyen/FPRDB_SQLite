@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using BLL;
+using BLL.Services;
 
 namespace FPRDB_SQLite
 {
@@ -18,7 +18,7 @@ namespace FPRDB_SQLite
         public Form1(DatabaseService databaseService)
         {
             this.databaseService = databaseService;
-;            InitializeComponent();
+            InitializeComponent();
         }
         private void LoadDatabaseTree()
         {
