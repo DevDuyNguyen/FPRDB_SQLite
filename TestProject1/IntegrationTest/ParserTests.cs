@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestProject1.UnitTest
+namespace TestProject1.IntegrationTest
 {
     public class ParserTests
     {
@@ -91,6 +91,21 @@ namespace TestProject1.UnitTest
             Assert.Equal(fieldName3, res[2].getFieldName());
             Assert.Equal(type3, res[2].getFieldInfo().getType());
             Assert.Equal(txtLength3, res[2].getFieldInfo().getTXTLength());
+        }
+
+        [Theory]
+        [InlineData("id, name, age")]
+        public void Parser_primaryAttributes_success(string str)
+        {
+            //arrange
+            this.parser.parse(str);
+            //act
+            List<string> primaryAttributeList = this.parser.primaryAttributes();
+            //assert
+            Assert.Equal("id", primaryAttributeList[0]);
+            Assert.Equal("name", primaryAttributeList[1]);
+            Assert.Equal("age", primaryAttributeList[2]);
+
         }
 
     }

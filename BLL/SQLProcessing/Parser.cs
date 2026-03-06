@@ -10,6 +10,7 @@ using Irony.Parsing;
 
 namespace BLL.SQLProcessing
 {
+    //not done: not unit test, cause no mocking yet
     public class RecursiveDescentParser
     {
         private Lexer lexer;
@@ -128,7 +129,8 @@ namespace BLL.SQLProcessing
             }
             return fieldDefList;
         }
-        private List<string> primaryAttributes()
+        //not done: mocking for private
+        public List<string> primaryAttributes()
         {
             List<string> fieldNames = new List<string>();
             fieldNames.Add(field());
