@@ -44,7 +44,7 @@ namespace BLL.SQLProcessing
         {
             return lexer.eatIdentifier();
         }
-        //mocking for private
+        //not done:mocking for private
         public FieldInfo typeDef()
         {
             FieldType type;
@@ -106,14 +106,15 @@ namespace BLL.SQLProcessing
             return new FieldInfo(type, txtLength);
 
         }
-        //mocking for private
+        //not done: mocking for private
         public Field fieldDef()
         {
             string fieldName = field();
             FieldInfo fieldInfo = typeDef();
             return new Field(fieldName, fieldInfo);
         }
-        private List<Field> fieldDefs()
+        //mot done: mocking for private
+        public List<Field> fieldDefs()
         {
             List<Field> fieldDefList = new List<Field>();
             fieldDefList.Add(fieldDef());

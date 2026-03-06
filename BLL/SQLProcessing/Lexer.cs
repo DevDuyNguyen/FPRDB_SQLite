@@ -158,7 +158,7 @@ namespace BLL.SQLProcessing
         }
         public bool matchDelimiter(string delimiter)
         {
-            if (this.currentToken.Terminal.Name == "delimiter"
+            if (this.currentToken!=null && this.currentToken.Terminal.Name == "delimiter"
                 && this.currentToken.Text==delimiter)
                 return true;
             else
@@ -173,7 +173,7 @@ namespace BLL.SQLProcessing
 
         public bool matchKeyword(string w)
         {
-            if (this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w.ToLower()))
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w.ToLower()))
             {
                 string tokenStr = (string)this.currentToken.Value;
                 tokenStr = tokenStr.ToLower();
@@ -191,7 +191,7 @@ namespace BLL.SQLProcessing
         //non-orphan unary operator: -1, -12
         public bool matchOrphanUnaryOperator()
         {
-            if (this.currentToken.Terminal.Name == "unary operator")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "unary operator")
             {
                 Token peekNexToken = (this.currentIndex<this.tokenListLength)? 
                     this.tokens[this.currentIndex + 1]:null;
@@ -204,7 +204,7 @@ namespace BLL.SQLProcessing
         //it should be at when you are creating field Tokens
         public bool matchNumberConstant()
         {
-            if (this.currentToken.Terminal.Name == "unary operator")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "unary operator")
             {
                 if(!matchOrphanUnaryOperator())
                 {
@@ -237,7 +237,7 @@ namespace BLL.SQLProcessing
 
         public bool matchStringConstant()
         {
-            if (this.currentToken.Terminal.Name == "singleQuoteStringConstant"
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "singleQuoteStringConstant"
                 || this.currentToken.Terminal.Name == "doubleQuoteStringConstant")
             {
                 return true;
@@ -255,7 +255,7 @@ namespace BLL.SQLProcessing
 
         public bool matchBooleanConstant()
         {
-            if (this.currentToken.Terminal.Name == "booleanConstant")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "booleanConstant")
                 return true;
             return false;
         }
@@ -270,7 +270,7 @@ namespace BLL.SQLProcessing
 
         public bool matchOperator()
         {
-            if (this.currentToken.Terminal.Name == "comparison operator")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "comparison operator")
                 return true;
             return false;
         }
@@ -285,7 +285,7 @@ namespace BLL.SQLProcessing
 
         public bool matchProbabilisticCombinationStrategy()
         {
-            if (this.currentToken.Terminal.Name == "probabilistic combination strategy")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "probabilistic combination strategy")
                 return true;
             return false;
         }
@@ -300,7 +300,7 @@ namespace BLL.SQLProcessing
 
         public bool matchIdentifier()
         {
-            return (this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
+            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
         }
         //not done: this tokenization shouldn't be at here
         //it should be at when you are creating field Tokens
