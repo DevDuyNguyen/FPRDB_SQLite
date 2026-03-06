@@ -1,13 +1,12 @@
 ﻿using Irony.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
-namespace FPRDB_SQLite.BLL
+namespace BLL.SQLProcessing
 {
     public class MismatchTokenType : Exception
     {
@@ -24,11 +23,13 @@ namespace FPRDB_SQLite.BLL
     {
         public FPRDBSQLTerminals() : base(false)
         {
-            var comma = new KeyTerm(",", "comma");
-            var openParenthesis = new KeyTerm("(", "openParenthesis");
-            var closedParenthesis = new KeyTerm(")", "closedParenthesis");
-            var openSquareBracket = new KeyTerm("[", "openSquareBracket");
-            var closedSquareBracket = new KeyTerm("]", "closedSquareBracket");
+            var comma = new KeyTerm(",", "delimiter");
+            var dot = new KeyTerm(".", "delimiter");
+            var asterisk = new KeyTerm("*", "asterisk");
+            var openParenthesis = new KeyTerm("(", "delimiter");
+            var closedParenthesis = new KeyTerm(")", "delimiter");
+            var openSquareBracket = new KeyTerm("[", "delimiter");
+            var closedSquareBracket = new KeyTerm("]", "delimiter");
 
             //var select = ToTerm("SELECT", "keyword");
             //var from = ToTerm("FROM", "keyword");
@@ -73,8 +74,7 @@ namespace FPRDB_SQLite.BLL
             var positive = ToTerm("+", "unary operator");
 
             var any = new NonTerminal("any");
-            any.Rule = comma | openParenthesis | closedParenthesis
-                | openSquareBracket | closedSquareBracket
+            any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket
                 | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
                 | probConjunctionStrategy | probDisjunctionStrategy | probDifferencetionStrategy
@@ -102,9 +102,13 @@ namespace FPRDB_SQLite.BLL
         private Scanner _scanner;
         private int currentIndex = -1;
         private List<Token> tokens = new List<Token>();
-        private int tokenListLength;
-        private List<string> keywords = new List<String>() { "select", "from", "where", "and",
-        "or", "not", "natural join", "union", "intersect", "except"};
+        private int tokenListLength { get => this.tokens.Count;}
+        private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
+            "union", "intersect", "except", "not", "and", "or",
+            "create", "schema", "int", "float", "char", "varchar", "boolean",
+            "dist_fuzzyset_int", "dist_fuzzyset_float", "dist_fuzzyset_text",
+            "cont_fuzzyset", "constraint", "primary", "key",
+            "relation", "on", "insert", "into", "values", "update", "set", "delete", "drop"};
 
         public void printAllToken()
         {
@@ -114,7 +118,7 @@ namespace FPRDB_SQLite.BLL
                 next();
             }
         }
-
+        public Lexer() { }
         public Lexer(string s)
         {
             analyze(s);
@@ -135,9 +139,11 @@ namespace FPRDB_SQLite.BLL
             {
                 token = this._scanner.VsReadToken(ref state);
                 if (token != null && token.Category == TokenCategory.Content)
+                {
+                    
                     this.tokens.Add(token);
+                }
             } while (token != null && token.Terminal.Name != "EOF");
-            this.tokenListLength = this.tokens.Count;
             next();
         }
 
@@ -155,7 +161,8 @@ namespace FPRDB_SQLite.BLL
         }
         public bool matchDelimiter(string delimiter)
         {
-            if (this.currentToken.Terminal.Name == delimiter)
+            if (this.currentToken!=null && this.currentToken.Terminal.Name == "delimiter"
+                && this.currentToken.Text==delimiter)
                 return true;
             else
                 return false;
@@ -166,10 +173,17 @@ namespace FPRDB_SQLite.BLL
                 throw new MismatchTokenType("delimiter", this.currentToken);
             next();
         }
-
+        public bool matchAnyKeyword()
+        {
+            if (this.currentToken != null &&  this.keywords.Contains(this.currentToken.Text.ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
         public bool matchKeyword(string w)
         {
-            if (this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w))
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w.ToLower()))
             {
                 string tokenStr = (string)this.currentToken.Value;
                 tokenStr = tokenStr.ToLower();
@@ -184,10 +198,10 @@ namespace FPRDB_SQLite.BLL
                 throw new MismatchTokenType("keyword", this.currentToken);
             next();
         }
-
+        //non-orphan unary operator: -1, -12
         public bool matchOrphanUnaryOperator()
         {
-            if (this.currentToken.Terminal.Name == "unary operator")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "unary operator")
             {
                 Token peekNexToken = (this.currentIndex<this.tokenListLength)? 
                     this.tokens[this.currentIndex + 1]:null;
@@ -196,10 +210,11 @@ namespace FPRDB_SQLite.BLL
             }
             return false; 
         }
-        
+        //not done: this tokenization shouldn't be at here
+        //it should be at when you are creating field Tokens
         public bool matchNumberConstant()
         {
-            if (this.currentToken.Terminal.Name == "unary operator")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "unary operator")
             {
                 if(!matchOrphanUnaryOperator())
                 {
@@ -211,6 +226,7 @@ namespace FPRDB_SQLite.BLL
                     if (this.currentToken.Terminal.Name == "numberConstant")
                     {
                         this.currentToken.Value = number * Convert.ToDouble(this.currentToken.Value);
+                        //this.tokens[this.currentIndex].Value = this.currentToken.Value;
                         return true;
                     }
                 }
@@ -231,7 +247,7 @@ namespace FPRDB_SQLite.BLL
 
         public bool matchStringConstant()
         {
-            if (this.currentToken.Terminal.Name == "singleQuoteStringConstant"
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "singleQuoteStringConstant"
                 || this.currentToken.Terminal.Name == "doubleQuoteStringConstant")
             {
                 return true;
@@ -249,7 +265,7 @@ namespace FPRDB_SQLite.BLL
 
         public bool matchBooleanConstant()
         {
-            if (this.currentToken.Terminal.Name == "booleanConstant")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "booleanConstant")
                 return true;
             return false;
         }
@@ -264,7 +280,7 @@ namespace FPRDB_SQLite.BLL
 
         public bool matchOperator()
         {
-            if (this.currentToken.Terminal.Name == "comparison operator")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "comparison operator")
                 return true;
             return false;
         }
@@ -279,7 +295,7 @@ namespace FPRDB_SQLite.BLL
 
         public bool matchProbabilisticCombinationStrategy()
         {
-            if (this.currentToken.Terminal.Name == "probabilistic combination strategy")
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "probabilistic combination strategy")
                 return true;
             return false;
         }
@@ -294,15 +310,60 @@ namespace FPRDB_SQLite.BLL
 
         public bool matchIdentifier()
         {
-            return this.currentToken.Terminal.Name == "identifier";
+            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
         }
+        //not done: this tokenization shouldn't be at here
+        //it should be at when you are creating field Tokens
         public string eatIdentifier()
         {
             if (!matchIdentifier())
                 throw new MismatchTokenType("identifier", this.currentToken);
-            string res= (string)this.currentToken.Value;
+            string res = (string)this.currentToken.Value;
+
+            Token peekNexToken = (this.currentIndex+1 <= this.tokenListLength-1) ?
+                    this.tokens[this.currentIndex + 1] : null;
+            if(peekNexToken!=null && peekNexToken.Terminal.Name=="delimiter" 
+                && peekNexToken.Text == ".")
+            {
+                Token peekNNextToken= (this.currentIndex+2 <= this.tokenListLength-1) ?
+                    this.tokens[this.currentIndex + 2] : null;
+                if(peekNNextToken != null && peekNNextToken.Terminal.Name== "numberConstant")
+                {
+                    res = res + "." + peekNNextToken.Value.ToString();
+                    this.currentToken.Value = res;
+                    this.tokens.RemoveAt(this.currentIndex+1);
+                    this.tokens.RemoveAt(this.currentIndex + 1);
+                }
+            } 
             next();
             return res;    
+        }
+        public Token getPrevToken()
+        {
+            if (this.currentIndex != 0)
+                return this.tokens[this.currentIndex - 1];
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+        public Token getCurrentToken()
+        {
+            if (this.currentIndex <= this.tokens.Count-1)
+                return this.tokens[this.currentIndex];
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+        public Token peekNext()
+        {
+            if (this.currentIndex < this.tokens.Count - 1)
+            {
+                return this.tokens[this.currentIndex + 1];
+            }
+            else
+                return null;
         }
     }
 }

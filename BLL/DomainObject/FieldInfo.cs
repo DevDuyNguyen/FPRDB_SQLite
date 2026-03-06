@@ -6,17 +6,17 @@ namespace BLL.DomainObject
     {
         private FieldType type;
 
-        private long txtLength { get; set; } = 255;
-        public FieldInfo(FieldType type, long length)
+        private int txtLength { get; set; } = 255;
+        public FieldInfo(FieldType type, int length)
         {
             this.type = type;
             this.txtLength = length;
         }
-        private FieldType getType()
+        public FieldType getType()
         {
             return this.type;
         }
-        private long getTXTLength()
+        public int getTXTLength()
         {
             return this.txtLength;
         }

@@ -68,13 +68,12 @@ namespace BLL
                 "type_type TEXT NOT NULL" +
                 ");";
             string create_fprdb_Attribute = "CREATE TABLE fprdb_Attribute(" +
-                "att_relschema_id INTEGER," +
-                "att_number INTEGER," +
+                "att_relschema_id INTEGER NOT NULL," +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "att_name TEXT NOT NULL," +
                 "att_type_id INTEGER NOT NULL," +
                 "att_type_mod INTEGER," +
                 "att_not_null BOOLEAN," +
-                "PRIMARY KEY(att_relschema_id, att_number)," +
                 "FOREIGN KEY (att_relschema_id) REFERENCES fprdb_RelationSchema (oid)," +
                 "FOREIGN KEY (att_type_id) REFERENCES fprdb_Type (oid)" +
                 ");";
@@ -176,6 +175,7 @@ namespace BLL
             }
             catch (Exception ex)
             {
+                this.connection.Close();
                 throw ex;
             }
         }
@@ -192,6 +192,7 @@ namespace BLL
             }
             catch (Exception ex)
             {
+                this.connection.Close();
                 throw ex;
             }
         }
