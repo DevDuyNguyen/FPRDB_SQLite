@@ -153,7 +153,7 @@ namespace BLL
             updatePlanner.executeCreateSchema(data1);
 
         }
-        static void SQLProcessor_executeDataDefinition_success()
+        static void SQLProcessor_executeDataDefinition_createschema_success()
         {
 
             CompositionRoot root = new CompositionRoot();
@@ -216,11 +216,21 @@ namespace BLL
             updatePlanner.executeCreateRelation(data);
 
         }
+        static void SQLProcessor_executeDataDefinition_createrelation_success()
+        {
+            CompositionRoot root = new CompositionRoot();
+            root.getDBMgr().loadDB(dbFile);
+            SQLProcessor processor = root.getSQLProcessor();
+            
+            string sql = "create relation student23 on student2";
+            processor.executeDataDefinition(sql);
+
+        }
         static void Main()
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            UpdatePlanner_executeCreateRelation_success();
+            SQLProcessor_executeDataDefinition_createrelation_success();
         }
     }
 }

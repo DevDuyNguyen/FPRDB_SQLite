@@ -53,7 +53,26 @@ namespace BLL.SQLProcessing
             }
             else
             {
-                throw new NotImplementedException("create relation");
+                FPRDBRelation createRelationData = (FPRDBRelation)data;
+                try
+                {
+                    if (this.preProcessor.checkSemanticCreateRelation(createRelationData))
+                    {
+                        this.updatePlanner.executeCreateRelation(createRelationData);
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                catch (SemanticException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.StackTrace);
+                    throw new Exception("Something went woring");
+                }
             }
         }
     }

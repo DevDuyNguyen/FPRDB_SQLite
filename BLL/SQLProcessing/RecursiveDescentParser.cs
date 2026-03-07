@@ -195,7 +195,7 @@ namespace BLL.SQLProcessing
             }
             else
             {
-                throw new NotImplementedException("create relation");
+                return createRelation();
             }
         }
         public string relation()
