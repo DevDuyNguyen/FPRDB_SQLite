@@ -1,16 +1,19 @@
-﻿using DevExpress.CodeParser;
+﻿using BLL;
+using BLL.DomainObject;
+using BLL.DTO;
+using DevExpress.CodeParser;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static FPRDB_SQLite.GUI.frmManageFuzzySet;
-using BLL.DTO;
 
 namespace FPRDB_SQLite.GUI.UserControls
 {
@@ -19,6 +22,24 @@ namespace FPRDB_SQLite.GUI.UserControls
         public DiscreteFuzzySet()
         {
             InitializeComponent();
+            cboDataType.Properties.Items.AddRange(new object[] { FieldType.distFS_INT, FieldType.distFS_FLOAT, FieldType.distFS_TEXT });
+        }
+        // Hàm lấy thông tin loại DiscreteFuzzySet từ UserControl để truyền ra form UI
+        public FieldType getFuzzySetType()
+        {
+            return (FieldType)cboDataType.SelectedItem;
+        }
+        // Hàm lấy dữ liệu từ UserControl để tạo một DiscreteFuzzySetDTO
+        public DiscreteFuzzySetDTO<T> getDiscreteFuzzySet<T>()
+        {
+            var fuzzySetName = txtNameDiscFuzzy.Text;
+            FieldType fuzzySetType = (FieldType)cboDataType.SelectedItem;
+            var rows = grdvDiscFuzzy.DataSource as IEnumerable<dynamic>;
+
+            var values = rows.Select(r => (T)r.value).ToList();
+            var degrees = rows.Select(r => (float)r.membershipDegree).ToList();
+
+            return new DiscreteFuzzySetDTO<T>(values, degrees, fuzzySetName, fuzzySetType);
         }
         // Phương thức này sẽ được gọi khi người dùng chọn một FuzzySet
         public void LoadFuzzySet(FuzzySetDTO fuzzySet)
