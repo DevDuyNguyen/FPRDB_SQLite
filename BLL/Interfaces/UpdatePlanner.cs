@@ -11,6 +11,6 @@ namespace BLL.Interfaces
     public interface UpdatePlanner
     {
         public bool executeCreateSchema(FPRDBSchema data);
-
+        public bool executeCreateRelation(FPRDBRelation data);
     }
 }

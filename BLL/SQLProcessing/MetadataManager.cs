@@ -24,7 +24,9 @@ namespace BLL.SQLProcessing
             {
                 string sql = $"select 1 from fprdb_RelationSchema where relschema_name='{name}'";
                 IDataReader reader = this.databaseMgr.executeQuery(sql);
-                return reader.Read();
+                bool ans = reader.Read();
+                reader.Close();
+                return ans;
             }
             catch (Exception ex)
             {
@@ -37,7 +39,9 @@ namespace BLL.SQLProcessing
             {
                 string sql = $"select 1 from fprdb_Constraint where con_name='{name}'";
                 IDataReader reader = this.databaseMgr.executeQuery(sql);
-                return reader.Read();
+                bool ans= reader.Read();
+                reader.Close();
+                return ans;
             }
             catch (Exception ex)
             {
@@ -45,9 +49,15 @@ namespace BLL.SQLProcessing
             }
         }
 
-        //public FPRDBRelation getRelation(string name)
-        //{
-
-        //}
+        public bool isRelationExist(string name)
+        {
+            IDataReader reader = this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_Relation WHERE rel_name='{name}'");
+            bool ans;
+            using (reader)
+            {
+                ans = reader.Read();
+            }
+            return ans;
+        }
     }
 }

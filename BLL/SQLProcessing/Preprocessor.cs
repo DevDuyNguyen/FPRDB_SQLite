@@ -1,11 +1,12 @@
 ﻿using BLL.DomainObject;
+using BLL.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.Exceptions;
-using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {
@@ -36,6 +37,20 @@ namespace BLL.SQLProcessing
             }
             return true;
 
+        }
+        public bool checkSemanticCreateRelation(FPRDBRelation data)
+        {
+            //relation name must not existed before
+            if (this.metadataMgr.isRelationExist(data.getRelName()))
+            {
+                throw new SemanticException($"Relation with name {data.getRelName()} already exists");
+            }
+            //schema must existed before
+            if (!this.metadataMgr.isSchemaExist(data.getSchemaName()))
+            {
+                throw new SemanticException($"No schema with name {data.getSchemaName()} exists");
+            }
+            return true;
         }
 
 
