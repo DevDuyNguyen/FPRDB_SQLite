@@ -54,7 +54,7 @@ namespace BLL.Services
                     rsch.oid                 AS ""rsch.oid"", 
                     rsch.relschema_name      AS ""rsch.relschema_name"",
                     attr.att_relschema_id    AS ""attr.att_relschema_id"",
-                    attr.att_number          AS ""attr.att_number"", 
+                    attr.oid          		AS ""attr.oid"", 
                     attr.att_name            AS ""attr.att_name"", 
                     attr.att_type_id         AS ""attr.att_type_id"", 
                     attr.att_type_mod        AS ""attr.att_type_mod"", 
@@ -67,7 +67,7 @@ namespace BLL.Services
                 JOIN fprdb_Attribute AS attr      ON rsch.oid = attr.att_relschema_id
                 JOIN fprdb_Type AS type           ON attr.att_type_id = type.oid
                 JOIN fprdb_Constraint AS cons     ON cons.con_relschema_id = rsch.oid
-                WHERE cons.con_type = 'p'
+                WHERE cons.con_type = 'IDENTITY'
                 ORDER BY ""rsch.oid"";";
 
             try
@@ -122,7 +122,7 @@ namespace BLL.Services
                     rsch.oid            AS ""rsch.oid"",
                     rsch.relschema_name AS ""rsch.relschema_name"",
                     attr.att_relschema_id AS ""attr.att_relschema_id"",
-                    attr.att_number     AS ""attr.att_number"",
+                    attr.oid     AS ""attr.att_number"",
                     attr.att_name       AS ""attr.att_name"",
                     attr.att_type_id    AS ""attr.att_type_id"",
                     attr.att_type_mod   AS ""attr.att_type_mod"",
@@ -140,7 +140,7 @@ namespace BLL.Services
                     ON attr.att_type_id = type.oid
                 JOIN fprdb_Constraint AS cons 
                     ON cons.con_relschema_id = rsch.oid
-                WHERE cons.con_type = 'p'
+                WHERE cons.con_type = 'IDENTITY'
                 ORDER BY ""rsch.oid""
             ";
 
