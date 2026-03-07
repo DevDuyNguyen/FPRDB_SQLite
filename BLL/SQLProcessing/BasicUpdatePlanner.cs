@@ -20,33 +20,33 @@ namespace BLL.SQLProcessing
 
         public bool executeCreateSchema(FPRDBSchema data)
         {
-            string createTableForSchemaSQL = $@"CREATE TABLE {data.getSchemaName()} (";
+            //string createTableForSchemaSQL = $@"CREATE TABLE {data.getSchemaName()} (";
             
-            foreach(Field field in data.getFields())
-            {
-                FieldInfo fieldInfo = field.getFieldInfo();
+            //foreach(Field field in data.getFields())
+            //{
+            //    FieldInfo fieldInfo = field.getFieldInfo();
 
 
-                string fieldDef = $"{field.getFieldName()} {fieldInfo.getType().ToString()}";
-                if (fieldInfo.getType() == FieldType.VARCHAR)
-                {
-                    fieldDef += $"({fieldInfo.getTXTLength()})";
-                }
-                fieldDef += ",";
-                createTableForSchemaSQL += fieldDef;
-            }
+            //    string fieldDef = $"{field.getFieldName()} {fieldInfo.getType().ToString()}";
+            //    if (fieldInfo.getType() == FieldType.VARCHAR)
+            //    {
+            //        fieldDef += $"({fieldInfo.getTXTLength()})";
+            //    }
+            //    fieldDef += ",";
+            //    createTableForSchemaSQL += fieldDef;
+            //}
 
-            string primaryKeyConstraint = $"PRIMARY KEY (";
-            foreach(string keyAttribute in data.getPrimarykey())
-            {
-                primaryKeyConstraint+=keyAttribute+",";
-            }
-            primaryKeyConstraint=primaryKeyConstraint.TrimEnd(',');
-            primaryKeyConstraint += ")";
-            createTableForSchemaSQL += primaryKeyConstraint + ")";
+            //string primaryKeyConstraint = $"PRIMARY KEY (";
+            //foreach(string keyAttribute in data.getPrimarykey())
+            //{
+            //    primaryKeyConstraint+=keyAttribute+",";
+            //}
+            //primaryKeyConstraint=primaryKeyConstraint.TrimEnd(',');
+            //primaryKeyConstraint += ")";
+            //createTableForSchemaSQL += primaryKeyConstraint + ")";
 
 
-            this.dbMgr.executeNonQuery(createTableForSchemaSQL);
+            //this.dbMgr.executeNonQuery(createTableForSchemaSQL);
             long schemaID;
 
             string insert_fprdb_RelationSchema = $"INSERT INTO fprdb_RelationSchema(relschema_name) VALUES ('{data.getSchemaName()}')";
@@ -75,7 +75,7 @@ namespace BLL.SQLProcessing
                 //this.dbMgr.closeConnection();
 
                 string insertAttributeSQL = @$"INSERT INTO fprdb_Attribute(att_relschema_id, att_name, att_type_id, att_type_mod, att_not_null)
-                    VALUES ({schemaID}, '{field.getFieldName()}', {typeID}, {fieldInfo.getTXTLength()}, {primaryKeyConstraint.Contains(field.getFieldName())})
+                    VALUES ({schemaID}, '{field.getFieldName()}', {typeID}, {fieldInfo.getTXTLength()}, {data.getPrimarykey().Contains(field.getFieldName())})
                 ";
                 this.dbMgr.executeNonQuery(insertAttributeSQL);
             }
