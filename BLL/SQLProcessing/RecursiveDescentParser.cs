@@ -1,12 +1,14 @@
-﻿using System;
+﻿using BLL.DomainObject;
+using BLL.Enums;
+using BLL.Exceptions;
+using BLL.Interfaces;
+using Irony.Parsing;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.DomainObject;
-using BLL.Enums;
-using BLL.Exceptions;
-using Irony.Parsing;
 
 namespace BLL.SQLProcessing
 {
@@ -211,8 +213,128 @@ namespace BLL.SQLProcessing
             string schemaName = schema();
             return new FPRDBRelation(relationName, schemaName);
         }
+        public List<string> fieldList()
+        {
+            List<string> fields = new List<string>();
+            fields.Add(field());
+            while (lexer.matchDelimiter(","))
+            {
+                lexer.eatDelimiter(",");
+                fields.Add(field());
+            }
+            return fields;
+        }
+        public Constant constant()
+        {
+            if (lexer.matchNumberConstant())
+            {
+                object value = lexer.eatNumberConstant();
+                if (value is int)
+                    return new IntConstant((int)value);
+                else
+                    return new FloatConstant((float)value);
+            }
+            else if (lexer.matchStringConstant())
+            {
+                return new StringConstant(lexer.eatStringConstant());
+            }
+            else if (lexer.matchBooleanConstant())
+            {
+                return new BooleanConstant(lexer.eatBooleanConstant());
+            }
+            else if (lexer.matchFuzzySetConstant())
+            {
+                return new FuzzySetConstant(lexer.eatFuzzySetConstant());
+            }
+            else
+            {
+                throw createSQLSyntaxException("Not a constant value");
+            }
+        }
+        private bool isOfType<TExpected>(object value)
+        {
+            if (value == null)
+                return false;
+            else
+            {
+                Type type = typeof(TExpected);
+                return type.IsInstanceOfType(value);
+            }
+        }
 
+        public PossibleValue possibleValue()
+        {
+            lexer.eatDelimiter("(");
+            Constant constantValue = constant();
+            lexer.eatDelimiter(",");
+            lexer.eatDelimiter("[");
+            float lowerBound = Convert.ToSingle(lexer.eatNumberConstant());
+            lexer.eatDelimiter(",");
+            float upperBound = Convert.ToSingle(lexer.eatNumberConstant());
+            lexer.eatDelimiter("]");
+            lexer.eatDelimiter(")");
+            return new PossibleValue(constantValue, lowerBound, upperBound);
+        }
+        public FuzzyProbabilisticValueParsingData fuzzyProbabilisticValue()
+        {
+            FuzzyProbabilisticValueParsingData ans = new FuzzyProbabilisticValueParsingData();
+            List<Constant> valueList=new List<Constant>();
+            List<float> lowerBoundList = new List<float>();
+            List<float> upperBoundList = new List<float>();
 
+            //Type constraintType;
+            lexer.eatDelimiter("{");
+            PossibleValue possibleValueData = possibleValue();
+            valueList.Add(possibleValueData.constant);
+            lowerBoundList.Add(possibleValueData.lowerBound);
+            upperBoundList.Add(possibleValueData.upperBound);
+
+            while (lexer.matchDelimiter(","))
+            {
+                lexer.eatDelimiter(",");
+                possibleValueData = possibleValue();
+                if(valueList.Count!=0 
+                    && !(possibleValueData.constant is FuzzySetConstant)
+                    && valueList[0].GetType()!= possibleValueData.constant.GetType())
+                {
+                    throw new SemanticException("Values within a fuzzy probabilistic value must come from the same domain");
+                }
+                valueList.Add(possibleValueData.constant);
+                lowerBoundList.Add(possibleValueData.lowerBound);
+                upperBoundList.Add(possibleValueData.upperBound);
+            }
+            lexer.eatDelimiter("}");
+            ans.valueList = valueList;
+            ans.intervalProbLowerBoundList = lowerBoundList;
+            ans.intervalProbUpperBoundList = upperBoundList;
+            return ans;
+
+        }
+        public List<FuzzyProbabilisticValueParsingData> fuzzyProbabilisticValueList()
+        {
+            List<FuzzyProbabilisticValueParsingData> ans = new List<FuzzyProbabilisticValueParsingData>();
+            ans.Add(fuzzyProbabilisticValue());
+            while (lexer.matchDelimiter(","))
+            {
+                lexer.eatDelimiter(",");
+                ans.Add(fuzzyProbabilisticValue());
+            }
+            return ans;
+        }
+        public InsertData insert()
+        {
+            lexer.eatKeyword("INSERT");
+            lexer.eatKeyword("INTO");
+            string relName = relation();
+            lexer.eatDelimiter("(");
+            List<string> fields = fieldList();
+            lexer.eatDelimiter(")");
+            lexer.eatKeyword("VALUES");
+            lexer.eatDelimiter("(");
+            List<FuzzyProbabilisticValueParsingData> insertValues = fuzzyProbabilisticValueList();
+            lexer.eatDelimiter(")");
+            return new InsertData(relName, fields, insertValues);
+        }
 
     }
 }
