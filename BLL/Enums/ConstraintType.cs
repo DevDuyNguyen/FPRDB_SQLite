@@ -9,7 +9,6 @@ namespace BLL.Enums
     public enum ConstraintType
     {
         IDENTITY,
-        NOT_NULL,
         REFERENTIAL
     }
 }
