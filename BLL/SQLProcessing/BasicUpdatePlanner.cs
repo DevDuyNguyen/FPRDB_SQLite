@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace BLL.SQLProcessing
 {
     public class BasicUpdatePlanner:UpdatePlanner
@@ -86,10 +87,47 @@ namespace BLL.SQLProcessing
             this.dbMgr.executeNonQuery(primaryKeyConstraintSQL);
 
             return true;
-            
-  
+
+
 
         }
+        //not done: wrong order
+        //public int executeCreateRelation(FPRDBRelation data)
+        //{
+        //    //create sqlite table for relation
+        //    string createTableForSchemaSQL = $@"CREATE TABLE {data.getSchema().getSchemaName()} (";
+
+        //    foreach (Field field in data.getFields())
+        //    {
+        //        FieldInfo fieldInfo = field.getFieldInfo();
+
+
+        //        string fieldDef = $"{field.getFieldName()} {fieldInfo.getType().ToString()}";
+        //        if (fieldInfo.getType() == FieldType.VARCHAR)
+        //        {
+        //            fieldDef += $"({fieldInfo.getTXTLength()})";
+        //        }
+        //        fieldDef += ",";
+        //        createTableForSchemaSQL += fieldDef;
+        //    }
+
+        //    string primaryKeyConstraint = $"PRIMARY KEY (";
+        //    foreach (string keyAttribute in data.getPrimarykey())
+        //    {
+        //        primaryKeyConstraint += keyAttribute + ",";
+        //    }
+        //    primaryKeyConstraint = primaryKeyConstraint.TrimEnd(',');
+        //    primaryKeyConstraint += ")";
+        //    createTableForSchemaSQL += primaryKeyConstraint + ")";
+
+
+        //    this.dbMgr.executeNonQuery(createTableForSchemaSQL);
+
+
+        //    //insert metadata of the relation into fprdb_Relation
+
+
+        //}
 
 
     }
