@@ -122,7 +122,7 @@ namespace BLL.Services
                     rsch.oid            AS ""rsch.oid"",
                     rsch.relschema_name AS ""rsch.relschema_name"",
                     attr.att_relschema_id AS ""attr.att_relschema_id"",
-                    attr.oid     AS ""attr.att_number"",
+                    attr.oid     AS ""attr.oid"",
                     attr.att_name       AS ""attr.att_name"",
                     attr.att_type_id    AS ""attr.att_type_id"",
                     attr.att_type_mod   AS ""attr.att_type_mod"",
