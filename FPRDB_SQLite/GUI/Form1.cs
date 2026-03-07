@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,8 +18,9 @@ namespace FPRDB_SQLite
         public Form1(DatabaseService databaseService)
         {
             this.databaseService = databaseService;
-;            InitializeComponent();
+            InitializeComponent();
         }
+
         private void LoadDatabaseTree()
         {
             // 1. Xóa cây cũ

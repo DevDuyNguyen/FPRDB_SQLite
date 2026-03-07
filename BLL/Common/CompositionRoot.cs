@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.SQLProcessing;
 
 namespace BLL.Common
 {
@@ -16,7 +17,12 @@ namespace BLL.Common
         private FuzzySetService fuzzySetService;
         private FuzzySetDAO fuzzySetDAO;
         private DatabaseManager databseExportImport;
-
+        private Lexer lexer;
+        private RecursiveDescentParser parser;
+        private Preprocessor preprocessor;
+        private MetadataManager metadataMgr;
+        private BasicUpdatePlanner updatePlanner;
+        private SQLProcessor sqlProcessor;
         public CompositionRoot()
         {
             Initialize();
@@ -28,7 +34,12 @@ namespace BLL.Common
             this.databaseService = new DatabaseService(this.dbMgr);
             this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
             this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
-
+            this.lexer = new Lexer();
+            this.parser = new RecursiveDescentParser(this.lexer);
+            this.metadataMgr = new MetadataManager(this.dbMgr);
+            this.preprocessor = new Preprocessor(this.metadataMgr);
+            this.updatePlanner=new BasicUpdatePlanner(this.dbMgr);
+            this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor);
 
         }
 
@@ -40,6 +51,7 @@ namespace BLL.Common
         {
             return this.fuzzySetService;
         }
+        public SQLProcessor getSQLProcessor() => this.sqlProcessor;
 
         //delete: for testing
         public FuzzySetDAO getFuzzySetDAO()
@@ -51,6 +63,11 @@ namespace BLL.Common
         {
             return this.dbMgr;
         }
-
+        //delete: for testing
+        public RecursiveDescentParser getParser() => this.parser;
+        //delete: for testing
+        public Preprocessor getPreprocessor() => this.preprocessor;
+        //delete: for testing
+        public UpdatePlanner getUpdatePlanner() => this.updatePlanner;
     }
 }

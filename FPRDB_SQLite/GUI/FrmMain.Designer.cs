@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             buttonHelp_groupHelp = new DevExpress.XtraBars.BarButtonItem();
@@ -50,11 +51,19 @@
             pageHome = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            Schema = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             pageFuzzySet = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupDiscrete_pageFS = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupContinuous_pageFS = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupHelp_pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            treeView = new System.Windows.Forms.TreeView();
+            TreeView_imageList = new System.Windows.Forms.ImageList(components);
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
             SuspendLayout();
             // 
@@ -68,7 +77,7 @@
             ribbonControl1.MaxItemId = 19;
             ribbonControl1.Name = "ribbonControl1";
             ribbonControl1.OptionsMenuMinWidth = 385;
-            ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { pageHome, pageFuzzySet, pageHelp });
+            ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { pageHome, Schema, ribbonPage3, pageFuzzySet, ribbonPage1, pageHelp });
             ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem1);
             ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem2);
             ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem3);
@@ -131,6 +140,7 @@
             buttonNew_pageHome.Id = 9;
             buttonNew_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonNew_pageHome.ImageOptions.LargeImage");
             buttonNew_pageHome.Name = "buttonNew_pageHome";
+            buttonNew_pageHome.ItemClick += buttonNew_pageHome_ItemClick;
             // 
             // buttonOpen_pageHome
             // 
@@ -138,6 +148,7 @@
             buttonOpen_pageHome.Id = 10;
             buttonOpen_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonOpen_pageHome.ImageOptions.LargeImage");
             buttonOpen_pageHome.Name = "buttonOpen_pageHome";
+            buttonOpen_pageHome.ItemClick += buttonOpen_pageHome_ItemClick;
             // 
             // buttonClose_pageHome
             // 
@@ -219,6 +230,28 @@
             groupExit_pageHome.Name = "groupExit_pageHome";
             groupExit_pageHome.Text = "Exit";
             // 
+            // Schema
+            // 
+            Schema.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup2 });
+            Schema.Name = "Schema";
+            Schema.Text = "Schema";
+            // 
+            // ribbonPageGroup2
+            // 
+            ribbonPageGroup2.Name = "ribbonPageGroup2";
+            ribbonPageGroup2.Text = "ribbonPageGroup2";
+            // 
+            // ribbonPage3
+            // 
+            ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup3 });
+            ribbonPage3.Name = "ribbonPage3";
+            ribbonPage3.Text = "Table";
+            // 
+            // ribbonPageGroup3
+            // 
+            ribbonPageGroup3.Name = "ribbonPageGroup3";
+            ribbonPageGroup3.Text = "ribbonPageGroup3";
+            // 
             // pageFuzzySet
             // 
             pageFuzzySet.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupDiscrete_pageFS, groupContinuous_pageFS });
@@ -239,6 +272,17 @@
             groupContinuous_pageFS.Name = "groupContinuous_pageFS";
             groupContinuous_pageFS.Text = "Continuous";
             // 
+            // ribbonPage1
+            // 
+            ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup1 });
+            ribbonPage1.Name = "ribbonPage1";
+            ribbonPage1.Text = "Query";
+            // 
+            // ribbonPageGroup1
+            // 
+            ribbonPageGroup1.Name = "ribbonPageGroup1";
+            ribbonPageGroup1.Text = "ribbonPageGroup1";
+            // 
             // pageHelp
             // 
             pageHelp.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupHelp_pageHelp });
@@ -252,11 +296,37 @@
             groupHelp_pageHelp.Name = "groupHelp_pageHelp";
             groupHelp_pageHelp.Text = "Help";
             // 
+            // treeView
+            // 
+            treeView.ImageIndex = 0;
+            treeView.ImageList = TreeView_imageList;
+            treeView.Location = new System.Drawing.Point(12, 200);
+            treeView.Name = "treeView";
+            treeView.SelectedImageIndex = 0;
+            treeView.Size = new System.Drawing.Size(201, 340);
+            treeView.TabIndex = 1;
+            // 
+            // TreeView_imageList
+            // 
+            TreeView_imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            TreeView_imageList.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("TreeView_imageList.ImageStream");
+            TreeView_imageList.TransparentColor = System.Drawing.Color.Transparent;
+            TreeView_imageList.Images.SetKeyName(0, "open.jpg");
+            TreeView_imageList.Images.SetKeyName(1, "close.png");
+            TreeView_imageList.Images.SetKeyName(2, "attribute.png");
+            TreeView_imageList.Images.SetKeyName(3, "database.png");
+            TreeView_imageList.Images.SetKeyName(4, "folder.png");
+            TreeView_imageList.Images.SetKeyName(5, "key.png");
+            TreeView_imageList.Images.SetKeyName(6, "open.png");
+            TreeView_imageList.Images.SetKeyName(7, "relation.jpg");
+            TreeView_imageList.Images.SetKeyName(8, "schema.png");
+            // 
             // frmMain
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(884, 552);
+            Controls.Add(treeView);
             Controls.Add(ribbonControl1);
             IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmMain.IconOptions.Image");
             Margin = new System.Windows.Forms.Padding(4);
@@ -297,6 +367,14 @@
         private DevExpress.XtraBars.BarButtonItem buttonLibrary_groupDis;
         private DevExpress.XtraBars.BarButtonItem buttonAdd_groupCont;
         private DevExpress.XtraBars.BarButtonItem buttonLibrary_groupCont;
+        private DevExpress.XtraBars.Ribbon.RibbonPage Schema;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage3;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
+        private System.Windows.Forms.TreeView treeView;
+        private System.Windows.Forms.ImageList TreeView_imageList;
     }
 }
 

@@ -8,14 +8,30 @@ namespace BLL.DomainObject
 {
     public class FPRDBRelation
     {
-        private String relName;
+        private string relName;
         private FPRDBSchema schema;
-        public FPRDBRelation(String relName, FPRDBSchema schema)
+        private string schemaName;
+
+        public FPRDBRelation(string relName, FPRDBSchema schema, string schemaName)
+        {
+            this.relName = relName;
+            this.schema = schema;
+            this.schemaName = schemaName;
+        }
+
+        public FPRDBRelation(string relName, string schemaName)
+        {
+            this.relName = relName;
+            this.schemaName = schemaName;
+        }
+
+        public FPRDBRelation(string relName, FPRDBSchema schema)
         {
             this.relName = relName;
             this.schema = schema;
         }
-        public String getRelName()
+
+        public string getRelName()
         {
             return relName;
         }
@@ -32,5 +48,6 @@ namespace BLL.DomainObject
         {
             this.schema = schema;
         }
+        public string getSchemaName() => this.schemaName;
     }
 }
