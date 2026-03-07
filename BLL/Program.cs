@@ -153,7 +153,7 @@ namespace BLL
             updatePlanner.executeCreateSchema(data1);
 
         }
-        static void SQLProcessor_executeDataDefinition_success()
+        static void SQLProcessor_executeDataDefinition_createschema_success()
         {
 
             CompositionRoot root = new CompositionRoot();
@@ -167,11 +167,70 @@ namespace BLL
                 )";
             sqlProcessor.executeDataDefinition(sql);
         }
+
+        static void Preprocessor_checkSemanticCreateRelation_tests()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            Preprocessor preprocessor = compRoot.getPreprocessor();
+
+            //postive test
+            FPRDBRelation data = new FPRDBRelation("rel1", "student2");
+            Debug.WriteLine($"Expected:True, Actual:{preprocessor.checkSemanticCreateRelation(data)}");
+
+            //negative test: relation already exists
+            FPRDBRelation data1 = new FPRDBRelation("student21", "student2");
+            try
+            {
+                Debug.Write("Expected:True,");
+                bool ans=preprocessor.checkSemanticCreateRelation(data1);
+                Debug.WriteLine($"Actual:{ans}");
+            }
+            catch(SemanticException ex)
+            {
+                Debug.WriteLine($"Actual:{ex.Message}");
+            }
+
+            //negative test: Schema doesn't exists
+            FPRDBRelation data2 = new FPRDBRelation("thisrelnoteixst", "student2111");
+            try
+            {
+                Debug.Write("Expected:True,");
+                bool ans = preprocessor.checkSemanticCreateRelation(data2);
+                Debug.WriteLine($"Actual:{ans}");
+            }
+            catch (SemanticException ex)
+            {
+                Debug.WriteLine($"Actual:{ex.Message}");
+            }
+
+        }
+        static void UpdatePlanner_executeCreateRelation_success()
+        {
+            CompositionRoot root = new CompositionRoot();
+            root.getDBMgr().loadDB(dbFile);
+            UpdatePlanner updatePlanner = root.getUpdatePlanner();
+
+            FPRDBRelation data = new FPRDBRelation("student22", "student2");
+            updatePlanner.executeCreateRelation(data);
+
+        }
+        static void SQLProcessor_executeDataDefinition_createrelation_success()
+        {
+            CompositionRoot root = new CompositionRoot();
+            root.getDBMgr().loadDB(dbFile);
+            SQLProcessor processor = root.getSQLProcessor();
+            
+            string sql = "create relation student23 on student2";
+            processor.executeDataDefinition(sql);
+
+        }
         static void Main()
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            SQLProcessor_executeDataDefinition_success();
+            SQLProcessor_executeDataDefinition_createrelation_success();
         }
     }
 }

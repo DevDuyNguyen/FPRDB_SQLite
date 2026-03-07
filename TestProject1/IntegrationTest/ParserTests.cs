@@ -179,5 +179,20 @@ namespace TestProject1.IntegrationTest
 
         }
 
+        [Theory]
+        [InlineData("CREATE RELATION rel1 ON schema1", "rel1", "schema1")]
+        public void Parser_createRelation_success(string str, string relName, string schemaName)
+        {
+            //arrange
+            this.parser.parse(str);
+            //act
+            FPRDBRelation data = this.parser.createRelation();
+            //assert
+            Assert.Equal(relName, data.getRelName());
+            Assert.Equal(schemaName, data.getSchemaName());
+
+        }
+
+
     }
 }

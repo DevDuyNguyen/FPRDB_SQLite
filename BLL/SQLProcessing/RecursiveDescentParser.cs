@@ -195,9 +195,24 @@ namespace BLL.SQLProcessing
             }
             else
             {
-                throw new NotImplementedException("create relation");
+                return createRelation();
             }
         }
+        public string relation()
+        {
+            return lexer.eatIdentifier();
+        }
+        public FPRDBRelation createRelation()
+        {
+            lexer.eatKeyword("CREATE");
+            lexer.eatKeyword("RELATION");
+            string relationName = relation();
+            lexer.eatKeyword("ON");
+            string schemaName = schema();
+            return new FPRDBRelation(relationName, schemaName);
+        }
+
+
 
     }
 }
