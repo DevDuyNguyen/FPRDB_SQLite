@@ -11,12 +11,23 @@ namespace BLL.DomainObject
         private String schemaName;
         private List<Field> fields;
         public List<string> primarykey;
+        public string primaryConstraintName;
         public FPRDBSchema(string schemaName, List<Field> fields, List<string> primarykey)
         {
             this.schemaName = schemaName;
             this.fields = fields;
             this.primarykey = primarykey;
         }
+
+        public FPRDBSchema(string schemaName, List<Field> fields, List<string> primarykey, string primaryConstraintName)
+        {
+            this.schemaName = schemaName;
+            this.fields = fields;
+            this.primarykey = primarykey;
+            this.primaryConstraintName = primaryConstraintName;
+        }
+        public string getPrimaryConstraintName() => this.primaryConstraintName;
+
         public String getSchemaName()
         {
             return schemaName;

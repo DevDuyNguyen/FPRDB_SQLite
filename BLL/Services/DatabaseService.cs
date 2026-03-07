@@ -160,8 +160,8 @@ namespace BLL.Services
                     do
                     {
                         var a1=(string)reader["rel.rel_name"];
-                        long a3 = reader.IsDBNull(reader.GetOrdinal("attr.att_type_mod"))
-                                   ? 0 : reader.GetInt64(reader.GetOrdinal("attr.att_type_mod"));
+                        int a3 = reader.IsDBNull(reader.GetOrdinal("attr.att_type_mod"))
+                                   ? 0 : reader.GetInt32(reader.GetOrdinal("attr.att_type_mod"));
                         Field field = new Field(
                             (string)reader["attr.att_name"],
                             new FieldInfo(
