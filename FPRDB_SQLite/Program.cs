@@ -21,7 +21,7 @@ namespace FPRDB_SQLite
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             CompositionRoot composeRoot = new CompositionRoot();
-            Application.Run(new frmMain(composeRoot.getDatabaseService()));
+            Application.Run(new frmMain(composeRoot));
         }
     }
 }

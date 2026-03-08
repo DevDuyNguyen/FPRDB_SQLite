@@ -36,16 +36,16 @@ namespace FPRDB_SQLite.GUI
             // Xóa danh sách trước đó trong ListBox
             lstFuzzySetResults.Items.Clear();
             // Lọc dữ liệu theo keyword
-            var results = service.findFuzzySet(keyword);
-            if (results.Count == 0)
-            {
-                MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
-                return;
-            }
-            // Thiết lập DisplayMember để hiển thị tên fuzzy set trong ListBox (theo thuộc tính trong FuzzySetDTO)
-            lstFuzzySetResults.DisplayMember = "fuzzySetName";
-            // Hiển thị kết quả lọc
-            lstFuzzySetResults.Items.AddRange(results.ToArray());
+            //var results = service.findFuzzySet(keyword);
+            //if (results.Count == 0)
+            //{
+            //    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
+            //    return;
+            //}
+            //// Thiết lập DisplayMember để hiển thị tên fuzzy set trong ListBox (theo thuộc tính trong FuzzySetDTO)
+            //lstFuzzySetResults.DisplayMember = "fuzzySetName";
+            //// Hiển thị kết quả lọc
+            //lstFuzzySetResults.Items.AddRange(results.ToArray());
         }
 
         private void btnClear_Click(object sender, EventArgs e)

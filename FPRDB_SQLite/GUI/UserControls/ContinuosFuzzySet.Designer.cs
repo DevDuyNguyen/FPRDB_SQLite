@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             txtBotRight = new DevExpress.XtraEditors.TextEdit();
             txtTopRight = new DevExpress.XtraEditors.TextEdit();
             txtTopLeft = new DevExpress.XtraEditors.TextEdit();
@@ -39,11 +40,13 @@
             lblBotLeft = new DevExpress.XtraEditors.LabelControl();
             lblXCoordinates = new DevExpress.XtraEditors.LabelControl();
             lblNameConsFuzzy = new DevExpress.XtraEditors.LabelControl();
+            dxValidationProvider1 = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(components);
             ((System.ComponentModel.ISupportInitialize)txtBotRight.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtTopRight.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtTopLeft.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtBotLeft.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtNameConsFuzzy.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dxValidationProvider1).BeginInit();
             SuspendLayout();
             // 
             // txtBotRight
@@ -151,6 +154,7 @@
             ((System.ComponentModel.ISupportInitialize)txtTopLeft.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtBotLeft.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtNameConsFuzzy.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dxValidationProvider1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -168,5 +172,6 @@
         private DevExpress.XtraEditors.LabelControl lblBotLeft;
         private DevExpress.XtraEditors.LabelControl lblXCoordinates;
         private DevExpress.XtraEditors.LabelControl lblNameConsFuzzy;
+        private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider dxValidationProvider1;
     }
 }

@@ -9,26 +9,29 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using BLL.Services;
+using BLL.Common;
 
 namespace FPRDB_SQLite.GUI
 {
     public partial class frmMain : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        private CompositionRoot compRoot;
         private DatabaseService databaseService;
-        public frmMain(DatabaseService databaseService)
+        public frmMain(CompositionRoot compRoot)
         {
-            this.databaseService = databaseService;
+            this.compRoot = compRoot;
+            this.databaseService = this.compRoot.getDatabaseService();
             InitializeComponent();
         }
 
         private void buttonAdd_groupDis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new frmAddDiscreteFuzzySet().ShowDialog();
+            new frmAddDiscreteFuzzySet(compRoot).ShowDialog();
         }
 
         private void buttonAdd_groupCont_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new frmAddContinuousFuzzySet().ShowDialog();
+            new frmAddContinuousFuzzySet(compRoot).ShowDialog();
         }
 
         private void LoadDatabaseTree()

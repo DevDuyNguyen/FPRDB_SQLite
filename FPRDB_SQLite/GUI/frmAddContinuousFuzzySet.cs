@@ -1,4 +1,8 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL.Common;
+using BLL.Services;
+using DevExpress.Map.Kml.Model;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.DXErrorProvider;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,19 +12,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BLL.Common;
-using BLL.Services;
 
 namespace FPRDB_SQLite.GUI
 {
     public partial class frmAddContinuousFuzzySet : DevExpress.XtraEditors.XtraForm
     {
-        private CompositionRoot root = new CompositionRoot();
+        private CompositionRoot compRoot;
         private FuzzySetService service;
-        public frmAddContinuousFuzzySet()
+        public frmAddContinuousFuzzySet(CompositionRoot compRoot)
         {
+            this.compRoot = compRoot;
+            this.service = this.compRoot.getFuzzySetService();
             InitializeComponent();
-            service = root.getFuzzySetService();
         }
 
         // Click "Cancel" button
@@ -32,6 +35,11 @@ namespace FPRDB_SQLite.GUI
         // Click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (!continuosFuzzySetInfo.ValidateControls())
+            {
+                XtraMessageBox.Show("Please fix validation errors before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             var dto = continuosFuzzySetInfo.GetContinuousFuzzySet();
             if (service.checkIfFuzzySetValid(dto))
             {

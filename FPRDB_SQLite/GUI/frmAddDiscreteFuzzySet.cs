@@ -2,6 +2,7 @@
 using BLL.Common;
 using BLL.DTO;
 using BLL.Services;
+using DevExpress.Map.Kml.Model;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,13 @@ namespace FPRDB_SQLite.GUI
 {
     public partial class frmAddDiscreteFuzzySet : DevExpress.XtraEditors.XtraForm
     {
-        CompositionRoot root = new CompositionRoot();
+        CompositionRoot compRoot;
         FuzzySetService service;
-        public frmAddDiscreteFuzzySet()
+        public frmAddDiscreteFuzzySet(CompositionRoot compRoot)
         {
+            this.compRoot = compRoot;
+            this.service = this.compRoot.getFuzzySetService();
             InitializeComponent();
-            service = root.getFuzzySetService();
         }
 
         // Click "Cancel" button
@@ -43,13 +45,13 @@ namespace FPRDB_SQLite.GUI
             FieldType type = discreteFuzzySetInfo.getFuzzySetType();
             switch (type)
             {
-                case FieldType.distFS_INT:
+                case FieldType.INT:
                     HandleDiscreteFuzzySet<int>();
                     break;
-                case FieldType.distFS_FLOAT:
+                case FieldType.FLOAT:
                     HandleDiscreteFuzzySet<float>();
                     break;
-                case FieldType.distFS_TEXT:
+                case FieldType.VARCHAR:
                     HandleDiscreteFuzzySet<string>();
                     break;
 

@@ -1,5 +1,8 @@
-﻿using BLL.DTO;
+﻿using BLL;
+using BLL.DTO;
+using DevExpress.Mvvm.POCO;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.DXErrorProvider;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,15 +12,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BLL;
 
 namespace FPRDB_SQLite.GUI.UserControls
 {
     public partial class ContinuosFuzzySet : DevExpress.XtraEditors.XtraUserControl
     {
+        private readonly BaseEdit[] textFields;
         public ContinuosFuzzySet()
         {
             InitializeComponent();
+            textFields = new BaseEdit[]
+            {
+                txtNameConsFuzzy,
+                txtBotLeft, 
+                txtTopLeft, 
+                txtTopRight, 
+                txtBotRight
+            };
+            setValidationRules();
+        }
+        private void setValidationRules()
+        {
+            var notEmptyRule = new ConditionValidationRule
+            {
+                ConditionOperator = ConditionOperator.IsNotBlank,
+                ErrorText = "Trường này không được để trống!"
+            };
+
+            foreach (var control in textFields)
+            {
+                dxValidationProvider1.SetValidationRule(control, notEmptyRule);
+            }
+        }
+        public bool ValidateControls()
+        {
+            return dxValidationProvider1.Validate();
         }
         // Hàm lấy dữ liệu từ UserControl để tạo một ContinuousFuzzySetDTO
         public ContinuousFuzzySetDTO GetContinuousFuzzySet()

@@ -16,7 +16,7 @@ namespace BLL
 {
     public class Program
     {
-        static string dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
+        static string dbFile = "D:\\test.db";
         //not done: Moq for mocking
         static void test_createDiscreteFuzzySet()
         {
@@ -230,7 +230,7 @@ namespace BLL
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            SQLProcessor_executeDataDefinition_createrelation_success();
+            test_createContinuousFuzzySet();
         }
     }
 }
