@@ -236,6 +236,74 @@ namespace BLL.SQLProcessing
             this.dbMgr.executeNonQuery(insertRelationMetadata);
             return true;
         }
+        public int executeInsert(InsertData data)
+        {
+            //insert the data in actual table as text value
+            string relName = data.relation;
+            List<string> fieldList = data.fieldList;
+            List<FuzzyProbabilisticValueParsingData> fprobValues = data.fuzzyProbabilisticValues;
+            Dictionary<string, int> fuzzySetOIDs = new Dictionary<string, int>();
+            string insertSQL = $"INSERT INTO {relName} (";
+            foreach(string fieldName in fieldList)
+            {
+                insertSQL += fieldName + ",";
+            }
+            insertSQL = insertSQL.TrimEnd(',');
+            insertSQL += ") VALUES (";
+            for(int i=0; i<fieldList.Count; ++i)
+            {
+                insertSQL += "'" + fprobValues[i].ToTextRepresentation() + "'" + ",";
+            }
+            insertSQL = insertSQL.TrimEnd(',');
+            insertSQL += ")";
+            this.dbMgr.executeNonQuery(insertSQL);
+
+            //if inserted data is a fuzzy set, then increase the field "no" of fprdb_Relation_Fuzzyset by 1
+            foreach(FuzzyProbabilisticValueParsingData v in fprobValues)
+            {
+                foreach (Constant c in v.valueList)
+                {
+                    if (c is FuzzySetConstant)
+                    {
+                        FuzzySetConstant fsConstant = (FuzzySetConstant)c;
+                        if (fsConstant.getFuzzySetOID() == null || fsConstant.getFuzzySetOID() == default)
+                        {
+                            IDataReader reader1 = this.dbMgr.executeQuery($"SELECT oid FROM fprdb_FuzzySet WHERE fuzzset_name='{(string)fsConstant.getVal()}'");
+                            if (!reader1.Read())
+                                throw new QueryDataNotExistException($"Fuzzy set {(string)fsConstant.getVal()} doesn't exist");
+                            fuzzySetOIDs.TryAdd((string)fsConstant.getVal(), Convert.ToInt32(reader1["oid"]));
+                        }
+                        else
+                            fuzzySetOIDs.TryAdd((string)fsConstant.getVal(), fsConstant.getFuzzySetOID());
+                    }
+                }
+            }
+            int relOID;
+            IDataReader reader = this.dbMgr.executeQuery($"SELECT oid FROM fprdb_Relation WHERE rel_name='{data.relation}'");
+            using (reader)
+            {
+                if (!reader.Read())
+                    throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
+                relOID=Convert.ToInt32(reader["oid"]);
+            }
+            foreach(KeyValuePair<string, int> entry in fuzzySetOIDs)
+            {
+                reader = this.dbMgr.executeQuery($"SELECT 1 FROM FPRDB_Rel_FuzzSet WHERE rel_oid={relOID} AND fuzzset_oid={fuzzySetOIDs[entry.Key]}");
+                bool relHasFuzzySet;
+                using (reader)
+                {
+                    relHasFuzzySet = reader.Read();
+                }
+                if(!relHasFuzzySet)
+                    this.dbMgr.executeNonQuery($"INSERT INTO FPRDB_Rel_FuzzSet (rel_oid, fuzzset_oid, no) VALUES ({relOID},{fuzzySetOIDs[entry.Key]},1)");
+                else
+                {
+                    this.dbMgr.executeNonQuery($"UPDATE FPRDB_Rel_FuzzSet SET no=no+1 WHERE rel_oid={relOID} AND fuzzset_oid={fuzzySetOIDs[entry.Key]}");
+                }
+            }
+            return 1;
+
+        }
 
 
     }

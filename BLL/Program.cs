@@ -226,11 +226,138 @@ namespace BLL
             processor.executeDataDefinition(sql);
 
         }
+        static void MetadataManager_getRelation_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            MetadataManager metaDataMgr = compRoot.getMetaDataManger();
+            FPRDBRelation rel = metaDataMgr.getRelation("student23");
+        }
+        static void MetaDataManager_getFuzzySetType_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            MetadataManager metaDataMgr = compRoot.getMetaDataManger();
+            FieldType type = metaDataMgr.getFuzzySetType("fs2");
+        }
+        static void MetaDataManager_getFuzzySetOID_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            MetadataManager metaDataMgr = compRoot.getMetaDataManger();
+            int oid = metaDataMgr.getFuzzySetOID("contFS1");
+        }
+        static void MetaDataManager_isTupleExist_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            MetadataManager metaDataMgr = compRoot.getMetaDataManger();
+            bool ans = metaDataMgr.isTupleExist(
+                new List<string>{"student_id"},
+                new List<string> { "2"},
+                "student23"
+            );
+        }
+        static void Preprocessor_checkSemanticInsert_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            Preprocessor preprocessor = compRoot.getPreprocessor();
+
+            FuzzyProbabilisticValueParsingData student_id_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new IntConstant(1)
+                },
+                new List<float> { 1},
+                new List<float> { 1 }
+            );
+            FuzzyProbabilisticValueParsingData name_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new StringConstant("duy")
+                },
+                new List<float> { 1 },
+                new List<float> { 1 }
+            );
+            FuzzyProbabilisticValueParsingData age_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new FuzzySetConstant("fs1"),
+                    new FuzzySetConstant("fs1")
+                },
+                new List<float> { 0.5f, 0.5f },
+                new List<float> { 0.5f, 0.5f }
+            );
+
+            InsertData data = new InsertData(
+                "student23",
+                new List<String> { "student_id","name","age"},
+                new List<FuzzyProbabilisticValueParsingData> { student_id_data, name_data, age_data}
+            );
+            bool ans = preprocessor.checkSemanticInsert(data);
+        }
+        static void UpdatePlanner_executeInsert_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            UpdatePlanner planner = compRoot.getUpdatePlanner();
+            
+
+            FuzzyProbabilisticValueParsingData student_id_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new IntConstant(3)
+                },
+                new List<float> { 1 },
+                new List<float> { 1 }
+            );
+            FuzzyProbabilisticValueParsingData name_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new StringConstant("duy")
+                },
+                new List<float> { 1 },
+                new List<float> { 1 }
+            );
+            FuzzyProbabilisticValueParsingData age_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new FuzzySetConstant("fs1"),
+                    new FuzzySetConstant("fs1")
+                },
+                new List<float> { 0.5f, 0.5f },
+                new List<float> { 0.5f, 0.5f }
+            );
+
+            InsertData data = new InsertData(
+                "student23",
+                new List<String> { "student_id", "name", "age" },
+                new List<FuzzyProbabilisticValueParsingData> { student_id_data, name_data, age_data }
+            );
+            planner.executeInsert(data);
+        }
+        static void SQLProcessor_executeUpdate_insert()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            SQLProcessor processor = compRoot.getSQLProcessor();
+            processor.executeUpdate(@"INSERT INTO student23 (student_id,name,age)
+                VALUES ({(5,[1,1])},{('d2',[1,1]),('d1',[0.1,1])},{(fs1,[0.5, 0.5]),(fs1,[0.5, 0.5])})
+            ");
+        }
         static void Main()
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            SQLProcessor_executeDataDefinition_createrelation_success();
+            SQLProcessor_executeUpdate_insert();
         }
     }
 }

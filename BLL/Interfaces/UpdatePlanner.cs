@@ -12,5 +12,6 @@ namespace BLL.Interfaces
     {
         public bool executeCreateSchema(FPRDBSchema data);
         public bool executeCreateRelation(FPRDBRelation data);
+        public int executeInsert(InsertData data);
     }
 }
