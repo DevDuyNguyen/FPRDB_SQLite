@@ -68,7 +68,22 @@ namespace BLL.SQLProcessing
             {
                 Field field = schema.getFieldByName(fields[i]);
                 FieldInfo fieldInfo = field.getFieldInfo();
+                FieldType fieldType = fieldInfo.getType();
                 string generalExceptionMessage = $"Inserted data and field type of {field.getFieldName()} aren't compatible";
+                
+                //the inserted value for primitive type field must has only one possible value and probability interval of that value is [1,1]
+                //if (fieldType!=FieldType.distFS_INT && fieldType != FieldType.distFS_FLOAT && fieldType != FieldType.distFS_TEXT && fieldType != FieldType.contFS)
+                //{
+                //    if (data[i].valueList.Count > 1)
+                //    {
+                //        throw new SemanticException($"Primitive field {field.getFieldName()} must only has one possible value");
+                //    }
+                //    if (data[i].intervalProbLowerBoundList[0] != 1 || data[i].intervalProbUpperBoundList[0] != 1)
+                //    {
+                //        throw new SemanticException($"Primitive field {field.getFieldName()} must has interval probability of [1,1]");
+                //    }
+                //}
+
                 foreach (Constant constant in data[i].valueList)
                 {
                     if (fieldInfo.getType() == FieldType.INT)
@@ -169,7 +184,8 @@ namespace BLL.SQLProcessing
             {
                 for(int j=0;  j<d.intervalProbLowerBoundList.Count; ++j)
                 {
-                    if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
+                    if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbLowerBoundList[j] > 1
+                        || d.intervalProbUpperBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
                 }
                 

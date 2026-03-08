@@ -75,5 +75,31 @@ namespace BLL.SQLProcessing
                 }
             }
         }
+        public int executeUpdate(string sql)
+        {
+            this.parser.parse(sql);
+            Object data = this.parser.updateCommand();
+            if(data is InsertData)
+            {
+                InsertData idata = (InsertData)data;
+                try
+                {
+                    if(this.preProcessor.checkSemanticInsert(idata))
+                    {
+                        return this.updatePlanner.executeInsert(idata);
+                    }
+                }
+                catch (SemanticException ex)
+                {
+                    throw ex;
+                }
+                return 0;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
     }
 }

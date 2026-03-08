@@ -335,6 +335,17 @@ namespace BLL.SQLProcessing
             lexer.eatDelimiter(")");
             return new InsertData(relName, fields, insertValues);
         }
+        public Object updateCommand()
+        {
+            if (lexer.matchKeyword("INSERT"))
+            {
+                return insert();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
 
     }
 }

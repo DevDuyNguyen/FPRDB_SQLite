@@ -343,11 +343,21 @@ namespace BLL
             );
             planner.executeInsert(data);
         }
+        static void SQLProcessor_executeUpdate_insert()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            SQLProcessor processor = compRoot.getSQLProcessor();
+            processor.executeUpdate(@"INSERT INTO student23 (student_id,name,age)
+                VALUES ({(5,[1,1])},{('d2',[1,1]),('d1',[0.1,1])},{(fs1,[0.5, 0.5]),(fs1,[0.5, 0.5])})
+            ");
+        }
         static void Main()
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            UpdatePlanner_executeInsert_success();
+            SQLProcessor_executeUpdate_insert();
         }
     }
 }
