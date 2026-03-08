@@ -537,6 +537,49 @@ namespace TestProject1.IntegrationTest
             }
 
         }
+        class fromList_positive_test:TheoryData<string, object>
+        {
+            public fromList_positive_test()
+            {
+                Add("rel1,rel2,rel3", new List<String> { "rel1", "rel2", "rel3" });
+                Add("rel1 natural join ⨂_ig rel2 natural join ⨂_in rel3", new NaturalJoinList(
+                    new List<String> { "rel1", "rel2", "rel3" },
+                    new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE}
+                    )
+                );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(fromList_positive_test))]
+        public void RecursiveDescentParser_fromList_success(string sql, object expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(sql);
+            //act
+            object actual = parser.fromList();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            if(expected is List<string>)
+            {
+                List<string> list1 = (List<string>)expected;
+                List<string> list2 = (List<string>)actual;
+
+                for (int i = 0; i < list1.Count; ++i)
+                    Assert.Equal(list1[i], list2[i]);
+            }
+            else if (expected is NaturalJoinList)
+            {
+                NaturalJoinList list1 = (NaturalJoinList)expected;
+                NaturalJoinList list2 = (NaturalJoinList)actual;
+
+                for (int i = 0; i < list1.relationList.Count; ++i)
+                    Assert.Equal(list1.relationList[i], list2.relationList[i]);
+                for (int i = 0; i < list1.probCombinationStrategyList.Count; ++i)
+                    Assert.Equal(list1.probCombinationStrategyList[i], list2.probCombinationStrategyList[i]);
+            }
+        }
 
 
     }

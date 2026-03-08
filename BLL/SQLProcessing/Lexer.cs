@@ -68,9 +68,20 @@ namespace BLL.SQLProcessing
             var rightDoubleArrow = ToTerm("⇒", "comparison operator");
 
 
-            var probConjunctionStrategy = ToTerm("⨂", "probabilistic combination strategy");
-            var probDisjunctionStrategy = ToTerm("⨁", "probabilistic combination strategy");
-            var probDifferencetionStrategy = ToTerm("⦵", "probabilistic combination strategy");
+            var conjunction_ig = ToTerm("⨂_ig", "probabilistic combination strategy");
+            var conjunction_in = ToTerm("⨂_in", "probabilistic combination strategy");
+            var conjunction_pc = ToTerm("⨂_pc", "probabilistic combination strategy");
+            var conjunction_me = ToTerm("⨂_me", "probabilistic combination strategy");
+
+            var difference_ig = ToTerm("⦵_ig", "probabilistic combination strategy");
+            var difference_in = ToTerm("⦵_in", "probabilistic combination strategy");
+            var difference_pc = ToTerm("⦵_pc", "probabilistic combination strategy");
+            var difference_me = ToTerm("⦵_me", "probabilistic combination strategy");
+
+            var disjunction_ig = ToTerm("⨁_ig", "probabilistic combination strategy");
+            var disjunction_in = ToTerm("⨁_in", "probabilistic combination strategy");
+            var disjunction_pc = ToTerm("⨁_pc", "probabilistic combination strategy");
+            var disjunction_me = ToTerm("⨁_me", "probabilistic combination strategy");
 
             var negative = ToTerm("-", "unary operator");
             var positive = ToTerm("+", "unary operator");
@@ -79,7 +90,9 @@ namespace BLL.SQLProcessing
             any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket | openCurlyBracket | closedCurlyBracket
                 | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
-                | probConjunctionStrategy | probDisjunctionStrategy | probDifferencetionStrategy
+                | conjunction_ig | conjunction_in | conjunction_pc | conjunction_me 
+                | difference_ig | difference_in | difference_pc | difference_me 
+                | disjunction_ig | disjunction_in | disjunction_pc | disjunction_me
                 | negative | positive;
             //any.Rule = comma | openParenthesis | closedParenthesis
             //    | openSquareBracket | closedSquareBracket

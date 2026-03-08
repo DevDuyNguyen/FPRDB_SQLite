@@ -2,6 +2,7 @@
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Common;
 using Irony.Parsing;
 using System;
 using System.Collections.Generic;
@@ -380,6 +381,38 @@ namespace BLL.SQLProcessing
                 return ans;
             }
         }
+        public object fromList()
+        {
+            List<string> relNames = new List<string>();
+            List<ProbabilisticCombinationStrategy> combinationStrategies = new List<ProbabilisticCombinationStrategy>();
+            relNames.Add(relation());
+
+            if (lexer.matchKeyword("NATURAL"))
+            {
+                while (lexer.matchKeyword("NATURAL"))
+                {
+                    lexer.eatKeyword("NATURAL");
+                    lexer.eatKeyword("JOIN");
+                    var combinationStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(lexer.eatProbabilisticCombinationStrategy());
+                    if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(combinationStrategy))
+                        throw createSQLSyntaxException("NATUAL JOIN can only be pared with probabilistic conjunction strategy");
+                    combinationStrategies.Add(combinationStrategy);
+                    relNames.Add(relation());
+                }
+                return new NaturalJoinList(relNames, combinationStrategies);
+            }
+            else if (lexer.matchDelimiter(","))
+            {
+                while (lexer.matchDelimiter(","))
+                {
+                    lexer.eatDelimiter(",");
+                    relNames.Add(relation());
+                }
+                return relNames;
+            }
+            else
+                throw createSQLSyntaxException("This isn't a FROM clause statement");
+        }
         public QueryData PrimaryQuery()
         {
             if (lexer.matchKeyword("SELECT")){
@@ -388,7 +421,8 @@ namespace BLL.SQLProcessing
             }
             else if (lexer.matchDelimiter("("))
             {
-                throw new NotImplementedException();
+                List<SelectField> selectFields = selectList();
+                lexer.eatKeyword("FROM");
             }
             else
             {
