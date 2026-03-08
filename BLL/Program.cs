@@ -302,11 +302,52 @@ namespace BLL
             );
             bool ans = preprocessor.checkSemanticInsert(data);
         }
+        static void UpdatePlanner_executeInsert_success()
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(dbFile);
+            UpdatePlanner planner = compRoot.getUpdatePlanner();
+            
+
+            FuzzyProbabilisticValueParsingData student_id_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new IntConstant(3)
+                },
+                new List<float> { 1 },
+                new List<float> { 1 }
+            );
+            FuzzyProbabilisticValueParsingData name_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new StringConstant("duy")
+                },
+                new List<float> { 1 },
+                new List<float> { 1 }
+            );
+            FuzzyProbabilisticValueParsingData age_data = new FuzzyProbabilisticValueParsingData(
+                new List<Constant>
+                {
+                    new FuzzySetConstant("fs1"),
+                    new FuzzySetConstant("fs1")
+                },
+                new List<float> { 0.5f, 0.5f },
+                new List<float> { 0.5f, 0.5f }
+            );
+
+            InsertData data = new InsertData(
+                "student23",
+                new List<String> { "student_id", "name", "age" },
+                new List<FuzzyProbabilisticValueParsingData> { student_id_data, name_data, age_data }
+            );
+            planner.executeInsert(data);
+        }
         static void Main()
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            Preprocessor_checkSemanticInsert_success();
+            UpdatePlanner_executeInsert_success();
         }
     }
 }

@@ -21,5 +21,19 @@ namespace BLL.DomainObject
             this.intervalProbLowerBoundList = intervalProbLowerBoundList;
             this.intervalProbUpperBoundList = intervalProbUpperBoundList;
         }
+        public string ToTextRepresentation()
+        {
+            string str = "{";
+            for(int i=0; i<valueList.Count; ++i)
+            {
+                if(!(valueList[i] is StringConstant))
+                    str += $"({valueList[i].getVal().ToString()},[{intervalProbLowerBoundList[i].ToString()},{intervalProbUpperBoundList[i].ToString()}]),";
+                else
+                    str += $"(\"{valueList[i].getVal().ToString()}\",[{intervalProbLowerBoundList[i].ToString()},{intervalProbUpperBoundList[i].ToString()}]),";
+            }
+            str = str.TrimEnd(',');
+            str+="}";
+            return str;
+        }
     }
 }
