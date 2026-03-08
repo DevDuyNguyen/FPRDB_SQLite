@@ -272,7 +272,7 @@ namespace BLL
             FuzzyProbabilisticValueParsingData student_id_data = new FuzzyProbabilisticValueParsingData(
                 new List<Constant>
                 {
-                    new IntConstant(2)
+                    new IntConstant(1)
                 },
                 new List<float> { 1},
                 new List<float> { 1 }

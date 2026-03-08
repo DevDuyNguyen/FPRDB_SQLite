@@ -23,6 +23,7 @@ namespace BLL.Common
         private MetadataManager metadataMgr;
         private BasicUpdatePlanner updatePlanner;
         private SQLProcessor sqlProcessor;
+        private ConstraintService constraintService;
         public CompositionRoot()
         {
             Initialize();
@@ -37,7 +38,8 @@ namespace BLL.Common
             this.lexer = new Lexer();
             this.parser = new RecursiveDescentParser(this.lexer);
             this.metadataMgr = new MetadataManager(this.dbMgr);
-            this.preprocessor = new Preprocessor(this.metadataMgr);
+            this.constraintService = new ConstraintService(this.metadataMgr);
+            this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
             this.updatePlanner=new BasicUpdatePlanner(this.dbMgr);
             this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor);
 
@@ -52,6 +54,7 @@ namespace BLL.Common
             return this.fuzzySetService;
         }
         public SQLProcessor getSQLProcessor() => this.sqlProcessor;
+        public ConstraintService getConstraintService() => this.constraintService;
 
         //delete: for testing
         public FuzzySetDAO getFuzzySetDAO()

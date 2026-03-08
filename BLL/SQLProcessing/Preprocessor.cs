@@ -1,24 +1,27 @@
 ﻿using BLL.DomainObject;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {
     public class Preprocessor
     {
         private MetadataManager metadataMgr;
+        private ConstraintService constraintService;
 
-        public Preprocessor(MetadataManager metadataMgr)
+        public Preprocessor(MetadataManager metadataMgr, ConstraintService constraintService)
         {
             this.metadataMgr = metadataMgr;
+            this.constraintService = constraintService;
         }
+
         public bool checkSemanticCreateSchema(FPRDBSchema data)
         {
             string schemaName = data.getSchemaName();
@@ -172,28 +175,20 @@ namespace BLL.SQLProcessing
                 
             }
             //check identity constraint
-            List<string> value = new List<string>();
-            foreach (string keyAttr in schema.getPrimarykey())
+            try
             {
-                if (!data.fieldList.Contains(keyAttr))
-                    throw new SemanticException($"Must provide value for key attribute {keyAttr}");
-                int index = data.fieldList.IndexOf(keyAttr);
-                if (data.fuzzyProbabilisticValues[index].valueList.Count != 1 
-                    || !isPrimitiveConstant(data.fuzzyProbabilisticValues[index].valueList[0]))
-                    throw new SemanticException($"Invalid insert value for key attribute {keyAttr}");
-                value.Add(data.fuzzyProbabilisticValues[index].valueList[0].getVal().ToString());
+                this.constraintService.checkIntegrityConstraint(relation, data);
             }
-            if (this.metadataMgr.isTupleExist(schema.getPrimarykey(), value, data.relation))
-                throw new SemanticException("IDENTITY constraint violation");
+            catch(SemanticException ex)
+            {
+                throw ex;
+            }
+          
 
             //not done: referential constraint
 
             return true;
 
-        }
-        private bool isPrimitiveConstant(Constant c)
-        {
-            return c is IntConstant || c is FloatConstant || c is StringConstant || c is BooleanConstant;
         }
 
 
