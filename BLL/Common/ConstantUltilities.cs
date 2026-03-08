@@ -14,5 +14,26 @@ namespace BLL.Common
         {
             return c is IntConstant || c is FloatConstant || c is StringConstant || c is BooleanConstant;
         }
+        public static Constant turnValueIntoConstant(object v)
+        {
+            if (v is int)
+                return new IntConstant((int)v);
+            else if (v is float)
+                return new FloatConstant((float)v);
+            else if (v is bool)
+                return new BooleanConstant(Convert.ToBoolean(v));
+            else if (v is string)
+            {
+                string str = (string)v;
+                if (str[0] == '\'' || str[0] == '\"')
+                    return new StringConstant((string)v);
+                else
+                    return new FuzzySetConstant((string)v);
+            }
+            else
+            {
+                throw new Exception($"{v.ToString()} isn't a constant");
+            }
+        }
     }
 }

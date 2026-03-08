@@ -1,4 +1,5 @@
-﻿using Irony.Parsing;
+﻿using BLL.Interfaces;
+using Irony.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -317,6 +318,23 @@ namespace BLL.SQLProcessing
             next();
             return res;
         }
+        public bool matchConstant()
+        {
+            return matchNumberConstant() || matchStringConstant() || matchBooleanConstant() || matchFuzzySetConstant();
+        }
+        public object eatConstant()
+        {
+            if (matchNumberConstant())
+                return eatNumberConstant();
+            else if (matchStringConstant())
+                return eatStringConstant();
+            else if (matchBooleanConstant())
+                return eatBooleanConstant();
+            else if (matchFuzzySetConstant())
+                return eatFuzzySetConstant();
+            else
+                throw new MismatchTokenType("constant", this.currentToken);
+        } 
 
         public bool matchOperator()
         {

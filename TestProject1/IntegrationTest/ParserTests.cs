@@ -551,7 +551,7 @@ namespace TestProject1.IntegrationTest
         }
         [Theory]
         [ClassData(typeof(fromList_positive_test))]
-        public void RecursiveDescentParser_fromList_success(string sql, object expected)
+        public void Parser_fromList_success(string sql, object expected)
         {
             //arrange
             CompositionRoot compRoot = new CompositionRoot();
@@ -581,6 +581,50 @@ namespace TestProject1.IntegrationTest
             }
         }
 
+        class PrimarySelectionExpression_positive_testdata : TheoryData<string, SelectionExpression>
+        {
+            public PrimarySelectionExpression_positive_testdata()
+            {
+                Add("field=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.EQUAL));
+                Add("field!='haha'", new AtomicSelectionExpressionFieldConstant("field", new StringConstant("haha"), CompareOperation.NOT_EQUAL));
+                Add("field>1.1", new AtomicSelectionExpressionFieldConstant("field", new FloatConstant(1.1f), CompareOperation.GREATER_THAN));
+                Add("field=>1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.GREATER_EQUAL));
+                Add("field<1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_THAN));
+                Add("field<=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_EQUAL));
+                Add("field⇒1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.ALSO));
+                Add("field1=⨂_ig field2", new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE));
 
+            }
+        }
+        [Theory]
+        [ClassData(typeof(PrimarySelectionExpression_positive_testdata))]
+        public void Parser_PrimarySelectionExpression_success(string str, SelectionExpression expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            SelectionExpression actual = parser.PrimarySelectionExpression();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            if (expected is AtomicSelectionExpressionFieldConstant)
+            {
+                AtomicSelectionExpressionFieldConstant l = (AtomicSelectionExpressionFieldConstant)expected;
+                AtomicSelectionExpressionFieldConstant r = (AtomicSelectionExpressionFieldConstant)actual;
+                Assert.Equal(l.field, r.field);
+                Assert.Equivalent(l.constant, r.constant);
+                Assert.Equal(l.compareOperator, r.compareOperator);
+            }
+            else
+            {
+                AtomicSelectionExpressionFieldField l = (AtomicSelectionExpressionFieldField)expected;
+                AtomicSelectionExpressionFieldField r = (AtomicSelectionExpressionFieldField)actual;
+                Assert.Equal(l.lField, r.lField);
+                Assert.Equal(l.rField, r.rField);
+                Assert.Equal(l.probCombinationStrategy, r.probCombinationStrategy);
+            }
+        }
     }
+    
 }

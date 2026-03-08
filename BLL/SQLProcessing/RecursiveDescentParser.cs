@@ -37,7 +37,6 @@ namespace BLL.SQLProcessing
                 nearToken.Location.Column,
                 message
             );
-
         }
 
         private string schema()
@@ -413,6 +412,77 @@ namespace BLL.SQLProcessing
             else
                 throw createSQLSyntaxException("This isn't a FROM clause statement");
         }
+        public SelectionExpression PrimarySelectionExpression()
+        {
+            if (!lexer.matchDelimiter("("))
+            {
+                string fieldName1 = field();
+                string compareOperator = lexer.eatOperator();
+                if (compareOperator != "=" || !lexer.matchProbabilisticCombinationStrategy())
+                {
+                    object v = lexer.eatConstant();
+                    return new AtomicSelectionExpressionFieldConstant(fieldName1, ConstantUltilities.turnValueIntoConstant(v), CompareOperatorUltilities.convertStringToEnum(compareOperator));
+                }
+                else
+                {
+                    string strStrategy = lexer.eatProbabilisticCombinationStrategy();
+                    ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
+                    if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumStrategy))
+                        throw createSQLSyntaxException("Comparetor = must be paired with probabilistic conjunection strategy");
+                    string fieldName2 = field();
+                    return new AtomicSelectionExpressionFieldField(fieldName1, fieldName2, enumStrategy);
+
+                }
+            }
+            else
+            {
+                lexer.eatDelimiter("(");
+                SelectionExpression res= selectionExpression();
+                lexer.eatDelimiter(")");
+                return res;
+            }
+
+        }
+        public SelectionExpression CONJUNCTIONSelectionExpression()
+        {
+            SelectionExpression leftSExpression = PrimarySelectionExpression();
+            if(lexer.matchProbabilisticCombinationStrategy())
+            {
+                string strStrategy = lexer.eatProbabilisticCombinationStrategy();
+                ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
+                if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumStrategy))
+                    return leftSExpression;
+                else
+                {
+                    SelectionExpression rightSExpression = PrimarySelectionExpression();
+
+                    return new CompoundSelectionExpression(leftSExpression, rightSExpression, enumStrategy);
+                }
+            }
+            return leftSExpression;
+        }
+        public SelectionExpression DISJUNCTION_DIFFERENCE_SelectionExpresion()
+        {
+            SelectionExpression leftSExpression = CONJUNCTIONSelectionExpression();
+            string strStrategy = lexer.eatProbabilisticCombinationStrategy();
+            if (lexer.matchProbabilisticCombinationStrategy())
+            {
+                ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
+                SelectionExpression rightSExpression = CONJUNCTIONSelectionExpression();
+
+                return new CompoundSelectionExpression(leftSExpression, rightSExpression, enumStrategy);
+            }
+            return leftSExpression;
+
+        }
+        public SelectionExpression selectionExpression()
+        {
+            return DISJUNCTION_DIFFERENCE_SelectionExpresion();
+        }
+        public SelectionCondition selectionCondition()
+        {
+            throw new NotImplementedException();
+        }
         public QueryData PrimaryQuery()
         {
             if (lexer.matchKeyword("SELECT")){
@@ -423,6 +493,11 @@ namespace BLL.SQLProcessing
             {
                 List<SelectField> selectFields = selectList();
                 lexer.eatKeyword("FROM");
+                object from_list = fromList();
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
+                }
             }
             else
             {
