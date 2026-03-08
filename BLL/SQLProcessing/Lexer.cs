@@ -25,7 +25,7 @@ namespace BLL.SQLProcessing
         {
             var comma = new KeyTerm(",", "delimiter");
             var dot = new KeyTerm(".", "delimiter");
-            var asterisk = new KeyTerm("*", "asterisk");
+            var asterisk = new KeyTerm("*", "delimiter");
             var openParenthesis = new KeyTerm("(", "delimiter");
             var closedParenthesis = new KeyTerm(")", "delimiter");
             var openSquareBracket = new KeyTerm("[", "delimiter");
@@ -337,7 +337,7 @@ namespace BLL.SQLProcessing
 
         public bool matchIdentifier()
         {
-            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
+            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier");
         }
         //not done: this tokenization shouldn't be at here
         //it should be at when you are creating field Tokens

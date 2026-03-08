@@ -346,6 +346,70 @@ namespace BLL.SQLProcessing
                 throw new NotImplementedException();
             }
         }
+        public List<SelectField> selectList()
+        {
+            List<SelectField> ans = new List<SelectField>();
+            if (lexer.matchDelimiter("*")){
+                return new List<SelectField> { new SelectField("", "*") };
+            }
+            else
+            {
+                string str1 = lexer.eatIdentifier();
+                string str2;
+                if (lexer.matchDelimiter("."))
+                {
+                    lexer.eatDelimiter(".");
+                    str2 = lexer.eatIdentifier();
+                    ans.Add(new SelectField(str1, str2));
+                }
+                else
+                    ans.Add(new SelectField("", str1));
+                while (lexer.matchDelimiter(","))
+                {
+                    lexer.eatDelimiter(",");
+                    str1 = lexer.eatIdentifier();
+                    if (lexer.matchDelimiter("."))
+                    {
+                        lexer.eatDelimiter(".");
+                        str2 = lexer.eatIdentifier();
+                        ans.Add(new SelectField(str1, str2));
+                    }
+                    else
+                        ans.Add(new SelectField("", str1));
+                }
+                return ans;
+            }
+        }
+        public QueryData PrimaryQuery()
+        {
+            if (lexer.matchKeyword("SELECT")){
+                lexer.eatKeyword("SELECT");
 
+            }
+            else if (lexer.matchDelimiter("("))
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw createSQLSyntaxException("The statement isn't a query");
+            }
+            throw new NotFiniteNumberException();
+        }
+        public QueryData INTERSECTIONQuery()
+        {
+
+            throw new NotFiniteNumberException();
+        }
+        public QueryData UNION_EXCEPT_Query()
+        {
+
+            throw new NotFiniteNumberException();
+        }
+        public QueryData query()
+        {
+
+            throw new NotFiniteNumberException();
+        }
     }
 }

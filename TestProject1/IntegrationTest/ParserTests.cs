@@ -501,5 +501,43 @@ namespace TestProject1.IntegrationTest
                 }
             }
         }
+        //[not done]: not enough coverage
+        class selectList_positive_testdata : TheoryData<string, List<SelectField>>
+        {
+            public selectList_positive_testdata()
+            {
+                Add("*", new List<SelectField> { new SelectField("", "*") });
+                Add("field1,field2,field3", new List<SelectField> { 
+                    new SelectField("", "field1"),
+                    new SelectField("", "field2"),
+                    new SelectField("", "field3"),
+                });
+                Add("rel1.field1,rel2.field2,field3", new List<SelectField> {
+                    new SelectField("rel1", "field1"),
+                    new SelectField("rel2", "field2"),
+                    new SelectField("", "field3"),
+                });
+            }
+        }
+        [Theory]
+        [ClassData(typeof(selectList_positive_testdata))]
+        public void Parser_selectList_success(string sql, List<SelectField> expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(sql);
+            //act
+            List<SelectField> actual = parser.selectList();
+            //assert
+            for(int i=0; i < expected.Count; ++i)
+            {
+                Assert.Equal(expected[i].relation, actual[i].relation);
+                Assert.Equal(expected[i].field, actual[i].field);
+            }
+
+        }
+
+
     }
 }
