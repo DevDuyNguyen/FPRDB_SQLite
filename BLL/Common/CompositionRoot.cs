@@ -69,5 +69,7 @@ namespace BLL.Common
         public Preprocessor getPreprocessor() => this.preprocessor;
         //delete: for testing
         public UpdatePlanner getUpdatePlanner() => this.updatePlanner;
+        //delete: for testing
+        public MetadataManager getMetaDataManger() => this.metadataMgr;
     }
 }
