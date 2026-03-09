@@ -1121,37 +1121,41 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_INTERSECTIONQuery_testdata()
             {
+                //Parser_PrimaryQuery_testdata
+                foreach (var row in new Parser_PrimaryQuery_testdata())
+                    Add((string)row[0], (QueryData)row[1]);
+                //true content:
                 QueryData l1_1=new BaseCartesianProductQueryData(
-                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                    new List<string> { "rel1", "rel2" },
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1"},
                     null
                     );
                 QueryData l1_2 = new BaseCartesianProductQueryData(
-                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                    new List<string> { "rel1", "rel2" },
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
                     null
                     );
                 QueryData root = new CompoundQueryData(l1_1, l1_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                Add("select field 1 from rel1 intersction ⨂_ig select field 1 from rel1", root);
+                Add("select field1 from rel1 intersect ⨂_ig select field1 from rel1", root);
 
                 l1_1 = new BaseCartesianProductQueryData(
-                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                    new List<string> { "rel1", "rel2" },
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
                     null
                     );
                 l1_2 = new BaseCartesianProductQueryData(
-                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                    new List<string> { "rel1", "rel2" },
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
                     null
                     );
                 var l2_1= new CompoundQueryData(l1_1, l1_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
                 var l2_2= new BaseCartesianProductQueryData(
-                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                    new List<string> { "rel1", "rel2" },
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
                     null
                     );
                 root = new CompoundQueryData(l2_1, l2_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                Add("select field 1 from rel1 intersction ⨂_ig select field 1 from rel1 intersction ⨂_ig select field 1 from rel1", root);
+                Add("select field1 from rel1 intersect ⨂_ig select field1 from rel1 intersect ⨂_ig select field1 from rel1", root);
             }
         }
         [Theory]

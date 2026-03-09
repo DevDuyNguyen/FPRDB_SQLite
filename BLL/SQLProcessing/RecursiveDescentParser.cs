@@ -400,7 +400,7 @@ namespace BLL.SQLProcessing
                 }
                 return new NaturalJoinList(relNames, combinationStrategies);
             }
-            else if (lexer.matchDelimiter(","))
+            else //if (lexer.matchDelimiter(","))
             {
                 while (lexer.matchDelimiter(","))
                 {
@@ -409,8 +409,7 @@ namespace BLL.SQLProcessing
                 }
                 return relNames;
             }
-            else
-                throw createSQLSyntaxException("This isn't a FROM clause statement");
+            
         }
         public SelectionExpression PrimarySelectionExpression()
         {
