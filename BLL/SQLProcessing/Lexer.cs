@@ -423,5 +423,17 @@ namespace BLL.SQLProcessing
             else
                 return null;
         }
+        public void prev()
+        {
+            if (this.currentIndex == 0)
+            {
+                this.currentToken = null;
+            }
+            else
+            {
+                this.currentIndex--;
+                this.currentToken=this.tokens[this.currentIndex];
+            }
+        }
     }
 }

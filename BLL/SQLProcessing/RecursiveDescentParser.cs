@@ -449,12 +449,17 @@ namespace BLL.SQLProcessing
             SelectionExpression ans= leftSExpression;
             if(!(lexer.matchProbabilisticCombinationStrategy()))
                 return ans;
+            bool isEatNotConjunctionStrategy = false;
             while (lexer.matchProbabilisticCombinationStrategy())
             {
                 string strStrategy = lexer.eatProbabilisticCombinationStrategy();
                 ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
                 if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumStrategy))
-                    return ans;
+                {
+                    isEatNotConjunctionStrategy = true;
+                    break;
+                    
+                }
                 else
                 {
                     SelectionExpression rightSExpression = PrimarySelectionExpression();
@@ -466,20 +471,26 @@ namespace BLL.SQLProcessing
                     }
                 }
             }
+            if (isEatNotConjunctionStrategy)
+                lexer.prev();
             return ans;
         }
         public SelectionExpression DISJUNCTION_DIFFERENCE_SelectionExpresion()
         {
             SelectionExpression leftSExpression = CONJUNCTIONSelectionExpression();
-            string strStrategy = lexer.eatProbabilisticCombinationStrategy();
-            if (lexer.matchProbabilisticCombinationStrategy())
+            SelectionExpression ans = leftSExpression;
+            if(!(lexer.matchProbabilisticCombinationStrategy()))
+                    return ans;
+            string strStrategy;
+            while (lexer.matchProbabilisticCombinationStrategy())
             {
+                strStrategy=lexer.eatProbabilisticCombinationStrategy();
                 ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
                 SelectionExpression rightSExpression = CONJUNCTIONSelectionExpression();
 
-                return new CompoundSelectionExpression(leftSExpression, rightSExpression, enumStrategy);
+                ans=new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
             }
-            return leftSExpression;
+            return ans;
 
         }
         public SelectionExpression selectionExpression()
