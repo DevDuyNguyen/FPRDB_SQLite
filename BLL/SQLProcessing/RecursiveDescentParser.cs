@@ -447,8 +447,10 @@ namespace BLL.SQLProcessing
         {
             SelectionExpression leftSExpression = PrimarySelectionExpression();
             SelectionExpression ans= leftSExpression;
-            if(!(lexer.matchProbabilisticCombinationStrategy()))
+            if (!lexer.hasNext())
                 return ans;
+            else if (!(lexer.matchProbabilisticCombinationStrategy()) && !lexer.matchDelimiter(")"))
+                throw createSQLSyntaxException("Supposed to be a probabilistic combination strategy");
             bool isEatNotConjunctionStrategy = false;
             while (lexer.matchProbabilisticCombinationStrategy())
             {
@@ -463,12 +465,7 @@ namespace BLL.SQLProcessing
                 else
                 {
                     SelectionExpression rightSExpression = PrimarySelectionExpression();
-                    if(!(ans is CompoundSelectionExpression))
-                        ans=new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
-                    else
-                    {
-                        ans= new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
-                    }
+                    ans= new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
                 }
             }
             if (isEatNotConjunctionStrategy)
@@ -479,8 +476,10 @@ namespace BLL.SQLProcessing
         {
             SelectionExpression leftSExpression = CONJUNCTIONSelectionExpression();
             SelectionExpression ans = leftSExpression;
-            if(!(lexer.matchProbabilisticCombinationStrategy()))
-                    return ans;
+            if (!lexer.hasNext())
+                return ans;
+            else if (!(lexer.matchProbabilisticCombinationStrategy()) && !lexer.matchDelimiter(")"))
+                throw createSQLSyntaxException("Supposed to be a probabilistic combination strategy");
             string strStrategy;
             while (lexer.matchProbabilisticCombinationStrategy())
             {

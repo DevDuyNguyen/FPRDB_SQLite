@@ -435,5 +435,9 @@ namespace BLL.SQLProcessing
                 this.currentToken=this.tokens[this.currentIndex];
             }
         }
+        public bool hasNext()
+        {
+            return this.currentIndex< this.tokens.Count-1;
+        }
     }
 }
