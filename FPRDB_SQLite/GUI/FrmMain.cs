@@ -25,8 +25,8 @@ namespace FPRDB_SQLite.GUI
             this.databaseService = this.compRoot.getDatabaseService();
             InitializeComponent();
         }
-        // Hàm để enable/disable tab khi load database
-        private void enableTab()
+        // Hàm để enable/disable tab và các nút khi load database
+        private void changeStatusTab()
         {
             if (!isDatabaseLoaded)
             {
@@ -34,6 +34,9 @@ namespace FPRDB_SQLite.GUI
                 pageFuzzySet.Visible = false;
                 ribbonPage3.Visible = false;    // Tab "Relation"
                 ribbonPage1.Visible = false;    // Tab "Query"
+                buttonClose_pageHome.Enabled = false;
+                buttonSave_pageHome.Enabled = false;
+                buttonSaveAs_pageHome.Enabled = false;
             }
             else
             {
@@ -41,6 +44,9 @@ namespace FPRDB_SQLite.GUI
                 pageFuzzySet.Visible = true;
                 ribbonPage3.Visible = true;    // Tab "Relation"
                 ribbonPage1.Visible = true;    // Tab "Query"
+                buttonClose_pageHome.Enabled = true;
+                buttonSave_pageHome.Enabled = true;
+                buttonSaveAs_pageHome.Enabled = true;
             }
         }
 
@@ -56,7 +62,7 @@ namespace FPRDB_SQLite.GUI
 
         private void LoadDatabaseTree()
         {
-            enableTab();
+            changeStatusTab();
             // 1. Xóa cây cũ
             treeView.Nodes.Clear();
 

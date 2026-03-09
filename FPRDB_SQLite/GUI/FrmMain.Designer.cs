@@ -153,6 +153,7 @@
             // buttonClose_pageHome
             // 
             buttonClose_pageHome.Caption = "Close";
+            buttonClose_pageHome.Enabled = false;
             buttonClose_pageHome.Id = 11;
             buttonClose_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonClose_pageHome.ImageOptions.LargeImage");
             buttonClose_pageHome.Name = "buttonClose_pageHome";
@@ -160,6 +161,7 @@
             // buttonSave_pageHome
             // 
             buttonSave_pageHome.Caption = "Save";
+            buttonSave_pageHome.Enabled = false;
             buttonSave_pageHome.Id = 12;
             buttonSave_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonSave_pageHome.ImageOptions.LargeImage");
             buttonSave_pageHome.Name = "buttonSave_pageHome";
@@ -167,6 +169,7 @@
             // buttonSaveAs_pageHome
             // 
             buttonSaveAs_pageHome.Caption = "Save As";
+            buttonSaveAs_pageHome.Enabled = false;
             buttonSaveAs_pageHome.Id = 13;
             buttonSaveAs_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonSaveAs_pageHome.ImageOptions.LargeImage");
             buttonSaveAs_pageHome.Name = "buttonSaveAs_pageHome";
