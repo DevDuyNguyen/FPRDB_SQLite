@@ -36,8 +36,6 @@
             buttonNew_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonOpen_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonClose_pageHome = new DevExpress.XtraBars.BarButtonItem();
-            iSave = new DevExpress.XtraBars.BarButtonItem();
-            iSaveAs = new DevExpress.XtraBars.BarButtonItem();
             buttonAbout_groupHelp = new DevExpress.XtraBars.BarButtonItem();
             iAddDiscrete = new DevExpress.XtraBars.BarButtonItem();
             iAddContinuous = new DevExpress.XtraBars.BarButtonItem();
@@ -161,7 +159,7 @@
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonClose_pageHome, iSave, iSaveAs, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iEditSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iOpenRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iDeleteQuery, barButtonItem1, barButtonItem2, barButtonItem3, barButtonItem4, barButtonItem5, barButtonItem6, barButtonItem7, barButtonItem8, barButtonItem9, barButtonItem10, barButtonItem11, barButtonItem12, barButtonItem13, barButtonItem14, barButtonItem15 });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonClose_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iEditSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iOpenRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iDeleteQuery, barButtonItem1, barButtonItem2, barButtonItem3, barButtonItem4, barButtonItem5, barButtonItem6, barButtonItem7, barButtonItem8, barButtonItem9, barButtonItem10, barButtonItem11, barButtonItem12, barButtonItem13, barButtonItem14, barButtonItem15 });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             ribbonControl.MaxItemId = 49;
@@ -212,22 +210,6 @@
             buttonClose_pageHome.Name = "buttonClose_pageHome";
             buttonClose_pageHome.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText | DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText;
             buttonClose_pageHome.ItemClick += iClose_ItemClick;
-            // 
-            // iSave
-            // 
-            iSave.Caption = "Save";
-            iSave.Id = 12;
-            iSave.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSave.ImageOptions.LargeImage");
-            iSave.Name = "iSave";
-            iSave.ItemClick += iSave_ItemClick;
-            // 
-            // iSaveAs
-            // 
-            iSaveAs.Caption = "Save As";
-            iSaveAs.Id = 13;
-            iSaveAs.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveAs.ImageOptions.LargeImage");
-            iSaveAs.Name = "iSaveAs";
-            iSaveAs.ItemClick += iSaveAs_ItemClick;
             // 
             // buttonAbout_groupHelp
             // 
@@ -458,8 +440,6 @@
             groupFile_pageHome.ItemLinks.Add(buttonNew_pageHome);
             groupFile_pageHome.ItemLinks.Add(buttonOpen_pageHome);
             groupFile_pageHome.ItemLinks.Add(buttonClose_pageHome);
-            groupFile_pageHome.ItemLinks.Add(iSave);
-            groupFile_pageHome.ItemLinks.Add(iSaveAs);
             groupFile_pageHome.Name = "groupFile_pageHome";
             groupFile_pageHome.Text = "File";
             // 
@@ -932,8 +912,6 @@
         private DevExpress.XtraBars.BarButtonItem buttonNew_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonOpen_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonClose_pageHome;
-        private DevExpress.XtraBars.BarButtonItem iSave;
-        private DevExpress.XtraBars.BarButtonItem iSaveAs;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup continuousFuzzySetRibbonPageGroup;
         private DevExpress.XtraBars.BarButtonItem buttonAbout_groupHelp;
         private DevExpress.XtraBars.BarButtonItem iAddDiscrete;
