@@ -505,16 +505,20 @@ namespace BLL.SQLProcessing
             {
                 SelectionCondition selCond = selectionCondition();
                 lexer.eatDelimiter(")");
+                return selCond;
             }
-            SelectionExpression selectionEx = selectionExpression();
-            lexer.eatDelimiter(")");
-            lexer.eatDelimiter("[");
-            float lowerBound = Convert.ToSingle(lexer.eatNumberConstant());
-            lexer.eatDelimiter(",");
-            float upperBound = Convert.ToSingle(lexer.eatNumberConstant());
-            lexer.eatDelimiter("]");
-            
-            return new AtomicSelectionCondition(selectionEx, lowerBound, upperBound);
+            else
+            {
+                SelectionExpression selectionEx = selectionExpression();
+                lexer.eatDelimiter(")");
+                lexer.eatDelimiter("[");
+                float lowerBound = Convert.ToSingle(lexer.eatNumberConstant());
+                lexer.eatDelimiter(",");
+                float upperBound = Convert.ToSingle(lexer.eatNumberConstant());
+                lexer.eatDelimiter("]");
+
+                return new AtomicSelectionCondition(selectionEx, lowerBound, upperBound);
+            }
             
         }
         public SelectionCondition NOTSelectionCondition()
@@ -549,7 +553,7 @@ namespace BLL.SQLProcessing
             {
                 lexer.eatKeyword("OR");
                 nextSelectionCondt = ANDSelectionCondition();
-                ans = new CompoundSelectionCondition(ans, nextSelectionCondt, LogicalConnective.AND);
+                ans = new CompoundSelectionCondition(ans, nextSelectionCondt, LogicalConnective.OR);
             }
             return ans;
         }

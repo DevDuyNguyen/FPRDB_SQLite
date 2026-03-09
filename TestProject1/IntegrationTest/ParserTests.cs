@@ -946,7 +946,7 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_ORSelectionCondition_postive_testdata()
             {
-                //Parser_NOTSelectionCondition_positive_testdata:
+                //Parser_ANDSelectionCondition_postive_test:
                 foreach (var row in new Parser_ANDSelectionCondition_postive_test())
                     Add((string)row[0], (SelectionCondition)row[1]);
                 //true content:
@@ -1004,7 +1004,7 @@ namespace TestProject1.IntegrationTest
             }
         }
         [Theory]
-        [ClassData(typeof(Parser_ANDSelectionCondition_postive_test))]
+        [ClassData(typeof(Parser_ORSelectionCondition_postive_testdata))]
         public void Parser_ORSelectionCondition_success(string str, SelectionCondition expected)
         {
             //arrange
@@ -1017,8 +1017,49 @@ namespace TestProject1.IntegrationTest
             Assert.Equal(true, expected.GetType() == actual.GetType());
             Assert.Equivalent(expected, actual);
         }
+        class Parser_selectionCondition_positive_testdata:TheoryData<string, SelectionCondition>
+        {
+            public Parser_selectionCondition_positive_testdata()
+            {
+                //Parser_ANDSelectionCondition_postive_test:
+                foreach (var row in new Parser_ANDSelectionCondition_postive_test())
+                    Add((string)row[0], (SelectionCondition)row[1]);
+                //true content
+                var l1_1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    1,
+                    1
+                    );
+                var l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    1,
+                    1
+                    );
+                var l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
+                var l2_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    1,
+                    1
+                    );
+                SelectionCondition root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.AND);
+                Add("((field1=1)[1,1] or (field1=1)[1,1]) AND (field1=1)[1,1]",root);
 
-
+            }
+        }
+        [Theory]
+        [ClassData(typeof(Parser_selectionCondition_positive_testdata))]
+        public void Parser_selectionCondition_success(string str, SelectionCondition expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            SelectionCondition actual = parser.selectionCondition();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            Assert.Equivalent(expected, actual);
+        }
 
 
     }
