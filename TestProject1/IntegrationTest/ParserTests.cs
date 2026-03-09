@@ -632,12 +632,12 @@ namespace TestProject1.IntegrationTest
             {
 
                 //PrimarySelectionExpression_positive_testdata
-                foreach(var row in new PrimarySelectionExpression_positive_testdata())
+                foreach (var row in new PrimarySelectionExpression_positive_testdata())
                 {
                     Add((string)row[0], (SelectionExpression)row[1]);
                 }
                 //true content:
-                Add("field1=1 ⨂_ig field1 =⨂_in field2",new CompoundSelectionExpression(
+                Add("field1=1 ⨂_ig field1 =⨂_in field2", new CompoundSelectionExpression(
                     new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
                     new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
                     ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE
@@ -661,6 +661,17 @@ namespace TestProject1.IntegrationTest
                     ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION
                     )
                 );
+
+                SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
+                SelectionExpression l1_2= new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                SelectionExpression l2_2= new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l3_1 = new CompoundSelectionExpression(l2_1, l2_2, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l3_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l4_1 = new CompoundSelectionExpression(l3_1, l3_2, ProbabilisticCombinationStrategy.CONJUNCTION_POSITIVE_CORRELATION);
+                SelectionExpression l4_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l5_1 = new CompoundSelectionExpression(l4_1, l4_2, ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION);
+                Add("field1=1 ⨂_ig field1 =⨂_in field2 ⨂_in field1 =⨂_in field2 ⨂_pc field1 =⨂_in field2 ⨂_me field1 =⨂_in field2", l5_1);
             }
         }
         [Theory]
@@ -689,6 +700,19 @@ namespace TestProject1.IntegrationTest
             }
 
         }
+        //class DISJUNCTION_DIFFERENCE_SelectionExpresion_postive_test_data:TheoryData<string, SelectionExpression>
+        //{
+        //    public DISJUNCTION_DIFFERENCE_SelectionExpresion_postive_test_data()
+        //    {
+        //        //CONJUNCTIONSelectionExpression_positive_testdata
+        //        foreach(var row in new CONJUNCTIONSelectionExpression_positive_testdata())
+        //        {
+        //            Add((string)row[0], (SelectionExpression)row[1]);
+        //        }
+        //        //true content:
+        //        Add();
+        //    }
+        //}
 
     }
     

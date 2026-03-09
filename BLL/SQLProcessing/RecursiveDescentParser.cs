@@ -446,20 +446,27 @@ namespace BLL.SQLProcessing
         public SelectionExpression CONJUNCTIONSelectionExpression()
         {
             SelectionExpression leftSExpression = PrimarySelectionExpression();
-            if(lexer.matchProbabilisticCombinationStrategy())
+            SelectionExpression ans= leftSExpression;
+            if(!(lexer.matchProbabilisticCombinationStrategy()))
+                return ans;
+            while (lexer.matchProbabilisticCombinationStrategy())
             {
                 string strStrategy = lexer.eatProbabilisticCombinationStrategy();
                 ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
                 if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumStrategy))
-                    return leftSExpression;
+                    return ans;
                 else
                 {
                     SelectionExpression rightSExpression = PrimarySelectionExpression();
-
-                    return new CompoundSelectionExpression(leftSExpression, rightSExpression, enumStrategy);
+                    if(!(ans is CompoundSelectionExpression))
+                        ans=new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
+                    else
+                    {
+                        ans= new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
+                    }
                 }
             }
-            return leftSExpression;
+            return ans;
         }
         public SelectionExpression DISJUNCTION_DIFFERENCE_SelectionExpresion()
         {
