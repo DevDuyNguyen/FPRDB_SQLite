@@ -1060,6 +1060,65 @@ namespace TestProject1.IntegrationTest
             Assert.Equal(true, expected.GetType() == actual.GetType());
             Assert.Equivalent(expected, actual);
         }
+        class Parser_PrimaryQuery_testdata:TheoryData<string, QueryData>
+        {
+            public Parser_PrimaryQuery_testdata()
+            {
+                QueryData root = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    null
+                    );
+                //Add("select field1,field2 from rel1, rel2", root);
+
+                SelectionCondition selectionCondt = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    1,
+                    1
+                    );
+                root = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    selectionCondt
+                    );
+                //Add("select field1,field2 from rel1, rel2 where (field1=1)[1,1]", root);
+
+                root = new BaseNaturalJoinQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new NaturalJoinList(new List<string> { "rel1", "rel2", "rel3" }, new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE }),
+                    null
+                    );
+                Add("select field1,field2 from rel1 natural join ⨂_ig rel2 natural join ⨂_ig rel3", root);
+
+                selectionCondt = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    1,
+                    1
+                    );
+                root = new BaseNaturalJoinQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new NaturalJoinList(new List<string> { "rel1", "rel2", "rel3" }, new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE }),
+                    selectionCondt
+                    );
+                Add("select field1,field2 from rel1 natural join ⨂_ig rel2 natural join ⨂_ig rel3 where (field1=1)[1,1]", root);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(Parser_PrimaryQuery_testdata))]
+        public void Parser_PrimaryQuery_success(string str, QueryData expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            QueryData actual = parser.PrimaryQuery();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            Assert.Equivalent(expected, actual);
+        }
+
+
 
 
     }

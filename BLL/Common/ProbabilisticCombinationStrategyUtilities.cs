@@ -75,6 +75,32 @@ namespace BLL.Common
 
             }
         }
+        static public bool isDisjunctionStategy(ProbabilisticCombinationStrategy value)
+        {
+            switch (value)
+            {
+                case ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE:
+                case ProbabilisticCombinationStrategy.DISJUNCTION_INDEPENDANCE:
+                case ProbabilisticCombinationStrategy.DISJUNCTION_POSITIVE_CORRELATION:
+                case ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        static public bool isDifferenceStategy(ProbabilisticCombinationStrategy value)
+        {
+            switch (value)
+            {
+                case ProbabilisticCombinationStrategy.DIFFERENCE_IGNORANCE:
+                case ProbabilisticCombinationStrategy.DIFFERENCE_INDEPENDANCE:
+                case ProbabilisticCombinationStrategy.DIFFERENCE_POSITIVE_CORRELATION:
+                case ProbabilisticCombinationStrategy.DIFFERENCE_MUTUAL_EXCLUSION:
+                    return true;
+                default:
+                    return false;
+            }
+        }
         static public bool isConjunctionStategy(ProbabilisticCombinationStrategy value)
         {
             switch (value)

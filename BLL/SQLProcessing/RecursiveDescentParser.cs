@@ -394,7 +394,7 @@ namespace BLL.SQLProcessing
                     lexer.eatKeyword("JOIN");
                     var combinationStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(lexer.eatProbabilisticCombinationStrategy());
                     if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(combinationStrategy))
-                        throw createSQLSyntaxException("NATUAL JOIN can only be pared with probabilistic conjunction strategy");
+                        throw createSQLSyntaxException("NATUAL JOIN can only be paired with probabilistic conjunction strategy");
                     combinationStrategies.Add(combinationStrategy);
                     relNames.Add(relation());
                 }
@@ -563,40 +563,86 @@ namespace BLL.SQLProcessing
         }
         public QueryData PrimaryQuery()
         {
-            if (lexer.matchKeyword("SELECT")){
-                lexer.eatKeyword("SELECT");
-
-            }
-            else if (lexer.matchDelimiter("("))
+            QueryData ans;
+            if (lexer.matchDelimiter("("))
             {
+                lexer.eatDelimiter("(");
+                ans = query();
+                lexer.eatDelimiter(")");
+                return ans;
+            }
+            else if (lexer.matchKeyword("SELECT"))
+            {
+                lexer.eatKeyword("SELECT");
                 List<SelectField> selectFields = selectList();
                 lexer.eatKeyword("FROM");
                 object from_list = fromList();
+                SelectionCondition selectionCondt = null;
                 if (lexer.matchKeyword("WHERE"))
                 {
                     lexer.eatKeyword("WHERE");
+                    selectionCondt = selectionCondition();
                 }
+                if (from_list is List<string>)
+                    return new BaseCartesianProductQueryData(selectFields, (List<string>)from_list, selectionCondt);
+                else
+                    return new BaseNaturalJoinQueryData(selectFields, (NaturalJoinList)from_list, selectionCondt);
+
             }
             else
-            {
-                throw createSQLSyntaxException("The statement isn't a query");
-            }
-            throw new NotFiniteNumberException();
+                throw createSQLSyntaxException("Not a query");
         }
         public QueryData INTERSECTIONQuery()
         {
-
-            throw new NotFiniteNumberException();
+            QueryData ans = PrimaryQuery();
+            QueryData next;
+            while (lexer.matchKeyword("INTERSECT"))
+            {
+                lexer.eatKeyword("INTERSECT");
+                string strProbCombStrategy = lexer.eatProbabilisticCombinationStrategy();
+                ProbabilisticCombinationStrategy enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
+                if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumProbCombStrategy))
+                    throw createSQLSyntaxException("INTERSECTION must be paired with probabilistic conjunction strategy");
+                next = PrimaryQuery();
+                ans = new CompoundQueryData(ans, next, SetConnective.INTERSECT, enumProbCombStrategy);
+            }
+            return ans;
         }
         public QueryData UNION_EXCEPT_Query()
         {
+            QueryData ans = INTERSECTIONQuery();
+            QueryData next;
+            bool isUNION;
+            while (lexer.matchKeyword("UNION") || lexer.matchKeyword("EXCEPT"))
+            {
+                if (lexer.matchKeyword("UNION"))
+                {
+                    lexer.eatKeyword("UNION");
+                    isUNION = true;
+                }
+                else
+                {
+                    lexer.eatKeyword("EXCEPT");
+                    isUNION = false;
+                }
+                string strProbCombStrategy = lexer.eatProbabilisticCombinationStrategy();
+                ProbabilisticCombinationStrategy enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
+                if (isUNION && !ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumProbCombStrategy))
+                    throw createSQLSyntaxException("UNION must be paired with probabilistic disjunction strategy");
+                else if (!isUNION && !ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(enumProbCombStrategy))
+                    throw createSQLSyntaxException("EXCEPT must be paired with probabilistic difference strategy");
+                next = INTERSECTIONQuery();
+                ans = (isUNION)?
+                    new CompoundQueryData(ans, next, SetConnective.UNION, enumProbCombStrategy)
+                    : new CompoundQueryData(ans, next, SetConnective.EXCEPT, enumProbCombStrategy);
+            }
+            return ans;
 
-            throw new NotFiniteNumberException();
         }
         public QueryData query()
         {
-
-            throw new NotFiniteNumberException();
+            return UNION_EXCEPT_Query();
         }
+
     }
 }
