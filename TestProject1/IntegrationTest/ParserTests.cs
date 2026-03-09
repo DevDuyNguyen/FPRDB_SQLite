@@ -588,7 +588,7 @@ namespace TestProject1.IntegrationTest
                 Add("field=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.EQUAL));
                 Add("field!='haha'", new AtomicSelectionExpressionFieldConstant("field", new StringConstant("haha"), CompareOperation.NOT_EQUAL));
                 Add("field>1.1", new AtomicSelectionExpressionFieldConstant("field", new FloatConstant(1.1f), CompareOperation.GREATER_THAN));
-                Add("field=>1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.GREATER_EQUAL));
+                Add("field>=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.GREATER_EQUAL));
                 Add("field<1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_THAN));
                 Add("field<=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_EQUAL));
                 Add("field⇒1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.ALSO));
@@ -625,6 +625,71 @@ namespace TestProject1.IntegrationTest
                 Assert.Equal(l.probCombinationStrategy, r.probCombinationStrategy);
             }
         }
+        
+        class CONJUNCTIONSelectionExpression_positive_testdata:TheoryData<string, SelectionExpression>
+        {
+            public CONJUNCTIONSelectionExpression_positive_testdata()
+            {
+
+                //PrimarySelectionExpression_positive_testdata
+                foreach(var row in new PrimarySelectionExpression_positive_testdata())
+                {
+                    Add((string)row[0], (SelectionExpression)row[1]);
+                }
+                //true content:
+                Add("field1=1 ⨂_ig field1 =⨂_in field2",new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE
+                    )
+                );
+                Add("field1=1 ⨂_in field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE
+                    )
+                );
+                Add("field1=1 ⨂_pc field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_POSITIVE_CORRELATION
+                    )
+                );
+                Add("field1=1 ⨂_me field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION
+                    )
+                );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(CONJUNCTIONSelectionExpression_positive_testdata))]
+        public void Parser_CONJUNCTIONSelectionExpression_success(string str, SelectionExpression expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            SelectionExpression actual = parser.CONJUNCTIONSelectionExpression();
+            //assert
+            if(expected is AtomicSelectionExpressionFieldConstant || expected is AtomicSelectionExpressionFieldField)
+            {
+                Parser_PrimarySelectionExpression_success(str, expected);
+            }
+            else
+            {
+                Assert.Equal(true, expected.GetType() == actual.GetType());
+                CompoundSelectionExpression ex = (CompoundSelectionExpression)expected;
+                CompoundSelectionExpression act = (CompoundSelectionExpression)actual;
+                Assert.Equivalent(ex.lSelectionExpresion, act.lSelectionExpresion);
+                Assert.Equivalent(ex.rSelectionExpresion, act.rSelectionExpresion);
+                Assert.Equivalent(ex.probCombStrategy, act.probCombStrategy);
+            }
+
+        }
+
     }
     
 }

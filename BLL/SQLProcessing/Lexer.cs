@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL.SQLProcessing
 {
+    //not done: extremely lack test coverage
     public class MismatchTokenType : Exception
     {
         public string Message{
@@ -156,7 +157,6 @@ namespace BLL.SQLProcessing
                 token = this._scanner.VsReadToken(ref state);
                 if (token != null && token.Category == TokenCategory.Content)
                 {
-                    
                     this.tokens.Add(token);
                 }
             } while (token != null && token.Terminal.Name != "EOF");
