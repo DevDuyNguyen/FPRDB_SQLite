@@ -224,5 +224,139 @@ namespace FPRDB_SQLite.GUI
                 return;
             }
         }
+
+        // Hàm đóng Database hiện tại
+        private void CloseDatabase()
+        {
+            try
+            {
+                // 1. Kiểm tra xem hiện tại có database nào đang mở không thông qua service
+                string dbName = this.databaseService.getDatabaseName();
+
+                if (string.IsNullOrEmpty(dbName) || dbName == "DATABASE")
+                {
+                    XtraMessageBox.Show("No database is currently open.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // 2. Xác nhận từ người dùng
+                DialogResult result = XtraMessageBox.Show($"Are you sure you want to close the database '{dbName}'?",
+            "Confirm Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // 3. Gọi hàm đóng DB trong service (nếu service có hàm close, nếu không hãy gán null hoặc khởi tạo lại)
+                    // Giả sử databaseService có phương thức để reset trạng thái:
+                    this.databaseService.closeDB();
+
+                    // 4. Xóa các nút trên cây thư mục (sử dụng đúng tên biến treeView)
+                    this.treeView.Nodes.Clear();
+
+                    // 5. Cập nhật trạng thái UI (nếu cần hàm này để ẩn các nút chức năng)
+                    // ActivateDatabase(false); 
+
+                    XtraMessageBox.Show("Database closed successfully.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Error while closing database: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void iClose_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            CloseDatabase();
+        }
+
+        private void buttonExit_pageHome_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            try
+            {
+                DialogResult result = XtraMessageBox.Show("Are you sure want to exit?", "Exit FPRDB Visual Management System", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (result == DialogResult.Yes)
+                {
+                    Application.Exit();
+                }
+            }
+            catch (Exception Ex)
+            {
+                XtraMessageBox.Show(Ex.Message);
+            }
+        }
+
+        // Hàm lưu Database hiện tại (not done)
+        private void iSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            try
+            {
+                if (this.databaseService == null)
+                {
+                    XtraMessageBox.Show("Error : Cannot find the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                //if (!databaseService.SaveDatabase())
+                //{
+                //    XtraMessageBox.Show("Error : Cannot save the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
+                //else
+                //{
+                //    XtraMessageBox.Show("Save successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //}
+            }
+            catch (Exception Ex)
+            {
+                XtraMessageBox.Show(Ex.Message);
+            }
+        }
+
+        private void iSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            try
+            {
+                // 1. Kiểm tra xem hiện tại có Database nào đang mở để "Save As" không
+                if (string.IsNullOrEmpty(this.databaseService.getDatabaseName()) || this.databaseService.getDatabaseName() == "DATABASE")
+                {
+                    XtraMessageBox.Show("No database is currently open to save!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                SaveFileDialog DialogSave = new SaveFileDialog();
+                DialogSave.Title = "Save As Fuzzy Probabilistic Relational Database (FPRDB)";
+                DialogSave.Filter = "Database file (*.db)|*.db"; // Đồng bộ đuôi .db với hàm Open/New
+                DialogSave.DefaultExt = "db";
+                DialogSave.AddExtension = true;
+                DialogSave.RestoreDirectory = true;
+                DialogSave.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
+                DialogSave.SupportMultiDottedExtensions = true;
+
+                if (DialogSave.ShowDialog() == DialogResult.OK)
+                {
+                    // 2. Gọi hàm Save As từ service
+                    // Lưu ý: đảm bảo databaseService có hàm hỗ trợ việc sao lưu sang file mới
+                    bool success = this.databaseService.saveAsDB(DialogSave.FileName);
+
+                    if (success)
+                    {
+                        // 3. Cập nhật lại giao diện sau khi lưu thành file mới
+                        LoadDatabaseTree(); // Gọi đúng tên hàm bạn đã viết ở trên
+
+                        // Nếu có hàm quản lý trạng thái các nút bấm
+                        // this.ActivateDatabase(true); 
+
+                        XtraMessageBox.Show("Database saved successfully as new file!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Error: Cannot save as database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                DialogSave.Dispose();
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

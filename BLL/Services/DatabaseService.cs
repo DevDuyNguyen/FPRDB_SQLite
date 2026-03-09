@@ -197,5 +197,44 @@ namespace BLL.Services
             }
         }
 
+        public bool saveAsDB(string newPath)
+        {
+            try
+            {
+                // 1. Lấy đường dẫn hiện tại từ dbMgr (Chuỗi kết nối SQLite thường là đường dẫn file)
+                string currentPath = this.dbMgr.getConnectionString();
+
+                // Kiểm tra nếu đường dẫn rỗng
+                if (string.IsNullOrEmpty(currentPath)) return false;
+
+                // 2. Copy file vật lý sang đường dẫn mới (true để ghi đè nếu đã tồn tại)
+                System.IO.File.Copy(currentPath, newPath, true);
+
+                // 3. Nạp lại database từ đường dẫn mới
+                this.loadDB(newPath);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("SaveAs Error: " + ex.Message);
+                return false;
+            }
+        }
+
+        public void closeDB()
+        {
+            try
+            {
+                // Gọi đóng kết nối từ Manager
+                this.dbMgr.closeConnection();
+                // Bạn có thể cần một hàm trong DatabaseManager để reset ConnectionString về rỗng
+                // Nếu dbMgr không có hàm reset, hãy đảm bảo các hàm getDatabaseName sẽ xử lý khi Connection rỗng
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("CloseDB Error: " + ex.Message);
+            }
+        }
     }
 }
