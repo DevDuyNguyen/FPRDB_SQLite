@@ -42,6 +42,11 @@ namespace FPRDB_SQLite.GUI
         // Click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (!discreteFuzzySetInfo.ValidateControls())
+            {
+                XtraMessageBox.Show("Please fill out all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             FieldType type = discreteFuzzySetInfo.getFuzzySetType();
             switch (type)
             {

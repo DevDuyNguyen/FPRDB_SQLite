@@ -36,7 +36,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             var notEmptyRule = new ConditionValidationRule
             {
                 ConditionOperator = ConditionOperator.IsNotBlank,
-                ErrorText = "Trường này không được để trống!"
+                ErrorText = "Required Field!!"
             };
 
             foreach (var control in textFields)
