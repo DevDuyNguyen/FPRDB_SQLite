@@ -1117,7 +1117,57 @@ namespace TestProject1.IntegrationTest
             Assert.Equal(true, expected.GetType() == actual.GetType());
             Assert.Equivalent(expected, actual);
         }
+        class Parser_INTERSECTIONQuery_testdata:TheoryData<string, QueryData>
+        {
+            public Parser_INTERSECTIONQuery_testdata()
+            {
+                QueryData l1_1=new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    null
+                    );
+                QueryData l1_2 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    null
+                    );
+                QueryData root = new CompoundQueryData(l1_1, l1_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                Add("select field 1 from rel1 intersction ⨂_ig select field 1 from rel1", root);
 
+                l1_1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    null
+                    );
+                l1_2 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    null
+                    );
+                var l2_1= new CompoundQueryData(l1_1, l1_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                var l2_2= new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    null
+                    );
+                root = new CompoundQueryData(l2_1, l2_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                Add("select field 1 from rel1 intersction ⨂_ig select field 1 from rel1 intersction ⨂_ig select field 1 from rel1", root);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(Parser_INTERSECTIONQuery_testdata))]
+        public void Parser_INTERSECTIONQuery_success(string str, QueryData expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            QueryData actual = parser.INTERSECTIONQuery();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            Assert.Equivalent(expected, actual);
+        }
 
 
 
