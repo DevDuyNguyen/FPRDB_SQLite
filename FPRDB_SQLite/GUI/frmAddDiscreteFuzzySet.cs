@@ -36,8 +36,7 @@ namespace FPRDB_SQLite.GUI
         private void HandleDiscreteFuzzySet<T>()
         {
             var dto = discreteFuzzySetInfo.getDiscreteFuzzySet<T>();
-            if (service.checkIfFuzzySetValid(dto))
-                service.createFuzzySet<T>(dto);
+            service.createFuzzySet<T>(dto);
         }
         // Click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
@@ -61,6 +60,8 @@ namespace FPRDB_SQLite.GUI
                     break;
 
             }
+            XtraMessageBox.Show("Discrete fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
         }
     }
 }

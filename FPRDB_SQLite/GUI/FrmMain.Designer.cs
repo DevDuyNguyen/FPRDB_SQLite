@@ -74,7 +74,7 @@
             ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl1.ExpandCollapseItem, buttonHelp_groupHelp, barButtonItem1, barButtonItem2, barButtonItem3, barButtonItem4, barButtonItem5, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonClose_pageHome, buttonSave_pageHome, buttonSaveAs_pageHome, buttonAbout_groupHelp, buttonAdd_groupDis, buttonLibrary_groupDis, buttonAdd_groupCont, buttonLibrary_groupCont });
             ribbonControl1.Location = new System.Drawing.Point(0, 0);
             ribbonControl1.Margin = new System.Windows.Forms.Padding(4);
-            ribbonControl1.MaxItemId = 19;
+            ribbonControl1.MaxItemId = 20;
             ribbonControl1.Name = "ribbonControl1";
             ribbonControl1.OptionsMenuMinWidth = 385;
             ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { pageHome, Schema, ribbonPage3, pageFuzzySet, ribbonPage1, pageHelp });
@@ -235,6 +235,7 @@
             Schema.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup2 });
             Schema.Name = "Schema";
             Schema.Text = "Schema";
+            Schema.Visible = false;
             // 
             // ribbonPageGroup2
             // 
@@ -246,6 +247,7 @@
             ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup3 });
             ribbonPage3.Name = "ribbonPage3";
             ribbonPage3.Text = "Table";
+            ribbonPage3.Visible = false;
             // 
             // ribbonPageGroup3
             // 
@@ -257,6 +259,7 @@
             pageFuzzySet.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupDiscrete_pageFS, groupContinuous_pageFS });
             pageFuzzySet.Name = "pageFuzzySet";
             pageFuzzySet.Text = "FuzzySet";
+            pageFuzzySet.Visible = false;
             // 
             // groupDiscrete_pageFS
             // 
@@ -277,6 +280,7 @@
             ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup1 });
             ribbonPage1.Name = "ribbonPage1";
             ribbonPage1.Text = "Query";
+            ribbonPage1.Visible = false;
             // 
             // ribbonPageGroup1
             // 
@@ -303,7 +307,7 @@
             treeView.Location = new System.Drawing.Point(12, 200);
             treeView.Name = "treeView";
             treeView.SelectedImageIndex = 0;
-            treeView.Size = new System.Drawing.Size(201, 340);
+            treeView.Size = new System.Drawing.Size(194, 343);
             treeView.TabIndex = 1;
             // 
             // TreeView_imageList

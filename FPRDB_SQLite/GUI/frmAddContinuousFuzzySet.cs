@@ -41,12 +41,9 @@ namespace FPRDB_SQLite.GUI
                 return;
             }
             var dto = continuosFuzzySetInfo.GetContinuousFuzzySet();
-            if (service.checkIfFuzzySetValid(dto))
-            {
-                service.createFuzzySet<float>(dto);
-                XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Close();
-            }
+            service.createFuzzySet<float>(dto);
+            XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
         }
     }
 }

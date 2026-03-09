@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using BLL.Services;
 using BLL.Common;
+using BLL.SQLProcessing;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -17,11 +18,30 @@ namespace FPRDB_SQLite.GUI
     {
         private CompositionRoot compRoot;
         private DatabaseService databaseService;
+        private bool isDatabaseLoaded = false;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
             this.databaseService = this.compRoot.getDatabaseService();
             InitializeComponent();
+        }
+        // Hàm để enable/disable tab khi load database
+        private void enableTab()
+        {
+            if (!isDatabaseLoaded)
+            {
+                Schema.Visible = false;
+                pageFuzzySet.Visible = false;
+                ribbonPage3.Visible = false;    // Tab "Relation"
+                ribbonPage1.Visible = false;    // Tab "Query"
+            }
+            else
+            {
+                Schema.Visible = true;
+                pageFuzzySet.Visible = true;
+                ribbonPage3.Visible = true;    // Tab "Relation"
+                ribbonPage1.Visible = true;    // Tab "Query"
+            }
         }
 
         private void buttonAdd_groupDis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -36,6 +56,7 @@ namespace FPRDB_SQLite.GUI
 
         private void LoadDatabaseTree()
         {
+            enableTab();
             // 1. Xóa cây cũ
             treeView.Nodes.Clear();
 
@@ -186,6 +207,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     this.databaseService.loadDB(DialogOpen.FileName);
                     XtraMessageBox.Show("Open database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    isDatabaseLoaded = true;
                     LoadDatabaseTree();
                 }
                 catch (IOException ex)
@@ -213,6 +235,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     this.databaseService.createDB(DialogNew.FileName);
                     XtraMessageBox.Show("Create new database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    isDatabaseLoaded = false;
                     LoadDatabaseTree();
                 }
             }
