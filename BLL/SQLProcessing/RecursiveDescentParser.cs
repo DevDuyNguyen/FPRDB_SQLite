@@ -626,7 +626,7 @@ namespace BLL.SQLProcessing
                 }
                 string strProbCombStrategy = lexer.eatProbabilisticCombinationStrategy();
                 ProbabilisticCombinationStrategy enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
-                if (isUNION && !ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumProbCombStrategy))
+                if (isUNION && !ProbabilisticCombinationStrategyUtilities.isDisjunctionStategy(enumProbCombStrategy))
                     throw createSQLSyntaxException("UNION must be paired with probabilistic disjunction strategy");
                 else if (!isUNION && !ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(enumProbCombStrategy))
                     throw createSQLSyntaxException("EXCEPT must be paired with probabilistic difference strategy");

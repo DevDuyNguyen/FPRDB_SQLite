@@ -1172,9 +1172,70 @@ namespace TestProject1.IntegrationTest
             Assert.Equal(true, expected.GetType() == actual.GetType());
             Assert.Equivalent(expected, actual);
         }
+        class Parser_UNION_EXCEPT_Query_testdata : TheoryData<string, QueryData>
+        {
+            public Parser_UNION_EXCEPT_Query_testdata()
+            {
+                //Parser_INTERSECTIONQuery_testdata
+                foreach (var row in new Parser_INTERSECTIONQuery_testdata())
+                    Add((string)row[0], (QueryData)row[1]);
+                //true content:
+                QueryData l1_1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
+                    null
+                    );
+                QueryData l1_2 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
+                    null
+                    );
+                var l2_1 = new CompoundQueryData(l1_1, l1_2, SetConnective.INTERSECT, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                var l2_2= new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
+                    null
+                    );
+                QueryData root = new CompoundQueryData(l2_1, l2_2, SetConnective.UNION, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
+                Add("select field1 from rel1 intersect ⨂_ig select field1 from rel1 union ⨁_ig select field1 from rel1", root);
+
+                l1_1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
+                    null
+                    );
+                l1_2 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
+                    null
+                    );
+                l2_1 = new CompoundQueryData(l1_1, l1_2, SetConnective.UNION, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
+                l2_2 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1") },
+                    new List<string> { "rel1" },
+                    null
+                    );
+                root = new CompoundQueryData(l2_1, l2_2, SetConnective.EXCEPT, ProbabilisticCombinationStrategy.DIFFERENCE_IGNORANCE);
+                Add("select field1 from rel1 union ⨁_ig select field1 from rel1 except ⦵_ig select field1 from rel1", root);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(Parser_UNION_EXCEPT_Query_testdata))]
+        public void Parser_UNION_EXCEPT_Query_success(string str, QueryData expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            QueryData actual = parser.UNION_EXCEPT_Query();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            Assert.Equivalent(expected, actual);
+        }
 
 
 
     }
-    
+
 }
