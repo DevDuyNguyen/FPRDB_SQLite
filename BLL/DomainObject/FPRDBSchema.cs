@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BLL.DomainObject
 {
@@ -47,6 +48,17 @@ namespace BLL.DomainObject
         public List<string> getPrimarykey()
         {
             return this.primarykey;
+        }
+        public Field getFieldByName(string name)
+        {
+            foreach(Field field in this.fields)
+            {
+                if (field.getFieldName() == name)
+                {
+                    return field;
+                }
+            }
+            return null;
         }
     }
 }

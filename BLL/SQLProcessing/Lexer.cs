@@ -30,6 +30,8 @@ namespace BLL.SQLProcessing
             var closedParenthesis = new KeyTerm(")", "delimiter");
             var openSquareBracket = new KeyTerm("[", "delimiter");
             var closedSquareBracket = new KeyTerm("]", "delimiter");
+            var openCurlyBracket = new KeyTerm("{", "delimiter");
+            var closedCurlyBracket = new KeyTerm("}", "delimiter");
 
             //var select = ToTerm("SELECT", "keyword");
             //var from = ToTerm("FROM", "keyword");
@@ -74,7 +76,7 @@ namespace BLL.SQLProcessing
             var positive = ToTerm("+", "unary operator");
 
             var any = new NonTerminal("any");
-            any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket
+            any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket | openCurlyBracket | closedCurlyBracket
                 | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
                 | probConjunctionStrategy | probDisjunctionStrategy | probDifferencetionStrategy
@@ -235,12 +237,23 @@ namespace BLL.SQLProcessing
                 return true;
             return false;
         }
-        public double eatNumberConstant()
+        public object eatNumberConstant()
         {
             if (!matchNumberConstant())
                 throw new MismatchTokenType("number constant", this.currentToken);
 
-            double res = Convert.ToDouble(this.currentToken.Value);
+            object res;
+            object value = this.currentToken.Value;
+            if (value is int || value is long || value is short ||
+                value is byte || value is sbyte || value is uint || value is ulong)
+                res = Convert.ToInt32(value);
+            else if(value is float || value is double || value is decimal)
+                res = Convert.ToSingle(value);
+            else
+            {
+                throw new NotSupportedException($"{value.ToString()} isn't supported");
+            }
+
             next();
             return res;
         }
@@ -274,6 +287,20 @@ namespace BLL.SQLProcessing
             if (!matchBooleanConstant())
                 throw new MismatchTokenType("boolean constant", this.currentToken);
             bool res = (bool)this.currentToken.Value;
+            next();
+            return res;
+        }
+        public bool matchFuzzySetConstant()
+        {
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier")
+                return true;
+            return false;
+        }
+        public string eatFuzzySetConstant()
+        {
+            if(!matchFuzzySetConstant())
+                throw new MismatchTokenType("fuzzy set constant", this.currentToken);
+            var res= this.currentToken.Value.ToString();
             next();
             return res;
         }
