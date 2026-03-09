@@ -445,6 +445,7 @@ namespace BLL.SQLProcessing
         }
         public SelectionExpression CONJUNCTIONSelectionExpression()
         {
+            //not done: this code isn't elegant, look at ANDSelectionCondition
             SelectionExpression leftSExpression = PrimarySelectionExpression();
             SelectionExpression ans= leftSExpression;
             if (!lexer.hasNext())
@@ -474,6 +475,7 @@ namespace BLL.SQLProcessing
         }
         public SelectionExpression DISJUNCTION_DIFFERENCE_SelectionExpresion()
         {
+            //not done: this code isn't elegant, look at ANDSelectionCondition
             SelectionExpression leftSExpression = CONJUNCTIONSelectionExpression();
             SelectionExpression ans = leftSExpression;
             if (!lexer.hasNext())
@@ -496,9 +498,64 @@ namespace BLL.SQLProcessing
         {
             return DISJUNCTION_DIFFERENCE_SelectionExpresion();
         }
+        public SelectionCondition PrimarySelectionCondition()
+        {
+            lexer.eatDelimiter("(");
+            if (lexer.matchDelimiter("("))
+            {
+                SelectionCondition selCond = selectionCondition();
+                lexer.eatDelimiter(")");
+            }
+            SelectionExpression selectionEx = selectionExpression();
+            lexer.eatDelimiter(")");
+            lexer.eatDelimiter("[");
+            float lowerBound = Convert.ToSingle(lexer.eatNumberConstant());
+            lexer.eatDelimiter(",");
+            float upperBound = Convert.ToSingle(lexer.eatNumberConstant());
+            lexer.eatDelimiter("]");
+            
+            return new AtomicSelectionCondition(selectionEx, lowerBound, upperBound);
+            
+        }
+        public SelectionCondition NOTSelectionCondition()
+        {
+            if (lexer.matchKeyword("NOT")){
+                lexer.eatKeyword("NOT");
+                SelectionCondition selectionCondt = PrimarySelectionCondition();
+                return new CompoundSelectionCondition(selectionCondt, null, LogicalConnective.NOT);
+            }
+            else
+            {
+                return PrimarySelectionCondition();
+            }
+        }
+        public SelectionCondition ANDSelectionCondition()
+        {
+            SelectionCondition ans = NOTSelectionCondition();
+            SelectionCondition nextSelectionCondt;
+            while (lexer.matchKeyword("AND"))
+            {
+                lexer.eatKeyword("AND");
+                nextSelectionCondt = NOTSelectionCondition();
+                ans = new CompoundSelectionCondition(ans, nextSelectionCondt, LogicalConnective.AND);
+            }
+            return ans;
+        }
+        public SelectionCondition ORSelectionCondition()
+        {
+            SelectionCondition ans = ANDSelectionCondition();
+            SelectionCondition nextSelectionCondt;
+            while (lexer.matchKeyword("OR"))
+            {
+                lexer.eatKeyword("OR");
+                nextSelectionCondt = ANDSelectionCondition();
+                ans = new CompoundSelectionCondition(ans, nextSelectionCondt, LogicalConnective.AND);
+            }
+            return ans;
+        }
         public SelectionCondition selectionCondition()
         {
-            throw new NotImplementedException();
+            return ORSelectionCondition();
         }
         public QueryData PrimaryQuery()
         {

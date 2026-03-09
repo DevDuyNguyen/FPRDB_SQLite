@@ -816,7 +816,29 @@ namespace TestProject1.IntegrationTest
             Assert.Equivalent(expected, actual);
 
         }
-
+        class Parser_PrimarySelectionCondition_positive_testdata:TheoryData<string, SelectionCondition>
+        {
+            public Parser_PrimarySelectionCondition_positive_testdata()
+            {
+                SelectionExpression selEx = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
+                SelectionCondition root = new AtomicSelectionCondition(selEx, 1, 1);
+                Add("(field1=1)[1,1]",root);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(Parser_PrimarySelectionCondition_positive_testdata))]
+        public void Parser_PrimarySelectionCondition_success(string str, SelectionCondition expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            SelectionCondition actual = parser.PrimarySelectionCondition();
+            //assert
+            Assert.Equal(true, expected.GetType()==actual.GetType());
+            Assert.Equivalent(expected, actual);
+        }
     }
     
 }

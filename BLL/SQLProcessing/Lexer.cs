@@ -186,7 +186,7 @@ namespace BLL.SQLProcessing
         public void eatDelimiter(string delimiter)
         {
             if (!matchDelimiter(delimiter))
-                throw new MismatchTokenType("delimiter", this.currentToken);
+                throw new MismatchTokenType("delimiter "+delimiter, this.currentToken);
             next();
         }
         public bool matchAnyKeyword()
