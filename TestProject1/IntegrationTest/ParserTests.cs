@@ -839,6 +839,37 @@ namespace TestProject1.IntegrationTest
             Assert.Equal(true, expected.GetType()==actual.GetType());
             Assert.Equivalent(expected, actual);
         }
+        class Parser_NOTSelectionCondition_positive_testdata:TheoryData<string, SelectionCondition>
+        {
+            
+
+            //true content:
+            public Parser_NOTSelectionCondition_positive_testdata()
+            {
+                //Parser_PrimarySelectionCondition_positive_testdata
+                //foreach (var row in new Parser_PrimarySelectionCondition_positive_testdata())
+                //    Add((string)row[0], (SelectionCondition)row[1]);
+                //true content:
+                SelectionExpression selEx = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
+                SelectionCondition l1 = new AtomicSelectionCondition(selEx, 0.5f, 0.9f);
+                SelectionCondition root = new CompoundSelectionCondition(l1, null, LogicalConnective.NOT);
+                Add("NOT (field1=1)[0.5,0.9]", root);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(Parser_NOTSelectionCondition_positive_testdata))]
+        public void Parser_NOTSelectionCondition_success(string str, SelectionCondition expected)
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            RecursiveDescentParser parser = compRoot.getParser();
+            parser.parse(str);
+            //act
+            SelectionCondition actual = parser.NOTSelectionCondition();
+            //assert
+            Assert.Equal(true, expected.GetType() == actual.GetType());
+            Assert.Equivalent(expected, actual);
+        }
     }
     
 }
