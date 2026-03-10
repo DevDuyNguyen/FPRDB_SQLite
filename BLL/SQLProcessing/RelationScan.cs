@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Common;
 using BLL.DomainObject;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -17,10 +18,12 @@ namespace BLL.SQLProcessing
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;
         private RecursiveDescentParser parser;
-        public RelationScan(string relName, RecursiveDescentParser parser)
+        public RelationScan(string relName, RecursiveDescentParser parser, DatabaseManager dbMgr, MetadataManager metaDataMgr)
         {
-            this.relationInfo = this.metaDataMgr.getRelation(relName);
             this.parser = parser;
+            this.dbMgr = dbMgr;
+            this.metaDataMgr = metaDataMgr;
+            this.relationInfo = this.metaDataMgr.getRelation(relName);
             this.currentTupleIndex = 0;
         }
         public void beforeFirst()=> this.currentTupleIndex = 0;
@@ -55,34 +58,57 @@ namespace BLL.SQLProcessing
             return (FuzzyProbabilisticValue<T>)(object)fprobValue;
 
         }
-        private FuzzySet<T> turnConstantToFuzzySet<T>(Constant c, FieldType fuzzSetType)
+        //not done: public only for testing, mocking for private
+        public FuzzySet<T> turnConstantToFuzzySet<T>(Constant c, FieldType fuzzSetType)
         {
-            if(c is IntConstant || c is FloatConstant || c is StringConstant)
+            Type t = typeof(T);
+            if (
+                (c is IntConstant && (fuzzSetType!=FieldType.distFS_INT || t!=typeof(int)))
+                || (c is FloatConstant && (fuzzSetType != FieldType.distFS_FLOAT || t != typeof(float)))
+                || (c is StringConstant && (fuzzSetType != FieldType.distFS_TEXT || t != typeof(string)))
+                || (c is BooleanConstant && (fuzzSetType != FieldType.BOOLEAN || t != typeof(bool)))
+                || (c is FuzzySetConstant && FieldTypeUltilities.isPrimitive(fuzzSetType))
+            )
+            {
+                throw new InvalidCastException($"Can't turn constant of type {c.GetType().Name} to fuzzy set of type {fuzzSetType.ToString()}");
+            }
+            if(ConstantUltilities.isPrimitiveConstant(c))
             {
                 T value = (T)c.getVal();
                 List<T> valueSet = new List<T> { value };
                 List<float> membershipDegreeSet = new List<float> { 1.0f };
                 string fuzzySetName = value.ToString();
-                if (fuzzSetType == FieldType.distFS_INT || fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.distFS_TEXT)
-                {
-                    return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
-                }
-                else
-                    throw new InvalidCastException("Can't turn a primitive constant value into non-discrete fuzzy set value");
+                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
             }
             else
             {
-                throw new NotImplementedException();
+                FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
+                if(FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
+                    return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
+                else
+                {
+                    return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);
+                }
+                    
             }
             
         }
-        private FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data)
+        private FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data, FieldType fieldType)
         {
             throw new NotImplementedException();
             FuzzyProbabilisticValue<T> ans;
             //extract FieldType domain
             FieldType domain;
             Type t = typeof(T);
+            if (
+                ((fieldType == FieldType.INT || fieldType == FieldType.distFS_INT) && t != typeof(int))
+                || ((fieldType == FieldType.FLOAT || fieldType == FieldType.contFS || fieldType == FieldType.distFS_FLOAT) && t != typeof(float))
+                || ((fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR || fieldType == FieldType.distFS_FLOAT) && t != typeof(string))
+                || ((fieldType == FieldType.BOOLEAN) && t != typeof(bool))
+            )
+            {
+                throw new NotSupportedException($"Field type {fieldType.ToString()} isn't compatible with fuzzy probabilistic values of {t.Name}");
+            }
             if (t == typeof(int))
             {
                 domain = FieldType.INT;
@@ -95,12 +121,16 @@ namespace BLL.SQLProcessing
             {
                 domain = FieldType.VARCHAR;
             }
+            else if (t == typeof(bool))
+            {
+                domain = FieldType.BOOLEAN;
+            }
             else
             {
                 throw new NotSupportedException($"{typeof(T)} isn't supported");
             }
             //extract List<FuzzySet<T>> valueList
-            List<FuzzySet<object>> valueList=new List<FuzzySet<object>>();
+            List<FuzzySet<T>> valueList=new List<FuzzySet<T>>();
             foreach(Constant c in data.valueList)
             {
                 if(c is IntConstant)
@@ -113,7 +143,7 @@ namespace BLL.SQLProcessing
                     string fuzzySetName = value.ToString();
                     FieldType fuzzySetType = FieldType.distFS_INT;
                     DiscreteFuzzySet<int> fuzzset = new DiscreteFuzzySet<int>(valueSet, membershipDegreeSet, fuzzySetName, fuzzySetType);
-                    valueList.Add((FuzzySet<object>)(object)fuzzset);
+                    //valueList.Add((FuzzySet<object>)(object)fuzzset);
                 }
                 
             }
@@ -121,7 +151,7 @@ namespace BLL.SQLProcessing
         }
         public bool next()
         {
-            throw new NotImplementedException();
+            throw new NotFiniteNumberException();
             List<string> primaryKey = this.relationInfo.getSchema().getPrimarykey();
             string sql = $"SELECT * FROM {this.relationInfo.getRelName()} ORDER BY";
             foreach(string fieldName in primaryKey)
@@ -139,7 +169,8 @@ namespace BLL.SQLProcessing
                     string content;
                     for(int i=0;  i<fields.Count; ++i)
                     {
-                        content = (string)reader[fields[i].getFieldName()];
+                        string fieldName = fields[i].getFieldName();
+                        content = (string)reader[fieldName];
                         this.parser.parse(content);
                         FuzzyProbabilisticValueParsingData parsingData = this.parser.fuzzyProbabilisticValue();
 
