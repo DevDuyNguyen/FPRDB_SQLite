@@ -1,4 +1,5 @@
-﻿using BLL.Enums;
+﻿using BLL.Common;
+using BLL.Enums;
 using BLL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,15 @@ namespace BLL.DomainObject
             this.probCombStrategy = probCombStrategy;
         }
 
-        public override float calculateProbabilisticInterpretation(Scan currentTuple)
+        public override List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema)
         {
-            throw new NotImplementedException();
+            List<float> interval1 = this.lSelectionExpresion.calculateProbabilisticInterpretation(currentTuple, schema);
+            List<float> interval2 = this.rSelectionExpresion.calculateProbabilisticInterpretation(currentTuple, schema);
+            return ProbabilisticCombinationStrategyUltilities.combine(interval1[0], interval1[1], interval2[0], interval2[1], this.probCombStrategy);
         }
         public override List<SelectionExpression> getAtomicSelectionExpression()
         {
-            throw new NotImplementedException();
+            return this.lSelectionExpresion.getAtomicSelectionExpression().Concat(this.rSelectionExpresion.getAtomicSelectionExpression()).ToList();
         }
     }
 }

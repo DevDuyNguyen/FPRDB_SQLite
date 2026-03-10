@@ -19,7 +19,7 @@ namespace BLL.SQLProcessing
             this.selectionCondition = selectionCondition;
         }
         public Scan open(){
-            throw new NotImplementedException();
+            return new SelectScan(this.p.open(), this.selectionCondition, this.p.getSchema());
         }
         public FPRDBSchema getSchema() => this.p.getSchema();
     }

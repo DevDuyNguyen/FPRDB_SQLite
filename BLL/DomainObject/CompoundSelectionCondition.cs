@@ -21,13 +21,24 @@ namespace BLL.DomainObject
             this.connective = connective;
         }
 
-        public override bool isSatisfied(Scan currentTuple)
+        public override bool isSatisfied(Scan currentTuple, FPRDBSchema schema)
         {
-            throw new NotImplementedException();
+            if (this.connective == LogicalConnective.NOT)
+            {
+                return !(this.lSelectionCondition.isSatisfied(currentTuple, schema));
+            }
+            else if (this.connective == LogicalConnective.AND)
+            {
+                return this.lSelectionCondition.isSatisfied(currentTuple, schema) && this.rSelectionCondition.isSatisfied(currentTuple, schema);
+            }
+            else //if (this.connective == LogicalConnective.OR)
+            {
+                return this.lSelectionCondition.isSatisfied(currentTuple, schema) || this.rSelectionCondition.isSatisfied(currentTuple, schema);
+            }
         }
-        public override List<SelectionExpression> getSelectionExpressions()
+        public override List<SelectionExpression> getAtomicSelectionExpressions()
         {
-            throw new NotImplementedException();
+            return this.lSelectionCondition.getAtomicSelectionExpressions().Concat(this.rSelectionCondition.getAtomicSelectionExpressions()).ToList();
         }
 
     }

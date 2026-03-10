@@ -34,6 +34,7 @@ namespace BLL.SQLProcessing
                     return true;
                 }
             }
+            this.currentTuple = null;
             return false;
         }
         public void close() { }

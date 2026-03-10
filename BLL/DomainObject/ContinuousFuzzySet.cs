@@ -60,7 +60,7 @@ namespace BLL.DomainObject
             List<float> membershipDegrees = new List<float>();
             float currentValue = this.rightBottom;
             valueSet.Add(currentValue);
-            membershipDegrees.Add(0);
+            membershipDegrees.Add(this.getMembershipDegree(currentValue));
             for(int i=2; i<=100; ++i)
             {
                 currentValue += interval;

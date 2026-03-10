@@ -20,13 +20,17 @@ namespace BLL.DomainObject
             this.upperBound = upperBound;
         }
 
-        public override bool isSatisfied(Scan currentTuple)
+        public override bool isSatisfied(Scan currentTuple, FPRDBSchema schema)
         {
-            throw new NotImplementedException();
+            List<float> intervalProb = this.selectionExpression.calculateProbabilisticInterpretation(currentTuple, schema);
+            if (intervalProb[0] >= this.lowerBound && intervalProb[1] <= this.upperBound)
+                return true;
+            else
+                return false;
         }
-        public override List<SelectionExpression> getSelectionExpressions()
+        public override List<SelectionExpression> getAtomicSelectionExpressions()
         {
-            throw new NotImplementedException();
+            return this.selectionExpression.getAtomicSelectionExpression();
         }
 
 
