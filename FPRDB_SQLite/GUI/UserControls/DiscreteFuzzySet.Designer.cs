@@ -110,6 +110,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             cboDataType.Location = new System.Drawing.Point(122, 38);
             cboDataType.Name = "cboDataType";
             cboDataType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cboDataType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             cboDataType.Size = new System.Drawing.Size(171, 22);
             cboDataType.TabIndex = 7;
             cboDataType.SelectedIndexChanged += cboDataType_SelectedIndexChanged;
