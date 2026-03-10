@@ -39,13 +39,11 @@
             iAddDiscrete = new DevExpress.XtraBars.BarButtonItem();
             iAddContinuous = new DevExpress.XtraBars.BarButtonItem();
             iNewSchema = new DevExpress.XtraBars.BarButtonItem();
-            iEditSchema = new DevExpress.XtraBars.BarButtonItem();
             iOpenSchema = new DevExpress.XtraBars.BarButtonItem();
             iDeleteSchema = new DevExpress.XtraBars.BarButtonItem();
             iCloseCurrentSchema = new DevExpress.XtraBars.BarButtonItem();
             iSearchFuzzySet = new DevExpress.XtraBars.BarButtonItem();
             iNewRelation = new DevExpress.XtraBars.BarButtonItem();
-            iOpenRelation = new DevExpress.XtraBars.BarButtonItem();
             iDeleteRelation = new DevExpress.XtraBars.BarButtonItem();
             iSaveRelation = new DevExpress.XtraBars.BarButtonItem();
             iCloseRelation = new DevExpress.XtraBars.BarButtonItem();
@@ -168,7 +166,7 @@
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iEditSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iOpenRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iDeleteQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iDeleteQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             ribbonControl.MaxItemId = 53;
@@ -241,13 +239,6 @@
             iNewSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
             iNewSchema.Name = "iNewSchema";
             // 
-            // iEditSchema
-            // 
-            iEditSchema.Caption = "Edit";
-            iEditSchema.Id = 20;
-            iEditSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iEditSchema.ImageOptions.LargeImage");
-            iEditSchema.Name = "iEditSchema";
-            // 
             // iOpenSchema
             // 
             iOpenSchema.Caption = "Open";
@@ -281,13 +272,6 @@
             iNewRelation.Id = 25;
             iNewRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
             iNewRelation.Name = "iNewRelation";
-            // 
-            // iOpenRelation
-            // 
-            iOpenRelation.Caption = "Open";
-            iOpenRelation.Id = 26;
-            iOpenRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iOpenRelation.ImageOptions.LargeImage");
-            iOpenRelation.Name = "iOpenRelation";
             // 
             // iDeleteRelation
             // 
@@ -345,6 +329,7 @@
             iConjunctionIgnorance.Id = 34;
             iConjunctionIgnorance.Name = "iConjunctionIgnorance";
             iConjunctionIgnorance.SmallWithTextWidth = 80;
+            iConjunctionIgnorance.ItemClick += iConjunctionIgnorance_ItemClick;
             // 
             // iConjunctionIndependence
             // 
@@ -352,6 +337,7 @@
             iConjunctionIndependence.Id = 35;
             iConjunctionIndependence.Name = "iConjunctionIndependence";
             iConjunctionIndependence.SmallWithTextWidth = 80;
+            iConjunctionIndependence.ItemClick += iConjunctionIndependence_ItemClick;
             // 
             // iConjunctionMutual
             // 
@@ -359,6 +345,7 @@
             iConjunctionMutual.Id = 36;
             iConjunctionMutual.Name = "iConjunctionMutual";
             iConjunctionMutual.SmallWithTextWidth = 80;
+            iConjunctionMutual.ItemClick += iConjunctionMutual_ItemClick;
             // 
             // iDisjunctionIgnorance
             // 
@@ -366,6 +353,7 @@
             iDisjunctionIgnorance.Id = 37;
             iDisjunctionIgnorance.Name = "iDisjunctionIgnorance";
             iDisjunctionIgnorance.SmallWithTextWidth = 80;
+            iDisjunctionIgnorance.ItemClick += iDisjunctionIgnorance_ItemClick;
             // 
             // iDisjunctionIndependence
             // 
@@ -373,6 +361,7 @@
             iDisjunctionIndependence.Id = 38;
             iDisjunctionIndependence.Name = "iDisjunctionIndependence";
             iDisjunctionIndependence.SmallWithTextWidth = 80;
+            iDisjunctionIndependence.ItemClick += iDisjunctionIndependence_ItemClick;
             // 
             // iDisjunctionMutual
             // 
@@ -380,6 +369,7 @@
             iDisjunctionMutual.Id = 39;
             iDisjunctionMutual.Name = "iDisjunctionMutual";
             iDisjunctionMutual.SmallWithTextWidth = 80;
+            iDisjunctionMutual.ItemClick += iDisjunctionMutual_ItemClick;
             // 
             // iDifferenceIgnorance
             // 
@@ -387,6 +377,7 @@
             iDifferenceIgnorance.Id = 40;
             iDifferenceIgnorance.Name = "iDifferenceIgnorance";
             iDifferenceIgnorance.SmallWithTextWidth = 80;
+            iDifferenceIgnorance.ItemClick += iDifferenceIgnorance_ItemClick;
             // 
             // iDifferenceIndependence
             // 
@@ -394,6 +385,7 @@
             iDifferenceIndependence.Id = 42;
             iDifferenceIndependence.Name = "iDifferenceIndependence";
             iDifferenceIndependence.SmallWithTextWidth = 80;
+            iDifferenceIndependence.ItemClick += iDifferenceIndependence_ItemClick;
             // 
             // iDiferenceMutual
             // 
@@ -401,6 +393,7 @@
             iDiferenceMutual.Id = 43;
             iDiferenceMutual.Name = "iDiferenceMutual";
             iDiferenceMutual.SmallWithTextWidth = 80;
+            iDiferenceMutual.ItemClick += iDiferenceMutual_ItemClick;
             // 
             // iOperator
             // 
@@ -408,6 +401,7 @@
             iOperator.Id = 46;
             iOperator.Name = "iOperator";
             iOperator.SmallWithTextWidth = 80;
+            iOperator.ItemClick += iOperator_ItemClick;
             // 
             // iExcuteQuery
             // 
@@ -422,6 +416,7 @@
             iConjunctionPositive.Id = 50;
             iConjunctionPositive.Name = "iConjunctionPositive";
             iConjunctionPositive.SmallWithTextWidth = 80;
+            iConjunctionPositive.ItemClick += iConjunctionPositive_ItemClick;
             // 
             // iDisjunctionPositive
             // 
@@ -429,6 +424,7 @@
             iDisjunctionPositive.Id = 51;
             iDisjunctionPositive.Name = "iDisjunctionPositive";
             iDisjunctionPositive.SmallWithTextWidth = 80;
+            iDisjunctionPositive.ItemClick += iDisjunctionPositive_ItemClick;
             // 
             // iDifferencePositive
             // 
@@ -436,6 +432,7 @@
             iDifferencePositive.Id = 52;
             iDifferencePositive.Name = "iDifferencePositive";
             iDifferencePositive.SmallWithTextWidth = 80;
+            iDifferencePositive.ItemClick += iDifferencePositive_ItemClick;
             // 
             // DatabaseRibbonPage
             // 
@@ -465,7 +462,6 @@
             // fileSchemaRibbonPageGroup
             // 
             fileSchemaRibbonPageGroup.ItemLinks.Add(iNewSchema);
-            fileSchemaRibbonPageGroup.ItemLinks.Add(iEditSchema);
             fileSchemaRibbonPageGroup.ItemLinks.Add(iOpenSchema);
             fileSchemaRibbonPageGroup.ItemLinks.Add(iDeleteSchema);
             fileSchemaRibbonPageGroup.Name = "fileSchemaRibbonPageGroup";
@@ -486,7 +482,6 @@
             // fileRelationRibbonPageGroup
             // 
             fileRelationRibbonPageGroup.ItemLinks.Add(iNewRelation);
-            fileRelationRibbonPageGroup.ItemLinks.Add(iOpenRelation);
             fileRelationRibbonPageGroup.ItemLinks.Add(iDeleteRelation);
             fileRelationRibbonPageGroup.ItemLinks.Add(iSaveRelation);
             fileRelationRibbonPageGroup.Name = "fileRelationRibbonPageGroup";
@@ -1005,7 +1000,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup fileQueryRibbonPageGroup;
         private System.Windows.Forms.ImageList TreeView_imageList;
         private DevExpress.XtraBars.BarButtonItem iNewSchema;
-        private DevExpress.XtraBars.BarButtonItem iEditSchema;
         private DevExpress.XtraBars.BarButtonItem iOpenSchema;
         private DevExpress.XtraBars.BarButtonItem iDeleteSchema;
         private DevExpress.XtraBars.BarButtonItem iCloseCurrentSchema;
@@ -1013,7 +1007,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup SearchFuzzySetribbonPageGroup;
         private DevExpress.XtraBars.BarButtonItem iSearchFuzzySet;
         private DevExpress.XtraBars.BarButtonItem iNewRelation;
-        private DevExpress.XtraBars.BarButtonItem iOpenRelation;
         private DevExpress.XtraBars.BarButtonItem iDeleteRelation;
         private DevExpress.XtraBars.BarButtonItem iSaveRelation;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup closeRelationRibbonPageGroup;

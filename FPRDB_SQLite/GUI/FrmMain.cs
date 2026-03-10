@@ -240,5 +240,330 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show(Ex.Message);
             }
         }
+
+        private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iConjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_in ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iConjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_me ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iConjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_in ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_me ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDifferenceIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDifferenceIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_in ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDiferenceMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_me ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDifferencePositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⇒ ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
     }
 }
