@@ -228,7 +228,14 @@ namespace BLL.SQLProcessing
             }
                
         }
-
+        public FPRDBSchema getSchema()
+        {
+            return this.relationInfo.getSchema();
+        }
+        public List<AbstractFuzzyProbabilisticValue> getCurrentTuple()
+        {
+            return this.currentTuple;
+        }
 
     }
 }
