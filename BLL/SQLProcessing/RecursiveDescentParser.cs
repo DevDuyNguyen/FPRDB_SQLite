@@ -383,7 +383,7 @@ namespace BLL.SQLProcessing
         public object fromList()
         {
             List<string> relNames = new List<string>();
-            List<ProbabilisticCombinationStrategy> combinationStrategies = new List<ProbabilisticCombinationStrategy>();
+            List<ProbabilisticCombinationStrategyUltilities> combinationStrategies = new List<ProbabilisticCombinationStrategyUltilities>();
             relNames.Add(relation());
 
             if (lexer.matchKeyword("NATURAL"))
@@ -425,7 +425,7 @@ namespace BLL.SQLProcessing
                 else
                 {
                     string strStrategy = lexer.eatProbabilisticCombinationStrategy();
-                    ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
+                    ProbabilisticCombinationStrategyUltilities enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
                     if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumStrategy))
                         throw createSQLSyntaxException("Comparetor = must be paired with probabilistic conjunection strategy");
                     string fieldName2 = field();
@@ -455,7 +455,7 @@ namespace BLL.SQLProcessing
             while (lexer.matchProbabilisticCombinationStrategy())
             {
                 string strStrategy = lexer.eatProbabilisticCombinationStrategy();
-                ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
+                ProbabilisticCombinationStrategyUltilities enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
                 if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumStrategy))
                 {
                     isEatNotConjunctionStrategy = true;
@@ -485,7 +485,7 @@ namespace BLL.SQLProcessing
             while (lexer.matchProbabilisticCombinationStrategy())
             {
                 strStrategy=lexer.eatProbabilisticCombinationStrategy();
-                ProbabilisticCombinationStrategy enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
+                ProbabilisticCombinationStrategyUltilities enumStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strStrategy);
                 SelectionExpression rightSExpression = CONJUNCTIONSelectionExpression();
 
                 ans=new CompoundSelectionExpression(ans, rightSExpression, enumStrategy);
@@ -599,7 +599,7 @@ namespace BLL.SQLProcessing
             {
                 lexer.eatKeyword("INTERSECT");
                 string strProbCombStrategy = lexer.eatProbabilisticCombinationStrategy();
-                ProbabilisticCombinationStrategy enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
+                ProbabilisticCombinationStrategyUltilities enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
                 if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(enumProbCombStrategy))
                     throw createSQLSyntaxException("INTERSECTION must be paired with probabilistic conjunction strategy");
                 next = PrimaryQuery();
@@ -625,7 +625,7 @@ namespace BLL.SQLProcessing
                     isUNION = false;
                 }
                 string strProbCombStrategy = lexer.eatProbabilisticCombinationStrategy();
-                ProbabilisticCombinationStrategy enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
+                ProbabilisticCombinationStrategyUltilities enumProbCombStrategy = ProbabilisticCombinationStrategyUtilities.convertStringToEnum(strProbCombStrategy);
                 if (isUNION && !ProbabilisticCombinationStrategyUtilities.isDisjunctionStategy(enumProbCombStrategy))
                     throw createSQLSyntaxException("UNION must be paired with probabilistic disjunction strategy");
                 else if (!isUNION && !ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(enumProbCombStrategy))

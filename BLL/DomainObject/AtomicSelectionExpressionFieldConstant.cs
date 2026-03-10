@@ -23,7 +23,8 @@ namespace BLL.DomainObject
 
         public override float calculateProbabilisticInterpretation(Scan currentTuple)
         {
-            throw new NotImplementedException();
+
+
         }
         public override List<SelectionExpression> getAtomicSelectionExpression()
         {
