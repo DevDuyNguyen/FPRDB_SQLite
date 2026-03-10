@@ -10,6 +10,6 @@ namespace BLL.DomainObject
     public abstract class SelectionExpression
     {
         public abstract List<SelectionExpression> getAtomicSelectionExpression();
-        public abstract float calculateProbabilisticInterpretation(Scan currentTuple);
+        public abstract List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema);
     }
 }

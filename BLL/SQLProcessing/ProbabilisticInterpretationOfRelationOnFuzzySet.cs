@@ -42,8 +42,10 @@ namespace BLL.SQLProcessing
 
 
         }
-        public static float compare<T>(FuzzySet<T> fs1, FuzzySet<T> fs2, CompareOperation compOperator) where T : IComparable<T>
+        public static float compare<T>(FuzzySet<T> nfs1, FuzzySet<T> nfs2, CompareOperation compOperator) where T : IComparable<T>
         {
+            DiscreteFuzzySet<T> fs1 = nfs1.ToDiscreteFuzzySet();
+            DiscreteFuzzySet<T> fs2 = nfs2.ToDiscreteFuzzySet();
 
             List<(List<T>, float)> massAssignMentsFS1 = getMassAssignments<T>(fs1);
             List<(List<T>, float)> massAssignMentsFS2 = getMassAssignments<T>(fs2);
@@ -62,8 +64,11 @@ namespace BLL.SQLProcessing
             }
             return ans;
         }
-        public static float also<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T> fs2) where T : IComparable<T>
+        public static float also<T>(FuzzySet<T> nfs1, FuzzySet<T> nfs2) where T : IComparable<T>
         {
+            DiscreteFuzzySet<T> fs1 = nfs1.ToDiscreteFuzzySet();
+            DiscreteFuzzySet<T> fs2 = nfs2.ToDiscreteFuzzySet();
+
             List<(List<T>, float)> massAssignMentsFS1 = getMassAssignments<T>(fs1);
             List<(List<T>, float)> massAssignMentsFS2 = getMassAssignments<T>(fs2);
             float ans = 0.0f;

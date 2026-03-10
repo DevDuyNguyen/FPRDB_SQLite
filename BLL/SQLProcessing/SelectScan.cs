@@ -28,7 +28,7 @@ namespace BLL.SQLProcessing
         {
             while (this.s.next())
             {
-                if (this.selectionCondition.isSatisfied(s))
+                if (this.selectionCondition.isSatisfied(s, schema))
                 {
                     this.currentTuple = s.getCurrentTuple();
                     return true;

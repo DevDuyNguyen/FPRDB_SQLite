@@ -9,7 +9,7 @@ namespace BLL.DomainObject
 {
     public abstract class SelectionCondition
     {
-        public abstract bool isSatisfied(Scan currentTuple);
+        public abstract bool isSatisfied(Scan currentTuple, FPRDBSchema schema);
         public abstract List<SelectionExpression> getSelectionExpressions();
     }
 }
