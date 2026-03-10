@@ -48,7 +48,7 @@ namespace BLL.SQLProcessing
 
             if (hasNext)
             {
-                this.currentTuple = null;
+                this.currentTuple = new List<AbstractFuzzyProbabilisticValue>();
                 foreach (AbstractFuzzyProbabilisticValue v in s1.getCurrentTuple())
                 {
                     this.currentTuple.Add(v);

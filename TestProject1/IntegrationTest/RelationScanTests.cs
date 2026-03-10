@@ -95,7 +95,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23" dbMgr, metaMgr);
+            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
             //act
             while (scan.next())
             {
