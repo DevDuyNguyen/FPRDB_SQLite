@@ -14,5 +14,7 @@ namespace BLL.Interfaces
         public void close();
         public FuzzyProbabilisticValue<T> getFieldContent<T>(String fldName);
         public bool hasField(string fldname);
+        //public FPRDBSchema getSchema();
+        public List<AbstractFuzzyProbabilisticValue> getCurrentTuple();
     }
 }

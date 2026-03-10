@@ -7,7 +7,7 @@ using BLL.DomainObject;
 
 namespace BLL.Interfaces
 {
-    internal interface Plan
+    public interface Plan
     {
         public Scan open();
         public FPRDBSchema getSchema();

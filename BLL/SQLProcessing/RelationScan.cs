@@ -18,12 +18,22 @@ namespace BLL.SQLProcessing
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;
         private RecursiveDescentParser parser;
-        public RelationScan(string relName, RecursiveDescentParser parser, DatabaseManager dbMgr, MetadataManager metaDataMgr)
+        public RelationScan(string relName, DatabaseManager dbMgr, MetadataManager metaDataMgr)
         {
-            this.parser = parser;
+            CompositionRoot compRoot = new CompositionRoot();
+            this.parser = compRoot.getParser();
             this.dbMgr = dbMgr;
             this.metaDataMgr = metaDataMgr;
             this.relationInfo = this.metaDataMgr.getRelation(relName);
+            this.currentTupleIndex = 0;
+        }
+        public RelationScan(FPRDBRelation relationInfo, DatabaseManager dbMgr, MetadataManager metaDataMgr)
+        {
+            CompositionRoot compRoot = new CompositionRoot();
+            this.parser = compRoot.getParser();
+            this.dbMgr = dbMgr;
+            this.metaDataMgr = metaDataMgr;
+            this.relationInfo = relationInfo;
             this.currentTupleIndex = 0;
         }
         public void beforeFirst()=> this.currentTupleIndex = 0;

@@ -26,7 +26,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
+            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
             //act
             FuzzySet<int> actual1 = scan.turnConstantToFuzzySet<int>(new IntConstant(12));
             FuzzySet<float> actual2 = scan.turnConstantToFuzzySet<float>(new FloatConstant(12.1f));
@@ -44,7 +44,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
+            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
             //act
             FuzzyProbabilisticValue<int> actual1 = scan.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(
                 new FuzzyProbabilisticValueParsingData(
@@ -80,7 +80,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
+            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
             //act
             while (scan.next())
             {
@@ -95,7 +95,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
+            RelationScan scan = new RelationScan("student23" dbMgr, metaMgr);
             //act
             while (scan.next())
             {
