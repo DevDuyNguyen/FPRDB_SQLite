@@ -123,22 +123,18 @@ namespace BLL.SQLProcessing
             if (t == typeof(int))
             {
                 domain = FieldType.INT;
-                fuzzSetType = FieldType.distFS_INT;
             }
             else if (t == typeof(float))
             {
                 domain = FieldType.FLOAT;
-                fuzzSetType = FieldType.distFS_FLOAT;
             }
             else if (t == typeof(string))
             {
                 domain = FieldType.VARCHAR;
-                fuzzSetType = FieldType.distFS_TEXT;
             }
             else if (t == typeof(bool))
             {
                 domain = FieldType.BOOLEAN;
-                fuzzSetType = FieldType.BOOLEAN;
             }
             else
             {
