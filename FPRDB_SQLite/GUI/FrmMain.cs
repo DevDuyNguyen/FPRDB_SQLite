@@ -10,15 +10,22 @@ using System.Text;
 using System.Windows.Forms;
 using BLL.Services;
 using BLL.DomainObject;
+using DevExpress.Xpo.DB.Helpers;
+using BLL.Common;
+using BLL.SQLProcessing;
 
 namespace FPRDB_SQLite.GUI
 {
     public partial class frmMain : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        private CompositionRoot compRoot;
         private DatabaseService databaseService;
-        public frmMain(DatabaseService databaseService)
+        private SQLProcessor sqlProcessor;
+        public frmMain(CompositionRoot compRoot)
         {
-            this.databaseService = databaseService;
+            this.compRoot = compRoot;
+            this.databaseService = compRoot.getDatabaseService();
+            this.sqlProcessor = compRoot.getSQLProcessor();
             InitializeComponent();
         }
 
@@ -244,43 +251,7 @@ namespace FPRDB_SQLite.GUI
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string sql = memoEditTxtQuery.Text;
-            var fakeFields = new List<Field>
-            {
-                new Field("id", new FieldInfo(BLL.FieldType.INT, 10)),
-                new Field("manv", new FieldInfo(BLL.FieldType.INT, 10)),
-                new Field("name", new FieldInfo(BLL.FieldType.VARCHAR, 10)),
-            };
-            List<string> primaryKeys = new List<string> { "id" };
-            FPRDBSchema selectedSchema = new FPRDBSchema("nhanvien", fakeFields, primaryKeys);
-            List<Field> fields = selectedSchema.getFields();
-
-            // Xóa cột cũ nếu có (an toàn khi reload)
-            gridView2.Columns.Clear();
-
-            // Tạo cột động cho từng field
-            foreach (var field in fields)
-            {
-                string fieldName = field.getFieldName();  // hoặc field.fieldName
-
-                // Tạo cột mới
-                DevExpress.XtraGrid.Columns.GridColumn col = gridView2.Columns.AddVisible(fieldName);
-
-                // Thiết lập header và thuộc tính
-                col.Caption = fieldName;                  // Header là tên field (id, manv, name)
-                col.FieldName = fieldName;                // Bind field name (nếu sau này có data)
-                col.VisibleIndex = gridView2.Columns.Count - 1;
-                col.Width = 120;
-                col.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            }
-
-            // (Tùy chọn) Thêm một dòng dữ liệu mẫu để thấy rõ cột
-            // Nếu bạn chỉ muốn header cột mà chưa có dữ liệu, có thể bỏ phần này
-            //var sampleData = new List<object> { new { } };  // Một object rỗng
-            //gridControlResultQuery.DataSource = sampleData;
-
-            // Refresh grid
-            //gridView2.PopulateColumns();
-            gridView2.BestFitColumns();
+            
         }
         private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
