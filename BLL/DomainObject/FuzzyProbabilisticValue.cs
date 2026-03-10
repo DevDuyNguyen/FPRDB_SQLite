@@ -9,15 +9,23 @@ namespace BLL.DomainObject
 {
     public class FuzzyProbabilisticValue<T>
     {
-        private FieldType domain;
-        private List<FuzzySet<T>> valueList;
-        private List<float> intervalProbLowerBoundList;
-        private List<float> intervalProbUpperBoundList;
+        public FieldType domain;
+        public List<FuzzySet<T>> valueList;
+        public List<float> intervalProbLowerBoundList;
+        public List<float> intervalProbUpperBoundList;
 
-        public FieldType getDomain() => this.domain;
-        public FuzzySet<T> getVal(int index) => this.valueList[index];
-        public float getLowerBoundProb(int index) => this.intervalProbLowerBoundList[index];
-        public float getUpperBoundProb(int index) => this.intervalProbUpperBoundList[index];
+        public FuzzyProbabilisticValue(FieldType domain, List<FuzzySet<T>> valueList, List<float> intervalProbLowerBoundList, List<float> intervalProbUpperBoundList)
+        {
+            this.domain = domain;
+            this.valueList = valueList;
+            this.intervalProbLowerBoundList = intervalProbLowerBoundList;
+            this.intervalProbUpperBoundList = intervalProbUpperBoundList;
+        }
+
+        //public FieldType getDomain() => this.domain;
+        //public FuzzySet<T> getVal(int index) => this.valueList[index];
+        //public float getLowerBoundProb(int index) => this.intervalProbLowerBoundList[index];
+        //public float getUpperBoundProb(int index) => this.intervalProbUpperBoundList[index];
 
 
     }

@@ -9,7 +9,7 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 namespace BLL.SQLProcessing
 {
-    public class RelationScan:Scan, UpdateScan
+    public class RelationScan:Scan
     {
         private FPRDBRelation relationInfo;
         private int currentTupleIndex;
@@ -55,8 +55,73 @@ namespace BLL.SQLProcessing
             return (FuzzyProbabilisticValue<T>)(object)fprobValue;
 
         }
+        private FuzzySet<T> turnConstantToFuzzySet<T>(Constant c, FieldType fuzzSetType)
+        {
+            if(c is IntConstant || c is FloatConstant || c is StringConstant)
+            {
+                T value = (T)c.getVal();
+                List<T> valueSet = new List<T> { value };
+                List<float> membershipDegreeSet = new List<float> { 1.0f };
+                string fuzzySetName = value.ToString();
+                if (fuzzSetType == FieldType.distFS_INT || fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.distFS_TEXT)
+                {
+                    return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
+                }
+                else
+                    throw new InvalidCastException("Can't turn a primitive constant value into non-discrete fuzzy set value");
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            
+        }
+        private FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data)
+        {
+            throw new NotImplementedException();
+            FuzzyProbabilisticValue<T> ans;
+            //extract FieldType domain
+            FieldType domain;
+            Type t = typeof(T);
+            if (t == typeof(int))
+            {
+                domain = FieldType.INT;
+            }
+            else if (t == typeof(float))
+            {
+                domain = FieldType.FLOAT;
+            }
+            else if (t == typeof(string))
+            {
+                domain = FieldType.VARCHAR;
+            }
+            else
+            {
+                throw new NotSupportedException($"{typeof(T)} isn't supported");
+            }
+            //extract List<FuzzySet<T>> valueList
+            List<FuzzySet<object>> valueList=new List<FuzzySet<object>>();
+            foreach(Constant c in data.valueList)
+            {
+                if(c is IntConstant)
+                {
+                    if (t != typeof(int))
+                        throw new InvalidCastException($"The fuzzy set's defining domain is supposed to be {t.Name}, but get value of int");
+                    int value = (int)c.getVal();
+                    List<int> valueSet = new List<int> { value};
+                    List<float> membershipDegreeSet=new List<float> { 1.0f};
+                    string fuzzySetName = value.ToString();
+                    FieldType fuzzySetType = FieldType.distFS_INT;
+                    DiscreteFuzzySet<int> fuzzset = new DiscreteFuzzySet<int>(valueSet, membershipDegreeSet, fuzzySetName, fuzzySetType);
+                    valueList.Add((FuzzySet<object>)(object)fuzzset);
+                }
+                
+            }
+
+        }
         public bool next()
         {
+            throw new NotImplementedException();
             List<string> primaryKey = this.relationInfo.getSchema().getPrimarykey();
             string sql = $"SELECT * FROM {this.relationInfo.getRelName()} ORDER BY";
             foreach(string fieldName in primaryKey)
