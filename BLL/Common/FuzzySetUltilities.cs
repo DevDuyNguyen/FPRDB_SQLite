@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.DomainObject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace BLL.Common
 {
-    internal class FuzzySetUltilities
+    public class FuzzySetUltilities
     {
+        
     }
 }
