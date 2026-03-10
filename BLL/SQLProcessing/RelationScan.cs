@@ -59,18 +59,17 @@ namespace BLL.SQLProcessing
 
         }
         //not done: public only for testing, mocking for private
-        public FuzzySet<T> turnConstantToFuzzySet<T>(Constant c, FieldType fuzzSetType)
+        public FuzzySet<T> turnConstantToFuzzySet<T>(Constant c)
         {
             Type t = typeof(T);
             if (
-                (c is IntConstant && (fuzzSetType!=FieldType.distFS_INT || t!=typeof(int)))
-                || (c is FloatConstant && (fuzzSetType != FieldType.distFS_FLOAT || t != typeof(float)))
-                || (c is StringConstant && (fuzzSetType != FieldType.distFS_TEXT || t != typeof(string)))
-                || (c is BooleanConstant && (fuzzSetType != FieldType.BOOLEAN || t != typeof(bool)))
-                || (c is FuzzySetConstant && FieldTypeUltilities.isPrimitive(fuzzSetType))
+                (c is IntConstant && (t!=typeof(int)))
+                || (c is FloatConstant && ( t != typeof(float)))
+                || (c is StringConstant && ( t != typeof(string)))
+                || (c is BooleanConstant && (t != typeof(bool)))
             )
             {
-                throw new InvalidCastException($"Can't turn constant of type {c.GetType().Name} to fuzzy set of type {fuzzSetType.ToString()}");
+                throw new InvalidCastException($"Can't turn constant of type {c.GetType().Name} to fuzzy set with defining domain of {t.Name}");
             }
             if(ConstantUltilities.isPrimitiveConstant(c))
             {
@@ -78,12 +77,22 @@ namespace BLL.SQLProcessing
                 List<T> valueSet = new List<T> { value };
                 List<float> membershipDegreeSet = new List<float> { 1.0f };
                 string fuzzySetName = value.ToString();
+                FieldType fuzzSetType;
+                if (c is IntConstant)
+                    fuzzSetType = FieldType.distFS_INT;
+                else if (c is FloatConstant)
+                    fuzzSetType = FieldType.distFS_FLOAT;
+                else if (c is StringConstant)
+                    fuzzSetType = FieldType.distFS_TEXT;
+                else
+                    fuzzSetType = FieldType.BOOLEAN;
                 return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
             }
             else
             {
                 FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
-                if(FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
+                FieldType fuzzSetType = this.metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
+                if (FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
                     return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
                 else
                 {
@@ -93,12 +102,14 @@ namespace BLL.SQLProcessing
             }
             
         }
-        private FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data, FieldType fieldType)
+        //not done:mocking for private
+        public FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data, FieldType fieldType)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             FuzzyProbabilisticValue<T> ans;
             //extract FieldType domain
             FieldType domain;
+            FieldType fuzzSetType;
             Type t = typeof(T);
             if (
                 ((fieldType == FieldType.INT || fieldType == FieldType.distFS_INT) && t != typeof(int))
@@ -112,18 +123,22 @@ namespace BLL.SQLProcessing
             if (t == typeof(int))
             {
                 domain = FieldType.INT;
+                fuzzSetType = FieldType.distFS_INT;
             }
             else if (t == typeof(float))
             {
                 domain = FieldType.FLOAT;
+                fuzzSetType = FieldType.distFS_FLOAT;
             }
             else if (t == typeof(string))
             {
                 domain = FieldType.VARCHAR;
+                fuzzSetType = FieldType.distFS_TEXT;
             }
             else if (t == typeof(bool))
             {
                 domain = FieldType.BOOLEAN;
+                fuzzSetType = FieldType.BOOLEAN;
             }
             else
             {
@@ -133,20 +148,17 @@ namespace BLL.SQLProcessing
             List<FuzzySet<T>> valueList=new List<FuzzySet<T>>();
             foreach(Constant c in data.valueList)
             {
-                if(c is IntConstant)
-                {
-                    if (t != typeof(int))
-                        throw new InvalidCastException($"The fuzzy set's defining domain is supposed to be {t.Name}, but get value of int");
-                    int value = (int)c.getVal();
-                    List<int> valueSet = new List<int> { value};
-                    List<float> membershipDegreeSet=new List<float> { 1.0f};
-                    string fuzzySetName = value.ToString();
-                    FieldType fuzzySetType = FieldType.distFS_INT;
-                    DiscreteFuzzySet<int> fuzzset = new DiscreteFuzzySet<int>(valueSet, membershipDegreeSet, fuzzySetName, fuzzySetType);
-                    //valueList.Add((FuzzySet<object>)(object)fuzzset);
-                }
-                
+                valueList.Add(turnConstantToFuzzySet<T>(c));
             }
+            //extract lower bound, upper boud
+            List<float> lowerBounds = new List<float>();
+            List<float> upperBounds = new List<float>();
+            for(int i=0; i<data.intervalProbUpperBoundList.Count; ++i)
+            {
+                lowerBounds.Add(data.intervalProbLowerBoundList[i]);
+                upperBounds.Add(data.intervalProbUpperBoundList[i]);
+            }
+            return new FuzzyProbabilisticValue<T>(domain, valueList, lowerBounds, upperBounds);
 
         }
         public bool next()
