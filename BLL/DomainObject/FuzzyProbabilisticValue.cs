@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace BLL.DomainObject
 {
-    public class FuzzyProbabilisticValue<T>
+    public class FuzzyProbabilisticValue<T>:AbstractFuzzyProbabilisticValue
     {
         public FieldType domain;
         public List<FuzzySet<T>> valueList;
         public List<float> intervalProbLowerBoundList;
         public List<float> intervalProbUpperBoundList;
 
-        public FuzzyProbabilisticValue(FieldType domain, List<FuzzySet<T>> valueList, List<float> intervalProbLowerBoundList, List<float> intervalProbUpperBoundList)
+        public FuzzyProbabilisticValue(FieldType domain, List<FuzzySet<T>> valueList, List<float> intervalProbLowerBoundList, List<float> intervalProbUpperBoundList):base()
         {
             this.domain = domain;
             this.valueList = valueList;

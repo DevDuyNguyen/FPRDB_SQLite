@@ -24,7 +24,7 @@ namespace TestProject1.IntegrationTest
             //arrange
             CompositionRoot compRoot = new CompositionRoot();
             MetadataManager metaMgr = compRoot.getMetaDataManger();
-            DatabaseManager dbMgr= compRoot.getDBMgr();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
             RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
             //act
@@ -71,6 +71,21 @@ namespace TestProject1.IntegrationTest
                     ),
                 FieldType.contFS
                 );
+        }
+        [Fact]
+        public void RelationScan_next_success()
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            MetadataManager metaMgr = compRoot.getMetaDataManger();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(this.dbFile);
+            RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
+            //act
+            while (scan.next())
+            {
+
+            }
         }
 
     }

@@ -14,7 +14,7 @@ namespace BLL.SQLProcessing
     {
         private FPRDBRelation relationInfo;
         private int currentTupleIndex;
-        private List<FuzzyProbabilisticValue<object>> currentTuple;
+        private List<AbstractFuzzyProbabilisticValue> currentTuple;
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;
         private RecursiveDescentParser parser;
@@ -159,7 +159,6 @@ namespace BLL.SQLProcessing
         }
         public bool next()
         {
-            throw new NotFiniteNumberException();
             List<string> primaryKey = this.relationInfo.getSchema().getPrimarykey();
             string sql = $"SELECT * FROM {this.relationInfo.getRelName()} ORDER BY";
             foreach(string fieldName in primaryKey)
@@ -167,12 +166,14 @@ namespace BLL.SQLProcessing
                 sql += " " + fieldName + ",";
             }
             sql = sql.TrimEnd(',');
-            sql += $"  LIMIT {this.currentTupleIndex} OFFSET 1";
+            sql += $"  LIMIT 1 OFFSET {this.currentTupleIndex}";
             IDataReader reader = this.dbMgr.executeQuery(sql);
             using (reader)
             {
                 if (reader.Read())
                 {
+                    //List<FuzzyProbabilisticValue<object>> tmp = new List<FuzzyProbabilisticValue<object>>();
+                    List<AbstractFuzzyProbabilisticValue> tmp = new List<AbstractFuzzyProbabilisticValue>();
                     List<Field> fields = this.relationInfo.getSchema().getFields();
                     string content;
                     for(int i=0;  i<fields.Count; ++i)
@@ -181,9 +182,31 @@ namespace BLL.SQLProcessing
                         content = (string)reader[fieldName];
                         this.parser.parse(content);
                         FuzzyProbabilisticValueParsingData parsingData = this.parser.fuzzyProbabilisticValue();
-
+                        FieldType fieldType = fields[i].getFieldInfo().getType();
+                        if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        {
+                            FuzzyProbabilisticValue<int> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsingData, fieldType);
+                            tmp.Add(fprobValue);
+                        }
+                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                        {
+                            FuzzyProbabilisticValue<float> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsingData, fieldType);
+                            tmp.Add(fprobValue);
+                        }
+                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                        {
+                            FuzzyProbabilisticValue<string> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsingData, fieldType);
+                            tmp.Add(fprobValue);
+                        }
+                        else //if (fieldType == FieldType.BOOLEAN)
+                        {
+                            FuzzyProbabilisticValue<bool> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<bool>(parsingData, fieldType);
+                            tmp.Add(fprobValue);
+                        }
+                        
                     }
-
+                    this.currentTuple = tmp;
+                    return true;
                 }
                 else
                     return false;
