@@ -26,7 +26,7 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
         }
         public override List<SelectionExpression> getAtomicSelectionExpression()
         {
-            throw new NotImplementedException();
+            return new List<SelectionExpression> { this };
         }
     }
 }

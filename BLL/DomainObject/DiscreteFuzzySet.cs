@@ -9,8 +9,8 @@ namespace BLL.DomainObject
 {
     public class DiscreteFuzzySet<T>:FuzzySet<T>
     {
-        private List<T> valueSet;
-        private List<float> membershipDegreeSet;
+        public List<T> valueSet;
+        public List<float> membershipDegreeSet;
 
         public DiscreteFuzzySet(List<T> valueSet, List<float> membershipDegreeSet, string fuzzySetName, FieldType fuzzySetType) :base(fuzzySetName, fuzzySetType)
         {

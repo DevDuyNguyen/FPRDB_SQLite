@@ -85,7 +85,9 @@ namespace TestProject1.IntegrationTest
             dbMgr.loadDB(this.dbFile);
             RelationPlan p1 = new RelationPlan("DOCTOR1", metaMgr, dbMgr);
             RelationPlan p2 = new RelationPlan("DOCTOR2", metaMgr, dbMgr);
-            ProductPlan p3 = new ProductPlan(p1, p2, metaMgr, dbMgr);
+
+
+            Plan p3 = new ProductPlan(p1, p2, metaMgr, dbMgr);
             Scan res = p3.open();
             while (res.next())
             {
