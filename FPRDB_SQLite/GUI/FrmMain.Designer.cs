@@ -415,6 +415,7 @@
             iExcuteQuery.Id = 47;
             iExcuteQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
             iExcuteQuery.Name = "iExcuteQuery";
+            iExcuteQuery.ItemClick += iExcuteQuery_ItemClick;
             // 
             // iConjunctionPositive
             // 
@@ -908,6 +909,7 @@
             // 
             gridView2.GridControl = gridControlResultQuery;
             gridView2.Name = "gridView2";
+            gridView2.OptionsView.ShowGroupPanel = false;
             // 
             // MessagextraTabPage
             // 
