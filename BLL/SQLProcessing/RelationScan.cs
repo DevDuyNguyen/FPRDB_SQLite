@@ -206,6 +206,7 @@ namespace BLL.SQLProcessing
                         
                     }
                     this.currentTuple = tmp;
+                    this.currentTupleIndex++;
                     return true;
                 }
                 else

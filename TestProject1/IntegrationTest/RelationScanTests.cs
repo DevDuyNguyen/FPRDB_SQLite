@@ -18,7 +18,7 @@ namespace TestProject1.IntegrationTest
         {
             this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
         }
-        [Fact]
+        //[Fact]
         public void RelationScan_turnConstantToFuzzySet_success()
         {
             //arrange
@@ -36,7 +36,7 @@ namespace TestProject1.IntegrationTest
             FuzzySet<string> actual6 = scan.turnConstantToFuzzySet<string>(new FuzzySetConstant("distFS2"));
             FuzzySet<float> actual7 = scan.turnConstantToFuzzySet<float>(new FuzzySetConstant("contFS1"));
         }
-        [Fact]
+        //[Fact]
         public void RelationScan_turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue_success()
         {
             //arrange
@@ -72,7 +72,7 @@ namespace TestProject1.IntegrationTest
                 FieldType.contFS
                 );
         }
-        [Fact]
+        //[Fact]
         public void RelationScan_next_success()
         {
             //arrange

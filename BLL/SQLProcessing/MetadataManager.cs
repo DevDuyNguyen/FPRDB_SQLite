@@ -237,7 +237,8 @@ namespace BLL.SQLProcessing
                                                 typeof(T),
                                                 CultureInfo.InvariantCulture))
                                             .ToList();
-                    List<float> memberships = ((string)(reader["fuzzset_membership_degree"])).Split(",").Select(float.Parse).ToList();
+                    string str = (string)reader["fuzzset_membership_degree"];
+                    List<float> memberships = (str).Split(",").Select(float.Parse).ToList();
 
                     return new DiscreteFuzzySet<T>(values, memberships, name, fuzzSetType);
 

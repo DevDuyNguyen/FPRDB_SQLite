@@ -358,7 +358,7 @@ namespace BLL
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
             //Preprocessor_checkSemanticInsert_success();
-            SQLProcessor_executeUpdate_insert();
+            //SQLProcessor_executeUpdate_insert();
         }
     }
 }
