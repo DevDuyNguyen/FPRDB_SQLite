@@ -28,6 +28,7 @@ namespace BLL.DomainObject
             return this.fuzzySetType;
         }
         public abstract FuzzySetDTO toDTO();
+        public abstract DiscreteFuzzySet<T> ToDiscreteFuzzySet();
 
     }
 }

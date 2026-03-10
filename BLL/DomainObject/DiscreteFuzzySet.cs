@@ -35,6 +35,6 @@ namespace BLL.DomainObject
                 this.getFuzzysetType()
                 );
         }
-
+        public override DiscreteFuzzySet<T> ToDiscreteFuzzySet() =>this;
     }
 }

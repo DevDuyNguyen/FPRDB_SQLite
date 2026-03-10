@@ -52,6 +52,23 @@ namespace BLL.DomainObject
                 this.getName()
                 );
         }
+        public override DiscreteFuzzySet<float> ToDiscreteFuzzySet()
+        {
+            int noPoints = 100;
+            float interval = (this.rightBottom - this.leftBottom)/100;
+            List<float> valueSet = new List<float>();
+            List<float> membershipDegrees = new List<float>();
+            float currentValue = this.rightBottom;
+            valueSet.Add(currentValue);
+            membershipDegrees.Add(0);
+            for(int i=2; i<=100; ++i)
+            {
+                currentValue += interval;
+                valueSet.Add(currentValue);
+                membershipDegrees.Add(this.getMembershipDegree(currentValue));
+            }
+            return new DiscreteFuzzySet<float>(valueSet, membershipDegrees, "", FieldType.distFS_FLOAT);
+        }
 
     }
 }
