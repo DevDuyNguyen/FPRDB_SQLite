@@ -87,6 +87,23 @@ namespace TestProject1.IntegrationTest
 
             }
         }
+        //[Fact]
+        public void RelationScan_getFieldContent_success()
+        {
+            //arrange
+            CompositionRoot compRoot = new CompositionRoot();
+            MetadataManager metaMgr = compRoot.getMetaDataManger();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(this.dbFile);
+            RelationScan scan = new RelationScan("student23", compRoot.getParser(), dbMgr, metaMgr);
+            //act
+            while (scan.next())
+            {
+                FuzzyProbabilisticValue<int> student_id = scan.getFieldContent<int>("student_id");
+                FuzzyProbabilisticValue<string> name = scan.getFieldContent<string>("name");
+                FuzzyProbabilisticValue<int> age = scan.getFieldContent<int>("age");
+            }
+        }
 
     }
 }
