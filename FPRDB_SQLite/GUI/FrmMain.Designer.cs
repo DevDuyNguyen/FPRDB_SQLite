@@ -30,60 +30,152 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
+            ribbonControl = new DevExpress.XtraBars.Ribbon.RibbonControl();
             buttonHelp_groupHelp = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
             buttonExit_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonNew_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonOpen_pageHome = new DevExpress.XtraBars.BarButtonItem();
-            buttonClose_pageHome = new DevExpress.XtraBars.BarButtonItem();
-            buttonSave_pageHome = new DevExpress.XtraBars.BarButtonItem();
-            buttonSaveAs_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonAbout_groupHelp = new DevExpress.XtraBars.BarButtonItem();
-            buttonAdd_groupDis = new DevExpress.XtraBars.BarButtonItem();
-            buttonLibrary_groupDis = new DevExpress.XtraBars.BarButtonItem();
-            buttonAdd_groupCont = new DevExpress.XtraBars.BarButtonItem();
-            buttonLibrary_groupCont = new DevExpress.XtraBars.BarButtonItem();
-            pageHome = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            iAddDiscrete = new DevExpress.XtraBars.BarButtonItem();
+            iAddContinuous = new DevExpress.XtraBars.BarButtonItem();
+            iNewSchema = new DevExpress.XtraBars.BarButtonItem();
+            iOpenSchema = new DevExpress.XtraBars.BarButtonItem();
+            iDeleteSchema = new DevExpress.XtraBars.BarButtonItem();
+            iCloseCurrentSchema = new DevExpress.XtraBars.BarButtonItem();
+            iSearchFuzzySet = new DevExpress.XtraBars.BarButtonItem();
+            iNewRelation = new DevExpress.XtraBars.BarButtonItem();
+            iDeleteRelation = new DevExpress.XtraBars.BarButtonItem();
+            iSaveRelation = new DevExpress.XtraBars.BarButtonItem();
+            iCloseRelation = new DevExpress.XtraBars.BarButtonItem();
+            iNewQuery = new DevExpress.XtraBars.BarButtonItem();
+            iOpenQuery = new DevExpress.XtraBars.BarButtonItem();
+            iSaveQuery = new DevExpress.XtraBars.BarButtonItem();
+            iConjunctionIgnorance = new DevExpress.XtraBars.BarButtonItem();
+            iConjunctionIndependence = new DevExpress.XtraBars.BarButtonItem();
+            iConjunctionMutual = new DevExpress.XtraBars.BarButtonItem();
+            iDisjunctionIgnorance = new DevExpress.XtraBars.BarButtonItem();
+            iDisjunctionIndependence = new DevExpress.XtraBars.BarButtonItem();
+            iDisjunctionMutual = new DevExpress.XtraBars.BarButtonItem();
+            iDifferenceIgnorance = new DevExpress.XtraBars.BarButtonItem();
+            iDifferenceIndependence = new DevExpress.XtraBars.BarButtonItem();
+            iDiferenceMutual = new DevExpress.XtraBars.BarButtonItem();
+            iOperator = new DevExpress.XtraBars.BarButtonItem();
+            iExcuteQuery = new DevExpress.XtraBars.BarButtonItem();
+            iConjunctionPositive = new DevExpress.XtraBars.BarButtonItem();
+            iDisjunctionPositive = new DevExpress.XtraBars.BarButtonItem();
+            iDifferencePositive = new DevExpress.XtraBars.BarButtonItem();
+            barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
+            barButtonGroup2 = new DevExpress.XtraBars.BarButtonGroup();
+            DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            Schema = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            SchemaRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            fileSchemaRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            closeSchemaribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            RelationRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            fileRelationRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            closeRelationRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            QueryRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            fileQueryRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            conjunctionRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            disjunctionRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            differenceRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            operatorRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            excuteQueryribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             pageFuzzySet = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            groupDiscrete_pageFS = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            groupContinuous_pageFS = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            discreteFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            continuousFuzzySetRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            SearchFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupHelp_pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            treeView = new System.Windows.Forms.TreeView();
+            ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             TreeView_imageList = new System.Windows.Forms.ImageList(components);
-            ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
+            RelationsplitContainerControl = new DevExpress.XtraEditors.SplitContainerControl();
+            treeView = new System.Windows.Forms.TreeView();
+            xtraTabControlDatabase = new DevExpress.XtraTab.XtraTabControl();
+            SchemaxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            gridControlScheme = new DevExpress.XtraGrid.GridControl();
+            gridView = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gridColumnPrimary = new DevExpress.XtraGrid.Columns.GridColumn();
+            repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            gridColumnAttribute = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumnDataType = new DevExpress.XtraGrid.Columns.GridColumn();
+            repositoryItemCalcEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCalcEdit();
+            repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            repositoryItemHeightType1 = new DevExpress.XtraRichEdit.Design.RepositoryItemHeightType();
+            RelationxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            splitContainerControl2 = new DevExpress.XtraEditors.SplitContainerControl();
+            gridControlRelation = new DevExpress.XtraGrid.GridControl();
+            gridView3 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gridControlValueRelation = new DevExpress.XtraGrid.GridControl();
+            gridView4 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gridColumnValue = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumnMinProb = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumnMaxProb = new DevExpress.XtraGrid.Columns.GridColumn();
+            panelControlRelation = new DevExpress.XtraEditors.PanelControl();
+            QueryxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
+            memoEditTxtQuery = new System.Windows.Forms.RichTextBox();
+            xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
+            QueryResultxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            gridControlResultQuery = new DevExpress.XtraGrid.GridControl();
+            gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            MessagextraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
+            RelationsplitContainerControl.Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel2).BeginInit();
+            RelationsplitContainerControl.Panel2.SuspendLayout();
+            RelationsplitContainerControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)xtraTabControlDatabase).BeginInit();
+            xtraTabControlDatabase.SuspendLayout();
+            SchemaxtraTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridControlScheme).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemCheckEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemCalcEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemButtonEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemHeightType1).BeginInit();
+            RelationxtraTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl2.Panel1).BeginInit();
+            splitContainerControl2.Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl2.Panel2).BeginInit();
+            splitContainerControl2.Panel2.SuspendLayout();
+            splitContainerControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridControlRelation).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridView3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridControlValueRelation).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridView4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)panelControlRelation).BeginInit();
+            QueryxtraTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).BeginInit();
+            splitContainerControl1.Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).BeginInit();
+            splitContainerControl1.Panel2.SuspendLayout();
+            splitContainerControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)xtraTabControl1).BeginInit();
+            xtraTabControl1.SuspendLayout();
+            QueryResultxtraTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridView2).BeginInit();
             SuspendLayout();
             // 
-            // ribbonControl1
+            // ribbonControl
             // 
-            ribbonControl1.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(35, 37, 35, 37);
-            ribbonControl1.ExpandCollapseItem.Id = 0;
-            ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl1.ExpandCollapseItem, buttonHelp_groupHelp, barButtonItem1, barButtonItem2, barButtonItem3, barButtonItem4, barButtonItem5, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonClose_pageHome, buttonSave_pageHome, buttonSaveAs_pageHome, buttonAbout_groupHelp, buttonAdd_groupDis, buttonLibrary_groupDis, buttonAdd_groupCont, buttonLibrary_groupCont });
-            ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            ribbonControl1.Margin = new System.Windows.Forms.Padding(4);
-            ribbonControl1.MaxItemId = 19;
-            ribbonControl1.Name = "ribbonControl1";
-            ribbonControl1.OptionsMenuMinWidth = 385;
-            ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { pageHome, Schema, ribbonPage3, pageFuzzySet, ribbonPage1, pageHelp });
-            ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem1);
-            ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem2);
-            ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem3);
-            ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem4);
-            ribbonControl1.QuickToolbarItemLinks.Add(barButtonItem5);
-            ribbonControl1.Size = new System.Drawing.Size(884, 193);
+            ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
+            ribbonControl.ExpandCollapseItem.Id = 0;
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2 });
+            ribbonControl.Location = new System.Drawing.Point(0, 0);
+            ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            ribbonControl.MaxItemId = 55;
+            ribbonControl.Name = "ribbonControl";
+            ribbonControl.OptionsMenuMinWidth = 715;
+            ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
+            ribbonControl.Size = new System.Drawing.Size(970, 193);
+            ribbonControl.StatusBar = ribbonStatusBar;
             // 
             // buttonHelp_groupHelp
             // 
@@ -92,47 +184,14 @@
             buttonHelp_groupHelp.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonHelp_groupHelp.ImageOptions.LargeImage");
             buttonHelp_groupHelp.Name = "buttonHelp_groupHelp";
             // 
-            // barButtonItem1
-            // 
-            barButtonItem1.Caption = "barButtonItem1";
-            barButtonItem1.Id = 2;
-            barButtonItem1.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("barButtonItem1.ImageOptions.LargeImage");
-            barButtonItem1.Name = "barButtonItem1";
-            // 
-            // barButtonItem2
-            // 
-            barButtonItem2.Caption = "barButtonItem2";
-            barButtonItem2.Id = 3;
-            barButtonItem2.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("barButtonItem2.ImageOptions.LargeImage");
-            barButtonItem2.Name = "barButtonItem2";
-            // 
-            // barButtonItem3
-            // 
-            barButtonItem3.Caption = "barButtonItem3";
-            barButtonItem3.Id = 4;
-            barButtonItem3.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("barButtonItem3.ImageOptions.LargeImage");
-            barButtonItem3.Name = "barButtonItem3";
-            // 
-            // barButtonItem4
-            // 
-            barButtonItem4.Caption = "barButtonItem4";
-            barButtonItem4.Id = 5;
-            barButtonItem4.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("barButtonItem4.ImageOptions.LargeImage");
-            barButtonItem4.Name = "barButtonItem4";
-            // 
-            // barButtonItem5
-            // 
-            barButtonItem5.Caption = "barButtonItem5";
-            barButtonItem5.Id = 6;
-            barButtonItem5.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("barButtonItem5.ImageOptions.LargeImage");
-            barButtonItem5.Name = "barButtonItem5";
-            // 
             // buttonExit_pageHome
             // 
             buttonExit_pageHome.Caption = "Exit";
+            buttonExit_pageHome.Hint = "Exit program";
             buttonExit_pageHome.Id = 8;
             buttonExit_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonExit_pageHome.ImageOptions.LargeImage");
             buttonExit_pageHome.Name = "buttonExit_pageHome";
+            buttonExit_pageHome.ItemClick += buttonExit_pageHome_ItemClick;
             // 
             // buttonNew_pageHome
             // 
@@ -148,28 +207,8 @@
             buttonOpen_pageHome.Id = 10;
             buttonOpen_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonOpen_pageHome.ImageOptions.LargeImage");
             buttonOpen_pageHome.Name = "buttonOpen_pageHome";
+            buttonOpen_pageHome.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText | DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText;
             buttonOpen_pageHome.ItemClick += buttonOpen_pageHome_ItemClick;
-            // 
-            // buttonClose_pageHome
-            // 
-            buttonClose_pageHome.Caption = "Close";
-            buttonClose_pageHome.Id = 11;
-            buttonClose_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonClose_pageHome.ImageOptions.LargeImage");
-            buttonClose_pageHome.Name = "buttonClose_pageHome";
-            // 
-            // buttonSave_pageHome
-            // 
-            buttonSave_pageHome.Caption = "Save";
-            buttonSave_pageHome.Id = 12;
-            buttonSave_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonSave_pageHome.ImageOptions.LargeImage");
-            buttonSave_pageHome.Name = "buttonSave_pageHome";
-            // 
-            // buttonSaveAs_pageHome
-            // 
-            buttonSaveAs_pageHome.Caption = "Save As";
-            buttonSaveAs_pageHome.Id = 13;
-            buttonSaveAs_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonSaveAs_pageHome.ImageOptions.LargeImage");
-            buttonSaveAs_pageHome.Name = "buttonSaveAs_pageHome";
             // 
             // buttonAbout_groupHelp
             // 
@@ -178,49 +217,242 @@
             buttonAbout_groupHelp.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonAbout_groupHelp.ImageOptions.LargeImage");
             buttonAbout_groupHelp.Name = "buttonAbout_groupHelp";
             // 
-            // buttonAdd_groupDis
+            // iAddDiscrete
             // 
-            buttonAdd_groupDis.Caption = "Add";
-            buttonAdd_groupDis.Id = 15;
-            buttonAdd_groupDis.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonAdd_groupDis.ImageOptions.LargeImage");
-            buttonAdd_groupDis.Name = "buttonAdd_groupDis";
-            buttonAdd_groupDis.ItemClick += buttonAdd_groupDis_ItemClick;
+            iAddDiscrete.Caption = "Add";
+            iAddDiscrete.Id = 15;
+            iAddDiscrete.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iAddDiscrete.ImageOptions.LargeImage");
+            iAddDiscrete.Name = "iAddDiscrete";
+            iAddDiscrete.ItemClick += buttonAdd_groupDis_ItemClick;
             // 
-            // buttonLibrary_groupDis
+            // iAddContinuous
             // 
-            buttonLibrary_groupDis.Caption = "Library";
-            buttonLibrary_groupDis.Id = 16;
-            buttonLibrary_groupDis.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonLibrary_groupDis.ImageOptions.LargeImage");
-            buttonLibrary_groupDis.Name = "buttonLibrary_groupDis";
+            iAddContinuous.Caption = "Add";
+            iAddContinuous.Id = 17;
+            iAddContinuous.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iAddContinuous.ImageOptions.LargeImage");
+            iAddContinuous.Name = "iAddContinuous";
+            iAddContinuous.ItemClick += buttonAdd_groupCont_ItemClick;
             // 
-            // buttonAdd_groupCont
+            // iNewSchema
             // 
-            buttonAdd_groupCont.Caption = "Add";
-            buttonAdd_groupCont.Id = 17;
-            buttonAdd_groupCont.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonAdd_groupCont.ImageOptions.LargeImage");
-            buttonAdd_groupCont.Name = "buttonAdd_groupCont";
-            buttonAdd_groupCont.ItemClick += buttonAdd_groupCont_ItemClick;
+            iNewSchema.Caption = "New";
+            iNewSchema.Id = 19;
+            iNewSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
+            iNewSchema.Name = "iNewSchema";
             // 
-            // buttonLibrary_groupCont
+            // iOpenSchema
             // 
-            buttonLibrary_groupCont.Caption = "Library";
-            buttonLibrary_groupCont.Id = 18;
-            buttonLibrary_groupCont.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonLibrary_groupCont.ImageOptions.LargeImage");
-            buttonLibrary_groupCont.Name = "buttonLibrary_groupCont";
+            iOpenSchema.Caption = "Open";
+            iOpenSchema.Id = 21;
+            iOpenSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iOpenSchema.ImageOptions.LargeImage");
+            iOpenSchema.Name = "iOpenSchema";
             // 
-            // pageHome
+            // iDeleteSchema
             // 
-            pageHome.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupFile_pageHome, groupExit_pageHome });
-            pageHome.Name = "pageHome";
-            pageHome.Text = "Home";
+            iDeleteSchema.Caption = "Delete";
+            iDeleteSchema.Id = 22;
+            iDeleteSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
+            iDeleteSchema.Name = "iDeleteSchema";
+            // 
+            // iCloseCurrentSchema
+            // 
+            iCloseCurrentSchema.Caption = "Close";
+            iCloseCurrentSchema.Id = 23;
+            iCloseCurrentSchema.Name = "iCloseCurrentSchema";
+            // 
+            // iSearchFuzzySet
+            // 
+            iSearchFuzzySet.Caption = "Search";
+            iSearchFuzzySet.Id = 24;
+            iSearchFuzzySet.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSearchFuzzySet.ImageOptions.LargeImage");
+            iSearchFuzzySet.Name = "iSearchFuzzySet";
+            // 
+            // iNewRelation
+            // 
+            iNewRelation.Caption = "New";
+            iNewRelation.Id = 25;
+            iNewRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
+            iNewRelation.Name = "iNewRelation";
+            // 
+            // iDeleteRelation
+            // 
+            iDeleteRelation.Caption = "Delete";
+            iDeleteRelation.Id = 27;
+            iDeleteRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
+            iDeleteRelation.Name = "iDeleteRelation";
+            // 
+            // iSaveRelation
+            // 
+            iSaveRelation.Caption = "Save";
+            iSaveRelation.Enabled = false;
+            iSaveRelation.Id = 28;
+            iSaveRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveRelation.ImageOptions.LargeImage");
+            iSaveRelation.Name = "iSaveRelation";
+            // 
+            // iCloseRelation
+            // 
+            iCloseRelation.Caption = "Close";
+            iCloseRelation.Enabled = false;
+            iCloseRelation.Id = 29;
+            iCloseRelation.Name = "iCloseRelation";
+            // 
+            // iNewQuery
+            // 
+            iNewQuery.Caption = "New";
+            iNewQuery.Id = 30;
+            iNewQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewQuery.ImageOptions.LargeImage");
+            iNewQuery.Name = "iNewQuery";
+            iNewQuery.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.iNewQuery_ItemClick);
+            // 
+            // iOpenQuery
+            // 
+            iOpenQuery.Caption = "Open";
+            iOpenQuery.Id = 31;
+            iOpenQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iOpenQuery.ImageOptions.LargeImage");
+            iOpenQuery.Name = "iOpenQuery";
+            // 
+            // iSaveQuery
+            // 
+            iSaveQuery.Caption = "Save";
+            iSaveQuery.Id = 32;
+            iSaveQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveQuery.ImageOptions.LargeImage");
+            iSaveQuery.Name = "iSaveQuery";
+            // 
+            // iConjunctionIgnorance
+            // 
+            iConjunctionIgnorance.Caption = "⨂_ig";
+            iConjunctionIgnorance.Id = 34;
+            iConjunctionIgnorance.Name = "iConjunctionIgnorance";
+            iConjunctionIgnorance.SmallWithTextWidth = 80;
+            iConjunctionIgnorance.ItemClick += iConjunctionIgnorance_ItemClick;
+            // 
+            // iConjunctionIndependence
+            // 
+            iConjunctionIndependence.Caption = "⨂_in";
+            iConjunctionIndependence.Id = 35;
+            iConjunctionIndependence.Name = "iConjunctionIndependence";
+            iConjunctionIndependence.SmallWithTextWidth = 80;
+            iConjunctionIndependence.ItemClick += iConjunctionIndependence_ItemClick;
+            // 
+            // iConjunctionMutual
+            // 
+            iConjunctionMutual.Caption = "⨂_me";
+            iConjunctionMutual.Id = 36;
+            iConjunctionMutual.Name = "iConjunctionMutual";
+            iConjunctionMutual.SmallWithTextWidth = 80;
+            iConjunctionMutual.ItemClick += iConjunctionMutual_ItemClick;
+            // 
+            // iDisjunctionIgnorance
+            // 
+            iDisjunctionIgnorance.Caption = "⨁_ig";
+            iDisjunctionIgnorance.Id = 37;
+            iDisjunctionIgnorance.Name = "iDisjunctionIgnorance";
+            iDisjunctionIgnorance.SmallWithTextWidth = 80;
+            iDisjunctionIgnorance.ItemClick += iDisjunctionIgnorance_ItemClick;
+            // 
+            // iDisjunctionIndependence
+            // 
+            iDisjunctionIndependence.Caption = "⨁_in";
+            iDisjunctionIndependence.Id = 38;
+            iDisjunctionIndependence.Name = "iDisjunctionIndependence";
+            iDisjunctionIndependence.SmallWithTextWidth = 80;
+            iDisjunctionIndependence.ItemClick += iDisjunctionIndependence_ItemClick;
+            // 
+            // iDisjunctionMutual
+            // 
+            iDisjunctionMutual.Caption = "⨁_me";
+            iDisjunctionMutual.Id = 39;
+            iDisjunctionMutual.Name = "iDisjunctionMutual";
+            iDisjunctionMutual.SmallWithTextWidth = 80;
+            iDisjunctionMutual.ItemClick += iDisjunctionMutual_ItemClick;
+            // 
+            // iDifferenceIgnorance
+            // 
+            iDifferenceIgnorance.Caption = "⦵_ig";
+            iDifferenceIgnorance.Id = 40;
+            iDifferenceIgnorance.Name = "iDifferenceIgnorance";
+            iDifferenceIgnorance.SmallWithTextWidth = 80;
+            iDifferenceIgnorance.ItemClick += iDifferenceIgnorance_ItemClick;
+            // 
+            // iDifferenceIndependence
+            // 
+            iDifferenceIndependence.Caption = "⦵_in";
+            iDifferenceIndependence.Id = 42;
+            iDifferenceIndependence.Name = "iDifferenceIndependence";
+            iDifferenceIndependence.SmallWithTextWidth = 80;
+            iDifferenceIndependence.ItemClick += iDifferenceIndependence_ItemClick;
+            // 
+            // iDiferenceMutual
+            // 
+            iDiferenceMutual.Caption = "⦵_me";
+            iDiferenceMutual.Id = 43;
+            iDiferenceMutual.Name = "iDiferenceMutual";
+            iDiferenceMutual.SmallWithTextWidth = 80;
+            iDiferenceMutual.ItemClick += iDiferenceMutual_ItemClick;
+            // 
+            // iOperator
+            // 
+            iOperator.Caption = "⇒";
+            iOperator.Id = 46;
+            iOperator.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iOperator.ImageOptions.SvgImage");
+            iOperator.Name = "iOperator";
+            iOperator.SmallWithTextWidth = 80;
+            iOperator.ItemClick += iOperator_ItemClick;
+            // 
+            // iExcuteQuery
+            // 
+            iExcuteQuery.Caption = "Excute_Query";
+            iExcuteQuery.Id = 47;
+            iExcuteQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
+            iExcuteQuery.Name = "iExcuteQuery";
+            iExcuteQuery.ItemClick += iExcuteQuery_ItemClick;
+            // 
+            // iConjunctionPositive
+            // 
+            iConjunctionPositive.Caption = "⨂_pc";
+            iConjunctionPositive.Id = 50;
+            iConjunctionPositive.Name = "iConjunctionPositive";
+            iConjunctionPositive.SmallWithTextWidth = 80;
+            iConjunctionPositive.ItemClick += iConjunctionPositive_ItemClick;
+            // 
+            // iDisjunctionPositive
+            // 
+            iDisjunctionPositive.Caption = "⨁_pc";
+            iDisjunctionPositive.Id = 51;
+            iDisjunctionPositive.Name = "iDisjunctionPositive";
+            iDisjunctionPositive.SmallWithTextWidth = 80;
+            iDisjunctionPositive.ItemClick += iDisjunctionPositive_ItemClick;
+            // 
+            // iDifferencePositive
+            // 
+            iDifferencePositive.Caption = "⦵_pc";
+            iDifferencePositive.Id = 52;
+            iDifferencePositive.Name = "iDifferencePositive";
+            iDifferencePositive.SmallWithTextWidth = 80;
+            iDifferencePositive.ItemClick += iDifferencePositive_ItemClick;
+            // 
+            // barButtonGroup1
+            // 
+            barButtonGroup1.Caption = "barButtonGroup1";
+            barButtonGroup1.Id = 53;
+            barButtonGroup1.Name = "barButtonGroup1";
+            // 
+            // barButtonGroup2
+            // 
+            barButtonGroup2.Caption = "barButtonGroup2";
+            barButtonGroup2.Id = 54;
+            barButtonGroup2.Name = "barButtonGroup2";
+            // 
+            // DatabaseRibbonPage
+            // 
+            DatabaseRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupFile_pageHome, groupExit_pageHome });
+            DatabaseRibbonPage.Name = "DatabaseRibbonPage";
+            DatabaseRibbonPage.Text = "Home";
             // 
             // groupFile_pageHome
             // 
             groupFile_pageHome.ItemLinks.Add(buttonNew_pageHome);
             groupFile_pageHome.ItemLinks.Add(buttonOpen_pageHome);
-            groupFile_pageHome.ItemLinks.Add(buttonClose_pageHome);
-            groupFile_pageHome.ItemLinks.Add(buttonSave_pageHome);
-            groupFile_pageHome.ItemLinks.Add(buttonSaveAs_pageHome);
             groupFile_pageHome.Name = "groupFile_pageHome";
             groupFile_pageHome.Text = "File";
             // 
@@ -230,58 +462,126 @@
             groupExit_pageHome.Name = "groupExit_pageHome";
             groupExit_pageHome.Text = "Exit";
             // 
-            // Schema
+            // SchemaRibbonPage
             // 
-            Schema.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup2 });
-            Schema.Name = "Schema";
-            Schema.Text = "Schema";
+            SchemaRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileSchemaRibbonPageGroup, closeSchemaribbonPageGroup });
+            SchemaRibbonPage.Name = "SchemaRibbonPage";
+            SchemaRibbonPage.Text = "Schema";
             // 
-            // ribbonPageGroup2
+            // fileSchemaRibbonPageGroup
             // 
-            ribbonPageGroup2.Name = "ribbonPageGroup2";
-            ribbonPageGroup2.Text = "ribbonPageGroup2";
+            fileSchemaRibbonPageGroup.ItemLinks.Add(iNewSchema);
+            fileSchemaRibbonPageGroup.ItemLinks.Add(iOpenSchema);
+            fileSchemaRibbonPageGroup.ItemLinks.Add(iDeleteSchema);
+            fileSchemaRibbonPageGroup.Name = "fileSchemaRibbonPageGroup";
+            fileSchemaRibbonPageGroup.Text = "File";
             // 
-            // ribbonPage3
+            // closeSchemaribbonPageGroup
             // 
-            ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup3 });
-            ribbonPage3.Name = "ribbonPage3";
-            ribbonPage3.Text = "Table";
+            closeSchemaribbonPageGroup.ItemLinks.Add(iCloseCurrentSchema);
+            closeSchemaribbonPageGroup.Name = "closeSchemaribbonPageGroup";
+            closeSchemaribbonPageGroup.Text = "Close";
             // 
-            // ribbonPageGroup3
+            // RelationRibbonPage
             // 
-            ribbonPageGroup3.Name = "ribbonPageGroup3";
-            ribbonPageGroup3.Text = "ribbonPageGroup3";
+            RelationRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileRelationRibbonPageGroup, closeRelationRibbonPageGroup });
+            RelationRibbonPage.Name = "RelationRibbonPage";
+            RelationRibbonPage.Text = "Relation";
+            // 
+            // fileRelationRibbonPageGroup
+            // 
+            fileRelationRibbonPageGroup.ItemLinks.Add(iNewRelation);
+            fileRelationRibbonPageGroup.ItemLinks.Add(iDeleteRelation);
+            fileRelationRibbonPageGroup.ItemLinks.Add(iSaveRelation);
+            fileRelationRibbonPageGroup.Name = "fileRelationRibbonPageGroup";
+            fileRelationRibbonPageGroup.Text = "File";
+            // 
+            // closeRelationRibbonPageGroup
+            // 
+            closeRelationRibbonPageGroup.ItemLinks.Add(iCloseRelation);
+            closeRelationRibbonPageGroup.Name = "closeRelationRibbonPageGroup";
+            closeRelationRibbonPageGroup.Text = "Close";
+            // 
+            // QueryRibbonPage
+            // 
+            QueryRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileQueryRibbonPageGroup, conjunctionRibbonPageGroup, disjunctionRibbonPageGroup, differenceRibbonPageGroup, operatorRibbonPageGroup, excuteQueryribbonPageGroup });
+            QueryRibbonPage.Name = "QueryRibbonPage";
+            QueryRibbonPage.Text = "Query";
+            // 
+            // fileQueryRibbonPageGroup
+            // 
+            fileQueryRibbonPageGroup.ItemLinks.Add(iNewQuery);
+            fileQueryRibbonPageGroup.ItemLinks.Add(iOpenQuery);
+            fileQueryRibbonPageGroup.ItemLinks.Add(iSaveQuery);
+            fileQueryRibbonPageGroup.Name = "fileQueryRibbonPageGroup";
+            fileQueryRibbonPageGroup.Text = "File";
+            // 
+            // conjunctionRibbonPageGroup
+            // 
+            conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionIgnorance);
+            conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionIndependence);
+            conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionMutual);
+            conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionPositive);
+            conjunctionRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.TwoRows;
+            conjunctionRibbonPageGroup.Name = "conjunctionRibbonPageGroup";
+            conjunctionRibbonPageGroup.Text = "Conjunction";
+            // 
+            // disjunctionRibbonPageGroup
+            // 
+            disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionIgnorance);
+            disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionIndependence);
+            disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionMutual);
+            disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionPositive);
+            disjunctionRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.TwoRows;
+            disjunctionRibbonPageGroup.Name = "disjunctionRibbonPageGroup";
+            disjunctionRibbonPageGroup.Text = "Disjunction";
+            // 
+            // differenceRibbonPageGroup
+            // 
+            differenceRibbonPageGroup.ItemLinks.Add(iDifferenceIgnorance);
+            differenceRibbonPageGroup.ItemLinks.Add(iDifferenceIndependence);
+            differenceRibbonPageGroup.ItemLinks.Add(iDiferenceMutual);
+            differenceRibbonPageGroup.ItemLinks.Add(iDifferencePositive);
+            differenceRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.TwoRows;
+            differenceRibbonPageGroup.Name = "differenceRibbonPageGroup";
+            differenceRibbonPageGroup.Text = "Difference";
+            // 
+            // operatorRibbonPageGroup
+            // 
+            operatorRibbonPageGroup.ItemLinks.Add(iOperator);
+            operatorRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.OneRow;
+            operatorRibbonPageGroup.Name = "operatorRibbonPageGroup";
+            operatorRibbonPageGroup.Text = "Operator";
+            // 
+            // excuteQueryribbonPageGroup
+            // 
+            excuteQueryribbonPageGroup.ItemLinks.Add(iExcuteQuery);
+            excuteQueryribbonPageGroup.Name = "excuteQueryribbonPageGroup";
+            excuteQueryribbonPageGroup.Text = "Excute";
             // 
             // pageFuzzySet
             // 
-            pageFuzzySet.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupDiscrete_pageFS, groupContinuous_pageFS });
+            pageFuzzySet.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { discreteFuzzySetribbonPageGroup, continuousFuzzySetRibbonPageGroup, SearchFuzzySetribbonPageGroup });
             pageFuzzySet.Name = "pageFuzzySet";
             pageFuzzySet.Text = "FuzzySet";
             // 
-            // groupDiscrete_pageFS
+            // discreteFuzzySetribbonPageGroup
             // 
-            groupDiscrete_pageFS.ItemLinks.Add(buttonAdd_groupDis);
-            groupDiscrete_pageFS.ItemLinks.Add(buttonLibrary_groupDis);
-            groupDiscrete_pageFS.Name = "groupDiscrete_pageFS";
-            groupDiscrete_pageFS.Text = "Discrete";
+            discreteFuzzySetribbonPageGroup.ItemLinks.Add(iAddDiscrete);
+            discreteFuzzySetribbonPageGroup.Name = "discreteFuzzySetribbonPageGroup";
+            discreteFuzzySetribbonPageGroup.Text = "Discrete";
             // 
-            // groupContinuous_pageFS
+            // continuousFuzzySetRibbonPageGroup
             // 
-            groupContinuous_pageFS.ItemLinks.Add(buttonAdd_groupCont);
-            groupContinuous_pageFS.ItemLinks.Add(buttonLibrary_groupCont);
-            groupContinuous_pageFS.Name = "groupContinuous_pageFS";
-            groupContinuous_pageFS.Text = "Continuous";
+            continuousFuzzySetRibbonPageGroup.ItemLinks.Add(iAddContinuous);
+            continuousFuzzySetRibbonPageGroup.Name = "continuousFuzzySetRibbonPageGroup";
+            continuousFuzzySetRibbonPageGroup.Text = "Continuous";
             // 
-            // ribbonPage1
+            // SearchFuzzySetribbonPageGroup
             // 
-            ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup1 });
-            ribbonPage1.Name = "ribbonPage1";
-            ribbonPage1.Text = "Query";
-            // 
-            // ribbonPageGroup1
-            // 
-            ribbonPageGroup1.Name = "ribbonPageGroup1";
-            ribbonPageGroup1.Text = "ribbonPageGroup1";
+            SearchFuzzySetribbonPageGroup.ItemLinks.Add(iSearchFuzzySet);
+            SearchFuzzySetribbonPageGroup.Name = "SearchFuzzySetribbonPageGroup";
+            SearchFuzzySetribbonPageGroup.Text = "Fuzzy Set";
             // 
             // pageHelp
             // 
@@ -296,15 +596,12 @@
             groupHelp_pageHelp.Name = "groupHelp_pageHelp";
             groupHelp_pageHelp.Text = "Help";
             // 
-            // treeView
+            // ribbonStatusBar
             // 
-            treeView.ImageIndex = 0;
-            treeView.ImageList = TreeView_imageList;
-            treeView.Location = new System.Drawing.Point(12, 200);
-            treeView.Name = "treeView";
-            treeView.SelectedImageIndex = 0;
-            treeView.Size = new System.Drawing.Size(201, 340);
-            treeView.TabIndex = 1;
+            ribbonStatusBar.Location = new System.Drawing.Point(0, 569);
+            ribbonStatusBar.Name = "ribbonStatusBar";
+            ribbonStatusBar.Ribbon = ribbonControl;
+            ribbonStatusBar.Size = new System.Drawing.Size(970, 30);
             // 
             // TreeView_imageList
             // 
@@ -321,19 +618,370 @@
             TreeView_imageList.Images.SetKeyName(7, "relation.jpg");
             TreeView_imageList.Images.SetKeyName(8, "schema.png");
             // 
+            // RelationsplitContainerControl
+            // 
+            RelationsplitContainerControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            RelationsplitContainerControl.Location = new System.Drawing.Point(0, 193);
+            RelationsplitContainerControl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            RelationsplitContainerControl.Name = "RelationsplitContainerControl";
+            RelationsplitContainerControl.Padding = new System.Windows.Forms.Padding(10);
+            // 
+            // RelationsplitContainerControl.Panel1
+            // 
+            RelationsplitContainerControl.Panel1.Controls.Add(treeView);
+            RelationsplitContainerControl.Panel1.Text = "Panel1";
+            // 
+            // RelationsplitContainerControl.Panel2
+            // 
+            RelationsplitContainerControl.Panel2.Controls.Add(xtraTabControlDatabase);
+            RelationsplitContainerControl.Panel2.Text = "Panel2";
+            RelationsplitContainerControl.Size = new System.Drawing.Size(970, 376);
+            RelationsplitContainerControl.SplitterPosition = 165;
+            RelationsplitContainerControl.TabIndex = 5;
+            // 
+            // treeView
+            // 
+            treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            treeView.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            treeView.ImageIndex = 0;
+            treeView.ImageList = TreeView_imageList;
+            treeView.ItemHeight = 22;
+            treeView.Location = new System.Drawing.Point(0, 0);
+            treeView.Name = "treeView";
+            treeView.SelectedImageIndex = 0;
+            treeView.Size = new System.Drawing.Size(165, 356);
+            treeView.TabIndex = 2;
+            // 
+            // xtraTabControlDatabase
+            // 
+            xtraTabControlDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
+            xtraTabControlDatabase.Location = new System.Drawing.Point(0, 0);
+            xtraTabControlDatabase.Name = "xtraTabControlDatabase";
+            xtraTabControlDatabase.SelectedTabPage = SchemaxtraTabPage;
+            xtraTabControlDatabase.Size = new System.Drawing.Size(773, 356);
+            xtraTabControlDatabase.TabIndex = 1;
+            xtraTabControlDatabase.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { SchemaxtraTabPage, RelationxtraTabPage, QueryxtraTabPage });
+            // 
+            // SchemaxtraTabPage
+            // 
+            SchemaxtraTabPage.Controls.Add(gridControlScheme);
+            SchemaxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            SchemaxtraTabPage.Name = "SchemaxtraTabPage";
+            SchemaxtraTabPage.Size = new System.Drawing.Size(771, 326);
+            SchemaxtraTabPage.Text = "Schema";
+            // 
+            // gridControlScheme
+            // 
+            gridControlScheme.Dock = System.Windows.Forms.DockStyle.Fill;
+            gridControlScheme.Location = new System.Drawing.Point(0, 0);
+            gridControlScheme.MainView = gridView;
+            gridControlScheme.MenuManager = ribbonControl;
+            gridControlScheme.Name = "gridControlScheme";
+            gridControlScheme.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCalcEdit1, repositoryItemButtonEdit1, repositoryItemHeightType1, repositoryItemCheckEdit1 });
+            gridControlScheme.Size = new System.Drawing.Size(771, 326);
+            gridControlScheme.TabIndex = 0;
+            gridControlScheme.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
+            // 
+            // gridView
+            // 
+            gridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnPrimary, gridColumnAttribute, gridColumnDataType });
+            gridView.GridControl = gridControlScheme;
+            gridView.Name = "gridView";
+            gridView.OptionsPrint.PrintFilterInfo = true;
+            // 
+            // gridColumnPrimary
+            // 
+            gridColumnPrimary.Caption = "Primary Key";
+            gridColumnPrimary.ColumnEdit = repositoryItemCheckEdit1;
+            gridColumnPrimary.FieldName = "gridColumnPrimary";
+            gridColumnPrimary.MinWidth = 25;
+            gridColumnPrimary.Name = "gridColumnPrimary";
+            gridColumnPrimary.Visible = true;
+            gridColumnPrimary.VisibleIndex = 0;
+            gridColumnPrimary.Width = 249;
+            // 
+            // repositoryItemCheckEdit1
+            // 
+            repositoryItemCheckEdit1.AutoHeight = false;
+            repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
+            // 
+            // gridColumnAttribute
+            // 
+            gridColumnAttribute.Caption = "Attribute name";
+            gridColumnAttribute.FieldName = "gridColumnAttribute";
+            gridColumnAttribute.MinWidth = 25;
+            gridColumnAttribute.Name = "gridColumnAttribute";
+            gridColumnAttribute.Visible = true;
+            gridColumnAttribute.VisibleIndex = 1;
+            gridColumnAttribute.Width = 245;
+            // 
+            // gridColumnDataType
+            // 
+            gridColumnDataType.Caption = "Data Type";
+            gridColumnDataType.FieldName = "gridColumnDataType";
+            gridColumnDataType.MinWidth = 25;
+            gridColumnDataType.Name = "gridColumnDataType";
+            gridColumnDataType.Visible = true;
+            gridColumnDataType.VisibleIndex = 2;
+            gridColumnDataType.Width = 247;
+            // 
+            // repositoryItemCalcEdit1
+            // 
+            repositoryItemCalcEdit1.AutoHeight = false;
+            repositoryItemCalcEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemCalcEdit1.Name = "repositoryItemCalcEdit1";
+            // 
+            // repositoryItemButtonEdit1
+            // 
+            repositoryItemButtonEdit1.AutoHeight = false;
+            repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton() });
+            repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
+            // 
+            // repositoryItemHeightType1
+            // 
+            repositoryItemHeightType1.AutoHeight = false;
+            repositoryItemHeightType1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemHeightType1.Name = "repositoryItemHeightType1";
+            // 
+            // RelationxtraTabPage
+            // 
+            RelationxtraTabPage.Controls.Add(splitContainerControl2);
+            RelationxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            RelationxtraTabPage.Name = "RelationxtraTabPage";
+            RelationxtraTabPage.Size = new System.Drawing.Size(771, 326);
+            RelationxtraTabPage.Text = "Relation";
+            // 
+            // splitContainerControl2
+            // 
+            splitContainerControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainerControl2.Horizontal = false;
+            splitContainerControl2.Location = new System.Drawing.Point(0, 0);
+            splitContainerControl2.Name = "splitContainerControl2";
+            // 
+            // splitContainerControl2.Panel1
+            // 
+            splitContainerControl2.Panel1.Controls.Add(gridControlRelation);
+            splitContainerControl2.Panel1.Text = "Panel1";
+            // 
+            // splitContainerControl2.Panel2
+            // 
+            splitContainerControl2.Panel2.Controls.Add(gridControlValueRelation);
+            splitContainerControl2.Panel2.Controls.Add(panelControlRelation);
+            splitContainerControl2.Panel2.Text = "Panel2";
+            splitContainerControl2.Size = new System.Drawing.Size(771, 326);
+            splitContainerControl2.SplitterPosition = 104;
+            splitContainerControl2.TabIndex = 0;
+            // 
+            // gridControlRelation
+            // 
+            gridControlRelation.Dock = System.Windows.Forms.DockStyle.Fill;
+            gridControlRelation.Location = new System.Drawing.Point(0, 0);
+            gridControlRelation.MainView = gridView3;
+            gridControlRelation.MenuManager = ribbonControl;
+            gridControlRelation.Name = "gridControlRelation";
+            gridControlRelation.Size = new System.Drawing.Size(771, 104);
+            gridControlRelation.TabIndex = 0;
+            gridControlRelation.UseEmbeddedNavigator = true;
+            gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
+            // 
+            // gridView3
+            // 
+            gridView3.GridControl = gridControlRelation;
+            gridView3.Name = "gridView3";
+            // 
+            // gridControlValueRelation
+            // 
+            gridControlValueRelation.Dock = System.Windows.Forms.DockStyle.Fill;
+            gridControlValueRelation.Location = new System.Drawing.Point(0, 45);
+            gridControlValueRelation.MainView = gridView4;
+            gridControlValueRelation.MenuManager = ribbonControl;
+            gridControlValueRelation.Name = "gridControlValueRelation";
+            gridControlValueRelation.Size = new System.Drawing.Size(771, 165);
+            gridControlValueRelation.TabIndex = 1;
+            gridControlValueRelation.UseEmbeddedNavigator = true;
+            gridControlValueRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView4 });
+            // 
+            // gridView4
+            // 
+            gridView4.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnValue, gridColumnMinProb, gridColumnMaxProb });
+            gridView4.GridControl = gridControlValueRelation;
+            gridView4.Name = "gridView4";
+            // 
+            // gridColumnValue
+            // 
+            gridColumnValue.Caption = "Value";
+            gridColumnValue.FieldName = "gridColumnValue";
+            gridColumnValue.MinWidth = 25;
+            gridColumnValue.Name = "gridColumnValue";
+            gridColumnValue.Visible = true;
+            gridColumnValue.VisibleIndex = 0;
+            gridColumnValue.Width = 94;
+            // 
+            // gridColumnMinProb
+            // 
+            gridColumnMinProb.Caption = "MinProb";
+            gridColumnMinProb.FieldName = "gridColumnMinProb";
+            gridColumnMinProb.MinWidth = 25;
+            gridColumnMinProb.Name = "gridColumnMinProb";
+            gridColumnMinProb.Visible = true;
+            gridColumnMinProb.VisibleIndex = 1;
+            gridColumnMinProb.Width = 94;
+            // 
+            // gridColumnMaxProb
+            // 
+            gridColumnMaxProb.AccessibleName = "gridColumnMaxProb";
+            gridColumnMaxProb.Caption = "MaxProb";
+            gridColumnMaxProb.MinWidth = 25;
+            gridColumnMaxProb.Name = "gridColumnMaxProb";
+            gridColumnMaxProb.Visible = true;
+            gridColumnMaxProb.VisibleIndex = 2;
+            gridColumnMaxProb.Width = 94;
+            // 
+            // panelControlRelation
+            // 
+            panelControlRelation.Dock = System.Windows.Forms.DockStyle.Top;
+            panelControlRelation.Location = new System.Drawing.Point(0, 0);
+            panelControlRelation.Name = "panelControlRelation";
+            panelControlRelation.Size = new System.Drawing.Size(771, 45);
+            panelControlRelation.TabIndex = 0;
+            // 
+            // QueryxtraTabPage
+            // 
+            QueryxtraTabPage.Controls.Add(splitContainerControl1);
+            QueryxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            QueryxtraTabPage.Name = "QueryxtraTabPage";
+            QueryxtraTabPage.Size = new System.Drawing.Size(771, 326);
+            QueryxtraTabPage.Text = "Query";
+            // 
+            // splitContainerControl1
+            // 
+            splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainerControl1.Horizontal = false;
+            splitContainerControl1.Location = new System.Drawing.Point(0, 0);
+            splitContainerControl1.Name = "splitContainerControl1";
+            // 
+            // splitContainerControl1.Panel1
+            // 
+            splitContainerControl1.Panel1.Controls.Add(memoEditTxtQuery);
+            splitContainerControl1.Panel1.Text = "Panel1";
+            // 
+            // splitContainerControl1.Panel2
+            // 
+            splitContainerControl1.Panel2.Controls.Add(xtraTabControl1);
+            splitContainerControl1.Panel2.Text = "Panel2";
+            splitContainerControl1.Size = new System.Drawing.Size(771, 326);
+            splitContainerControl1.SplitterPosition = 132;
+            splitContainerControl1.TabIndex = 0;
+            // 
+            // memoEditTxtQuery
+            // 
+            memoEditTxtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
+            memoEditTxtQuery.Name = "memoEditTxtQuery";
+            memoEditTxtQuery.Size = new System.Drawing.Size(771, 132);
+            memoEditTxtQuery.TabIndex = 0;
+            memoEditTxtQuery.Text = "";
+            // 
+            // xtraTabControl1
+            // 
+            xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            xtraTabControl1.Location = new System.Drawing.Point(0, 0);
+            xtraTabControl1.Name = "xtraTabControl1";
+            xtraTabControl1.SelectedTabPage = QueryResultxtraTabPage;
+            xtraTabControl1.Size = new System.Drawing.Size(771, 182);
+            xtraTabControl1.TabIndex = 0;
+            xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
+            // 
+            // QueryResultxtraTabPage
+            // 
+            QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
+            QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(769, 152);
+            QueryResultxtraTabPage.Text = "Query Result";
+            // 
+            // gridControlResultQuery
+            // 
+            gridControlResultQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            gridControlResultQuery.Location = new System.Drawing.Point(0, 0);
+            gridControlResultQuery.MainView = gridView2;
+            gridControlResultQuery.MenuManager = ribbonControl;
+            gridControlResultQuery.Name = "gridControlResultQuery";
+            gridControlResultQuery.Size = new System.Drawing.Size(769, 152);
+            gridControlResultQuery.TabIndex = 0;
+            gridControlResultQuery.UseEmbeddedNavigator = true;
+            gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView2 });
+            // 
+            // gridView2
+            // 
+            gridView2.GridControl = gridControlResultQuery;
+            gridView2.Name = "gridView2";
+            gridView2.OptionsView.ShowGroupPanel = false;
+            // 
+            // MessagextraTabPage
+            // 
+            MessagextraTabPage.Name = "MessagextraTabPage";
+            MessagextraTabPage.Size = new System.Drawing.Size(769, 152);
+            MessagextraTabPage.Text = "Message";
+            // 
             // frmMain
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
+            Appearance.Options.UseFont = true;
+            AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(884, 552);
-            Controls.Add(treeView);
-            Controls.Add(ribbonControl1);
+            ClientSize = new System.Drawing.Size(970, 599);
+            Controls.Add(RelationsplitContainerControl);
+            Controls.Add(ribbonStatusBar);
+            Controls.Add(ribbonControl);
+            Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmMain.IconOptions.Image");
-            Margin = new System.Windows.Forms.Padding(4);
+            IsMdiContainer = true;
+            Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             Name = "frmMain";
-            Ribbon = ribbonControl1;
+            Ribbon = ribbonControl;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            StatusBar = ribbonStatusBar;
             Text = "FPRDB Visual Management System";
-            ((System.ComponentModel.ISupportInitialize)ribbonControl1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ribbonControl).EndInit();
+            ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).EndInit();
+            RelationsplitContainerControl.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel2).EndInit();
+            RelationsplitContainerControl.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).EndInit();
+            RelationsplitContainerControl.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)xtraTabControlDatabase).EndInit();
+            xtraTabControlDatabase.ResumeLayout(false);
+            SchemaxtraTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridControlScheme).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemCheckEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemCalcEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemButtonEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemHeightType1).EndInit();
+            RelationxtraTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl2.Panel1).EndInit();
+            splitContainerControl2.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl2.Panel2).EndInit();
+            splitContainerControl2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl2).EndInit();
+            splitContainerControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridControlRelation).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridView3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridControlValueRelation).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridView4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)panelControlRelation).EndInit();
+            QueryxtraTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).EndInit();
+            splitContainerControl1.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).EndInit();
+            splitContainerControl1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerControl1).EndInit();
+            splitContainerControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)xtraTabControl1).EndInit();
+            xtraTabControl1.ResumeLayout(false);
+            QueryResultxtraTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridView2).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -341,40 +989,97 @@
 
         #endregion
 
-        private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
-        private DevExpress.XtraBars.Ribbon.RibbonPage pageHome;
+        private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl;
+        private DevExpress.XtraBars.Ribbon.RibbonPage DatabaseRibbonPage;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupFile_pageHome;
         private DevExpress.XtraBars.Ribbon.RibbonPage pageFuzzySet;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupDiscrete_pageFS;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup discreteFuzzySetribbonPageGroup;
         private DevExpress.XtraBars.Ribbon.RibbonPage pageHelp;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupHelp_pageHelp;
         private DevExpress.XtraBars.BarButtonItem buttonHelp_groupHelp;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem2;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem3;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem4;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem5;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupExit_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonExit_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonNew_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonOpen_pageHome;
-        private DevExpress.XtraBars.BarButtonItem buttonClose_pageHome;
-        private DevExpress.XtraBars.BarButtonItem buttonSave_pageHome;
-        private DevExpress.XtraBars.BarButtonItem buttonSaveAs_pageHome;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupContinuous_pageFS;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup continuousFuzzySetRibbonPageGroup;
         private DevExpress.XtraBars.BarButtonItem buttonAbout_groupHelp;
-        private DevExpress.XtraBars.BarButtonItem buttonAdd_groupDis;
-        private DevExpress.XtraBars.BarButtonItem buttonLibrary_groupDis;
-        private DevExpress.XtraBars.BarButtonItem buttonAdd_groupCont;
-        private DevExpress.XtraBars.BarButtonItem buttonLibrary_groupCont;
-        private DevExpress.XtraBars.Ribbon.RibbonPage Schema;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage3;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
-        private System.Windows.Forms.TreeView treeView;
+        private DevExpress.XtraBars.BarButtonItem iAddDiscrete;
+        private DevExpress.XtraBars.BarButtonItem iAddContinuous;
+        private DevExpress.XtraBars.Ribbon.RibbonPage SchemaRibbonPage;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup fileSchemaRibbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonPage RelationRibbonPage;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup fileRelationRibbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonPage QueryRibbonPage;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup fileQueryRibbonPageGroup;
         private System.Windows.Forms.ImageList TreeView_imageList;
+        private DevExpress.XtraBars.BarButtonItem iNewSchema;
+        private DevExpress.XtraBars.BarButtonItem iOpenSchema;
+        private DevExpress.XtraBars.BarButtonItem iDeleteSchema;
+        private DevExpress.XtraBars.BarButtonItem iCloseCurrentSchema;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup closeSchemaribbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup SearchFuzzySetribbonPageGroup;
+        private DevExpress.XtraBars.BarButtonItem iSearchFuzzySet;
+        private DevExpress.XtraBars.BarButtonItem iNewRelation;
+        private DevExpress.XtraBars.BarButtonItem iDeleteRelation;
+        private DevExpress.XtraBars.BarButtonItem iSaveRelation;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup closeRelationRibbonPageGroup;
+        private DevExpress.XtraBars.BarButtonItem iCloseRelation;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup conjunctionRibbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup disjunctionRibbonPageGroup;
+        private DevExpress.XtraBars.BarButtonItem iNewQuery;
+        private DevExpress.XtraBars.BarButtonItem iOpenQuery;
+        private DevExpress.XtraBars.BarButtonItem iSaveQuery;
+        private DevExpress.XtraBars.BarButtonItem iConjunctionIgnorance;
+        private DevExpress.XtraBars.BarButtonItem iConjunctionIndependence;
+        private DevExpress.XtraBars.BarButtonItem iConjunctionMutual;
+        private DevExpress.XtraBars.BarButtonItem iDisjunctionIgnorance;
+        private DevExpress.XtraBars.BarButtonItem iDisjunctionIndependence;
+        private DevExpress.XtraBars.BarButtonItem iDisjunctionMutual;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup differenceRibbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup operatorRibbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup excuteQueryribbonPageGroup;
+        private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar;
+        private DevExpress.XtraEditors.SplitContainerControl RelationsplitContainerControl;
+        private System.Windows.Forms.TreeView treeView;
+        private DevExpress.XtraTab.XtraTabControl xtraTabControlDatabase;
+        private DevExpress.XtraTab.XtraTabPage SchemaxtraTabPage;
+        private DevExpress.XtraTab.XtraTabPage RelationxtraTabPage;
+        private DevExpress.XtraTab.XtraTabPage QueryxtraTabPage;
+        private DevExpress.XtraGrid.GridControl gridControlScheme;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView;
+        private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
+        private DevExpress.XtraTab.XtraTabControl xtraTabControl1;
+        private DevExpress.XtraTab.XtraTabPage QueryResultxtraTabPage;
+        private DevExpress.XtraTab.XtraTabPage MessagextraTabPage;
+        private DevExpress.XtraGrid.GridControl gridControlResultQuery;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView2;
+        private DevExpress.XtraBars.BarButtonItem iDifferenceIgnorance;
+        private DevExpress.XtraBars.BarButtonItem iDifferenceIndependence;
+        private DevExpress.XtraBars.BarButtonItem iDiferenceMutual;
+        private DevExpress.XtraBars.BarButtonItem iOperator;
+        private DevExpress.XtraBars.BarButtonItem iExcuteQuery;
+        private DevExpress.XtraEditors.SplitContainerControl splitContainerControl2;
+        private DevExpress.XtraGrid.GridControl gridControlRelation;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView3;
+        private DevExpress.XtraGrid.GridControl gridControlValueRelation;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView4;
+        private DevExpress.XtraEditors.PanelControl panelControlRelation;
+        private System.Windows.Forms.RichTextBox memoEditTxtQuery;
+        private DevExpress.XtraBars.BarButtonItem iConjunctionPositive;
+        private DevExpress.XtraBars.BarButtonItem iDisjunctionPositive;
+        private DevExpress.XtraBars.BarButtonItem iDifferencePositive;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnPrimary;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnAttribute;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnDataType;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCalcEdit repositoryItemCalcEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
+        private DevExpress.XtraRichEdit.Design.RepositoryItemHeightType repositoryItemHeightType1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnValue;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnMinProb;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnMaxProb;
+        private DevExpress.XtraBars.BarButtonGroup barButtonGroup1;
+        private DevExpress.XtraBars.BarButtonGroup barButtonGroup2;
     }
 }
 

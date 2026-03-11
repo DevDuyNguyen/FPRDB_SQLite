@@ -196,6 +196,5 @@ namespace BLL.Services
                 throw ex;
             }
         }
-
     }
 }
