@@ -251,7 +251,7 @@ namespace FPRDB_SQLite.GUI
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string sql = memoEditTxtQuery.Text;
-            
+
         }
         private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -576,6 +576,31 @@ namespace FPRDB_SQLite.GUI
 
             // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             memoEditTxtQuery.Focus();
+        }
+
+        private void CreateNewQuery()
+        {
+            try
+            {
+
+                if (this.databaseService == null)
+                {
+                    XtraMessageBox.Show("Error : Cannot find the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+    
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+            }
+        }
+
+
+        // Nút này tạm thời chưa làm gì, để dành cho việc tạo Query mới sau này
+        private void iNewQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            CreateNewQuery();
         }
     }
 }
