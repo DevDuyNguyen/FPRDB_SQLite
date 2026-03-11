@@ -50,7 +50,6 @@
             iNewQuery = new DevExpress.XtraBars.BarButtonItem();
             iOpenQuery = new DevExpress.XtraBars.BarButtonItem();
             iSaveQuery = new DevExpress.XtraBars.BarButtonItem();
-            iDeleteQuery = new DevExpress.XtraBars.BarButtonItem();
             iConjunctionIgnorance = new DevExpress.XtraBars.BarButtonItem();
             iConjunctionIndependence = new DevExpress.XtraBars.BarButtonItem();
             iConjunctionMutual = new DevExpress.XtraBars.BarButtonItem();
@@ -65,6 +64,8 @@
             iConjunctionPositive = new DevExpress.XtraBars.BarButtonItem();
             iDisjunctionPositive = new DevExpress.XtraBars.BarButtonItem();
             iDifferencePositive = new DevExpress.XtraBars.BarButtonItem();
+            barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
+            barButtonGroup2 = new DevExpress.XtraBars.BarButtonGroup();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -166,10 +167,10 @@
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iDeleteQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2 });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            ribbonControl.MaxItemId = 53;
+            ribbonControl.MaxItemId = 55;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
             ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
@@ -301,6 +302,7 @@
             iNewQuery.Id = 30;
             iNewQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewQuery.ImageOptions.LargeImage");
             iNewQuery.Name = "iNewQuery";
+            iNewQuery.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.iNewQuery_ItemClick);
             // 
             // iOpenQuery
             // 
@@ -315,13 +317,6 @@
             iSaveQuery.Id = 32;
             iSaveQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveQuery.ImageOptions.LargeImage");
             iSaveQuery.Name = "iSaveQuery";
-            // 
-            // iDeleteQuery
-            // 
-            iDeleteQuery.Caption = "Delete";
-            iDeleteQuery.Id = 33;
-            iDeleteQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteQuery.ImageOptions.LargeImage");
-            iDeleteQuery.Name = "iDeleteQuery";
             // 
             // iConjunctionIgnorance
             // 
@@ -399,6 +394,7 @@
             // 
             iOperator.Caption = "⇒";
             iOperator.Id = 46;
+            iOperator.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iOperator.ImageOptions.SvgImage");
             iOperator.Name = "iOperator";
             iOperator.SmallWithTextWidth = 80;
             iOperator.ItemClick += iOperator_ItemClick;
@@ -434,6 +430,18 @@
             iDifferencePositive.Name = "iDifferencePositive";
             iDifferencePositive.SmallWithTextWidth = 80;
             iDifferencePositive.ItemClick += iDifferencePositive_ItemClick;
+            // 
+            // barButtonGroup1
+            // 
+            barButtonGroup1.Caption = "barButtonGroup1";
+            barButtonGroup1.Id = 53;
+            barButtonGroup1.Name = "barButtonGroup1";
+            // 
+            // barButtonGroup2
+            // 
+            barButtonGroup2.Caption = "barButtonGroup2";
+            barButtonGroup2.Id = 54;
+            barButtonGroup2.Name = "barButtonGroup2";
             // 
             // DatabaseRibbonPage
             // 
@@ -505,7 +513,6 @@
             fileQueryRibbonPageGroup.ItemLinks.Add(iNewQuery);
             fileQueryRibbonPageGroup.ItemLinks.Add(iOpenQuery);
             fileQueryRibbonPageGroup.ItemLinks.Add(iSaveQuery);
-            fileQueryRibbonPageGroup.ItemLinks.Add(iDeleteQuery);
             fileQueryRibbonPageGroup.Name = "fileQueryRibbonPageGroup";
             fileQueryRibbonPageGroup.Text = "File";
             // 
@@ -515,6 +522,7 @@
             conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionIndependence);
             conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionMutual);
             conjunctionRibbonPageGroup.ItemLinks.Add(iConjunctionPositive);
+            conjunctionRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.TwoRows;
             conjunctionRibbonPageGroup.Name = "conjunctionRibbonPageGroup";
             conjunctionRibbonPageGroup.Text = "Conjunction";
             // 
@@ -524,6 +532,7 @@
             disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionIndependence);
             disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionMutual);
             disjunctionRibbonPageGroup.ItemLinks.Add(iDisjunctionPositive);
+            disjunctionRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.TwoRows;
             disjunctionRibbonPageGroup.Name = "disjunctionRibbonPageGroup";
             disjunctionRibbonPageGroup.Text = "Disjunction";
             // 
@@ -533,12 +542,14 @@
             differenceRibbonPageGroup.ItemLinks.Add(iDifferenceIndependence);
             differenceRibbonPageGroup.ItemLinks.Add(iDiferenceMutual);
             differenceRibbonPageGroup.ItemLinks.Add(iDifferencePositive);
+            differenceRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.TwoRows;
             differenceRibbonPageGroup.Name = "differenceRibbonPageGroup";
             differenceRibbonPageGroup.Text = "Difference";
             // 
             // operatorRibbonPageGroup
             // 
             operatorRibbonPageGroup.ItemLinks.Add(iOperator);
+            operatorRibbonPageGroup.ItemsLayout = DevExpress.XtraBars.Ribbon.RibbonPageGroupItemsLayout.OneRow;
             operatorRibbonPageGroup.Name = "operatorRibbonPageGroup";
             operatorRibbonPageGroup.Text = "Operator";
             // 
@@ -1018,7 +1029,6 @@
         private DevExpress.XtraBars.BarButtonItem iNewQuery;
         private DevExpress.XtraBars.BarButtonItem iOpenQuery;
         private DevExpress.XtraBars.BarButtonItem iSaveQuery;
-        private DevExpress.XtraBars.BarButtonItem iDeleteQuery;
         private DevExpress.XtraBars.BarButtonItem iConjunctionIgnorance;
         private DevExpress.XtraBars.BarButtonItem iConjunctionIndependence;
         private DevExpress.XtraBars.BarButtonItem iConjunctionMutual;
@@ -1068,6 +1078,8 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnValue;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnMinProb;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnMaxProb;
+        private DevExpress.XtraBars.BarButtonGroup barButtonGroup1;
+        private DevExpress.XtraBars.BarButtonGroup barButtonGroup2;
     }
 }
 
