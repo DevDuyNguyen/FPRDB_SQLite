@@ -18,17 +18,27 @@ namespace FPRDB_SQLite.GUI
     {
         private readonly CompositionRoot compRoot;
         private readonly DatabaseService databaseService;
+        private readonly List<FPRDBSchema> schemas;
+        private FPRDBSchema selectedSchema;
         public frmNewRelation(CompositionRoot compRoot)
         {
             InitializeComponent();
             this.compRoot = compRoot;
             this.databaseService = compRoot.getDatabaseService();
-            loadSchemas();
-        }
-        private void loadSchemas()
-        {
-            List<FPRDBSchema> schemas = databaseService.getFPRDBSchemas();
+            this.schemas = databaseService.getFPRDBSchemas();
             cboSchemaName.Properties.Items.AddRange(schemas.Select(s => s.getSchemaName()).ToArray());
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            string relName = txtRelName.Text.Trim();
+            // createFPRDBRelation(relName, selectedSchema, selectedSchema.getSchemaName());
+        }
+
+        private void cboSchemaName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedName = cboSchemaName.SelectedItem?.ToString();
+            selectedSchema = schemas.FirstOrDefault(s => s.getSchemaName() == selectedName);
         }
     }
 }

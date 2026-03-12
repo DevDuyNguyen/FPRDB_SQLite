@@ -1,4 +1,6 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL;
+using BLL.DomainObject;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,14 +26,7 @@ namespace FPRDB_SQLite.GUI
             public string attributeName { get; set; } = string.Empty;
 
             [DisplayName("Data Type")]
-            public string dataType { get; set; } = string.Empty;
-            public SchemaAttribute() { }
-            public SchemaAttribute(bool isPk, string name, string type)
-            {
-                isPrimaryKey = isPk;
-                attributeName = name;
-                dataType = type;
-            }
+            public FieldType dataType { get; set; } = FieldType.INT;
         }
         public frmNewSchema()
         {
@@ -43,11 +38,11 @@ namespace FPRDB_SQLite.GUI
         {
             grdcSchemaAttribute.DataSource = new BindingList<SchemaAttribute>();
             grdvSchemaAttribute.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Bottom;
-            repositoryItemComboBox1.Items.AddRange(new string[]
+            repositoryItemComboBox1.Items.AddRange(new object[]
             {
-                "INTEGER",
-                "TEXT",
-                "FLOAT"
+                FieldType.INT,
+                FieldType.FLOAT,
+                FieldType.VARCHAR
             });
             repositoryItemComboBox1.NullText = "<Choose data type>";
             repositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
@@ -66,10 +61,24 @@ namespace FPRDB_SQLite.GUI
 
             var rows = grdvSchemaAttribute.DataSource as BindingList<SchemaAttribute>;
 
-            foreach (var attr in rows)
+            //schema = convertGridToSchema(schemaName, rows);
+            //defineFPRDBSchema(schema)
+        }
+        private FPRDBSchema convertGridToSchema(string schemaName, BindingList<SchemaAttribute> attributes)
+        {
+            List<Field> fields = new List<Field>();
+            List<string> primaryKeys = new List<string>();
+            foreach (var attr in attributes)
             {
-                Debug.WriteLine("PK: " + attr.isPrimaryKey + ", Name: " + attr.attributeName + ", Type: " + attr.dataType);
+                var fieldInfo = new FieldInfo(attr.dataType, 255);
+                var field = new Field(attr.attributeName, fieldInfo);
+                fields.Add(field);
+                if (attr.isPrimaryKey)
+                {
+                    primaryKeys.Add(attr.attributeName);
+                }
             }
+            return new FPRDBSchema(schemaName, fields, primaryKeys);
         }
     }
 }
