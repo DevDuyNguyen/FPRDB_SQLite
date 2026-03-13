@@ -26,6 +26,7 @@ namespace BLL.DomainObject
         }
         private List<float> genericCalculateProbabilisticInterpretation<T>(FuzzyProbabilisticValue<T> fprobValue, FuzzySet<T> constant) where T : IComparable<T>
         {
+            throw new NotImplementedException();
             List<float> intervalProb;
             List<float> ans=new List<float>();
             float probInterpretationRelationOnFuzzSet;
@@ -36,25 +37,25 @@ namespace BLL.DomainObject
             //intervalProb[1] *= probInterpretationRelationOnFuzzSet;
             //ans.Add(intervalProb[0], intervalProb[1]);
 
-            for (int i = 0; i < fprobValue.valueList.Count; ++i)
-            {
-                intervalProb = new List<float> { fprobValue.intervalProbLowerBoundList[i], fprobValue.intervalProbUpperBoundList[i] };
-                if (this.compareOperator == CompareOperation.ALSO)
-                    probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.also<T>(fprobValue.valueList[i], constant);
-                else
-                    probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(fprobValue.valueList[i], constant, this.compareOperator);
-                intervalProb[0] *= probInterpretationRelationOnFuzzSet;
-                intervalProb[1] *= probInterpretationRelationOnFuzzSet;
-                if (i == 0)
-                {
-                    ans.Add(intervalProb[0]);
-                    ans.Add(intervalProb[1]);
-                }
-                else
-                    ans = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], intervalProb[0], intervalProb[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+            //for (int i = 0; i < fprobValue.valueList.Count; ++i)
+            //{
+            //    intervalProb = new List<float> { fprobValue.intervalProbLowerBoundList[i], fprobValue.intervalProbUpperBoundList[i] };
+            //    if (this.compareOperator == CompareOperation.ALSO)
+            //        probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.also<T>(fprobValue.valueList[i], constant);
+            //    else
+            //        probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(fprobValue.valueList[i], constant, this.compareOperator);
+            //    intervalProb[0] *= probInterpretationRelationOnFuzzSet;
+            //    intervalProb[1] *= probInterpretationRelationOnFuzzSet;
+            //    if (i == 0)
+            //    {
+            //        ans.Add(intervalProb[0]);
+            //        ans.Add(intervalProb[1]);
+            //    }
+            //    else
+            //        ans = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], intervalProb[0], intervalProb[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
 
-            }
-            return ans;
+            //}
+            //return ans;
         }
         public override List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema)
         {

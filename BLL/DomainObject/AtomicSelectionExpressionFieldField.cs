@@ -23,35 +23,37 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
         }
         private List<float> genericCalculateProbabilisticInterpretation<T>(FuzzyProbabilisticValue<T> v1, FuzzyProbabilisticValue<T> v2) where T : IComparable<T>
         {
-            List<float> ans = new List<float>(2);
-            for(int i=0; i<v1.valueList.Count; ++i)
-            {
-                List<float> tmp = new List<float>(2);
-                for (int j = 0; j < v1.valueList.Count; ++j)
-                {
-                    List<float> tmp1 = ProbabilisticCombinationStrategyUltilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], this.probCombinationStrategy);
-                    float tmp2 = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(v1.valueList[i], v2.valueList[j], CompareOperation.EQUAL);
-                    if (j == 0)
-                    {
-                        tmp.Add(tmp1[0] * tmp2);
-                        tmp.Add(tmp1[1] * tmp2);
-                    }
-                    else
-                    {
-                        tmp = ProbabilisticCombinationStrategyUltilities.combine(tmp[0], tmp[1], tmp1[0] * tmp2, tmp1[1] * tmp2, ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
-                    }
-                }
-                if (i == 0)
-                {
-                    ans.Add(tmp[0]);
-                    ans.Add(tmp[1]);
-                }
-                else
-                {
-                    tmp = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], tmp[0], tmp[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
-                }
-            }
-            return ans;
+
+            throw new NotImplementedException();
+            //List<float> ans = new List<float>(2);
+            //for(int i=0; i<v1.valueList.Count; ++i)
+            //{
+            //    List<float> tmp = new List<float>(2);
+            //    for (int j = 0; j < v1.valueList.Count; ++j)
+            //    {
+            //        List<float> tmp1 = ProbabilisticCombinationStrategyUltilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], this.probCombinationStrategy);
+            //        float tmp2 = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(v1.valueList[i], v2.valueList[j], CompareOperation.EQUAL);
+            //        if (j == 0)
+            //        {
+            //            tmp.Add(tmp1[0] * tmp2);
+            //            tmp.Add(tmp1[1] * tmp2);
+            //        }
+            //        else
+            //        {
+            //            tmp = ProbabilisticCombinationStrategyUltilities.combine(tmp[0], tmp[1], tmp1[0] * tmp2, tmp1[1] * tmp2, ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+            //        }
+            //    }
+            //    if (i == 0)
+            //    {
+            //        ans.Add(tmp[0]);
+            //        ans.Add(tmp[1]);
+            //    }
+            //    else
+            //    {
+            //        tmp = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], tmp[0], tmp[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+            //    }
+            //}
+            //return ans;
 
         }
         public override List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema)

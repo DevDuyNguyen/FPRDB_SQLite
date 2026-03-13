@@ -11,9 +11,97 @@ namespace BLL.SQLProcessing
 {
     public static class ProbabilisticInterpretationOfRelationOnFuzzySets
     {
-        private static (DiscreteFuzzySet<float>, DiscreteFuzzySet<float>) discretize2ContinuousFS(ContinuousFuzzySet fs1, ContinuousFuzzySet fs2)
+        //not done: mocking for private
+        public static (DiscreteFuzzySet<float>, DiscreteFuzzySet<float>) discretize2ContinuousFS(ContinuousFuzzySet fs1, ContinuousFuzzySet fs2)
         {
+            int maxDiscretePoint = 100;
+            int variance = 10;
 
+            float fs1_left_bottom = fs1.getLeftBottom();
+            float fs1_left_top = fs1.getLeftTop();
+            float fs1_right_bottom = fs1.getRightBottom();
+            float fs1_right_top = fs1.getRightTop();
+
+
+            float fs2_left_bottom = fs2.getLeftBottom();
+            float fs2_left_top = fs2.getLeftTop();
+            float fs2_right_bottom = fs2.getRightBottom();
+            float fs2_right_top = fs2.getRightTop();
+
+            List<float> rfs1_values = new List<float>();
+            List<float> rfs1_memberships = new List<float>();
+            List<float> rfs2_values = new List<float>();
+            List<float> rfs2_memberships = new List<float>();
+
+
+            if (fs1.isDomainOverlapedWith(fs2)){
+                float delta;
+                if (CompareOperatorUltilities.floatNearlyEquals(fs1_left_bottom, fs2_left_bottom)){
+                    delta = (fs1.getRightBottom() - fs1.getLeftBottom()) / (float)(maxDiscretePoint);
+                }
+                else
+                {
+                    delta = Math.Abs(fs1_left_bottom - fs2_left_bottom) / 2;
+                    //if left_a is very close to left_b 
+                    if (((fs1_right_bottom-fs1_left_bottom)/delta>maxDiscretePoint+variance)||((fs2_right_bottom - fs2_left_bottom) / delta > maxDiscretePoint + variance)){
+                        if (fs1_left_bottom < fs2_left_bottom)
+                        {
+                            rfs1_values.Add(fs1_left_bottom);
+                            rfs1_memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
+                            rfs1_values.Add(fs2_left_bottom);
+                            rfs1_memberships.Add(fs2.getMembershipDegree(fs2_left_bottom));
+                            delta = (fs2_right_bottom - fs2_left_bottom) / maxDiscretePoint;
+                            fs1_left_bottom = fs2_left_bottom;
+                        }
+                        else
+                        {
+                            rfs2_values.Add(fs2_left_bottom);
+                            rfs2_memberships.Add(fs2.getMembershipDegree(fs2_left_bottom));
+                            rfs2_values.Add(fs1_left_bottom);
+                            rfs2_memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
+                            delta = (fs1_right_bottom - fs1_left_bottom) / maxDiscretePoint;
+                            fs2_left_bottom = fs1_left_bottom;
+                        }
+                    }
+                    //if A and B has overlapping universe of discourse but distance betwee left_a and left_b is very long
+                    if (((fs1_right_bottom - fs1_left_bottom) / delta < maxDiscretePoint - variance) || ((fs2_right_bottom - fs2_left_bottom) / delta < maxDiscretePoint - variance))
+                    {
+                        int n = 3;
+                        while (((fs1_right_bottom - fs1_left_bottom) / delta < maxDiscretePoint - variance) || ((fs2_right_bottom - fs2_left_bottom) / delta < maxDiscretePoint - variance))
+                        {
+                            delta= Math.Abs(fs1_left_bottom - fs2_left_bottom) / n;
+                            ++n;
+                        }
+                    }
+                }
+                for (; fs1_left_bottom <= fs1_right_bottom; fs1_left_bottom += delta)
+                {
+                    rfs1_values.Add(fs1_left_bottom);
+                    rfs1_memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
+                }
+                for (; fs2_left_bottom <= fs2_right_bottom; fs2_left_bottom += delta)
+                {
+                    rfs2_values.Add(fs2_left_bottom);
+                    rfs2_memberships.Add(fs2.getMembershipDegree(fs2_left_bottom));
+                }
+
+            }
+            else
+            {
+                float epsilon1 = (fs1.getRightBottom() - fs1.getLeftBottom()) / (float)(maxDiscretePoint);
+                float epsilon2 = (fs2.getRightBottom() - fs2.getLeftBottom()) / (float)(maxDiscretePoint);
+                for (; fs1_left_bottom <= fs1_right_bottom; fs1_left_bottom += epsilon1)
+                {
+                    rfs1_values.Add(fs1_left_bottom);
+                    rfs1_memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
+                }
+                for (; fs2_left_bottom <= fs2_right_bottom; fs2_left_bottom += epsilon2)
+                {
+                    rfs2_values.Add(fs2_left_bottom);
+                    rfs2_memberships.Add(fs2.getMembershipDegree(fs2_left_bottom));
+                }
+            }
+            return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.distFS_FLOAT), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.distFS_FLOAT));
         }
         public static float compareFuzzySet<T>(FuzzySet<T> fs1, FuzzySet<T> fs2, CompareOperation operation) where T : IComparable<T>
         {

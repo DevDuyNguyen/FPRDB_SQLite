@@ -53,7 +53,7 @@ namespace BLL.SQLProcessing
                     tmpSubSet = new List<T>(tmpSubSet);
                     tmpSubSet.Add(fs.valueSet[i]);
                     currentDegree = fs.membershipDegreeSet[i];
-                    if (s.membershipDegreeSet[i] == 0)
+                    if (fs.membershipDegreeSet[i] == 0)
                         break;
                 }
             }

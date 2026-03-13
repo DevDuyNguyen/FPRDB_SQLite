@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BLL.DomainObject
 {
-    public class ContinuousFuzzySet:FuzzySet<float>
+    public class ContinuousFuzzySet : FuzzySet<float>
     {
         private float leftBottom;
         private float leftTop;
@@ -21,6 +21,10 @@ namespace BLL.DomainObject
             this.rightTop = rightTop;
             this.rightBottom = rightBottom;
         }
+        public float getLeftBottom() => this.leftBottom;
+        public float getLeftTop() => this.leftTop;
+        public float getRightBottom() => this.rightBottom;
+        public float getRightTop() => this.rightTop;
 
         public override float getMembershipDegree(float value)
         {
@@ -50,7 +54,7 @@ namespace BLL.DomainObject
             {
                 if (value < leftBottom || value > rightBottom)
                     return 0;
-                else if (value== leftTop)
+                else if (value == leftTop)
                     return 1;
                 else if (value >= leftBottom && value <= leftTop)
                 {
@@ -100,7 +104,7 @@ namespace BLL.DomainObject
                     return Convert.ToSingle(m * value + b);
                 }
             }
-            
+
         }
 
         public override FuzzySetDTO toDTO()
@@ -116,19 +120,23 @@ namespace BLL.DomainObject
         public override DiscreteFuzzySet<float> ToDiscreteFuzzySet()
         {
             int noPoints = 15;
-            float interval = (this.rightBottom - this.leftBottom)/ noPoints;
+            float interval = (this.rightBottom - this.leftBottom) / noPoints;
             List<float> valueSet = new List<float>();
             List<float> membershipDegrees = new List<float>();
             float currentValue = this.leftBottom;
             valueSet.Add(currentValue);
             membershipDegrees.Add(this.getMembershipDegree(currentValue));
-            for(int i=2; i<= noPoints; ++i)
+            for (int i = 2; i <= noPoints; ++i)
             {
                 currentValue += interval;
                 valueSet.Add(currentValue);
                 membershipDegrees.Add(this.getMembershipDegree(currentValue));
             }
             return new DiscreteFuzzySet<float>(valueSet, membershipDegrees, "", FieldType.distFS_FLOAT);
+        }
+        public bool isDomainOverlapedWith(ContinuousFuzzySet fs)
+        {
+            return !(this.rightBottom < fs.leftBottom || fs.rightBottom < this.leftBottom);
         }
 
     }
