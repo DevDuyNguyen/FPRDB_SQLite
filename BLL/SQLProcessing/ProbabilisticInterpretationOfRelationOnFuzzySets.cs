@@ -9,7 +9,7 @@ using BLL.Enums;
 
 namespace BLL.SQLProcessing
 {
-    public static class ProbabilisticInterpretationOfRelationOnFuzzySet
+    public static class ProbabilisticInterpretationOfRelationOnFuzzySets
     {
         static List<(List<T>,float)> getMassAssignments<T>(DiscreteFuzzySet<T> fs)
         {

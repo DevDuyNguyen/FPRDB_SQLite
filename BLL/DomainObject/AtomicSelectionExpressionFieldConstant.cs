@@ -24,49 +24,6 @@ namespace BLL.DomainObject
             this.compareOperator = compareOperator;
             this.metaDataMgr = metaMgr;
         }
-        public FuzzySet<T> turnConstantToFuzzySet<T>(Constant c)
-        {
-            Type t = typeof(T);
-            if (
-                (c is IntConstant && (t != typeof(int)))
-                || (c is FloatConstant && (t != typeof(float)))
-                || (c is StringConstant && (t != typeof(string)))
-                || (c is BooleanConstant && (t != typeof(bool)))
-            )
-            {
-                throw new InvalidCastException($"Can't turn constant of type {c.GetType().Name} to fuzzy set with defining domain of {t.Name}");
-            }
-            if (ConstantUltilities.isPrimitiveConstant(c))
-            {
-                T value = (T)c.getVal();
-                List<T> valueSet = new List<T> { value };
-                List<float> membershipDegreeSet = new List<float> { 1.0f };
-                string fuzzySetName = value.ToString();
-                FieldType fuzzSetType;
-                if (c is IntConstant)
-                    fuzzSetType = FieldType.distFS_INT;
-                else if (c is FloatConstant)
-                    fuzzSetType = FieldType.distFS_FLOAT;
-                else if (c is StringConstant)
-                    fuzzSetType = FieldType.distFS_TEXT;
-                else
-                    fuzzSetType = FieldType.BOOLEAN;
-                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
-            }
-            else
-            {
-                FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
-                FieldType fuzzSetType = this.metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
-                if (FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
-                    return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
-                else
-                {
-                    return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);
-                }
-
-            }
-
-        }
         private List<float> genericCalculateProbabilisticInterpretation<T>(FuzzyProbabilisticValue<T> fprobValue, FuzzySet<T> constant) where T : IComparable<T>
         {
             List<float> intervalProb;
@@ -107,7 +64,7 @@ namespace BLL.DomainObject
             {
                 //if (!(this.constant is IntConstant))
                 //    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
-                return genericCalculateProbabilisticInterpretation<int>(currentTuple.getFieldContent<int>(field), turnConstantToFuzzySet<int>(this.constant));
+                return genericCalculateProbabilisticInterpretation<int>(currentTuple.getFieldContent<int>(field),FuzzySetUltilities.turnConstantToFuzzySet<int>(this.constant, this.metaDataMgr));
             }
             else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType==FieldType.contFS)
             {
