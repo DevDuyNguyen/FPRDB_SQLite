@@ -14,11 +14,13 @@ namespace BLL.SQLProcessing
     {
         private MetadataManager metaDataMgr;
         private DatabaseManager dbMgr;
+        RecursiveDescentParser parser;
 
-        public BasicQueryPlanner(MetadataManager metaDataMgr, DatabaseManager dbMgr)
+        public BasicQueryPlanner(MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser)
         {
             this.metaDataMgr = metaDataMgr;
             this.dbMgr = dbMgr;
+            this.parser = parser;
         }
 
         public Plan createPlan(QueryData data)
@@ -50,7 +52,7 @@ namespace BLL.SQLProcessing
             List<RelationPlan> relPlans = new List<RelationPlan>();
             foreach(string relName in data.relationList)
             {
-                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr));
+                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr, this.parser));
             }
             //create product plans 
             Plan plan = relPlans[0];

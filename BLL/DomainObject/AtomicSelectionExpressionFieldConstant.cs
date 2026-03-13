@@ -40,9 +40,9 @@ namespace BLL.DomainObject
             {
                 intervalProb = new List<float> { fprobValue.intervalProbLowerBoundList[i], fprobValue.intervalProbUpperBoundList[i] };
                 if (this.compareOperator == CompareOperation.ALSO)
-                    probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySet.also<T>(fprobValue.valueList[i], constant);
+                    probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.also<T>(fprobValue.valueList[i], constant);
                 else
-                    probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySet.compare<T>(fprobValue.valueList[i], constant, this.compareOperator);
+                    probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(fprobValue.valueList[i], constant, this.compareOperator);
                 intervalProb[0] *= probInterpretationRelationOnFuzzSet;
                 intervalProb[1] *= probInterpretationRelationOnFuzzSet;
                 if (i == 0)
@@ -69,15 +69,15 @@ namespace BLL.DomainObject
             else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType==FieldType.contFS)
             {
                     
-                    return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(field), turnConstantToFuzzySet<float>(this.constant));
+                    return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(field), FuzzySetUltilities.turnConstantToFuzzySet<float>(this.constant, this.metaDataMgr));
             }
             else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
             {
-                    return genericCalculateProbabilisticInterpretation<string>(currentTuple.getFieldContent<string>(field), turnConstantToFuzzySet<string>(this.constant));
+                    return genericCalculateProbabilisticInterpretation<string>(currentTuple.getFieldContent<string>(field), FuzzySetUltilities.turnConstantToFuzzySet<string>(this.constant, this.metaDataMgr));
                 }
             else //if (fieldType == FieldType.BOOLEAN)
             {
-                    return genericCalculateProbabilisticInterpretation<bool>(currentTuple.getFieldContent<bool>(field), turnConstantToFuzzySet<bool>(this.constant));
+                    return genericCalculateProbabilisticInterpretation<bool>(currentTuple.getFieldContent<bool>(field), FuzzySetUltilities.turnConstantToFuzzySet<bool>(this.constant, this.metaDataMgr));
             }
         }
         public override List<SelectionExpression> getAtomicSelectionExpression()

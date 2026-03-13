@@ -30,7 +30,7 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
                 for (int j = 0; j < v1.valueList.Count; ++j)
                 {
                     List<float> tmp1 = ProbabilisticCombinationStrategyUltilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], this.probCombinationStrategy);
-                    float tmp2 = ProbabilisticInterpretationOfRelationOnFuzzySet.compare<T>(v1.valueList[i], v2.valueList[j], CompareOperation.EQUAL);
+                    float tmp2 = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(v1.valueList[i], v2.valueList[j], CompareOperation.EQUAL);
                     if (j == 0)
                     {
                         tmp.Add(tmp1[0] * tmp2);

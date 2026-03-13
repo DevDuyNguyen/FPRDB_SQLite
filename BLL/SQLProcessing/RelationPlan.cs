@@ -13,18 +13,20 @@ namespace BLL.SQLProcessing
         private FPRDBRelation relationInfo;
         private MetadataManager metaDataMgr;
         private DatabaseManager dbMgr;
+        RecursiveDescentParser parser;
 
-        public RelationPlan(string relName, MetadataManager metaDataMgr, DatabaseManager dbMgr)
+        public RelationPlan(string relName, MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser)
         {
             this.relationInfo = relationInfo;
             this.metaDataMgr = metaDataMgr;
             this.relationInfo = this.metaDataMgr.getRelation(relName);
             this.dbMgr = dbMgr;
+            this.parser = parser;
         }
 
         public Scan open()
         {
-            return new RelationScan(this.relationInfo, this.dbMgr, this.metaDataMgr);
+            return new RelationScan(this.relationInfo, this.dbMgr, this.metaDataMgr, this.parser);
         }
         public FPRDBSchema getSchema()
         {

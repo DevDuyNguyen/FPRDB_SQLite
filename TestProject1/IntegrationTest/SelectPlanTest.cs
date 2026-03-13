@@ -63,7 +63,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationPlan p1 = new RelationPlan("PATIENT", metaMgr, dbMgr);
+            RelationPlan p1 = new RelationPlan("PATIENT", metaMgr, dbMgr, compRoot.getParser());
 
             SelectionExpression se1 = new AtomicSelectionExpressionFieldConstant("P_COST", new FuzzySetConstant("approx_15"), CompareOperation.ALSO, metaMgr);
             SelectionExpression se2 = new AtomicSelectionExpressionFieldConstant("P_DISEASE", new StringConstant("hepatitis"), CompareOperation.EQUAL, metaMgr);

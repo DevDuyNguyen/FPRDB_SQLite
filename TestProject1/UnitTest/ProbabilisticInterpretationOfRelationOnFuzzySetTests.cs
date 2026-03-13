@@ -30,7 +30,7 @@ namespace TestProject1.UnitTest
         {
             //arrange
             //act
-            float actual = ProbabilisticInterpretationOfRelationOnFuzzySet.compare<float>(fs1, fs2, compOp);
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<float>(fs1, fs2, compOp);
             //assert
             Assert.Equal(expected, actual, 1);
         }
@@ -51,7 +51,7 @@ namespace TestProject1.UnitTest
         {
             //arrange
             //act
-            float actual = ProbabilisticInterpretationOfRelationOnFuzzySet.also<float>(fs1, fs2);
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.also<float>(fs1, fs2);
             //assert
             Assert.Equal(expected, actual, 1);
         }

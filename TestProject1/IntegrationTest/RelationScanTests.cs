@@ -26,15 +26,14 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
             //act
-            FuzzySet<int> actual1 = scan.turnConstantToFuzzySet<int>(new IntConstant(12));
-            FuzzySet<float> actual2 = scan.turnConstantToFuzzySet<float>(new FloatConstant(12.1f));
-            FuzzySet<string> actual3 = scan.turnConstantToFuzzySet<string>(new StringConstant("haha"));
-            FuzzySet<bool> actual4 = scan.turnConstantToFuzzySet<bool>(new BooleanConstant(false));
-            FuzzySet<int> actual5 = scan.turnConstantToFuzzySet<int>(new FuzzySetConstant("distFS1"));
-            FuzzySet<string> actual6 = scan.turnConstantToFuzzySet<string>(new FuzzySetConstant("distFS2"));
-            FuzzySet<float> actual7 = scan.turnConstantToFuzzySet<float>(new FuzzySetConstant("contFS1"));
+            FuzzySet<int> actual1 = FuzzySetUltilities.turnConstantToFuzzySet<int>(new IntConstant(12), compRoot.getMetaDataManger());
+            FuzzySet<float> actual2 = FuzzySetUltilities.turnConstantToFuzzySet<float>(new FloatConstant(12.1f), compRoot.getMetaDataManger());
+            FuzzySet<string> actual3 = FuzzySetUltilities.turnConstantToFuzzySet<string>(new StringConstant("haha"), compRoot.getMetaDataManger());
+            FuzzySet<bool> actual4 = FuzzySetUltilities.turnConstantToFuzzySet<bool>(new BooleanConstant(false), compRoot.getMetaDataManger());
+            FuzzySet<int> actual5 = FuzzySetUltilities.turnConstantToFuzzySet<int>(new FuzzySetConstant("distFS1"), compRoot.getMetaDataManger());
+            FuzzySet<string> actual6 = FuzzySetUltilities.turnConstantToFuzzySet<string>(new FuzzySetConstant("distFS2"), compRoot.getMetaDataManger());
+            FuzzySet<float> actual7 = FuzzySetUltilities.turnConstantToFuzzySet<float>(new FuzzySetConstant("contFS1"), compRoot.getMetaDataManger());
         }
         //[Fact]
         public void RelationScan_turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue_success()
@@ -44,7 +43,8 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
+            FPRDBRelation relInfo = metaMgr.getRelation("student23");
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
             //act
             FuzzyProbabilisticValue<int> actual1 = scan.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(
                 new FuzzyProbabilisticValueParsingData(
@@ -80,7 +80,8 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
+            FPRDBRelation relInfo = metaMgr.getRelation("student23");
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
             //act
             while (scan.next())
             {
@@ -95,7 +96,8 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationScan scan = new RelationScan("student23", dbMgr, metaMgr);
+            FPRDBRelation relInfo = metaMgr.getRelation("student23");
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
             //act
             while (scan.next())
             {

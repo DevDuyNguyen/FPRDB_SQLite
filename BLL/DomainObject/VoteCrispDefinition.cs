@@ -11,5 +11,10 @@ namespace BLL.DomainObject
         public List<T> subSet;
         public float mass;
 
+        public VoteCrispDefinition(List<T> subSet, float mass)
+        {
+            this.subSet = subSet;
+            this.mass = mass;
+        }
     }
 }
