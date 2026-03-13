@@ -77,10 +77,11 @@ namespace BLL.SQLProcessing
             {
                 for (int j = 0; j < massAssignMentsFS2.Count; ++j)
                 {
-                    ans += ProbabilisticInterpretationOfRelationOnSets.subset<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
-                    //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.subset<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1);
-                    //float tmp2 = massAssignMentsFS1[i].Item2;
-                    //float tmp3 = massAssignMentsFS2[j].Item2;
+                    //ans += ProbabilisticInterpretationOfRelationOnSets.subset<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
+                    float tmp1 = ProbabilisticInterpretationOfRelationOnSets.subset<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1);
+                    float tmp2 = massAssignMentsFS1[i].Item2;
+                    float tmp3 = massAssignMentsFS2[j].Item2;
+                    ans += tmp1 * tmp2 * tmp3;
                 }
             }
             return ans;

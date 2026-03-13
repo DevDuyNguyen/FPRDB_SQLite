@@ -17,17 +17,15 @@ namespace BLL.SQLProcessing
         private UpdatePlanner updatePlanner;
         private Preprocessor preProcessor;
         private QueryPlanner queryPlanner;
+        private Lexer lexer;
 
-        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor)
+        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor, QueryPlanner queryPlanner, Lexer lexer)
         {
             this.parser = parser;
             this.updatePlanner = updatePlanner;
             this.preProcessor = preProcessor;
-        }
-
-        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor, QueryPlanner queryPlanner) : this(parser, updatePlanner, preProcessor)
-        {
             this.queryPlanner = queryPlanner;
+            this.lexer = lexer;
         }
 
         public bool executeDataDefinition(string sql)

@@ -50,7 +50,7 @@ namespace BLL.SQLProcessing
         public void close() { }
         private int getFieldIndexInTuple(string fldName)
         {
-            List<Field> fields = this.schema.getFields();
+            List<Field> fields = this.selectFields.getFields();
             for (int i = 0; i < fields.Count; ++i)
             {
                 if (fields[i].getFieldName() == fldName)

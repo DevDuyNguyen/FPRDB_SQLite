@@ -24,22 +24,83 @@ namespace BLL.DomainObject
 
         public override float getMembershipDegree(float value)
         {
-            if (value <= leftBottom || value >= rightBottom)
-                return 0;
-            else if (value >= leftTop && value <= rightTop)
-                return 1;
-            else if(value> leftBottom && value < leftTop)
+            if (leftBottom == leftTop && leftTop == rightBottom && rightBottom == rightTop)
             {
-                double m = 1.0 / (leftTop - leftBottom);
-                double b = -m * leftBottom;
-                return Convert.ToSingle(m * value + b);
+                if (value == leftBottom)
+                    return 1;
+                else
+                    return 0;
             }
-            else //value> rightTop && value < rightBottom
+            else if (leftBottom == leftTop)
             {
-                double m = -1.0 / (rightBottom - rightTop);
-                double b = -m * rightBottom;
-                return Convert.ToSingle(m * value + b);
+                if (value == leftBottom)
+                    return 1;
+                else if (value < leftBottom || value > rightBottom)
+                    return 0;
+                else if (value >= leftTop && value <= rightTop)
+                    return 1;
+                else //value> rightTop && value < rightBottom
+                {
+                    double m = -1.0 / (rightBottom - rightTop);
+                    double b = -m * rightBottom;
+                    return Convert.ToSingle(m * value + b);
+                }
             }
+            else if (leftTop == rightTop)
+            {
+                if (value < leftBottom || value > rightBottom)
+                    return 0;
+                else if (value== leftTop)
+                    return 1;
+                else if (value >= leftBottom && value <= leftTop)
+                {
+                    double m = 1.0 / (leftTop - leftBottom);
+                    double b = -m * leftBottom;
+                    return Convert.ToSingle(m * value + b);
+                }
+                else //value> rightTop && value < rightBottom
+                {
+                    double m = -1.0 / (rightBottom - rightTop);
+                    double b = -m * rightBottom;
+                    return Convert.ToSingle(m * value + b);
+                }
+            }
+            else if (rightTop == rightBottom)
+            {
+                if (value == rightTop)
+                    return 1;
+                else if (value < leftBottom || value > rightBottom)
+                    return 0;
+                else if (value >= leftTop && value <= rightTop)
+                    return 1;
+                else //if (value >= leftBottom && value <= leftTop)
+                {
+                    double m = 1.0 / (leftTop - leftBottom);
+                    double b = -m * leftBottom;
+                    return Convert.ToSingle(m * value + b);
+                }
+
+            }
+            else
+            {
+                if (value < leftBottom || value > rightBottom)
+                    return 0;
+                else if (value >= leftTop && value <= rightTop)
+                    return 1;
+                else if (value >= leftBottom && value <= leftTop)
+                {
+                    double m = 1.0 / (leftTop - leftBottom);
+                    double b = -m * leftBottom;
+                    return Convert.ToSingle(m * value + b);
+                }
+                else //value> rightTop && value < rightBottom
+                {
+                    double m = -1.0 / (rightBottom - rightTop);
+                    double b = -m * rightBottom;
+                    return Convert.ToSingle(m * value + b);
+                }
+            }
+            
         }
 
         public override FuzzySetDTO toDTO()
@@ -54,14 +115,14 @@ namespace BLL.DomainObject
         }
         public override DiscreteFuzzySet<float> ToDiscreteFuzzySet()
         {
-            int noPoints = 100;
-            float interval = (this.rightBottom - this.leftBottom)/100;
+            int noPoints = 15;
+            float interval = (this.rightBottom - this.leftBottom)/ noPoints;
             List<float> valueSet = new List<float>();
             List<float> membershipDegrees = new List<float>();
-            float currentValue = this.rightBottom;
+            float currentValue = this.leftBottom;
             valueSet.Add(currentValue);
             membershipDegrees.Add(this.getMembershipDegree(currentValue));
-            for(int i=2; i<=100; ++i)
+            for(int i=2; i<= noPoints; ++i)
             {
                 currentValue += interval;
                 valueSet.Add(currentValue);

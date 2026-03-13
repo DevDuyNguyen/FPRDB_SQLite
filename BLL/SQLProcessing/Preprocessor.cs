@@ -88,7 +88,7 @@ namespace BLL.SQLProcessing
                 {
                     if(constant is IntConstant)
                     {
-                        if(fieldInfo.getType()!=FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT)
+                        if(fieldInfo.getType()!=FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT && fieldInfo.getType() != FieldType.contFS)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is FloatConstant)

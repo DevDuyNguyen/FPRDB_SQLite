@@ -21,6 +21,29 @@ namespace BLL.SQLProcessing
             this.dbMgr = dbMgr;
         }
 
+        public Plan createPlan(QueryData data)
+        {
+            if (data is BaseCartesianProductQueryData)
+                return createPlanForBaseCartesianProductQueryData((BaseCartesianProductQueryData)data);
+            else if (data is BaseNaturalJoinQueryData)
+                return createPlanForBaseNaturalJoinQueryData((BaseNaturalJoinQueryData)data);
+            CompoundQueryData compndData = (CompoundQueryData)data;
+            Plan lPlan = createPlan(compndData.leftQuery);
+            Plan rPlan = createPlan(compndData.rightQuery);
+            if (compndData.setConnective == SetConnective.INTERSECT)
+            {
+                return new IntersectionPlan(lPlan, rPlan, compndData.probCombinationStrategy);
+            }
+            else if (compndData.setConnective == SetConnective.UNION)
+            {
+                return new UnionPlan(lPlan, rPlan, compndData.probCombinationStrategy);
+            }
+            else //if (compndData.setConnective == SetConnective.EXCEPT)
+            {
+                return new DifferencePlan(lPlan, rPlan, compndData.probCombinationStrategy);
+            }
+
+        }
         private Plan createPlanForBaseCartesianProductQueryData(BaseCartesianProductQueryData data)
         {
             //create relation plans for each mentioned relations
@@ -45,29 +68,6 @@ namespace BLL.SQLProcessing
         {
             throw new NotImplementedException();
         }
-        public override Plan createPlan(QueryData data)
-        {
-            throw new NotImplementedException();
-            if (data is BaseCartesianProductQueryData)
-                return createPlanForBaseCartesianProductQueryData((BaseCartesianProductQueryData)data);
-            else if (data is BaseNaturalJoinQueryData)
-                return createPlanForBaseNaturalJoinQueryData((BaseNaturalJoinQueryData)data);
-            CompoundQueryData compndData = (CompoundQueryData)data;
-            Plan lPlan = createPlan(compndData.leftQuery);
-            Plan rPlan = createPlan(compndData.rightQuery);
-            if (compndData.setConnective == SetConnective.INTERSECT)
-            {
-                return new IntersectionPlan(lPlan, rPlan, compndData.probCombinationStrategy);
-            }
-            else if (compndData.setConnective == SetConnective.UNION)
-            {
-                return new UnionPlan(lPlan, rPlan, compndData.probCombinationStrategy);
-            }
-            else //if (compndData.setConnective == SetConnective.EXCEPT)
-            {
-                return new DifferencePlan(lPlan, rPlan, compndData.probCombinationStrategy);
-            }
-
-        }
+        
     }
 }

@@ -18,16 +18,7 @@ namespace BLL.SQLProcessing
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;
         private RecursiveDescentParser parser;
-        public RelationScan(string relName, DatabaseManager dbMgr, MetadataManager metaDataMgr)
-        {
-            CompositionRoot compRoot = new CompositionRoot();
-            this.parser = compRoot.getParser();
-            this.dbMgr = dbMgr;
-            this.metaDataMgr = metaDataMgr;
-            this.relationInfo = this.metaDataMgr.getRelation(relName);
-            this.currentTupleIndex = 0;
-        }
-        public RelationScan(FPRDBRelation relationInfo, DatabaseManager dbMgr, MetadataManager metaDataMgr)
+        public RelationScan(FPRDBRelation relationInfo, DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser)
         {
             CompositionRoot compRoot = new CompositionRoot();
             this.parser = compRoot.getParser();
@@ -35,17 +26,13 @@ namespace BLL.SQLProcessing
             this.metaDataMgr = metaDataMgr;
             this.relationInfo = relationInfo;
             this.currentTupleIndex = 0;
+            this.parser = parser;
         }
         public void beforeFirst()=> this.currentTupleIndex = 0;
         public bool hasField(string fldname)
         {
-            List<Field> fields= this.relationInfo.getSchema().getFields();
-            foreach(Field field in fields)
-            {
-                if (field.getFieldName() == fldname)
-                    return true;
-            }
-            return false;
+            Field field= this.relationInfo.getSchema().getFieldByName(fldname);
+            return (field != null) ? true : false;
         }
         private int getFieldIndexInTuple(string fldName)
         {
@@ -65,57 +52,13 @@ namespace BLL.SQLProcessing
             var fprobValue = this.currentTuple[index];
             if (!(fprobValue is FuzzyProbabilisticValue<T>))
                 throw new InvalidCastException($"Fuzzy probabilistic value of {fldName} doesn't contain fuzzy sets defined on domain of {typeof(T).Name}");
-            return (FuzzyProbabilisticValue<T>)(object)fprobValue;
+            return (FuzzyProbabilisticValue<T>)fprobValue;
 
         }
-        //not done: public only for testing, mocking for private
-        public FuzzySet<T> turnConstantToFuzzySet<T>(Constant c)
-        {
-            Type t = typeof(T);
-            if (
-                (c is IntConstant && (t!=typeof(int)))
-                || (c is FloatConstant && ( t != typeof(float)))
-                || (c is StringConstant && ( t != typeof(string)))
-                || (c is BooleanConstant && (t != typeof(bool)))
-            )
-            {
-                throw new InvalidCastException($"Can't turn constant of type {c.GetType().Name} to fuzzy set with defining domain of {t.Name}");
-            }
-            if(ConstantUltilities.isPrimitiveConstant(c))
-            {
-                T value = (T)c.getVal();
-                List<T> valueSet = new List<T> { value };
-                List<float> membershipDegreeSet = new List<float> { 1.0f };
-                string fuzzySetName = value.ToString();
-                FieldType fuzzSetType;
-                if (c is IntConstant)
-                    fuzzSetType = FieldType.distFS_INT;
-                else if (c is FloatConstant)
-                    fuzzSetType = FieldType.distFS_FLOAT;
-                else if (c is StringConstant)
-                    fuzzSetType = FieldType.distFS_TEXT;
-                else
-                    fuzzSetType = FieldType.BOOLEAN;
-                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
-            }
-            else
-            {
-                FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
-                FieldType fuzzSetType = this.metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
-                if (FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
-                    return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
-                else
-                {
-                    return this.metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);
-                }
-                    
-            }
-            
-        }
+        
         //not done:mocking for private
         public FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data, FieldType fieldType)
         {
-            //throw new NotImplementedException();
             FuzzyProbabilisticValue<T> ans;
             //extract FieldType domain
             FieldType domain;
@@ -124,11 +67,11 @@ namespace BLL.SQLProcessing
             if (
                 ((fieldType == FieldType.INT || fieldType == FieldType.distFS_INT) && t != typeof(int))
                 || ((fieldType == FieldType.FLOAT || fieldType == FieldType.contFS || fieldType == FieldType.distFS_FLOAT) && t != typeof(float))
-                || ((fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR || fieldType == FieldType.distFS_FLOAT) && t != typeof(string))
+                || ((fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR) && t != typeof(string))
                 || ((fieldType == FieldType.BOOLEAN) && t != typeof(bool))
             )
             {
-                throw new NotSupportedException($"Field type {fieldType.ToString()} isn't compatible with fuzzy probabilistic values of {t.Name}");
+                throw new NotSupportedException($"Field type {fieldType.ToString()} isn't compatible with fuzzy probabilistic values of domain {t.Name}");
             }
             if (t == typeof(int))
             {
@@ -154,7 +97,7 @@ namespace BLL.SQLProcessing
             List<FuzzySet<T>> valueList=new List<FuzzySet<T>>();
             foreach(Constant c in data.valueList)
             {
-                valueList.Add(turnConstantToFuzzySet<T>(c));
+                valueList.Add(FuzzySetUltilities.turnConstantToFuzzySet<T>(c, this.metaDataMgr));
             }
             //extract lower bound, upper boud
             List<float> lowerBounds = new List<float>();
