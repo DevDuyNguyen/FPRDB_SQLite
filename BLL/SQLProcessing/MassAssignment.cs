@@ -42,6 +42,7 @@ namespace BLL.SQLProcessing
             List<VoteCrispDefinition<T>> ans = new List<VoteCrispDefinition<T>>();
             for (int i = 0; i < fs.valueSet.Count; ++i)
             {
+                
                 if (fs.membershipDegreeSet[i] == currentDegree)
                 {
                     tmpSubSet.Add(fs.valueSet[i]);
@@ -52,6 +53,8 @@ namespace BLL.SQLProcessing
                     tmpSubSet = new List<T>(tmpSubSet);
                     tmpSubSet.Add(fs.valueSet[i]);
                     currentDegree = fs.membershipDegreeSet[i];
+                    if (s.membershipDegreeSet[i] == 0)
+                        break;
                 }
             }
             ans.Add(new VoteCrispDefinition<T>(tmpSubSet, currentDegree));
