@@ -78,7 +78,7 @@ namespace BLL.SQLProcessing
 
             return (float)count / (s1.Count * s2.Count);
         }
-        public static int BinarySearch(List<float> sorted, float target, float epsilon = 1e-6f)
+        public static int PrecisionBinarySearch(List<float> sorted, float target, float epsilon = 1e-3f)
         {
             if (sorted == null || sorted.Count == 0)
                 return -1;
@@ -118,7 +118,7 @@ namespace BLL.SQLProcessing
             {
                 foreach (T v in s1)
                 {
-                    if ()
+                    if (PrecisionBinarySearch()
                         ++count;
                 }
             }
