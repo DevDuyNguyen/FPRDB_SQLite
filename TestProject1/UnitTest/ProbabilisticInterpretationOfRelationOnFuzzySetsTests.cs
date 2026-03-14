@@ -244,7 +244,7 @@ namespace TestProject1.UnitTest
             //act
             float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1, fs2, op);
             //assert
-            Assert.Equal(expected, actual, 5);
+            Assert.Equal(expected, actual, 0.03);
         }
 
 

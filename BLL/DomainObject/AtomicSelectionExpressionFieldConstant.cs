@@ -26,36 +26,34 @@ namespace BLL.DomainObject
         }
         private List<float> genericCalculateProbabilisticInterpretation<T>(FuzzyProbabilisticValue<T> fprobValue, FuzzySet<T> constant) where T : IComparable<T>
         {
-            throw new NotImplementedException();
-            List<float> intervalProb;
-            List<float> ans=new List<float>();
+            List<float> tmp_IntervalProbability;
+            List<float> resultIntervalProbability=new List<float>();
             float probInterpretationRelationOnFuzzSet;
 
-            //intervalProb = new List<float> { fprobValue.intervalProbLowerBoundList[0], fprobValue.intervalProbUpperBoundList[0] };
-            //probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySet.compare<T>(fprobValue.valueList[0], constant, this.compareOperator);
-            //intervalProb[0] *= probInterpretationRelationOnFuzzSet;
-            //intervalProb[1] *= probInterpretationRelationOnFuzzSet;
-            //ans.Add(intervalProb[0], intervalProb[1]);
+            tmp_IntervalProbability = new List<float> { fprobValue.intervalProbLowerBoundList[0], fprobValue.intervalProbUpperBoundList[0] };
+            probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<T>(fprobValue.valueList[0], constant, this.compareOperator);
+            tmp_IntervalProbability[0] *= probInterpretationRelationOnFuzzSet;
+            tmp_IntervalProbability[1] *= probInterpretationRelationOnFuzzSet;
+            resultIntervalProbability.Add(tmp_IntervalProbability[0]);
+            resultIntervalProbability.Add(tmp_IntervalProbability[1]);
 
-            //for (int i = 0; i < fprobValue.valueList.Count; ++i)
-            //{
-            //    intervalProb = new List<float> { fprobValue.intervalProbLowerBoundList[i], fprobValue.intervalProbUpperBoundList[i] };
-            //    if (this.compareOperator == CompareOperation.ALSO)
-            //        probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.also<T>(fprobValue.valueList[i], constant);
-            //    else
-            //        probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compare<T>(fprobValue.valueList[i], constant, this.compareOperator);
-            //    intervalProb[0] *= probInterpretationRelationOnFuzzSet;
-            //    intervalProb[1] *= probInterpretationRelationOnFuzzSet;
-            //    if (i == 0)
-            //    {
-            //        ans.Add(intervalProb[0]);
-            //        ans.Add(intervalProb[1]);
-            //    }
-            //    else
-            //        ans = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], intervalProb[0], intervalProb[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+            for (int i = 0; i < fprobValue.valueList.Count; ++i)
+            {
+                tmp_IntervalProbability = new List<float> { fprobValue.intervalProbLowerBoundList[i], fprobValue.intervalProbUpperBoundList[i] };
+                probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<T>(fprobValue.valueList[i], constant, this.compareOperator);
+                tmp_IntervalProbability[0] *= probInterpretationRelationOnFuzzSet;
+                tmp_IntervalProbability[1] *= probInterpretationRelationOnFuzzSet;
+                //if (i == 0)
+                //{
+                //    ans.Add(intervalProb[0]);
+                //    ans.Add(intervalProb[1]);
+                //}
+                //else
+                //    ans = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], intervalProb[0], intervalProb[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+                resultIntervalProbability = ProbabilisticCombinationStrategyUltilities.combine(resultIntervalProbability[0], resultIntervalProbability[1], tmp_IntervalProbability[0], tmp_IntervalProbability[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
 
-            //}
-            //return ans;
+            }
+            return resultIntervalProbability;
         }
         public override List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema)
         {
@@ -63,22 +61,27 @@ namespace BLL.DomainObject
             
             if(fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
             {
-                //if (!(this.constant is IntConstant))
-                //    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
+                if (!(this.constant is IntConstant && this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
                 return genericCalculateProbabilisticInterpretation<int>(currentTuple.getFieldContent<int>(field),FuzzySetUltilities.turnConstantToFuzzySet<int>(this.constant, this.metaDataMgr));
             }
             else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType==FieldType.contFS)
             {
-                    
-                    return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(field), FuzzySetUltilities.turnConstantToFuzzySet<float>(this.constant, this.metaDataMgr));
+                if(!(this.constant is FloatConstant && this.constant is IntConstant && this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}"); 
+                return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(field), FuzzySetUltilities.turnConstantToFuzzySet<float>(this.constant, this.metaDataMgr));
             }
             else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
             {
-                    return genericCalculateProbabilisticInterpretation<string>(currentTuple.getFieldContent<string>(field), FuzzySetUltilities.turnConstantToFuzzySet<string>(this.constant, this.metaDataMgr));
-                }
+                if (!(this.constant is StringConstant && this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
+                return genericCalculateProbabilisticInterpretation<string>(currentTuple.getFieldContent<string>(field), FuzzySetUltilities.turnConstantToFuzzySet<string>(this.constant, this.metaDataMgr));
+            }
             else //if (fieldType == FieldType.BOOLEAN)
             {
-                    return genericCalculateProbabilisticInterpretation<bool>(currentTuple.getFieldContent<bool>(field), FuzzySetUltilities.turnConstantToFuzzySet<bool>(this.constant, this.metaDataMgr));
+                if (!(this.constant is BooleanConstant && this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
+                return genericCalculateProbabilisticInterpretation<bool>(currentTuple.getFieldContent<bool>(field), FuzzySetUltilities.turnConstantToFuzzySet<bool>(this.constant, this.metaDataMgr));
             }
         }
         public override List<SelectionExpression> getAtomicSelectionExpression()
