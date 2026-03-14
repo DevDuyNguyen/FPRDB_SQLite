@@ -28,6 +28,10 @@ namespace BLL.DomainObject
         {
             this.lParrent = lParrent;
             this.rParrent = rParrent;
+            this.leftBottom = (lParrent.getLeftBottom()<=rParrent.getLeftBottom())? lParrent.getLeftBottom(): rParrent.getLeftBottom();
+            this.leftTop = (lParrent.getLeftTop() >= rParrent.getLeftTop()) ? lParrent.getLeftTop() : rParrent.getLeftTop();
+            this.rightTop = (lParrent.getRightTop() <= rParrent.getRightTop()) ? lParrent.getRightTop() : rParrent.getRightTop();
+            this.rightBottom = (lParrent.getRightTop() >= rParrent.getRightTop()) ? lParrent.getRightTop() : rParrent.getRightTop();
         }
 
         public float getLeftBottom() => this.leftBottom;
@@ -126,17 +130,17 @@ namespace BLL.DomainObject
                 this.getName()
                 );
         }
-        
+
         public bool isDomainOverlapedWith(ContinuousFuzzySet fs)
         {
             return !(this.rightBottom < fs.leftBottom || fs.rightBottom < this.leftBottom);
         }
         public override FuzzySet<float> StandardIntersection(FuzzySet<float> fs)
         {
-            if(fs is ContinuousFuzzySet)
+            if (fs is ContinuousFuzzySet)
             {
                 ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
-                float left_bot = (this.leftBottom >= cfs.getLeftBottom())? this.leftBottom: cfs.getLeftBottom();
+                float left_bot = (this.leftBottom <= cfs.getLeftBottom()) ? this.leftBottom : cfs.getLeftBottom();
                 float right_bot = (this.rightBottom >= cfs.getRightBottom()) ? this.rightBottom : cfs.getRightBottom();
                 return new ContinuousFuzzySet(this, cfs, this.getName() + "⋂" + cfs.getName());
             }
@@ -148,12 +152,14 @@ namespace BLL.DomainObject
                 foreach (float v1 in dfs.valueSet)
                 {
                     values.Add(v1);
-                    memberships.Add(Math.Max(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
+                    memberships.Add(Math.Min(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
                 }
-                
+                return new DiscreteFuzzySet<float>(values, memberships, this.getName() + "⋂" + dfs.getName(), FieldType.distFS_FLOAT)
             }
         }
-        public override float getHeight() => throw new NotImplementedException();
+        public override float getHeight(){
+            if()
+        }
         public override bool isEqualTo(FuzzySet<float> fs) => throw new NotImplementedException();
     }
 }
