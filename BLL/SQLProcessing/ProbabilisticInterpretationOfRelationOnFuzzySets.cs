@@ -68,7 +68,7 @@ namespace BLL.SQLProcessing
                     if (((fs1_right_bottom - fs1_left_bottom) / delta < maxDiscretePoint - variance) || ((fs2_right_bottom - fs2_left_bottom) / delta < maxDiscretePoint - variance))
                     {
                         int n = 3;
-                        while (((fs1_right_bottom - fs1_left_bottom) / delta < maxDiscretePoint - variance) || ((fs2_right_bottom - fs2_left_bottom) / delta < maxDiscretePoint - variance))
+                        while (((fs1_right_bottom - fs1_left_bottom) / delta < maxDiscretePoint - variance) && ((fs2_right_bottom - fs2_left_bottom) / delta < maxDiscretePoint - variance))
                         {
                             delta= Math.Abs(fs1_left_bottom - fs2_left_bottom) / n;
                             ++n;
@@ -242,9 +242,6 @@ namespace BLL.SQLProcessing
                 dfs1 = (DiscreteFuzzySet<T>)(object)fs1;
                 dfs2 = (DiscreteFuzzySet<T>)(object)fs2;
             }
-
-            List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>((DiscreteFuzzySet<T>)(object)dfs1);
-            List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>((DiscreteFuzzySet<T>)(object)dfs2);
             float ans = 0.0f;
             if (operation == CompareOperation.EQUAL)
                 return equalDistcreteFuzzySets<T>(dfs1, dfs2);

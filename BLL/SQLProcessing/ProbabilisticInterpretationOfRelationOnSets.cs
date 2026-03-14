@@ -78,13 +78,49 @@ namespace BLL.SQLProcessing
 
             return (float)count / (s1.Count * s2.Count);
         }
+        public static int BinarySearch(List<float> sorted, float target, float epsilon = 1e-6f)
+        {
+            if (sorted == null || sorted.Count == 0)
+                return -1;
+
+            int left = 0;
+            int right = sorted.Count - 1;
+
+            while (left <= right)
+            {
+                int mid = left + (right - left) / 2;
+                float midValue = sorted[mid];
+                float diff = MathF.Abs(midValue - target);
+
+                if (diff < epsilon)
+                    return mid;
+                else if (midValue < target)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+
+            return -1;
+        }
         public static float also<T>(List<T> s1, List<T> s2) where T : IComparable<T>
         {
             int count = 0;
-            foreach(T v in s1)
+            Type t = typeof(T);
+            if(t!=typeof(float))
             {
-                if (s2.Contains(v))
-                    ++count;
+                foreach (T v in s1)
+                {
+                    if (s2.BinarySearch(v)>0)
+                        ++count;
+                }
+            }
+            else
+            {
+                foreach (T v in s1)
+                {
+                    if ()
+                        ++count;
+                }
             }
             return (float)count / (s1.Count);
         }

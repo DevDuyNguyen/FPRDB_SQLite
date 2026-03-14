@@ -172,9 +172,9 @@ namespace TestProject1.UnitTest
             //assert
             Assert.Equal(expected, actual, 1);
         }
-        class compareFLOAT_positive_testdata : TheoryData<DiscreteFuzzySet<float>, DiscreteFuzzySet<float>, CompareOperation, float>
+        class compareDiscreteFLOAT_positive_testdata : TheoryData<DiscreteFuzzySet<float>, DiscreteFuzzySet<float>, CompareOperation, float>
         {
-            public compareFLOAT_positive_testdata()
+            public compareDiscreteFLOAT_positive_testdata()
             {
                 foreach(var row in new equalDistcreteFuzzySets_positive_testdata())
                 {
@@ -212,7 +212,7 @@ namespace TestProject1.UnitTest
             }
         }
         [Theory]
-        [ClassData(typeof(compareFLOAT_positive_testdata))]
+        [ClassData(typeof(compareDiscreteFLOAT_positive_testdata))]
         public void compareDistcreteFLOAT_sucess(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, CompareOperation compOp, float expected)
         {
             //arrange
@@ -221,7 +221,33 @@ namespace TestProject1.UnitTest
             //assert
             Assert.Equal(expected, actual, 1);
         }
-        
+        class compareContinuousFuzzySet_positive_testdata:TheoryData<ContinuousFuzzySet, ContinuousFuzzySet, CompareOperation, float>
+        {
+            public compareContinuousFuzzySet_positive_testdata()
+            {
+                ContinuousFuzzySet young = new ContinuousFuzzySet(0, 0, 20, 35,"young");
+                ContinuousFuzzySet middle_aged = new ContinuousFuzzySet(20, 35, 45, 60, "middle_aged");
+                ContinuousFuzzySet approx_15 = new ContinuousFuzzySet(10, 15, 15, 20, "approx_15");
+                Add(
+                    young,
+                    approx_15,
+                    CompareOperation.ALSO,
+                    0.2f
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(compareContinuousFuzzySet_positive_testdata))]
+        public void compareContinuousFuzzySet_success(ContinuousFuzzySet fs1, ContinuousFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1, fs2, op);
+            //assert
+            Assert.Equal(expected, actual, 5);
+        }
+
+
 
     }
 }
