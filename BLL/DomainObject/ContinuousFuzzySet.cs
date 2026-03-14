@@ -138,6 +138,8 @@ namespace BLL.DomainObject
         {
             return !(this.rightBottom < fs.leftBottom || fs.rightBottom < this.leftBottom);
         }
-
+        public override FuzzySet<float> StandardIntersection(FuzzySet<float> fs) => throw new NotImplementedException();
+        public override float getHeight() => throw new NotImplementedException();
+        public override bool isEqualTo(FuzzySet<float> fs) => throw new NotImplementedException();
     }
 }

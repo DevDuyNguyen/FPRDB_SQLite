@@ -26,7 +26,7 @@ namespace BLL.DomainObject
         {
             List<float> interval1 = this.lSelectionExpresion.calculateProbabilisticInterpretation(currentTuple, schema);
             List<float> interval2 = this.rSelectionExpresion.calculateProbabilisticInterpretation(currentTuple, schema);
-            return ProbabilisticCombinationStrategyUltilities.combine(interval1[0], interval1[1], interval2[0], interval2[1], this.probCombStrategy);
+            return ProbabilisticCombinationStrategyUtilities.combine(interval1[0], interval1[1], interval2[0], interval2[1], this.probCombStrategy);
         }
         public override List<SelectionExpression> getAtomicSelectionExpression()
         {

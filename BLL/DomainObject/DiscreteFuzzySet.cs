@@ -36,5 +36,69 @@ namespace BLL.DomainObject
                 );
         }
         public override DiscreteFuzzySet<T> ToDiscreteFuzzySet() =>this;
+        public override FuzzySet<T> StandardIntersection(FuzzySet<T> fs)
+        {
+            List<T> values = new List<T>();
+            List<float> memberships = new List<float>();
+            foreach(T v1 in this.valueSet)
+            {
+                values.Add(v1);
+                memberships.Add(Math.Max(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
+            }
+            if(fs is DiscreteFuzzySet<T>)
+            {
+                DiscreteFuzzySet<T> dfs = (DiscreteFuzzySet<T>)(object)fs;
+                foreach (T v2 in dfs.valueSet)
+                {
+                    if (!values.Contains(v2))
+                    {
+                        values.Add(v2);
+                        memberships.Add(Math.Max(this.getMembershipDegree(v2), fs.getMembershipDegree(v2)));
+                    }   
+                    
+                }
+            }
+            //else
+            //{
+            //    ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
+
+
+            //}
+            return new DiscreteFuzzySet<T>(values, memberships, this.getName()+ "⋂"+ fs.getName(), this.getFuzzysetType());
+
+        }
+        public override float getHeight()
+        {
+            int maxIndex = 0;
+            for(int i=1; i < this.membershipDegreeSet.Count; ++i)
+            {
+                if (this.membershipDegreeSet[i] > this.membershipDegreeSet[maxIndex])
+                {
+                    maxIndex = i;
+                }
+            }
+            return maxIndex;
+        }
+        public override bool isEqualTo(FuzzySet<T> fs)
+        {
+            if (fs is ContinuousFuzzySet)
+                return false;
+            else
+            {
+                DiscreteFuzzySet<T> dfs = (DiscreteFuzzySet<T>)(object)fs;
+                if (this.valueSet.Count != dfs.valueSet.Count)
+                    return false;
+                for(int i=0; i < this.valueSet.Count; ++i)
+                {
+                    if (this.membershipDegreeSet[i] != dfs.getMembershipDegree(this.valueSet[i]))
+                        return false;
+                    if (dfs.membershipDegreeSet[i] != this.getMembershipDegree(dfs.valueSet[i]))
+                        return false;
+                }
+                return true;
+
+            }
+            
+        }
     }
 }

@@ -31,7 +31,7 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
                 tmp_IntervalProbabilistic = new List<float>(2);
                 for (int j = 0; j < v2.valueList.Count; ++j)
                 {
-                    List<float> v1_v2_interval_prob_conjunction = ProbabilisticCombinationStrategyUltilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], this.probCombinationStrategy);
+                    List<float> v1_v2_interval_prob_conjunction = ProbabilisticCombinationStrategyUtilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], this.probCombinationStrategy);
                     float probabilisticIntepretationforRelation = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<T>(v1.valueList[i], v2.valueList[j], CompareOperation.EQUAL);
                     v1_v2_interval_prob_conjunction[0] = v1_v2_interval_prob_conjunction[0] * probabilisticIntepretationforRelation;
                     v1_v2_interval_prob_conjunction[1] = v1_v2_interval_prob_conjunction[1] * probabilisticIntepretationforRelation;
@@ -42,7 +42,7 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
                     }
                     else
                     {
-                        result_IntervalProbabilistic = ProbabilisticCombinationStrategyUltilities.combine(result_IntervalProbabilistic[0], result_IntervalProbabilistic[1], v1_v2_interval_prob_conjunction[0], v1_v2_interval_prob_conjunction[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+                        result_IntervalProbabilistic = ProbabilisticCombinationStrategyUtilities.combine(result_IntervalProbabilistic[0], result_IntervalProbabilistic[1], v1_v2_interval_prob_conjunction[0], v1_v2_interval_prob_conjunction[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
                     }
                 }
                 
