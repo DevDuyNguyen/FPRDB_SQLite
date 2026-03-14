@@ -58,6 +58,28 @@ namespace TestProject1.UnitTest
             DiscreteFuzzySet<float> actual = ProbabilisticInterpretationOfRelationOnFuzzySets.discretizeContinuousFSFromDiscreteFS<float>(fs1, fs2);
             //assert
         }
+        class equalDistcreteFuzzySets_positive_testdata:TheoryData<DiscreteFuzzySet<float>, DiscreteFuzzySet<float>, float>
+        {
+            public equalDistcreteFuzzySets_positive_testdata()
+            {
+                Add(
+                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4}, new List<float> { 0.3f, 1f, 0.3f}, null, FieldType.distFS_FLOAT),
+                0.34f
+                );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(equalDistcreteFuzzySets_positive_testdata))]
+        public void equalDistcreteFuzzySets(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, float expected)
+        {
+            //arrange
+            //act
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.equalDistcreteFuzzySets<float>(fs1, fs2);
+            //assert
+            Assert.Equal(expected, actual, 5);
+        }
 
     }
 }

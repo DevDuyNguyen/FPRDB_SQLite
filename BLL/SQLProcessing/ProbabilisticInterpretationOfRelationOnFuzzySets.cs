@@ -130,6 +130,47 @@ namespace BLL.SQLProcessing
             return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.distFS_FLOAT);
 
         }
+        //not done: mocking for private
+        public static float equalDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T>  fs2) where T : IComparable<T>
+        {
+
+            List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
+            List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>(fs2);
+            float ans = 0.0f;
+
+            for (int i = 0; i < massAssignMentsFS1.Count; ++i)
+            {
+                for (int j = 0; j < massAssignMentsFS2.Count; ++j)
+                {
+                    ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.EQUAL) * massAssignMentsFS1[i].mass * massAssignMentsFS2[j].mass;
+                    //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.EQUAL);
+                    //float tmp2 = massAssignMentsFS1[i].mass;
+                    //float tmp3 = massAssignMentsFS2[j].mass;
+                    //ans += tmp1 * tmp2 * tmp3;
+                }
+            }
+            return ans;
+        }
+        public static float noEqualDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T>  fs2) where T : IComparable<T>
+        {
+
+            List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
+            List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>(fs2);
+            float ans = 0.0f;
+
+            for (int i = 0; i < massAssignMentsFS1.Count; ++i)
+            {
+                for (int j = 0; j < massAssignMentsFS2.Count; ++j)
+                {
+                    ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.NOT_EQUAL) * massAssignMentsFS1[i].mass * massAssignMentsFS2[j].mass;
+                    //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator);
+                    //float tmp2 = massAssignMentsFS1[i].Item2;
+                    //float tmp3 = massAssignMentsFS2[j].Item2;
+                    //float tmp = tmp1 * tmp2 * tmp3;
+                }
+            }
+            return ans;
+        }
         public static float compareFuzzySet<T>(FuzzySet<T> fs1, FuzzySet<T> fs2, CompareOperation operation) where T : IComparable<T>
         {
             throw new NotImplementedException();
