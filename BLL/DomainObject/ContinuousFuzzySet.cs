@@ -15,6 +15,7 @@ namespace BLL.DomainObject
         private float rightBottom;
         private ContinuousFuzzySet lParrent;
         private ContinuousFuzzySet rParrent;
+        private bool isNormalFuzzySet = true;
 
         public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
         {
@@ -24,14 +25,15 @@ namespace BLL.DomainObject
             this.rightBottom = rightBottom;
         }
 
-        public ContinuousFuzzySet(ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
+        private ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, bool isNormalFuzzySet, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
         {
+            this.leftBottom = leftBottom;
+            this.leftTop = leftTop;
+            this.rightTop = rightTop;
+            this.rightBottom = rightBottom;
             this.lParrent = lParrent;
             this.rParrent = rParrent;
-            this.leftBottom = (lParrent.getLeftBottom()<=rParrent.getLeftBottom())? lParrent.getLeftBottom(): rParrent.getLeftBottom();
-            this.leftTop = (lParrent.getLeftTop() >= rParrent.getLeftTop()) ? lParrent.getLeftTop() : rParrent.getLeftTop();
-            this.rightTop = (lParrent.getRightTop() <= rParrent.getRightTop()) ? lParrent.getRightTop() : rParrent.getRightTop();
-            this.rightBottom = (lParrent.getRightTop() >= rParrent.getRightTop()) ? lParrent.getRightTop() : rParrent.getRightTop();
+            this.isNormalFuzzySet = isNormalFuzzySet;
         }
 
         public float getLeftBottom() => this.leftBottom;
@@ -137,12 +139,27 @@ namespace BLL.DomainObject
         }
         public override FuzzySet<float> StandardIntersection(FuzzySet<float> fs)
         {
+            string fuzzSetName = this.getName() + "⋂" + fs.getName();
             if (fs is ContinuousFuzzySet)
             {
                 ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
-                float left_bot = (this.leftBottom <= cfs.getLeftBottom()) ? this.leftBottom : cfs.getLeftBottom();
-                float right_bot = (this.rightBottom >= cfs.getRightBottom()) ? this.rightBottom : cfs.getRightBottom();
-                return new ContinuousFuzzySet(this, cfs, this.getName() + "⋂" + cfs.getName());
+                if(this.leftBottom>cfs.rightBottom || this.rightBottom < cfs.leftBottom)
+                {
+                    //not done: the design of continuous fuzzy set is wrongful, it can accommodates its tasks
+                    return new ContinuousFuzzySet(0, 0, 0, 0, this, cfs, false, fuzzSetName);
+                }
+                else
+                {
+                    float left_bot = (this.leftBottom <= cfs.getLeftBottom()) ? this.leftBottom : cfs.getLeftBottom();
+                    float right_bot = (this.rightBottom >= cfs.getRightBottom()) ? this.rightBottom : cfs.getRightBottom();
+                    if (this.leftTop > cfs.getRightTop() || this.rightTop <= cfs.getLeftTop())
+                        return new ContinuousFuzzySet(left_bot, 0, 0, right_bot, this, cfs, false, fuzzSetName);
+                    else
+                        return new ContinuousFuzzySet(left_bot, 0, 0, right_bot, this, cfs, true, fuzzSetName);
+
+                } 
+                    
+
             }
             else
             {
@@ -154,12 +171,29 @@ namespace BLL.DomainObject
                     values.Add(v1);
                     memberships.Add(Math.Min(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
                 }
-                return new DiscreteFuzzySet<float>(values, memberships, this.getName() + "⋂" + dfs.getName(), FieldType.distFS_FLOAT)
+                return new DiscreteFuzzySet<float>(values, memberships, this.getName() + "⋂" + dfs.getName(), FieldType.distFS_FLOAT);
             }
         }
-        public override float getHeight(){
-            if()
+        public override bool isNormal(){
+            return this.isNormalFuzzySet;
         }
-        public override bool isEqualTo(FuzzySet<float> fs) => throw new NotImplementedException();
+        public override bool isEqualTo(FuzzySet<float> fs)
+        {
+            if (fs is ContinuousFuzzySet)
+            {
+                ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
+                //not done: the design of continuous fuzzy set is wrongful, it can accommodates its tasks
+                int maxDiscreteTestPoint = 200;
+                float delta = (this.rightBottom - this.leftBottom) / 200.0f;
+                for(float i=this.leftBottom; i<=this.rightBottom; i += delta)
+                {
+                    if (this.getMembershipDegree(i) != cfs.getMembershipDegree(i))
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

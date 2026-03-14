@@ -66,17 +66,25 @@ namespace BLL.DomainObject
             return new DiscreteFuzzySet<T>(values, memberships, this.getName()+ "⋂"+ fs.getName(), this.getFuzzysetType());
 
         }
-        public override float getHeight()
+        public override bool isNormal()
         {
-            float maxHeight = this.membershipDegreeSet[0];
-            for(int i=1; i < this.membershipDegreeSet.Count; ++i)
+            //float maxHeight = this.membershipDegreeSet[0];
+            //for(int i=1; i < this.membershipDegreeSet.Count; ++i)
+            //{
+            //    if (this.membershipDegreeSet[i] > maxHeight)
+            //    {
+            //        maxHeight = this.membershipDegreeSet[i];
+            //    }
+            //}
+            //return maxHeight;
+            for (int i = 0; i < this.membershipDegreeSet.Count; ++i)
             {
-                if (this.membershipDegreeSet[i] > maxHeight)
+                if (this.membershipDegreeSet[i]==1)
                 {
-                    maxHeight = this.membershipDegreeSet[i];
+                    return true;
                 }
             }
-            return maxHeight;
+            return false;
         }
         public override bool isEqualTo(FuzzySet<T> fs)
         {
