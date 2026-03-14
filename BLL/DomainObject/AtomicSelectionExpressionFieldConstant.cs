@@ -37,7 +37,7 @@ namespace BLL.DomainObject
             resultIntervalProbability.Add(tmp_IntervalProbability[0]);
             resultIntervalProbability.Add(tmp_IntervalProbability[1]);
 
-            for (int i = 0; i < fprobValue.valueList.Count; ++i)
+            for (int i = 1; i < fprobValue.valueList.Count; ++i)
             {
                 tmp_IntervalProbability = new List<float> { fprobValue.intervalProbLowerBoundList[i], fprobValue.intervalProbUpperBoundList[i] };
                 probInterpretationRelationOnFuzzSet = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<T>(fprobValue.valueList[i], constant, this.compareOperator);
@@ -58,29 +58,30 @@ namespace BLL.DomainObject
         public override List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema)
         {
             FieldType fieldType = schema.getFieldByName(field).getFieldInfo().getType();
+            Type constantType = this.constant.GetType();
             
             if(fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
             {
-                if (!(this.constant is IntConstant && this.constant is FuzzySetConstant))
-                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
+                if (!(this.constant is IntConstant || this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}");
                 return genericCalculateProbabilisticInterpretation<int>(currentTuple.getFieldContent<int>(field),FuzzySetUltilities.turnConstantToFuzzySet<int>(this.constant, this.metaDataMgr));
             }
             else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType==FieldType.contFS)
             {
-                if(!(this.constant is FloatConstant && this.constant is IntConstant && this.constant is FuzzySetConstant))
-                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}"); 
+                if(!(this.constant is FloatConstant || this.constant is IntConstant || this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}"); 
                 return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(field), FuzzySetUltilities.turnConstantToFuzzySet<float>(this.constant, this.metaDataMgr));
             }
             else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
             {
-                if (!(this.constant is StringConstant && this.constant is FuzzySetConstant))
-                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
+                if (!(this.constant is StringConstant || this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}");
                 return genericCalculateProbabilisticInterpretation<string>(currentTuple.getFieldContent<string>(field), FuzzySetUltilities.turnConstantToFuzzySet<string>(this.constant, this.metaDataMgr));
             }
             else //if (fieldType == FieldType.BOOLEAN)
             {
-                if (!(this.constant is BooleanConstant && this.constant is FuzzySetConstant))
-                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {typeof(Constant).Name}");
+                if (!(this.constant is BooleanConstant || this.constant is FuzzySetConstant))
+                    throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}");
                 return genericCalculateProbabilisticInterpretation<bool>(currentTuple.getFieldContent<bool>(field), FuzzySetUltilities.turnConstantToFuzzySet<bool>(this.constant, this.metaDataMgr));
             }
         }

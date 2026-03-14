@@ -65,10 +65,10 @@ namespace TestProject1.IntegrationTest
             dbMgr.loadDB(this.dbFile);
             RelationPlan p1 = new RelationPlan("PATIENT", metaMgr, dbMgr, compRoot.getParser());
 
-            SelectionExpression se1 = new AtomicSelectionExpressionFieldConstant("P_COST", new FuzzySetConstant("approx_15"), CompareOperation.ALSO, metaMgr);
+            SelectionExpression se1 = new AtomicSelectionExpressionFieldConstant("P_AGE", new FuzzySetConstant("approx_15"), CompareOperation.ALSO, metaMgr);
             SelectionExpression se2 = new AtomicSelectionExpressionFieldConstant("P_DISEASE", new StringConstant("hepatitis"), CompareOperation.EQUAL, metaMgr);
-            SelectionCondition sc1 = new AtomicSelectionCondition(se1, 0.2f, 0.5f);
-            SelectionCondition sc2 = new AtomicSelectionCondition(se2, 0.4f, 0.1f);
+            SelectionCondition sc1 = new AtomicSelectionCondition(se1, 0.18f, 0.5f);
+            SelectionCondition sc2 = new AtomicSelectionCondition(se2, 0.45f, 0.65f);
             SelectionCondition sc = new CompoundSelectionCondition(sc1, sc2, LogicalConnective.AND);
             SelectPlan p2 = new SelectPlan(p1, sc);
             Scan scan = p2.open();
