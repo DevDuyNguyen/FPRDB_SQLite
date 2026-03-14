@@ -15,6 +15,7 @@ using BLL;
 using DevExpress.XtraRichEdit.API.Native;
 using BLL.Services;
 using DevExpress.Map.Kml.Model;
+using DevExpress.XtraCharts;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -42,12 +43,47 @@ namespace FPRDB_SQLite.GUI
             //    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
             //    return;
             //}
-            //// Thiết lập DisplayMember để hiển thị tên fuzzy set trong ListBox (theo thuộc tính trong FuzzySetDTO)
-            //lstFuzzySetResults.DisplayMember = "fuzzySetName";
-            //// Hiển thị kết quả lọc
-            //lstFuzzySetResults.Items.AddRange(results.ToArray());
+            ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10,20, 30, 40, "random2");
+            DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
+                new List<int>() { 22, 23, 24 },
+                new List<float>() { 0.5f, 1, 0.5f },
+                "about_23",
+                FieldType.INT);
+            List<FuzzySetDTO> results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
+            foreach (var item in results)
+            {
+                lstFuzzySetResults.Items.Add(item);
+            }
         }
+        // Hàm vẽ đồ thị của Continuous Fuzzy Set
+        private void drawChartContinuousFS(FuzzySetDTO fuzzySet)
+        {
+            tabpgFuzzySetChart.Controls.Clear();
+            ChartControl chart = new ChartControl();
+            ContinuousFuzzySetDTO continuousFuzzySet = fuzzySet as ContinuousFuzzySetDTO;
+            // Create series and add points
+            Series series = new Series(continuousFuzzySet.fuzzySetName, ViewType.Line);
+            series.Points.Add(new SeriesPoint(continuousFuzzySet.leftBottom.ToString(), 0));
+            series.Points.Add(new SeriesPoint(continuousFuzzySet.leftTop.ToString(), 1));
+            series.Points.Add(new SeriesPoint(continuousFuzzySet.rightTop.ToString(), 1));
+            series.Points.Add(new SeriesPoint(continuousFuzzySet.rightBottom.ToString(), 0));
+            // Add series to chart
+            chart.Series.Add(series);
+            series.ArgumentScaleType = ScaleType.Numerical;
+            ((LineSeriesView)series.View).LineStyle.DashStyle = DashStyle.Dash;
+            ((LineSeriesView)series.View).LineMarkerOptions.Kind = MarkerKind.Circle;
+            chart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
+            XYDiagram diagram = (XYDiagram)chart.Diagram;
+            diagram.EnableAxisXScrolling = true;
+            diagram.AxisX.Title.Text = "Value";
+            diagram.AxisX.Title.Visibility = DevExpress.Utils.DefaultBoolean.True;
+            diagram.AxisY.Title.Text = "Membership Degree";
+            diagram.AxisY.Title.Visibility = DevExpress.Utils.DefaultBoolean.True;
+
+            chart.Dock = DockStyle.Fill;
+            tabpgFuzzySetChart.Controls.Add(chart);
+        }
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtFuzzySetName.Clear();
@@ -61,22 +97,24 @@ namespace FPRDB_SQLite.GUI
             {
                 var selectedItem = (FuzzySetDTO)lstFuzzySetResults.SelectedItem;
                 pnlFuzzySetMeaning.Visible = true;
-                // Hiển thị thông tin chi tiết của fuzzy set đã chọn
-                if (selectedItem.fuzzySetType == FieldType.distFS_INT
-                    || selectedItem.fuzzySetType == FieldType.distFS_FLOAT
-                    || selectedItem.fuzzySetType == FieldType.distFS_TEXT)
+                if (selectedItem is DiscreteFuzzySetDTO<int>||
+                    selectedItem is DiscreteFuzzySetDTO<float>||
+                    selectedItem is DiscreteFuzzySetDTO<string>)
                 {
                     // Thông tin chi tiết Discrete Fuzzy Set
-                    discreteFuzzySetInfo.LoadFuzzySet(selectedItem);
-                    discreteFuzzySetInfo.Visible = true;
                     continuosFuzzySetInfo.Visible = false;
+                    tabpgFuzzySetChart.PageVisible = false;
+                    discreteFuzzySetInfo.Visible = true;
+                    discreteFuzzySetInfo.LoadFuzzySet(selectedItem);
                 }
                 else
                 {
                     // Thông tin chi tiết Continuous Fuzzy Set
-                    continuosFuzzySetInfo.LoadFuzzySet(selectedItem);
                     discreteFuzzySetInfo.Visible = false;
                     continuosFuzzySetInfo.Visible = true;
+                    tabpgFuzzySetChart.PageVisible = true;
+                    continuosFuzzySetInfo.LoadFuzzySet(selectedItem);
+                    drawChartContinuousFS(selectedItem);
                 }
             }
         }

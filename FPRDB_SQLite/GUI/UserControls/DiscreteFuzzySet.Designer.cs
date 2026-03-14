@@ -113,7 +113,6 @@ namespace FPRDB_SQLite.GUI.UserControls
             cboDataType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             cboDataType.Size = new System.Drawing.Size(171, 22);
             cboDataType.TabIndex = 7;
-            cboDataType.SelectedIndexChanged += cboDataType_SelectedIndexChanged;
             // 
             // DiscreteFuzzySet
             // 

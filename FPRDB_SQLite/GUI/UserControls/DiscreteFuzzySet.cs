@@ -36,6 +36,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             cboDataType.Properties.Items.AddRange(new object[] { FieldType.INT, FieldType.FLOAT, FieldType.VARCHAR });
             textFields = new BaseEdit[] { txtNameDiscFuzzy, cboDataType };
             setValidationRules();
+            InitGrid();
         }
         // VALIDATE INPUT
         // Hàm set rules cho các control
@@ -102,7 +103,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             e.Valid = false;
             e.ErrorText = message;
         }
-        // Hàm khoi tạo GridControl với một BindingList rỗng, được gọi khi chọn loại dữ liệu
+        // Hàm khoi tạo GridControl với một BindingList rỗng
         public void InitGrid()
         {
             grdcDiscFuzzy.Enabled = true;
@@ -111,12 +112,6 @@ namespace FPRDB_SQLite.GUI.UserControls
 
             grdvDiscFuzzy.PopulateColumns();
             grdvDiscFuzzy.BestFitColumns();
-        }
-        // Sự kiện khi người dùng chọn loại dữ liệu
-        private void cboDataType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            InitGrid();
-            grdvDiscFuzzy.RefreshData();
         }
         // Sự kiện khi người dùng chuyển dòng hoặc cột trong GridControl, đảm bảo commit dữ liệu đang edit vào DataSource
         private void grdvDiscFuzzy_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
@@ -169,41 +164,40 @@ namespace FPRDB_SQLite.GUI.UserControls
         // Phương thức này sẽ được gọi khi người dùng chọn một FuzzySet
         public void LoadFuzzySet(FuzzySetDTO fuzzySet)
         {
-            //txtNameDiscFuzzy.Text = fuzzySet.fuzzySetName;
-            //cboDataType.Text = fuzzySet.fuzzySetType.ToString();
+            txtNameDiscFuzzy.Text = fuzzySet.fuzzySetName;
+            cboDataType.Text = fuzzySet.fuzzySetType.ToString();
 
-            //if (fuzzySet is DiscreteFuzzySetDTO<int> discreteInt)
-            //{
-            //    BindDiscrete(discreteInt.valueSet, discreteInt.membershipDegreeSet);
-            //}
-            //else if (fuzzySet is DiscreteFuzzySetDTO<float> discreteFloat)
-            //{
-            //    BindDiscrete(discreteFloat.valueSet, discreteFloat.membershipDegreeSet);
-            //}
-            //else if (fuzzySet is DiscreteFuzzySetDTO<string> discreteText)
-            //{
-            //    BindDiscrete(discreteText.valueSet, discreteText.membershipDegreeSet);
-            //}
+            if (fuzzySet is DiscreteFuzzySetDTO<int> discreteInt)
+            {
+                BindDiscrete(discreteInt.valueSet, discreteInt.membershipDegreeSet);
+            }
+            else if (fuzzySet is DiscreteFuzzySetDTO<float> discreteFloat)
+            {
+                BindDiscrete(discreteFloat.valueSet, discreteFloat.membershipDegreeSet);
+            }
+            else if (fuzzySet is DiscreteFuzzySetDTO<string> discreteText)
+            {
+                BindDiscrete(discreteText.valueSet, discreteText.membershipDegreeSet);
+            }
         }
 
         // Bind dữ liệu cho GridControl, sử dụng kiểu generic để tái sử dụng cho cả 3 loại dữ liệu
         private void BindDiscrete<TDomain>(List<TDomain> valueSet, List<float> membershipDegreeSet)
         {
             // Ghép dữ liệu theo index: mỗi phần tử values[i] đi với memberships[i]
-            //var rows = Enumerable.Range(0, valueSet.Count)
-            //    .Select(i => new
-            //    {
-            //        value = valueSet[i],
-            //        membershipDegree = membershipDegreeSet[i]
-            //    })
-            //    .ToList();
+            var rows = Enumerable.Range(0, valueSet.Count)
+                .Select(i => new FuzzySetRow
+                {
+                    Value = valueSet[i].ToString(),
+                    MembershipDegree = membershipDegreeSet[i]
+                })
+                .ToList();
 
-            //// Gán danh sách rows vào GridControl
-            //grdcDiscFuzzy.DataSource = rows;
+            // Gán danh sách rows vào GridControl
+            grdcDiscFuzzy.DataSource = rows;
 
-            //// Map cột với thuộc tính trong object ẩn danh
-            //grdcolValue.FieldName = "value";
-            //grdcolMembership.FieldName = "membershipDegree";
+            grdvDiscFuzzy.PopulateColumns();
+            grdvDiscFuzzy.BestFitColumns();
         }
 
     }
