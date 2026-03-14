@@ -192,6 +192,28 @@ namespace BLL.SQLProcessing
             }
             return ans;
         }
+        public static float lessThanEqualDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T> fs2) where T : IComparable<T>
+        {
+
+            List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
+            List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>(fs2);
+            float ans = 0.0f;
+
+            for (int i = 0; i < massAssignMentsFS1.Count; ++i)
+            {
+                for (int j = 0; j < massAssignMentsFS2.Count; ++j)
+                {
+                    //ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.LESS_EQUAL) * massAssignMentsFS1[i].mass * massAssignMentsFS2[j].mass;
+                    float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.LESS_EQUAL);
+                    float tmp2 = massAssignMentsFS1[i].mass;
+                    float tmp3 = massAssignMentsFS2[j].mass;
+                    ans += tmp1 * tmp2 * tmp3;
+                }
+            }
+            return ans;
+        }
+
+
         public static float compareFuzzySet<T>(FuzzySet<T> fs1, FuzzySet<T> fs2, CompareOperation operation) where T : IComparable<T>
         {
             throw new NotImplementedException();
