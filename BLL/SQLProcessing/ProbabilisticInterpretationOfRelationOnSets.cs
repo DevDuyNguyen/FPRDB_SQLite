@@ -78,7 +78,8 @@ namespace BLL.SQLProcessing
 
             return (float)count / (s1.Count * s2.Count);
         }
-        public static int BinarySearch(List<float> sorted, float target, float epsilon = 1e-6f)
+        //not done: lacking computer science knowledge about the problem of floating point and its precision
+        public static int floatBinarySearch(List<float> sorted, float target, float epsilon = 1e-3f)
         {
             if (sorted == null || sorted.Count == 0)
                 return -1;
@@ -106,19 +107,22 @@ namespace BLL.SQLProcessing
         {
             int count = 0;
             Type t = typeof(T);
-            if(t!=typeof(float))
+            if (t != typeof(float))
             {
                 foreach (T v in s1)
                 {
-                    if (s2.BinarySearch(v)>0)
+                    if (s2.Contains(v))
                         ++count;
                 }
             }
             else
             {
-                foreach (T v in s1)
+                List<float> fs1 = (List<float>)(object)s1;
+                List<float> fs2 = (List<float>)(object)s2;
+                fs2.Sort();
+                foreach (float v in fs1)
                 {
-                    if ()
+                    if (floatBinarySearch(fs2, v) >= 0)
                         ++count;
                 }
             }
