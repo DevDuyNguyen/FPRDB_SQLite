@@ -69,15 +69,15 @@ namespace BLL.DomainObject
         }
         public override float getHeight()
         {
-            int maxIndex = 0;
+            float maxHeight = this.membershipDegreeSet[0];
             for(int i=1; i < this.membershipDegreeSet.Count; ++i)
             {
-                if (this.membershipDegreeSet[i] > this.membershipDegreeSet[maxIndex])
+                if (this.membershipDegreeSet[i] > maxHeight)
                 {
-                    maxIndex = i;
+                    maxHeight = this.membershipDegreeSet[i];
                 }
             }
-            return maxIndex;
+            return maxHeight;
         }
         public override bool isEqualTo(FuzzySet<T> fs)
         {

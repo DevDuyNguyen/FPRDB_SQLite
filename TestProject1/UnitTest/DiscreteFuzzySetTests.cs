@@ -45,5 +45,36 @@ namespace TestProject1.UnitTest
             }
         }
 
+        class getHeight_positive_testdata : TheoryData<FuzzySet<float>, float>
+        {
+            public getHeight_positive_testdata()
+            {
+                Add(
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
+                    1
+                    );
+                Add(
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
+                    0.3f
+                    );
+                Add(
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.2f, 1.3f, 4 }, new List<float> { 0.1f, 0, 0, 0, 0 }, "fs1⋂fs2", FieldType.distFS_FLOAT),
+                    0.1f
+                    );
+                
+                    
+            }
+
+        }
+        [Theory]
+        [ClassData(typeof(getHeight_positive_testdata))]
+        public void getHeight_success(DiscreteFuzzySet<float> fs, float expected)
+        {
+            //arrange
+            //act
+            //assert
+            Assert.Equal(expected, fs.getHeight(), 3);
+        }
+
     }
 }
