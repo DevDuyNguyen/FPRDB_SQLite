@@ -27,18 +27,18 @@ namespace FPRDB_SQLite.GUI
             InitializeComponent();
         }
 
-        // Click "Cancel" button
+        // Hàm xử lý khi click "Cancel" button
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
-        // Helper for adding a new discrete fuzzy set
+        // Helper để xử lý tạo Discrete Fuzzy Set dựa trên kiểu dữ liệu được chọn
         private void HandleDiscreteFuzzySet<T>()
         {
             var dto = discreteFuzzySetInfo.getDiscreteFuzzySet<T>();
             service.createFuzzySet<T>(dto);
         }
-        // Click "Save" button
+        // Hàm xử lý khi click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (!discreteFuzzySetInfo.ValidateControls())

@@ -26,13 +26,13 @@ namespace FPRDB_SQLite.GUI
             InitializeComponent();
         }
 
-        // Click "Cancel" button
+        // Hàm xử lý khi click "Cancel" button
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        // Click "Save" button
+        // Hàm xử lý khi click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (!continuosFuzzySetInfo.ValidateControls())

@@ -31,6 +31,8 @@ namespace FPRDB_SQLite.GUI.UserControls
             };
             setValidationRules();
         }
+
+        // Hàm set rules cho các control
         private void setValidationRules()
         {
             var notEmptyRule = new ConditionValidationRule
@@ -44,6 +46,8 @@ namespace FPRDB_SQLite.GUI.UserControls
                 dxValidationProvider1.SetValidationRule(control, notEmptyRule);
             }
         }
+
+        // Ham validate toàn bộ control, được gọi từ form cha
         public bool ValidateControls()
         {
             return dxValidationProvider1.Validate();
@@ -58,7 +62,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             float rightBottom = float.Parse(txtBotRight.Text);
             return new ContinuousFuzzySetDTO(leftBottom, leftTop, rightTop, rightBottom, name);
         }
-        // Phương thức này sẽ được gọi khi người dùng chọn một FuzzySet
+        // Hàm này sẽ được gọi khi người dùng chọn một FuzzySet
         public void LoadFuzzySet(FuzzySetDTO fuzzySet)
         {
             txtNameConsFuzzy.Text = fuzzySet.fuzzySetName;

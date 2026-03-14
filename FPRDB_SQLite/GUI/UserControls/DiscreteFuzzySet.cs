@@ -103,7 +103,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             e.Valid = false;
             e.ErrorText = message;
         }
-        // Hàm khoi tạo GridControl với một BindingList rỗng
+        // Hàm khởi tạo GridControl với một BindingList rỗng
         public void InitGrid()
         {
             grdcDiscFuzzy.Enabled = true;

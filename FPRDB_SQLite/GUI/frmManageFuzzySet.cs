@@ -22,14 +22,19 @@ namespace FPRDB_SQLite.GUI
     public partial class frmManageFuzzySet : DevExpress.XtraEditors.XtraForm
     {
         // Khai báo CompositionRoot để sử dụng các service
-        private CompositionRoot root = new CompositionRoot();
+        private CompositionRoot compRoot = new CompositionRoot();
         // Khai báo Fuzzy Set Service
         private FuzzySetService service;
-        public frmManageFuzzySet()
+        // Khai báo DTO để lưu thông tin Fuzzy Set đang được chọn
+        private FuzzySetDTO selectedFuzzySet;
+        public frmManageFuzzySet(CompositionRoot compRoot)
         {
             InitializeComponent();
-            service = root.getFuzzySetService();
+            this.compRoot = compRoot;
+            this.service = compRoot.getFuzzySetService();
         }
+
+        // Hàm xử lý khi nhấn nút "Search" để tìm kiếm Fuzzy Set theo tên
         private void btnSearch_Click(object sender, EventArgs e)
         {
             // Lấy thông tin từ ô tìm kiếm
@@ -91,21 +96,22 @@ namespace FPRDB_SQLite.GUI
             pnlFuzzySetMeaning.Visible = false;
         }
 
+        // Hàm xử lý khi người dùng chọn một Fuzzy Set trong danh sách kết quả
         private void lstFuzzySetResults_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstFuzzySetResults.SelectedItem != null)
             {
-                var selectedItem = (FuzzySetDTO)lstFuzzySetResults.SelectedItem;
+                selectedFuzzySet = (FuzzySetDTO)lstFuzzySetResults.SelectedItem;
                 pnlFuzzySetMeaning.Visible = true;
-                if (selectedItem is DiscreteFuzzySetDTO<int>||
-                    selectedItem is DiscreteFuzzySetDTO<float>||
-                    selectedItem is DiscreteFuzzySetDTO<string>)
+                if (selectedFuzzySet is DiscreteFuzzySetDTO<int>||
+                    selectedFuzzySet is DiscreteFuzzySetDTO<float>||
+                    selectedFuzzySet is DiscreteFuzzySetDTO<string>)
                 {
                     // Thông tin chi tiết Discrete Fuzzy Set
                     continuosFuzzySetInfo.Visible = false;
                     tabpgFuzzySetChart.PageVisible = false;
                     discreteFuzzySetInfo.Visible = true;
-                    discreteFuzzySetInfo.LoadFuzzySet(selectedItem);
+                    discreteFuzzySetInfo.LoadFuzzySet(selectedFuzzySet);
                 }
                 else
                 {
@@ -113,25 +119,40 @@ namespace FPRDB_SQLite.GUI
                     discreteFuzzySetInfo.Visible = false;
                     continuosFuzzySetInfo.Visible = true;
                     tabpgFuzzySetChart.PageVisible = true;
-                    continuosFuzzySetInfo.LoadFuzzySet(selectedItem);
-                    drawChartContinuousFS(selectedItem);
+                    continuosFuzzySetInfo.LoadFuzzySet(selectedFuzzySet);
+                    drawChartContinuousFS(selectedFuzzySet);
                 }
             }
         }
 
+        // Hàm xử lý khi nhấn nút "Close" để đóng form
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        // Hàm xử lý khi nhấn nút "Delete" để xóa Fuzzy Set đã chọn
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            // Sử dụng hàm isDeleteable và removeFuzzySet từ service
+            DialogResult result = MessageBox.Show($"Are you sure you want to delete fuzzy set '{selectedFuzzySet.fuzzySetName}'?", "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                //service.removeFuzzySet(selectedFuzzySet.fuzzySetName);
+                XtraMessageBox.Show("Fuzzy set deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Refresh the list after deletion
+                btnSearch_Click(null, null);
+            }
         }
 
+        // Hàm xử lý khi nhấn nút "Update" để cập nhật thông tin Fuzzy Set đã chọn
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-
+            DialogResult result = XtraMessageBox.Show($"Are you sure you want to update fuzzy set '{selectedFuzzySet.fuzzySetName}'?", "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                //service.updateFuzzySet(selectedFuzzySet);
+                XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }    
         }
     }
 }

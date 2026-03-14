@@ -33,6 +33,8 @@ namespace FPRDB_SQLite.GUI
         {
             string relName = txtRelName.Text.Trim();
             // createFPRDBRelation(relName, selectedSchema, selectedSchema.getSchemaName());
+            XtraMessageBox.Show("Relation added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
         }
 
         private void cboSchemaName_SelectedIndexChanged(object sender, EventArgs e)

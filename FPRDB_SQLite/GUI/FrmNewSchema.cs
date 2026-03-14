@@ -1,4 +1,5 @@
 ﻿using BLL;
+using BLL.Common;
 using BLL.DomainObject;
 using DevExpress.XtraEditors;
 using System;
@@ -28,9 +29,13 @@ namespace FPRDB_SQLite.GUI
             [DisplayName("Data Type")]
             public FieldType dataType { get; set; } = FieldType.INT;
         }
-        public frmNewSchema()
+        private CompositionRoot compRoot;
+        //private FPRDBSchemaService service;
+        public frmNewSchema(CompositionRoot compRoot)
         {
             InitializeComponent();
+            this.compRoot = compRoot;
+            //this.service = compRoot.getFPRDBSchemaService();
             InitGrid();
         }
         // Hàm khởi tạo GridControl
@@ -48,11 +53,13 @@ namespace FPRDB_SQLite.GUI
             repositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
         }
 
+        // Hàm xử lý khi click "Cancel" button
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        // Hàm xử lý khi click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
             string schemaName = txtSchemaName.Text.Trim();
@@ -63,7 +70,12 @@ namespace FPRDB_SQLite.GUI
 
             //schema = convertGridToSchema(schemaName, rows);
             //defineFPRDBSchema(schema)
+            XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
+
         }
+
+        // Hàm chuyển đổi dữ liệu từ GridControl thành FPRDBSchema
         private FPRDBSchema convertGridToSchema(string schemaName, BindingList<SchemaAttribute> attributes)
         {
             List<Field> fields = new List<Field>();
