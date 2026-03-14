@@ -1,11 +1,12 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
+using BLL.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.Common;
-using BLL.Enums;
 
 namespace BLL.SQLProcessing
 {
@@ -102,6 +103,32 @@ namespace BLL.SQLProcessing
                 }
             }
             return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.distFS_FLOAT), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.distFS_FLOAT));
+        }
+        public static DiscreteFuzzySet<float> discretizeContinuousFSFromDiscreteFS<T>(ContinuousFuzzySet fs1, DiscreteFuzzySet<T> fs2) where T : INumber<T>{
+            //discretization for continuous fuzzy set
+            float fs1_left_bottom = fs1.getLeftBottom();
+            float fs1_right_bottom = fs1.getRightBottom();
+            int maxDiscretePoint = 100;
+            float delta = (fs1_right_bottom - fs1_left_bottom) / maxDiscretePoint;
+            List<float> fs1_Values = new List<float>();
+            List<float> fs1_Memberships = new List<float>();
+            for (; fs1_left_bottom <= fs1_right_bottom; fs1_left_bottom += delta)
+            {
+                fs1_Values.Add(fs1_left_bottom);
+                fs1_Memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
+            }
+            //add the discrete set's universe of discourse to the discretized continuous fuzzy set
+            float tmp_v;
+            foreach (T v in fs2.valueSet)
+            {
+                tmp_v = Convert.ToSingle(v);
+                if (fs1_Values.BinarySearch(tmp_v)<0){
+                    fs1_Values.Add(tmp_v);
+                    fs1_Memberships.Add(fs1.getMembershipDegree(tmp_v));
+                }
+            }
+            return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.distFS_FLOAT);
+
         }
         public static float compareFuzzySet<T>(FuzzySet<T> fs1, FuzzySet<T> fs2, CompareOperation operation) where T : IComparable<T>
         {
