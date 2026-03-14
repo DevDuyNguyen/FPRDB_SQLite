@@ -32,7 +32,11 @@ namespace BLL.SQLProcessing
                                 ++count;
                         }
                         else {
-                            if (a < b)
+                            if (compOperator==CompareOperation.NOT_EQUAL)
+                            {
+                                ++count;
+                            }
+                            else if (a < b)
                             {
                                 if (compOperator == CompareOperation.LESS_THAN || compOperator == CompareOperation.LESS_EQUAL)
                                     ++count;
@@ -53,15 +57,20 @@ namespace BLL.SQLProcessing
                             if (compOperator == CompareOperation.EQUAL || compOperator == CompareOperation.LESS_EQUAL || compOperator == CompareOperation.GREATER_EQUAL)
                                 ++count;
                         }
-                        else if (compareRes < 0)
+                        else
                         {
-                            if (compOperator == CompareOperation.LESS_THAN || compOperator == CompareOperation.LESS_EQUAL)
+                            if (compOperator == CompareOperation.NOT_EQUAL)
                                 ++count;
-                        }
-                        else if (compareRes > 0)
-                        {
-                            if (compOperator == CompareOperation.GREATER_THAN || compOperator == CompareOperation.GREATER_EQUAL)
-                                ++count;
+                            else if (compareRes < 0)
+                            {
+                                if (compOperator == CompareOperation.LESS_THAN || compOperator == CompareOperation.LESS_EQUAL)
+                                    ++count;
+                            }
+                            else if (compareRes > 0)
+                            {
+                                if (compOperator == CompareOperation.GREATER_THAN || compOperator == CompareOperation.GREATER_EQUAL)
+                                    ++count;
+                            }
                         }
                     }
                 }

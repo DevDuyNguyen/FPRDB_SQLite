@@ -11,6 +11,7 @@ namespace TestProject1.UnitTest
 {
     public class ProbabilisticInterpretationOfRelationOnSetsTests
     {
+        //not done: not enough test coverage
         class compareINT_positive_testdata:TheoryData<List<int>, List<int>, CompareOperation, float>
         {
             public compareINT_positive_testdata()
