@@ -50,7 +50,7 @@ namespace BLL.DomainObject
                 //}
                 //else
                 //    ans = ProbabilisticCombinationStrategyUltilities.combine(ans[0], ans[1], intervalProb[0], intervalProb[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
-                resultIntervalProbability = ProbabilisticCombinationStrategyUltilities.combine(resultIntervalProbability[0], resultIntervalProbability[1], tmp_IntervalProbability[0], tmp_IntervalProbability[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+                resultIntervalProbability = ProbabilisticCombinationStrategyUtilities.combine(resultIntervalProbability[0], resultIntervalProbability[1], tmp_IntervalProbability[0], tmp_IntervalProbability[1], ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
 
             }
             return resultIntervalProbability;
