@@ -27,7 +27,10 @@ namespace BLL.SQLProcessing
                 throw new Exception("Some selected fields aren't included");
             this.schema = new FPRDBSchema(null, fields, null);
         }
-        public Scan open() => throw new NotImplementedException();
+        public Scan open()
+        {
+            return new ProjectScan(this.p.open(), this.schema); 
+        }
         public FPRDBSchema getSchema() => this.schema;
 
 
