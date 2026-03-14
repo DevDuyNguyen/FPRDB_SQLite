@@ -23,6 +23,13 @@ namespace BLL.DomainObject
             this.rightTop = rightTop;
             this.rightBottom = rightBottom;
         }
+
+        public ContinuousFuzzySet(ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
+        {
+            this.lParrent = lParrent;
+            this.rParrent = rParrent;
+        }
+
         public float getLeftBottom() => this.leftBottom;
         public float getLeftTop() => this.leftTop;
         public float getRightBottom() => this.rightBottom;
@@ -32,18 +39,11 @@ namespace BLL.DomainObject
         {
             if (this.lParrent == this.rParrent == null)
             {
-                return Math.Min(this.lParrent.getMembershipDegree(), this.rParrent.getMembershipDegree())
+                return Math.Min(this.lParrent.getMembershipDegree(value), this.rParrent.getMembershipDegree(value));
             }
             else
             {
-                if (leftBottom == leftTop && leftTop == rightBottom && rightBottom == rightTop)
-                {
-                    if (value == leftBottom)
-                        return 1;
-                    else
-                        return 0;
-                }
-                else if (leftBottom == leftTop)
+                if (leftBottom == leftTop)
                 {
                     if (value == leftBottom)
                         return 1;
@@ -136,15 +136,21 @@ namespace BLL.DomainObject
             if(fs is ContinuousFuzzySet)
             {
                 ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
-                float fs_left_bot = cfs.getLeftBottom();
-                float fs_left_top = cfs.getLeftTop();
-                float fs_right_bot = cfs.getRightBottom();
-                float fs_right_top = cfs.getRightTop();
-
+                float left_bot = (this.leftBottom >= cfs.getLeftBottom())? this.leftBottom: cfs.getLeftBottom();
+                float right_bot = (this.rightBottom >= cfs.getRightBottom()) ? this.rightBottom : cfs.getRightBottom();
+                return new ContinuousFuzzySet(this, cfs, this.getName() + "⋂" + cfs.getName());
             }
             else
             {
-
+                DiscreteFuzzySet<float> dfs = (DiscreteFuzzySet<float>)(object)fs;
+                List<float> values = new List<float>();
+                List<float> memberships = new List<float>();
+                foreach (float v1 in dfs.valueSet)
+                {
+                    values.Add(v1);
+                    memberships.Add(Math.Max(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
+                }
+                
             }
         }
         public override float getHeight() => throw new NotImplementedException();

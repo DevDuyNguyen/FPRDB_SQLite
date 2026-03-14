@@ -42,7 +42,7 @@ namespace BLL.DomainObject
             foreach(T v1 in this.valueSet)
             {
                 values.Add(v1);
-                memberships.Add(Math.Max(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
+                memberships.Add(Math.Min(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
             }
             if(fs is DiscreteFuzzySet<T>)
             {
