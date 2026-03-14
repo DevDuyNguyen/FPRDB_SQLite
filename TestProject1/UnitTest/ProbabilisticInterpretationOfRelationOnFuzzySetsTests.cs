@@ -104,5 +104,28 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected, actual, 5);
         }
 
+        class lessThanDistcreteFuzzySets_positive_testdata : TheoryData<DiscreteFuzzySet<float>, DiscreteFuzzySet<float>, float>
+        {
+            public lessThanDistcreteFuzzySets_positive_testdata()
+            {
+                Add(
+                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.distFS_FLOAT),
+                0.22f
+                );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(lessThanDistcreteFuzzySets_positive_testdata))]
+        public void lessThanDistcreteFuzzySets_success(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, float expected)
+        {
+            //arrange
+            //act
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.lessThanDistcreteFuzzySets<float>(fs1, fs2);
+            //assert
+            Assert.Equal(expected, actual, 5);
+        }
+
     }
 }

@@ -162,8 +162,29 @@ namespace BLL.SQLProcessing
             {
                 for (int j = 0; j < massAssignMentsFS2.Count; ++j)
                 {
-                    //ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.NOT_EQUAL) * massAssignMentsFS1[i].mass * massAssignMentsFS2[j].mass;
-                    float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.NOT_EQUAL);
+                    ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.NOT_EQUAL) * massAssignMentsFS1[i].mass * massAssignMentsFS2[j].mass;
+                    //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.NOT_EQUAL);
+                    //float tmp2 = massAssignMentsFS1[i].mass;
+                    //float tmp3 = massAssignMentsFS2[j].mass;
+                    //ans += tmp1 * tmp2 * tmp3;
+                }
+            }
+            return ans;
+        }
+        //hot done: mocking for private
+        public static float lessThanDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T>  fs2) where T : IComparable<T>
+        {
+
+            List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
+            List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>(fs2);
+            float ans = 0.0f;
+
+            for (int i = 0; i < massAssignMentsFS1.Count; ++i)
+            {
+                for (int j = 0; j < massAssignMentsFS2.Count; ++j)
+                {
+                    //ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.LESS_THAN) * massAssignMentsFS1[i].mass * massAssignMentsFS2[j].mass;
+                    float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].subSet, massAssignMentsFS2[j].subSet, CompareOperation.LESS_THAN);
                     float tmp2 = massAssignMentsFS1[i].mass;
                     float tmp3 = massAssignMentsFS2[j].mass;
                     ans += tmp1 * tmp2 * tmp3;
