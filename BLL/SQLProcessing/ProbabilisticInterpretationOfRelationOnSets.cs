@@ -78,7 +78,7 @@ namespace BLL.SQLProcessing
 
             return (float)count / (s1.Count * s2.Count);
         }
-        public static float subset<T>(List<T> s1, List<T> s2) where T : IComparable<T>
+        public static float also<T>(List<T> s1, List<T> s2) where T : IComparable<T>
         {
             int count = 0;
             foreach(T v in s1)

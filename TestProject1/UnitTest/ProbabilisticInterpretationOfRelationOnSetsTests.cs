@@ -50,5 +50,24 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected, actual, 10);
         }
 
+        class alsoFLOAT_positive_testdata : TheoryData<List<float>, List<float>, float>
+        {
+            public alsoFLOAT_positive_testdata()
+            {
+                Add(new List<float> { 1.0f, 2.1f, 3 }, new List<float> { 1.0f, 2.1f, 3 }, 1f);
+                Add(new List<float> { 1.0f, 2.1f, 3 }, new List<float> { 1.0f, 2.1f, 4 }, 2 / 3f);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(alsoFLOAT_positive_testdata))]
+        public void alsoFLOAT_success(List<float> s1, List<float> s2, float expected)
+        {
+            //arrange
+            //act
+            float actual = ProbabilisticInterpretationOfRelationOnSets.also<float>(s1, s2);
+            //assert
+            Assert.Equal(expected, actual, 5);
+        }
+
     }
 }

@@ -34,6 +34,7 @@ namespace TestProject1.UnitTest
             //assert
             Assert.Equal(expected, actual, 1);
         }
+        //here here
         class alsoFLOAT_positive_testdata : TheoryData<DiscreteFuzzySet<float>, DiscreteFuzzySet<float>, float>
         {
             public alsoFLOAT_positive_testdata()
@@ -51,7 +52,7 @@ namespace TestProject1.UnitTest
         {
             //arrange
             //act
-            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.also<float>(fs1, fs2);
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.alsoDistcreteFuzzySets<float>(fs1, fs2);
             //assert
             Assert.Equal(expected, actual, 1);
         }
