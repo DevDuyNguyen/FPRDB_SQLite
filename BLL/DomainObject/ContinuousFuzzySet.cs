@@ -13,6 +13,8 @@ namespace BLL.DomainObject
         private float leftTop;
         private float rightTop;
         private float rightBottom;
+        private ContinuousFuzzySet lParrent;
+        private ContinuousFuzzySet rParrent;
 
         public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
         {
@@ -28,80 +30,87 @@ namespace BLL.DomainObject
 
         public override float getMembershipDegree(float value)
         {
-            if (leftBottom == leftTop && leftTop == rightBottom && rightBottom == rightTop)
+            if (this.lParrent == this.rParrent == null)
             {
-                if (value == leftBottom)
-                    return 1;
-                else
-                    return 0;
-            }
-            else if (leftBottom == leftTop)
-            {
-                if (value == leftBottom)
-                    return 1;
-                else if (value < leftBottom || value > rightBottom)
-                    return 0;
-                else if (value >= leftTop && value <= rightTop)
-                    return 1;
-                else //value> rightTop && value < rightBottom
-                {
-                    double m = -1.0 / (rightBottom - rightTop);
-                    double b = -m * rightBottom;
-                    return Convert.ToSingle(m * value + b);
-                }
-            }
-            else if (leftTop == rightTop)
-            {
-                if (value < leftBottom || value > rightBottom)
-                    return 0;
-                else if (value == leftTop)
-                    return 1;
-                else if (value >= leftBottom && value <= leftTop)
-                {
-                    double m = 1.0 / (leftTop - leftBottom);
-                    double b = -m * leftBottom;
-                    return Convert.ToSingle(m * value + b);
-                }
-                else //value> rightTop && value < rightBottom
-                {
-                    double m = -1.0 / (rightBottom - rightTop);
-                    double b = -m * rightBottom;
-                    return Convert.ToSingle(m * value + b);
-                }
-            }
-            else if (rightTop == rightBottom)
-            {
-                if (value == rightTop)
-                    return 1;
-                else if (value < leftBottom || value > rightBottom)
-                    return 0;
-                else if (value >= leftTop && value <= rightTop)
-                    return 1;
-                else //if (value >= leftBottom && value <= leftTop)
-                {
-                    double m = 1.0 / (leftTop - leftBottom);
-                    double b = -m * leftBottom;
-                    return Convert.ToSingle(m * value + b);
-                }
-
+                return Math.Min(this.lParrent.getMembershipDegree(), this.rParrent.getMembershipDegree())
             }
             else
             {
-                if (value < leftBottom || value > rightBottom)
-                    return 0;
-                else if (value >= leftTop && value <= rightTop)
-                    return 1;
-                else if (value >= leftBottom && value <= leftTop)
+                if (leftBottom == leftTop && leftTop == rightBottom && rightBottom == rightTop)
                 {
-                    double m = 1.0 / (leftTop - leftBottom);
-                    double b = -m * leftBottom;
-                    return Convert.ToSingle(m * value + b);
+                    if (value == leftBottom)
+                        return 1;
+                    else
+                        return 0;
                 }
-                else //value> rightTop && value < rightBottom
+                else if (leftBottom == leftTop)
                 {
-                    double m = -1.0 / (rightBottom - rightTop);
-                    double b = -m * rightBottom;
-                    return Convert.ToSingle(m * value + b);
+                    if (value == leftBottom)
+                        return 1;
+                    else if (value < leftBottom || value > rightBottom)
+                        return 0;
+                    else if (value >= leftTop && value <= rightTop)
+                        return 1;
+                    else //value> rightTop && value < rightBottom
+                    {
+                        double m = -1.0 / (rightBottom - rightTop);
+                        double b = -m * rightBottom;
+                        return Convert.ToSingle(m * value + b);
+                    }
+                }
+                else if (leftTop == rightTop)
+                {
+                    if (value < leftBottom || value > rightBottom)
+                        return 0;
+                    else if (value == leftTop)
+                        return 1;
+                    else if (value >= leftBottom && value <= leftTop)
+                    {
+                        double m = 1.0 / (leftTop - leftBottom);
+                        double b = -m * leftBottom;
+                        return Convert.ToSingle(m * value + b);
+                    }
+                    else //value> rightTop && value < rightBottom
+                    {
+                        double m = -1.0 / (rightBottom - rightTop);
+                        double b = -m * rightBottom;
+                        return Convert.ToSingle(m * value + b);
+                    }
+                }
+                else if (rightTop == rightBottom)
+                {
+                    if (value == rightTop)
+                        return 1;
+                    else if (value < leftBottom || value > rightBottom)
+                        return 0;
+                    else if (value >= leftTop && value <= rightTop)
+                        return 1;
+                    else //if (value >= leftBottom && value <= leftTop)
+                    {
+                        double m = 1.0 / (leftTop - leftBottom);
+                        double b = -m * leftBottom;
+                        return Convert.ToSingle(m * value + b);
+                    }
+
+                }
+                else
+                {
+                    if (value < leftBottom || value > rightBottom)
+                        return 0;
+                    else if (value >= leftTop && value <= rightTop)
+                        return 1;
+                    else if (value >= leftBottom && value <= leftTop)
+                    {
+                        double m = 1.0 / (leftTop - leftBottom);
+                        double b = -m * leftBottom;
+                        return Convert.ToSingle(m * value + b);
+                    }
+                    else //value> rightTop && value < rightBottom
+                    {
+                        double m = -1.0 / (rightBottom - rightTop);
+                        double b = -m * rightBottom;
+                        return Convert.ToSingle(m * value + b);
+                    }
                 }
             }
 
@@ -117,28 +126,27 @@ namespace BLL.DomainObject
                 this.getName()
                 );
         }
-        public override DiscreteFuzzySet<float> ToDiscreteFuzzySet()
-        {
-            int noPoints = 15;
-            float interval = (this.rightBottom - this.leftBottom) / noPoints;
-            List<float> valueSet = new List<float>();
-            List<float> membershipDegrees = new List<float>();
-            float currentValue = this.leftBottom;
-            valueSet.Add(currentValue);
-            membershipDegrees.Add(this.getMembershipDegree(currentValue));
-            for (int i = 2; i <= noPoints; ++i)
-            {
-                currentValue += interval;
-                valueSet.Add(currentValue);
-                membershipDegrees.Add(this.getMembershipDegree(currentValue));
-            }
-            return new DiscreteFuzzySet<float>(valueSet, membershipDegrees, "", FieldType.distFS_FLOAT);
-        }
+        
         public bool isDomainOverlapedWith(ContinuousFuzzySet fs)
         {
             return !(this.rightBottom < fs.leftBottom || fs.rightBottom < this.leftBottom);
         }
-        public override FuzzySet<float> StandardIntersection(FuzzySet<float> fs) => throw new NotImplementedException();
+        public override FuzzySet<float> StandardIntersection(FuzzySet<float> fs)
+        {
+            if(fs is ContinuousFuzzySet)
+            {
+                ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
+                float fs_left_bot = cfs.getLeftBottom();
+                float fs_left_top = cfs.getLeftTop();
+                float fs_right_bot = cfs.getRightBottom();
+                float fs_right_top = cfs.getRightTop();
+
+            }
+            else
+            {
+
+            }
+        }
         public override float getHeight() => throw new NotImplementedException();
         public override bool isEqualTo(FuzzySet<float> fs) => throw new NotImplementedException();
     }

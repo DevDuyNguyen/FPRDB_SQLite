@@ -28,7 +28,6 @@ namespace BLL.DomainObject
             return this.fuzzySetType;
         }
         public abstract FuzzySetDTO toDTO();
-        public abstract DiscreteFuzzySet<T> ToDiscreteFuzzySet();
         public abstract FuzzySet<T> StandardIntersection(FuzzySet<T> fs);
         public abstract float getHeight();
         public abstract bool isEqualTo(FuzzySet<T> fs);

@@ -35,7 +35,6 @@ namespace BLL.DomainObject
                 this.getFuzzysetType()
                 );
         }
-        public override DiscreteFuzzySet<T> ToDiscreteFuzzySet() =>this;
         public override FuzzySet<T> StandardIntersection(FuzzySet<T> fs)
         {
             List<T> values = new List<T>();
@@ -53,7 +52,7 @@ namespace BLL.DomainObject
                     if (!values.Contains(v2))
                     {
                         values.Add(v2);
-                        memberships.Add(Math.Max(this.getMembershipDegree(v2), fs.getMembershipDegree(v2)));
+                        memberships.Add(Math.Min(this.getMembershipDegree(v2), fs.getMembershipDegree(v2)));
                     }   
                     
                 }
