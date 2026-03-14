@@ -1,4 +1,8 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL.Common;
+using BLL.Services;
+using DevExpress.Map.Kml.Model;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.DXErrorProvider;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,8 +17,12 @@ namespace FPRDB_SQLite.GUI
 {
     public partial class frmAddContinuousFuzzySet : DevExpress.XtraEditors.XtraForm
     {
-        public frmAddContinuousFuzzySet()
+        private CompositionRoot compRoot;
+        private FuzzySetService service;
+        public frmAddContinuousFuzzySet(CompositionRoot compRoot)
         {
+            this.compRoot = compRoot;
+            this.service = this.compRoot.getFuzzySetService();
             InitializeComponent();
         }
 
@@ -27,7 +35,15 @@ namespace FPRDB_SQLite.GUI
         // Click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
-
+            if (!continuosFuzzySetInfo.ValidateControls())
+            {
+                XtraMessageBox.Show("Please fill out all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            var dto = continuosFuzzySetInfo.GetContinuousFuzzySet();
+            service.createFuzzySet<float>(dto);
+            XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
         }
     }
 }

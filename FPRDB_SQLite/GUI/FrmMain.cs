@@ -9,30 +9,60 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using BLL.Services;
+using BLL.Common;
+using BLL.SQLProcessing;
 
 namespace FPRDB_SQLite.GUI
 {
     public partial class frmMain : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        private CompositionRoot compRoot;
         private DatabaseService databaseService;
-        public frmMain(DatabaseService databaseService)
+        private bool isDatabaseLoaded = false;
+        public frmMain(CompositionRoot compRoot)
         {
-            this.databaseService = databaseService;
+            this.compRoot = compRoot;
+            this.databaseService = this.compRoot.getDatabaseService();
             InitializeComponent();
+        }
+        // Hàm để enable/disable tab và các nút khi load database
+        private void changeStatusTab()
+        {
+            if (!isDatabaseLoaded)
+            {
+                Schema.Visible = false;
+                pageFuzzySet.Visible = false;
+                ribbonPage3.Visible = false;    // Tab "Relation"
+                ribbonPage1.Visible = false;    // Tab "Query"
+                buttonClose_pageHome.Enabled = false;
+                buttonSave_pageHome.Enabled = false;
+                buttonSaveAs_pageHome.Enabled = false;
+            }
+            else
+            {
+                Schema.Visible = true;
+                pageFuzzySet.Visible = true;
+                ribbonPage3.Visible = true;    // Tab "Relation"
+                ribbonPage1.Visible = true;    // Tab "Query"
+                buttonClose_pageHome.Enabled = true;
+                buttonSave_pageHome.Enabled = true;
+                buttonSaveAs_pageHome.Enabled = true;
+            }
         }
 
         private void buttonAdd_groupDis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new frmAddDiscreteFuzzySet().ShowDialog();
+            new frmAddDiscreteFuzzySet(compRoot).ShowDialog();
         }
 
         private void buttonAdd_groupCont_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new frmAddContinuousFuzzySet().ShowDialog();
+            new frmAddContinuousFuzzySet(compRoot).ShowDialog();
         }
 
         private void LoadDatabaseTree()
         {
+            changeStatusTab();
             // 1. Xóa cây cũ
             treeView.Nodes.Clear();
 
@@ -183,6 +213,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     this.databaseService.loadDB(DialogOpen.FileName);
                     XtraMessageBox.Show("Open database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    isDatabaseLoaded = true;
                     LoadDatabaseTree();
                 }
                 catch (IOException ex)
@@ -210,6 +241,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     this.databaseService.createDB(DialogNew.FileName);
                     XtraMessageBox.Show("Create new database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    isDatabaseLoaded = false;
                     LoadDatabaseTree();
                 }
             }

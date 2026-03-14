@@ -1,4 +1,8 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL;
+using BLL.DTO;
+using DevExpress.Mvvm.POCO;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.DXErrorProvider;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +17,59 @@ namespace FPRDB_SQLite.GUI.UserControls
 {
     public partial class ContinuosFuzzySet : DevExpress.XtraEditors.XtraUserControl
     {
+        private readonly BaseEdit[] textFields;
         public ContinuosFuzzySet()
         {
             InitializeComponent();
+            textFields = new BaseEdit[]
+            {
+                txtNameConsFuzzy,
+                txtBotLeft, 
+                txtTopLeft, 
+                txtTopRight, 
+                txtBotRight
+            };
+            setValidationRules();
+        }
+        private void setValidationRules()
+        {
+            var notEmptyRule = new ConditionValidationRule
+            {
+                ConditionOperator = ConditionOperator.IsNotBlank,
+                ErrorText = "Required Field!!"
+            };
+
+            foreach (var control in textFields)
+            {
+                dxValidationProvider1.SetValidationRule(control, notEmptyRule);
+            }
+        }
+        public bool ValidateControls()
+        {
+            return dxValidationProvider1.Validate();
+        }
+        // Hàm lấy dữ liệu từ UserControl để tạo một ContinuousFuzzySetDTO
+        public ContinuousFuzzySetDTO GetContinuousFuzzySet()
+        {
+            string name = txtNameConsFuzzy.Text;
+            float leftBottom = float.Parse(txtBotLeft.Text);
+            float leftTop = float.Parse(txtTopLeft.Text);
+            float rightTop = float.Parse(txtTopRight.Text);
+            float rightBottom = float.Parse(txtBotRight.Text);
+            return new ContinuousFuzzySetDTO(leftBottom, leftTop, rightTop, rightBottom, name);
+        }
+        // Phương thức này sẽ được gọi khi người dùng chọn một FuzzySet
+        public void LoadFuzzySet(FuzzySetDTO fuzzySet)
+        {
+            txtNameConsFuzzy.Text = fuzzySet.fuzzySetName;
+            // Bind dữ liệu của FuzzySet vào các TextBox tương ứng
+            if (fuzzySet is ContinuousFuzzySetDTO continuousFuzzySet)
+            {
+                txtBotLeft.Text = continuousFuzzySet.leftBottom.ToString();
+                txtTopLeft.Text = continuousFuzzySet.leftTop.ToString();
+                txtTopRight.Text = continuousFuzzySet.rightTop.ToString();
+                txtBotRight.Text = continuousFuzzySet.rightBottom.ToString();
+            }
         }
     }
 }

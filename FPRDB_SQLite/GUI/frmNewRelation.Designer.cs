@@ -30,17 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNewRelation));
             pnlNewRelation = new DevExpress.XtraEditors.PanelControl();
-            lblHeading = new DevExpress.XtraEditors.LabelControl();
-            lblRelName = new DevExpress.XtraEditors.LabelControl();
-            lblSchemaName = new DevExpress.XtraEditors.LabelControl();
-            txtRelName = new DevExpress.XtraEditors.TextEdit();
-            cboSchemaName = new DevExpress.XtraEditors.ComboBoxEdit();
-            btnSave = new DevExpress.XtraEditors.SimpleButton();
             btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            btnSave = new DevExpress.XtraEditors.SimpleButton();
+            cboSchemaName = new DevExpress.XtraEditors.ComboBoxEdit();
+            txtRelName = new DevExpress.XtraEditors.TextEdit();
+            lblSchemaName = new DevExpress.XtraEditors.LabelControl();
+            lblRelName = new DevExpress.XtraEditors.LabelControl();
+            lblHeading = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)pnlNewRelation).BeginInit();
             pnlNewRelation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)txtRelName.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cboSchemaName.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)txtRelName.Properties).BeginInit();
             SuspendLayout();
             // 
             // pnlNewRelation
@@ -58,23 +58,38 @@
             pnlNewRelation.Size = new System.Drawing.Size(542, 176);
             pnlNewRelation.TabIndex = 0;
             // 
-            // lblHeading
+            // btnCancel
             // 
-            lblHeading.Appearance.Font = new System.Drawing.Font("Tahoma", 18F);
-            lblHeading.Appearance.Options.UseFont = true;
-            lblHeading.Location = new System.Drawing.Point(135, 5);
-            lblHeading.Name = "lblHeading";
-            lblHeading.Size = new System.Drawing.Size(271, 36);
-            lblHeading.TabIndex = 0;
-            lblHeading.Text = "Create New Relation";
+            btnCancel.Location = new System.Drawing.Point(455, 138);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 25);
+            btnCancel.TabIndex = 6;
+            btnCancel.Text = "&Cancel";
             // 
-            // lblRelName
+            // btnSave
             // 
-            lblRelName.Location = new System.Drawing.Point(32, 55);
-            lblRelName.Name = "lblRelName";
-            lblRelName.Size = new System.Drawing.Size(88, 16);
-            lblRelName.TabIndex = 1;
-            lblRelName.Text = "Relation Name:";
+            btnSave.Location = new System.Drawing.Point(374, 138);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(75, 25);
+            btnSave.TabIndex = 5;
+            btnSave.Text = "&Save";
+            btnSave.Click += btnSave_Click;
+            // 
+            // cboSchemaName
+            // 
+            cboSchemaName.Location = new System.Drawing.Point(135, 107);
+            cboSchemaName.Name = "cboSchemaName";
+            cboSchemaName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cboSchemaName.Size = new System.Drawing.Size(356, 22);
+            cboSchemaName.TabIndex = 4;
+            cboSchemaName.SelectedIndexChanged += cboSchemaName_SelectedIndexChanged;
+            // 
+            // txtRelName
+            // 
+            txtRelName.Location = new System.Drawing.Point(135, 52);
+            txtRelName.Name = "txtRelName";
+            txtRelName.Size = new System.Drawing.Size(356, 22);
+            txtRelName.TabIndex = 3;
             // 
             // lblSchemaName
             // 
@@ -84,36 +99,23 @@
             lblSchemaName.TabIndex = 2;
             lblSchemaName.Text = "Choose Schema:";
             // 
-            // txtRelName
+            // lblRelName
             // 
-            txtRelName.Location = new System.Drawing.Point(135, 52);
-            txtRelName.Name = "txtRelName";
-            txtRelName.Size = new System.Drawing.Size(356, 22);
-            txtRelName.TabIndex = 3;
+            lblRelName.Location = new System.Drawing.Point(32, 55);
+            lblRelName.Name = "lblRelName";
+            lblRelName.Size = new System.Drawing.Size(88, 16);
+            lblRelName.TabIndex = 1;
+            lblRelName.Text = "Relation Name:";
             // 
-            // cboSchemaName
+            // lblHeading
             // 
-            cboSchemaName.Location = new System.Drawing.Point(135, 107);
-            cboSchemaName.Name = "cboSchemaName";
-            cboSchemaName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            cboSchemaName.Size = new System.Drawing.Size(356, 22);
-            cboSchemaName.TabIndex = 4;
-            // 
-            // btnSave
-            // 
-            btnSave.Location = new System.Drawing.Point(374, 138);
-            btnSave.Name = "btnSave";
-            btnSave.Size = new System.Drawing.Size(75, 25);
-            btnSave.TabIndex = 5;
-            btnSave.Text = "&Save";
-            // 
-            // btnCancel
-            // 
-            btnCancel.Location = new System.Drawing.Point(455, 138);
-            btnCancel.Name = "btnCancel";
-            btnCancel.Size = new System.Drawing.Size(75, 25);
-            btnCancel.TabIndex = 6;
-            btnCancel.Text = "&Cancel";
+            lblHeading.Appearance.Font = new System.Drawing.Font("Tahoma", 18F);
+            lblHeading.Appearance.Options.UseFont = true;
+            lblHeading.Location = new System.Drawing.Point(135, 5);
+            lblHeading.Name = "lblHeading";
+            lblHeading.Size = new System.Drawing.Size(271, 36);
+            lblHeading.TabIndex = 0;
+            lblHeading.Text = "Create New Relation";
             // 
             // frmNewRelation
             // 
@@ -127,8 +129,8 @@
             ((System.ComponentModel.ISupportInitialize)pnlNewRelation).EndInit();
             pnlNewRelation.ResumeLayout(false);
             pnlNewRelation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)txtRelName.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)cboSchemaName.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)txtRelName.Properties).EndInit();
             ResumeLayout(false);
         }
 

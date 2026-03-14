@@ -1,4 +1,9 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL;
+using BLL.Common;
+using BLL.DTO;
+using BLL.Services;
+using DevExpress.Map.Kml.Model;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,8 +18,12 @@ namespace FPRDB_SQLite.GUI
 {
     public partial class frmAddDiscreteFuzzySet : DevExpress.XtraEditors.XtraForm
     {
-        public frmAddDiscreteFuzzySet()
+        CompositionRoot compRoot;
+        FuzzySetService service;
+        public frmAddDiscreteFuzzySet(CompositionRoot compRoot)
         {
+            this.compRoot = compRoot;
+            this.service = this.compRoot.getFuzzySetService();
             InitializeComponent();
         }
 
@@ -23,11 +32,36 @@ namespace FPRDB_SQLite.GUI
         {
             Close();
         }
-
+        // Helper for adding a new discrete fuzzy set
+        private void HandleDiscreteFuzzySet<T>()
+        {
+            var dto = discreteFuzzySetInfo.getDiscreteFuzzySet<T>();
+            service.createFuzzySet<T>(dto);
+        }
         // Click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (!discreteFuzzySetInfo.ValidateControls())
+            {
+                XtraMessageBox.Show("Please fill out all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FieldType type = discreteFuzzySetInfo.getFuzzySetType();
+            switch (type)
+            {
+                case FieldType.INT:
+                    HandleDiscreteFuzzySet<int>();
+                    break;
+                case FieldType.FLOAT:
+                    HandleDiscreteFuzzySet<float>();
+                    break;
+                case FieldType.VARCHAR:
+                    HandleDiscreteFuzzySet<string>();
+                    break;
 
+            }
+            XtraMessageBox.Show("Discrete fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
         }
     }
 }
