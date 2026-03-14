@@ -216,28 +216,83 @@ namespace BLL.SQLProcessing
 
         public static float compareFuzzySet<T>(FuzzySet<T> fs1, FuzzySet<T> fs2, CompareOperation operation) where T : IComparable<T>
         {
-            throw new NotImplementedException();
 
-            //DiscreteFuzzySet<T> fs1 = nfs1.ToDiscreteFuzzySet();
-            //DiscreteFuzzySet<T> fs2 = nfs2.ToDiscreteFuzzySet();
+            DiscreteFuzzySet<T> dfs1, dfs2; ;
+            if (fs1 is ContinuousFuzzySet && fs2 is ContinuousFuzzySet)
+            {
+                DiscreteFuzzySet<float> tmp_dfs1, tmp_dfs2;
+                (tmp_dfs1, tmp_dfs2) = discretize2ContinuousFS((ContinuousFuzzySet)(object)fs1, (ContinuousFuzzySet)(object)fs2);
+                dfs1 = (DiscreteFuzzySet<T>)(object)tmp_dfs1;
+                dfs2 = (DiscreteFuzzySet<T>)(object)tmp_dfs2;
+            }
+            else if((fs1 is ContinuousFuzzySet && !(fs2 is ContinuousFuzzySet)))
+            {
+                DiscreteFuzzySet<float> tmp_dfs1 = discretizeContinuousFSFromDiscreteFS<float>((ContinuousFuzzySet)(object)fs1, (DiscreteFuzzySet<float>)(object)fs2);
+                dfs1 = (DiscreteFuzzySet<T>)(object)tmp_dfs1;
+                dfs2 = (DiscreteFuzzySet<T>)(object)fs2;
+            }
+            else if(!(fs1 is ContinuousFuzzySet) && fs2 is ContinuousFuzzySet)
+            {
+                DiscreteFuzzySet<float> tmp_dfs2 = discretizeContinuousFSFromDiscreteFS<float>((ContinuousFuzzySet)(object)fs2, (DiscreteFuzzySet<float>)(object)fs1);
+                dfs2 = (DiscreteFuzzySet<T>)(object)tmp_dfs2;
+                dfs1 = (DiscreteFuzzySet<T>)(object)fs1;
+            }
+            else
+            {
+                dfs1 = (DiscreteFuzzySet<T>)(object)fs1;
+                dfs2 = (DiscreteFuzzySet<T>)(object)fs2;
+            }
 
-            //List<(List<T>, float)> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
-            //List<(List<T>, float)> massAssignMentsFS2 = createMassAssignment<T>(fs2);
-            //float ans = 0.0f;
+            List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>((DiscreteFuzzySet<T>)(object)dfs1);
+            List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>((DiscreteFuzzySet<T>)(object)dfs2);
+            float ans = 0.0f;
+            if (operation == CompareOperation.EQUAL)
+                return equalDistcreteFuzzySets<T>(dfs1, dfs2);
+            else if (operation == CompareOperation.NOT_EQUAL)
+                return noEqualDistcreteFuzzySets<T>(dfs1, dfs2);
+            else if (operation == CompareOperation.LESS_THAN)
+                return lessThanDistcreteFuzzySets<T>(dfs1, dfs2);
+            else if (operation == CompareOperation.LESS_EQUAL)
+                return lessThanEqualDistcreteFuzzySets<T>(dfs1, dfs2);
+            else if (operation == CompareOperation.GREATER_THAN)
+                return lessThanDistcreteFuzzySets<T>(dfs2, dfs1);
+            else if (operation == CompareOperation.GREATER_EQUAL)
+                return lessThanEqualDistcreteFuzzySets<T>(dfs2, dfs1);
+            else if (operation == CompareOperation.LESS_EQUAL)
+                return lessThanEqualDistcreteFuzzySets<T>(dfs1, dfs2);
+            else //if (operation == CompareOperation.ALSO)
+                return alsoDistcreteFuzzySets<T>(dfs1, dfs2);
 
-            //for (int i = 0; i < massAssignMentsFS1.Count; ++i)
-            //{
-            //    for (int j = 0; j < massAssignMentsFS2.Count; ++j)
-            //    {
-            //        ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
-            //        //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator);
-            //        //float tmp2 = massAssignMentsFS1[i].Item2;
-            //        //float tmp3 = massAssignMentsFS2[j].Item2;
-            //        //float tmp = tmp1 * tmp2 * tmp3;
-            //    }
-            //}
-            //return ans;
-
+        }
+        //comparison between INT fuzzy set and FLOAT fuzzy set
+        public static float compareFuzzySet<T1, T2>(FuzzySet<T1> fs1, FuzzySet<T2> fs2, CompareOperation operation) 
+            where T1: IComparable<T1> 
+            where T2 : IComparable<T2>
+        {
+            Type t1 = typeof(T1);
+            Type t2 = typeof(T2);
+            if (t1 != t2)
+            {
+                if (t1 == typeof(float) && t2 == typeof(int))
+                {
+                    FuzzySet<float> ffs1 = (FuzzySet<float>)(object)fs1;
+                    FuzzySet<float> ffs2 = FuzzySetUltilities.turnINTDistcreteFuzzySetToFLOATDistcreteFuzzySet((DiscreteFuzzySet<int>)(object)fs2);
+                    return compareFuzzySet<float>(ffs1, ffs2, operation);
+                }
+                else if (t1 == typeof(int) && t2 == typeof(float))
+                {
+                    FuzzySet<float> ffs2 = (FuzzySet<float>)(object)fs2;
+                    FuzzySet<float> ffs1 = FuzzySetUltilities.turnINTDistcreteFuzzySetToFLOATDistcreteFuzzySet((DiscreteFuzzySet<int>)(object)fs1);
+                    return compareFuzzySet<float>(ffs1, ffs2, operation);
+                }
+                else
+                {
+                    throw new InvalidCastException($"Fuzzy set of domain {t1.Name} can't be compare with fuzzy set of domain {t2.Name}");
+                }
+            }
+            else {
+                return compareFuzzySet<T1>(fs1, (FuzzySet<T1>)(object)fs2, operation);
+            }
         }
 
         //public static float compare<T>(FuzzySet<T> nfs1, FuzzySet<T> nfs2, CompareOperation compOperator) where T : IComparable<T>
@@ -246,23 +301,23 @@ namespace BLL.SQLProcessing
         //    DiscreteFuzzySet<T> fs1 = nfs1.ToDiscreteFuzzySet();
         //    DiscreteFuzzySet<T> fs2 = nfs2.ToDiscreteFuzzySet();
 
-        //    List<(List<T>, float)> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
-        //    List<(List<T>, float)> massAssignMentsFS2 = createMassAssignment<T>(fs2);
-        //    float ans = 0.0f;
+            //    List<(List<T>, float)> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
+            //    List<(List<T>, float)> massAssignMentsFS2 = createMassAssignment<T>(fs2);
+            //    float ans = 0.0f;
 
-        //    for (int i = 0; i < massAssignMentsFS1.Count; ++i)
-        //    {
-        //        for (int j = 0; j < massAssignMentsFS2.Count; ++j)
-        //        {
-        //            ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
-        //            //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator);
-        //            //float tmp2 = massAssignMentsFS1[i].Item2;
-        //            //float tmp3 = massAssignMentsFS2[j].Item2;
-        //            //float tmp = tmp1 * tmp2 * tmp3;
-        //        }
-        //    }
-        //    return ans;
-        //}
+            //    for (int i = 0; i < massAssignMentsFS1.Count; ++i)
+            //    {
+            //        for (int j = 0; j < massAssignMentsFS2.Count; ++j)
+            //        {
+            //            ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
+            //            //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator);
+            //            //float tmp2 = massAssignMentsFS1[i].Item2;
+            //            //float tmp3 = massAssignMentsFS2[j].Item2;
+            //            //float tmp = tmp1 * tmp2 * tmp3;
+            //        }
+            //    }
+            //    return ans;
+            //}
         public static float alsoDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T> fs2) where T : IComparable<T>
         {
             List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);

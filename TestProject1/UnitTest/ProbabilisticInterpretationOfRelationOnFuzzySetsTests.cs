@@ -96,7 +96,7 @@ namespace TestProject1.UnitTest
         }
         [Theory]
         [ClassData(typeof(noEqualDistcreteFuzzySets_positive_testdata))]
-        public void noEqualDistcreteFuzzySets_success(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, float expected)
+        public void notEqualDistcreteFuzzySets_success(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, float expected)
         {
             //arrange
             //act
@@ -176,17 +176,44 @@ namespace TestProject1.UnitTest
         {
             public compareFLOAT_positive_testdata()
             {
+                foreach(var row in new equalDistcreteFuzzySets_positive_testdata())
+                {
+                    Add((DiscreteFuzzySet<float>)row[0], (DiscreteFuzzySet<float>)row[1], CompareOperation.EQUAL, (float)row[2]);
+                }
+                foreach (var row in new noEqualDistcreteFuzzySets_positive_testdata())
+                {
+                    Add((DiscreteFuzzySet<float>)row[0], (DiscreteFuzzySet<float>)row[1], CompareOperation.NOT_EQUAL, (float)row[2]);
+                }
+                foreach (var row in new lessThanDistcreteFuzzySets_positive_testdata())
+                {
+                    Add((DiscreteFuzzySet<float>)row[0], (DiscreteFuzzySet<float>)row[1], CompareOperation.LESS_THAN, (float)row[2]);
+
+                    Add((DiscreteFuzzySet<float>)row[1], (DiscreteFuzzySet<float>)row[0], CompareOperation.GREATER_THAN, (float)row[2]);
+                }
+                foreach (var row in new lessThanEqualDistcreteFuzzySets_positive_testdata())
+                {
+                    Add((DiscreteFuzzySet<float>)row[0], (DiscreteFuzzySet<float>)row[1], CompareOperation.LESS_EQUAL, (float)row[2]);
+                    Add((DiscreteFuzzySet<float>)row[1], (DiscreteFuzzySet<float>)row[0], CompareOperation.GREATER_EQUAL, (float)row[2]);
+                }
+                foreach (var row in new alsoFLOAT_positive_testdata())
+                {
+                    Add((DiscreteFuzzySet<float>)row[0], (DiscreteFuzzySet<float>)row[1], CompareOperation.ALSO, (float)row[2]);
+                }
+                //true content:
                 Add(
                     new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1.0f, 0.3f }, "about_5", FieldType.distFS_INT),
                     new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> { 0.2f, 0.5f, 0.9f, 1 }, "high", FieldType.distFS_INT),
                     CompareOperation.EQUAL,
                     0.34f
                     );
+
+
+
             }
         }
         [Theory]
         [ClassData(typeof(compareFLOAT_positive_testdata))]
-        public void compareFLOAT_sucess(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, CompareOperation compOp, float expected)
+        public void compareDistcreteFLOAT_sucess(DiscreteFuzzySet<float> fs1, DiscreteFuzzySet<float> fs2, CompareOperation compOp, float expected)
         {
             //arrange
             //act

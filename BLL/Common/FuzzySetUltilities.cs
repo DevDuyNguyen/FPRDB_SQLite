@@ -58,5 +58,14 @@ namespace BLL.Common
             }
 
         }
+        public static DiscreteFuzzySet<float> turnINTDistcreteFuzzySetToFLOATDistcreteFuzzySet(DiscreteFuzzySet<int> fs)
+        {
+            List<float> values = new List<float>();
+            foreach(int v in fs.valueSet)
+            {
+                values.Add(Convert.ToSingle(v));
+            }
+            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT);
+        }
     }
 }
