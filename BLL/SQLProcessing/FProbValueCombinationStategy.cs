@@ -141,7 +141,7 @@ namespace BLL.SQLProcessing
 
 
         }
-        public FuzzyProbabilisticValue<T> difference<T>(FuzzyProbabilisticValue<T> v1, FuzzyProbabilisticValue<T> v2, ProbabilisticCombinationStrategy probCombStrategy)
+        public static FuzzyProbabilisticValue<T> difference<T>(FuzzyProbabilisticValue<T> v1, FuzzyProbabilisticValue<T> v2, ProbabilisticCombinationStrategy probCombStrategy)
         {
 
             List<bool> isV1ValueListIntersectedNormalHeight = new List<bool>();
@@ -158,7 +158,7 @@ namespace BLL.SQLProcessing
             List<float> ans_intervalProbLowerBoundList = new List<float>();
             List<float> ans_intervalProbUpperBoundList = new List<float>();
 
-            if (ProbabilisticCombinationStrategyUtilities.isDisjunctionStategy(probCombStrategy))
+            if (ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(probCombStrategy))
                 throw new InvalidDataException("Probabilistic combination strategy must be disjunction");
 
 
