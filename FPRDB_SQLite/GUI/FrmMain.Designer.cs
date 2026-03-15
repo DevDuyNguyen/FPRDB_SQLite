@@ -207,7 +207,6 @@
             buttonOpen_pageHome.Id = 10;
             buttonOpen_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonOpen_pageHome.ImageOptions.LargeImage");
             buttonOpen_pageHome.Name = "buttonOpen_pageHome";
-            buttonOpen_pageHome.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText | DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText;
             buttonOpen_pageHome.ItemClick += buttonOpen_pageHome_ItemClick;
             // 
             // buttonAbout_groupHelp
@@ -239,6 +238,7 @@
             iNewSchema.Id = 19;
             iNewSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
             iNewSchema.Name = "iNewSchema";
+            iNewSchema.ItemClick += iNewSchema_ItemClick;
             // 
             // iOpenSchema
             // 
@@ -273,6 +273,7 @@
             iNewRelation.Id = 25;
             iNewRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
             iNewRelation.Name = "iNewRelation";
+            iNewRelation.ItemClick += iNewRelation_ItemClick;
             // 
             // iDeleteRelation
             // 
@@ -302,7 +303,7 @@
             iNewQuery.Id = 30;
             iNewQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewQuery.ImageOptions.LargeImage");
             iNewQuery.Name = "iNewQuery";
-            iNewQuery.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.iNewQuery_ItemClick);
+            iNewQuery.ItemClick += iNewQuery_ItemClick;
             // 
             // iOpenQuery
             // 

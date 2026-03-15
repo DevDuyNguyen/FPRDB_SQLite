@@ -26,29 +26,24 @@ namespace FPRDB_SQLite.GUI
             this.compRoot = compRoot;
             this.databaseService = this.compRoot.getDatabaseService();
             InitializeComponent();
+            changeStatusTab();
         }
         // Hàm để enable/disable tab và các nút khi load database
         private void changeStatusTab()
         {
             if (!isDatabaseLoaded)
             {
-                Schema.Visible = false;
+                SchemaRibbonPage.Visible = false;
                 pageFuzzySet.Visible = false;
-                ribbonPage3.Visible = false;    // Tab "Relation"
-                ribbonPage1.Visible = false;    // Tab "Query"
-                buttonClose_pageHome.Enabled = false;
-                buttonSave_pageHome.Enabled = false;
-                buttonSaveAs_pageHome.Enabled = false;
+                RelationRibbonPage.Visible = false;    // Tab "Relation"
+                QueryRibbonPage.Visible = false;    // Tab "Query"
             }
             else
             {
-                Schema.Visible = true;
+                SchemaRibbonPage.Visible = true;
                 pageFuzzySet.Visible = true;
-                ribbonPage3.Visible = true;    // Tab "Relation"
-                ribbonPage1.Visible = true;    // Tab "Query"
-                buttonClose_pageHome.Enabled = true;
-                buttonSave_pageHome.Enabled = true;
-                buttonSaveAs_pageHome.Enabled = true;
+                RelationRibbonPage.Visible = true;    // Tab "Relation"
+                QueryRibbonPage.Visible = true;    // Tab "Query"
             }
         }
 
@@ -614,7 +609,7 @@ namespace FPRDB_SQLite.GUI
                     XtraMessageBox.Show("Error : Cannot find the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-    
+
             }
             catch (Exception Ex)
             {
@@ -627,6 +622,16 @@ namespace FPRDB_SQLite.GUI
         private void iNewQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             CreateNewQuery();
+        }
+
+        private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new frmNewSchema(compRoot).ShowDialog();
+        }
+
+        private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new frmNewRelation(compRoot).ShowDialog();
         }
     }
 }
