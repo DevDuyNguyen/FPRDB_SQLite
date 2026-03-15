@@ -38,7 +38,7 @@ namespace BLL.SQLProcessing
             s1.next();
             s2.beforeFirst();
         }
-        public bool nextPair()
+        private bool nextPair()
         {
             if (s2.next())
                 return true;

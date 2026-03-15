@@ -30,7 +30,7 @@ namespace BLL.SQLProcessing
             this.probCombinationStrategy = probCombinationStrategy;
             this.schema = this.p1.getSchema();
         }
-        public bool isSameSchema(FPRDBSchema sch1, FPRDBSchema sch2)
+        private bool isSameSchema(FPRDBSchema sch1, FPRDBSchema sch2)
         {
             bool isSameStructure = true;
             List<Field> sch1Fields = sch1.getFields();
