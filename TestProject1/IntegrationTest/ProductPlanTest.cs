@@ -93,9 +93,9 @@ namespace TestProject1.IntegrationTest
             while (res.next())
             {
                 FuzzyProbabilisticValue<string> id = res.getFieldContent<string>("DOCTOR_ID");
-                FuzzyProbabilisticValue<int> age = res.getFieldContent<int>("D_AGE");
+                FuzzyProbabilisticValue<float> age = res.getFieldContent<float>("D_AGE");
                 FuzzyProbabilisticValue<string> name = res.getFieldContent<string>("DOCTOR_NAME");
-                FuzzyProbabilisticValue<int> age1 = res.getFieldContent<int>("D_AGE");
+                FuzzyProbabilisticValue<float> age1 = res.getFieldContent<float>("D_AGE");
             }
         }
 
