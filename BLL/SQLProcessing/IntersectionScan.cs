@@ -24,7 +24,7 @@ namespace BLL.SQLProcessing
         {
             this.s1 = s1;
             this.s2 = s2;
-            if (ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombinationStrategy))
+            if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombinationStrategy))
                 throw new InvalidDataException("Intersection must be paired with probabilistic conjunction strategy");
             this.probCombinationStrategy = probCombinationStrategy;
             this.schema = schema;

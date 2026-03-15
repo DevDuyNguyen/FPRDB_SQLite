@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DomainObject;
+using BLL.Enums;
 using BLL.Interfaces;
 using BLL.SQLProcessing;
 using System;
@@ -57,7 +58,7 @@ namespace TestProject1.IntegrationTest
             //");
             //processor.executeUpdate(@"
             //    INSERT INTO DIAGNOSE1 (P_ID, D_ID, P_AGE, DISEASE)
-            //    VALUES ( {('PT234',[1,1])}, {('DT102',[1,1])}, {(approx_15,[1,1])}, {('lhepatitis',[0.5, 0.5]),('cirrhosis',[0.5, 0.5])} )
+            //    VALUES ( {('PT234',[1,1])}, {('DT102',[1,1])}, {(approx_15,[1,1])}, {('hepatitis',[0.5, 0.5]),('cirrhosis',[0.5, 0.5])} )
             //");
 
             //processor.executeUpdate(@"
@@ -75,25 +76,24 @@ namespace TestProject1.IntegrationTest
 
         }
         [Fact]
-        public void ProductPlan_getSchema_success()
+        public void IntersectionPlan_getSchema_success()
         {
             //arrange
             CompositionRoot compRoot = new CompositionRoot();
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            RelationPlan p1 = new RelationPlan("DOCTOR1", metaMgr, dbMgr, compRoot.getParser());
-            RelationPlan p2 = new RelationPlan("DOCTOR2", metaMgr, dbMgr, compRoot.getParser());
+            Plan p1 = new RelationPlan("DIAGNOSE1", metaMgr, dbMgr, compRoot.getParser());
+            Plan p2 = new RelationPlan("DIAGNOSE2", metaMgr, dbMgr, compRoot.getParser());
 
-
-            Plan p3 = new ProductPlan(p1, p2, metaMgr, dbMgr);
+            Plan p3 = new IntersectionPlan(p1, p2, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
             Scan res = p3.open();
             while (res.next())
             {
-                FuzzyProbabilisticValue<string> id = res.getFieldContent<string>("DOCTOR_ID");
-                FuzzyProbabilisticValue<float> age = res.getFieldContent<float>("D_AGE");
-                FuzzyProbabilisticValue<string> name = res.getFieldContent<string>("DOCTOR_NAME");
-                FuzzyProbabilisticValue<float> age1 = res.getFieldContent<float>("D_AGE");
+                FuzzyProbabilisticValue<string> p_id = res.getFieldContent<string>("P_ID");
+                FuzzyProbabilisticValue<string> d_id = res.getFieldContent<string>("D_ID");
+                FuzzyProbabilisticValue<float> p_age = res.getFieldContent<float>("P_AGE");
+                FuzzyProbabilisticValue<string> disease = res.getFieldContent<string>("DISEASE");
             }
         }
 
