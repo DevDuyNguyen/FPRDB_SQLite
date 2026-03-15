@@ -11,12 +11,12 @@ namespace BLL.Services
     public class FPRDBSchemaService
     {
         private FPRDBSchemaDAO fprdbSchemaDAO;
-        private ConstaintService constaintService;
+        private ConstraintService constraintService;
 
-        public FPRDBSchemaService(FPRDBSchemaDAO fprdbSchemaDAO, ConstaintService constaintService)
+        public FPRDBSchemaService(FPRDBSchemaDAO fprdbSchemaDAO, ConstraintService constraintService)
         {
             this.fprdbSchemaDAO = fprdbSchemaDAO;
-            this.constaintService = constaintService;
+            this.constraintService = constraintService;
         }
 
         public bool defineFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO)

@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DomainObject;
+using BLL.Services;
 using BLL.DTO;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Grid;
@@ -16,6 +17,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GUI.GlobalStates;
+using BLL.Exceptions;
+using System.IO;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -30,17 +33,17 @@ namespace FPRDB_SQLite.GUI
             public string attributeName { get; set; } = string.Empty;
 
             [DisplayName("Data Type")]
-            public FieldType dataType { get; set; } = FieldType.INT;
+            public string dataType { get; set; }
             [DisplayName("Length")]
             public int length { get; set; } = 0;
         }
         private CompositionRoot compRoot;
-        //private FPRDBSchemaService service;
+        private FPRDBSchemaService fprdbSchemaService;
         public frmNewSchema(CompositionRoot compRoot)
         {
             InitializeComponent();
             this.compRoot = compRoot;
-            //this.service = compRoot.getFPRDBSchemaService();
+            this.fprdbSchemaService = compRoot.getFPRDBSchemaService();
             InitGrid();
         }
         // Hàm khởi tạo GridControl
@@ -68,11 +71,22 @@ namespace FPRDB_SQLite.GUI
 
             var rows = grdvSchemaAttribute.DataSource as BindingList<SchemaAttribute>;
 
-            FPRDBSchemaDTO schema = convertGridToSchema(schemaName, rows);
-
-            //defineFPRDBSchema(schema);
-            XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Close();
+            
+            try
+            {
+                FPRDBSchemaDTO schema = convertGridToSchema(schemaName, rows);
+                this.fprdbSchemaService.defineFPRDBSchema(schema);
+                XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Close();
+            }
+            catch (SemanticException ex)
+            {
+                XtraMessageBox.Show($"Semantic error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch(InvalidDataException ex)
+            {
+                XtraMessageBox.Show($"Semantic error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
         }
 
@@ -83,7 +97,12 @@ namespace FPRDB_SQLite.GUI
             List<string> primaryKeys = new List<string>();
             foreach (var attr in attributes)
             {
-                var fieldInfo = new FieldInfo(attr.dataType, 255);
+                FieldType fieldType = FieldTypeUtilities.turnSQLFieldTypeToEnumFieldType(attr.dataType);
+                FieldInfo fieldInfo;
+                if (fieldType==FieldType.VARCHAR)
+                    fieldInfo = new FieldInfo(fieldType, attr.length);
+                else
+                    fieldInfo = new FieldInfo(fieldType, 0);
                 var field = new Field(attr.attributeName, fieldInfo);
                 fields.Add(field);
                 if (attr.isPrimaryKey)
@@ -106,7 +125,7 @@ namespace FPRDB_SQLite.GUI
             object dataType = view.GetRowCellValue(view.FocusedRowHandle, "dataType");
 
             // Cancel editing if DataType is NOT varchar
-            if (dataType == null || (FieldType)dataType != FieldType.VARCHAR)
+            if (dataType == null || (string)dataType != FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(FieldType.VARCHAR))
             {
                 e.Cancel = true; // Prevent editor from opening
             }
@@ -119,7 +138,7 @@ namespace FPRDB_SQLite.GUI
 
             object dataType = grdvSchemaAttribute.GetRowCellValue(e.RowHandle, "dataType");
 
-            if (dataType == null || (FieldType)dataType != FieldType.VARCHAR)
+            if (dataType == null || (string)dataType != FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(FieldType.VARCHAR))
             {
                 e.Appearance.BackColor = Color.LightGray;
                 e.Appearance.ForeColor = Color.DarkGray;
@@ -131,7 +150,7 @@ namespace FPRDB_SQLite.GUI
             if (e.Column.FieldName != "dataType")
                 return;
 
-            if (e.Value == null || (FieldType)e.Value != FieldType.VARCHAR)
+            if (e.Value == null || (string)e.Value != FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(FieldType.VARCHAR))
             {
                 grdvSchemaAttribute.SetRowCellValue(e.RowHandle, "length", null);
             }

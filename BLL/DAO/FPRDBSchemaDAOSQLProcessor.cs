@@ -22,21 +22,36 @@ namespace BLL.DAO
 
         public bool defineFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO)
         {
+            if (fprdbSchemaDTO.schemaName == "" || fprdbSchemaDTO.schemaName == null)
+                throw new SemanticException("Schema name is empty");
+            if (fprdbSchemaDTO.fields.Count==0)
+                throw new SemanticException("Attribute is empty");
+            if (fprdbSchemaDTO.primarykey.Count == 0)
+                throw new SemanticException("Primary key is empty");
+
             string fprdSQL = $"CREATE SCHEMA {fprdbSchemaDTO.schemaName} (";
             foreach(Field field in fprdbSchemaDTO.fields)
             {
                 if(field.getFieldInfo().getType()==FieldType.VARCHAR)
-                    fprdSQL += $" {field.getFieldName()} {FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(field.getFieldInfo().getType())} {field.getFieldInfo().getTXTLength()},";
+                    fprdSQL += $" {field.getFieldName()} {FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(field.getFieldInfo().getType())} ({field.getFieldInfo().getTXTLength()}),";
                 else 
                     fprdSQL += $" {field.getFieldName()} {FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(field.getFieldInfo().getType())},";
             }
-            fprdSQL += $" CONSTRAINT pk_{fprdbSchemaDTO.schemaName} PRIMARY KEY (";
-            foreach(string key in fprdbSchemaDTO.primarykey)
+            if(fprdbSchemaDTO.primarykey.Count>0)
             {
-                fprdSQL += " "+key+",";
+                fprdSQL += $" CONSTRAINT pk_{fprdbSchemaDTO.schemaName} PRIMARY KEY (";
+                foreach (string key in fprdbSchemaDTO.primarykey)
+                {
+                    fprdSQL += " " + key + ",";
+                }
+                fprdSQL = fprdSQL.TrimEnd(',');
+                fprdSQL += "))";
             }
-            fprdSQL = fprdSQL.TrimEnd(',');
-            fprdSQL += "))";
+            else
+            {
+                fprdSQL = fprdSQL.TrimEnd(',');
+                fprdSQL += ")";
+            }
 
             return this.sqlProcessor.executeDataDefinition(fprdSQL);
         }
