@@ -50,9 +50,10 @@ namespace BLL.SQLProcessing
         }
         public bool next()
         {
+            List<string> primaryKey = this.schema.primarykey;
             while (nextPair())
             {
-
+                
             }
             return false;
         }

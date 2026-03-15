@@ -25,6 +25,27 @@ namespace BLL.DomainObject
         {
             return this.valueList.Count == 0;
         }
+        public override bool hasSameKeyValue(AbstractFuzzyProbabilisticValue v)
+        {
+            if (v is FuzzyProbabilisticValue<T>)
+            {
+                bool isSameKeyValue = true;
+                FuzzyProbabilisticValue<T> T_v = (FuzzyProbabilisticValue<T>)(object)v;
+                isSameKeyValue = this.valueList.Count == T_v.valueList.Count;
+                for(int i=0; i < this.valueList.Count; ++i)
+                {
+                    if (!this.valueList[i].isEqualTo(T_v.valueList[i]))
+                    {
+                        isSameKeyValue = false;
+                        break;
+                    }
+                }
+                return isSameKeyValue;
+                
+            }
+            else
+                return false;
+        }
 
         //public FieldType getDomain() => this.domain;
         //public FuzzySet<T> getVal(int index) => this.valueList[index];
