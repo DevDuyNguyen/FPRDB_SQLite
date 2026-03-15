@@ -1,4 +1,6 @@
-﻿namespace FPRDB_SQLite.GUI.UserControls
+﻿using DevExpress.XtraGrid.Views.Grid;
+
+namespace FPRDB_SQLite.GUI.UserControls
 {
     partial class DiscreteFuzzySet
     {
@@ -28,26 +30,28 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             grdcDiscFuzzy = new DevExpress.XtraGrid.GridControl();
-            grdvDiscFuzzy = new DevExpress.XtraGrid.Views.Grid.GridView();
-            grdcolValue = new DevExpress.XtraGrid.Columns.GridColumn();
+            grdvDiscFuzzy = new GridView();
             repositoryItemValue = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            grdcolMembership = new DevExpress.XtraGrid.Columns.GridColumn();
             repositoryItemMembership = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             txtNameDiscFuzzy = new DevExpress.XtraEditors.TextEdit();
             lblNameDiscFuzzy = new DevExpress.XtraEditors.LabelControl();
             lblDataType = new DevExpress.XtraEditors.LabelControl();
             cboDataType = new DevExpress.XtraEditors.ComboBoxEdit();
+            dxValidationProvider1 = new DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider(components);
             ((System.ComponentModel.ISupportInitialize)grdcDiscFuzzy).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grdvDiscFuzzy).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemValue).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemMembership).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtNameDiscFuzzy.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cboDataType.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dxValidationProvider1).BeginInit();
             SuspendLayout();
             // 
             // grdcDiscFuzzy
             // 
+            grdcDiscFuzzy.Enabled = false;
             grdcDiscFuzzy.Location = new System.Drawing.Point(25, 72);
             grdcDiscFuzzy.MainView = grdvDiscFuzzy;
             grdcDiscFuzzy.Name = "grdcDiscFuzzy";
@@ -59,35 +63,19 @@
             // 
             // grdvDiscFuzzy
             // 
-            grdvDiscFuzzy.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolValue, grdcolMembership });
             grdvDiscFuzzy.GridControl = grdcDiscFuzzy;
             grdvDiscFuzzy.Name = "grdvDiscFuzzy";
+            grdvDiscFuzzy.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.True;
+            grdvDiscFuzzy.OptionsView.NewItemRowPosition = NewItemRowPosition.Bottom;
             grdvDiscFuzzy.OptionsView.ShowGroupPanel = false;
-            // 
-            // grdcolValue
-            // 
-            grdcolValue.Caption = "Value";
-            grdcolValue.ColumnEdit = repositoryItemValue;
-            grdcolValue.MinWidth = 25;
-            grdcolValue.Name = "grdcolValue";
-            grdcolValue.Visible = true;
-            grdcolValue.VisibleIndex = 0;
-            grdcolValue.Width = 94;
+            grdvDiscFuzzy.FocusedRowChanged += grdvDiscFuzzy_FocusedRowChanged;
+            grdvDiscFuzzy.FocusedColumnChanged += grdvDiscFuzzy_FocusedColumnChanged;
+            grdvDiscFuzzy.ValidatingEditor += grdvDiscFuzzy_ValidatingEditor;
             // 
             // repositoryItemValue
             // 
             repositoryItemValue.AutoHeight = false;
             repositoryItemValue.Name = "repositoryItemValue";
-            // 
-            // grdcolMembership
-            // 
-            grdcolMembership.Caption = "Membership";
-            grdcolMembership.ColumnEdit = repositoryItemMembership;
-            grdcolMembership.MinWidth = 25;
-            grdcolMembership.Name = "grdcolMembership";
-            grdcolMembership.Visible = true;
-            grdcolMembership.VisibleIndex = 1;
-            grdcolMembership.Width = 94;
             // 
             // repositoryItemMembership
             // 
@@ -105,9 +93,9 @@
             // 
             lblNameDiscFuzzy.Location = new System.Drawing.Point(25, 6);
             lblNameDiscFuzzy.Name = "lblNameDiscFuzzy";
-            lblNameDiscFuzzy.Size = new System.Drawing.Size(91, 16);
+            lblNameDiscFuzzy.Size = new System.Drawing.Size(97, 16);
             lblNameDiscFuzzy.TabIndex = 3;
-            lblNameDiscFuzzy.Text = "Linguistic Label:";
+            lblNameDiscFuzzy.Text = "Fuzzy Set Name:";
             // 
             // lblDataType
             // 
@@ -122,6 +110,7 @@
             cboDataType.Location = new System.Drawing.Point(122, 38);
             cboDataType.Name = "cboDataType";
             cboDataType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cboDataType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             cboDataType.Size = new System.Drawing.Size(171, 22);
             cboDataType.TabIndex = 7;
             // 
@@ -142,6 +131,7 @@
             ((System.ComponentModel.ISupportInitialize)repositoryItemMembership).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtNameDiscFuzzy.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)cboDataType.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dxValidationProvider1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -150,13 +140,12 @@
 
         private DevExpress.XtraGrid.GridControl grdcDiscFuzzy;
         private DevExpress.XtraGrid.Views.Grid.GridView grdvDiscFuzzy;
-        private DevExpress.XtraGrid.Columns.GridColumn grdcolValue;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemValue;
-        private DevExpress.XtraGrid.Columns.GridColumn grdcolMembership;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemMembership;
         private DevExpress.XtraEditors.TextEdit txtNameDiscFuzzy;
         private DevExpress.XtraEditors.LabelControl lblNameDiscFuzzy;
         private DevExpress.XtraEditors.LabelControl lblDataType;
         private DevExpress.XtraEditors.ComboBoxEdit cboDataType;
+        private DevExpress.XtraEditors.DXErrorProvider.DXValidationProvider dxValidationProvider1;
     }
 }
