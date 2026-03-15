@@ -21,6 +21,10 @@ namespace BLL.DomainObject
             this.intervalProbLowerBoundList = intervalProbLowerBoundList;
             this.intervalProbUpperBoundList = intervalProbUpperBoundList;
         }
+        public override bool isValueSetEmpty()
+        {
+            return this.valueList.Count != 0;
+        }
 
         //public FieldType getDomain() => this.domain;
         //public FuzzySet<T> getVal(int index) => this.valueList[index];

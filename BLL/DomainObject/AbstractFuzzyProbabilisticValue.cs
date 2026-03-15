@@ -8,5 +8,6 @@ namespace BLL.DomainObject
 {
     public abstract class AbstractFuzzyProbabilisticValue
     {
+        public abstract bool isValueSetEmpty();
     }
 }
