@@ -143,6 +143,7 @@ namespace BLL.DomainObject
             if (fs is ContinuousFuzzySet)
             {
                 ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
+                //non-overlapping universe of discourse
                 if(this.leftBottom>cfs.rightBottom || this.rightBottom < cfs.leftBottom)
                 {
                     //not done: the design of continuous fuzzy set is wrongful, it can accommodates its tasks
@@ -152,10 +153,15 @@ namespace BLL.DomainObject
                 {
                     float left_bot = (this.leftBottom <= cfs.getLeftBottom()) ? this.leftBottom : cfs.getLeftBottom();
                     float right_bot = (this.rightBottom >= cfs.getRightBottom()) ? this.rightBottom : cfs.getRightBottom();
+                    //non-overlapping 1 membership degree range
                     if (this.leftTop > cfs.getRightTop() || this.rightTop <= cfs.getLeftTop())
                         return new ContinuousFuzzySet(left_bot, 0, 0, right_bot, this, cfs, false, fuzzSetName);
                     else
+                    {
+                        if (this.isEqualTo(cfs) && this.getName() == cfs.getName())
+                            fuzzSetName = this.getName();
                         return new ContinuousFuzzySet(left_bot, 0, 0, right_bot, this, cfs, true, fuzzSetName);
+                    }
 
                 } 
                     
@@ -171,7 +177,7 @@ namespace BLL.DomainObject
                     values.Add(v1);
                     memberships.Add(Math.Min(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
                 }
-                return new DiscreteFuzzySet<float>(values, memberships, this.getName() + "⋂" + dfs.getName(), FieldType.distFS_FLOAT);
+                return new DiscreteFuzzySet<float>(values, memberships, dfs.getName(), FieldType.distFS_FLOAT);
             }
         }
         public override bool isNormal(){

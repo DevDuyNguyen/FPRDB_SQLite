@@ -37,8 +37,10 @@ namespace BLL.DomainObject
         }
         public override FuzzySet<T> StandardIntersection(FuzzySet<T> fs)
         {
+
             List<T> values = new List<T>();
             List<float> memberships = new List<float>();
+            string fuzzSetName = this.getName();
             foreach(T v1 in this.valueSet)
             {
                 values.Add(v1);
@@ -56,6 +58,8 @@ namespace BLL.DomainObject
                     }   
                     
                 }
+                if (this.getName() != fs.getName())
+                    fuzzSetName = this.getName() + "⋂" + fs.getName();
             }
             //else
             //{
@@ -63,7 +67,7 @@ namespace BLL.DomainObject
 
 
             //}
-            return new DiscreteFuzzySet<T>(values, memberships, this.getName()+ "⋂"+ fs.getName(), this.getFuzzysetType());
+            return new DiscreteFuzzySet<T>(values, memberships, fuzzSetName, this.getFuzzysetType());
 
         }
         public override bool isNormal()
