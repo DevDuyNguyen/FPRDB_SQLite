@@ -97,6 +97,7 @@
             btnAdd.Size = new System.Drawing.Size(75, 25);
             btnAdd.TabIndex = 1;
             btnAdd.Text = "&Add";
+            btnAdd.Click += btnAdd_Click;
             // 
             // btnDelete
             // 
@@ -105,6 +106,7 @@
             btnDelete.Size = new System.Drawing.Size(75, 25);
             btnDelete.TabIndex = 2;
             btnDelete.Text = "&Delete";
+            btnDelete.Click += btnDelete_Click;
             // 
             // grpFKSelected
             // 
@@ -123,6 +125,7 @@
             lstFKSelected.Name = "lstFKSelected";
             lstFKSelected.Size = new System.Drawing.Size(216, 272);
             lstFKSelected.TabIndex = 0;
+            lstFKSelected.SelectedIndexChanged += lstFKSelected_SelectedIndexChanged;
             // 
             // grpFKDetail
             // 
@@ -141,6 +144,7 @@
             grpFKDetail.Size = new System.Drawing.Size(421, 345);
             grpFKDetail.TabIndex = 0;
             grpFKDetail.Text = "Foreign Key Detail";
+            grpFKDetail.Visible = false;
             // 
             // grdMappingAttr
             // 
@@ -205,6 +209,7 @@
             btnSave.Size = new System.Drawing.Size(75, 25);
             btnSave.TabIndex = 3;
             btnSave.Text = "&Save";
+            btnSave.Click += btnSave_Click;
             // 
             // btnClose
             // 
@@ -213,6 +218,7 @@
             btnClose.Size = new System.Drawing.Size(75, 25);
             btnClose.TabIndex = 3;
             btnClose.Text = "&Close";
+            btnClose.Click += btnClose_Click;
             // 
             // cboPKRelName
             // 

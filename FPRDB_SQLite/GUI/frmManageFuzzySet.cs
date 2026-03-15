@@ -25,6 +25,8 @@ namespace FPRDB_SQLite.GUI
         private CompositionRoot compRoot = new CompositionRoot();
         // Khai báo Fuzzy Set Service
         private FuzzySetService service;
+        // Khai báo danh sách để lưu kết quả tìm kiếm Fuzzy Set
+        private List<FuzzySetDTO> results;
         // Khai báo DTO để lưu thông tin Fuzzy Set đang được chọn
         private FuzzySetDTO selectedFuzzySet;
         public frmManageFuzzySet(CompositionRoot compRoot)
@@ -39,6 +41,11 @@ namespace FPRDB_SQLite.GUI
         {
             // Lấy thông tin từ ô tìm kiếm
             string keyword = txtFuzzySetName.Text.ToLower();
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                XtraMessageBox.Show("Please enter a fuzzy set name to search.");
+                return;
+            }
             // Xóa danh sách trước đó trong ListBox
             lstFuzzySetResults.Items.Clear();
             // Lọc dữ liệu theo keyword
@@ -48,16 +55,16 @@ namespace FPRDB_SQLite.GUI
             //    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
             //    return;
             //}
-            ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10,20, 30, 40, "random2");
+            ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
             DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
                 new List<int>() { 22, 23, 24 },
                 new List<float>() { 0.5f, 1, 0.5f },
                 "about_23",
                 FieldType.INT);
-            List<FuzzySetDTO> results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
+            results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
             foreach (var item in results)
             {
-                lstFuzzySetResults.Items.Add(item);
+                lstFuzzySetResults.Items.Add(item.fuzzySetName);
             }
         }
         // Hàm vẽ đồ thị của Continuous Fuzzy Set
@@ -101,10 +108,10 @@ namespace FPRDB_SQLite.GUI
         {
             if (lstFuzzySetResults.SelectedItem != null)
             {
-                selectedFuzzySet = (FuzzySetDTO)lstFuzzySetResults.SelectedItem;
+                selectedFuzzySet = results.FirstOrDefault(r => r.fuzzySetName == lstFuzzySetResults.SelectedItem.ToString());
                 pnlFuzzySetMeaning.Visible = true;
-                if (selectedFuzzySet is DiscreteFuzzySetDTO<int>||
-                    selectedFuzzySet is DiscreteFuzzySetDTO<float>||
+                if (selectedFuzzySet is DiscreteFuzzySetDTO<int> ||
+                    selectedFuzzySet is DiscreteFuzzySetDTO<float> ||
                     selectedFuzzySet is DiscreteFuzzySetDTO<string>)
                 {
                     // Thông tin chi tiết Discrete Fuzzy Set
@@ -140,7 +147,7 @@ namespace FPRDB_SQLite.GUI
                 //service.removeFuzzySet(selectedFuzzySet.fuzzySetName);
                 XtraMessageBox.Show("Fuzzy set deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 // Refresh the list after deletion
-                btnSearch_Click(null, null);
+                refreshForm();
             }
         }
 
@@ -152,7 +159,15 @@ namespace FPRDB_SQLite.GUI
             {
                 //service.updateFuzzySet(selectedFuzzySet);
                 XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }    
+            }
+        }
+
+        // Hàm reset lại form
+        private void refreshForm()
+        {
+            pnlFuzzySetMeaning.Visible = false;
+            tabpgFuzzySetChart.Controls.Clear();
+            selectedFuzzySet = null;
         }
     }
 }
