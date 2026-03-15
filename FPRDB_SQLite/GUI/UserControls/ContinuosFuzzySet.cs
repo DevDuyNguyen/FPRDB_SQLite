@@ -53,7 +53,7 @@ namespace FPRDB_SQLite.GUI.UserControls
             return dxValidationProvider1.Validate();
         }
         // Hàm lấy dữ liệu từ UserControl để tạo một ContinuousFuzzySetDTO
-        public ContinuousFuzzySetDTO GetContinuousFuzzySet()
+        public ContinuousFuzzySetDTO getContinuousFuzzySet()
         {
             string name = txtNameConsFuzzy.Text;
             float leftBottom = float.Parse(txtBotLeft.Text);

@@ -157,7 +157,26 @@ namespace FPRDB_SQLite.GUI
             DialogResult result = XtraMessageBox.Show($"Are you sure you want to update fuzzy set '{selectedFuzzySet.fuzzySetName}'?", "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                //service.updateFuzzySet(selectedFuzzySet);
+                if (selectedFuzzySet is ContinuousFuzzySetDTO)
+                {
+                    var updatedFuzzySet = continuosFuzzySetInfo.getContinuousFuzzySet();
+                }
+                else
+                {
+                    switch (discreteFuzzySetInfo.getFuzzySetType())
+                    {
+                        case FieldType.INT:
+                            var updatedIntFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<int>();
+                            break;
+                        case FieldType.FLOAT:
+                            var updatedFloatFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<float>();
+                            break;
+                        case FieldType.VARCHAR:
+                            var updatedStringFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<string>();
+                            break;
+                    }
+                }
+                //service.updateFuzzySet(updatedFuzzySet);
                 XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }

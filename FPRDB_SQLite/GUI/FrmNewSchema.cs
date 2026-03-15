@@ -69,7 +69,7 @@ namespace FPRDB_SQLite.GUI
             var rows = grdvSchemaAttribute.DataSource as BindingList<SchemaAttribute>;
 
             //schema = convertGridToSchema(schemaName, rows);
-            //defineFPRDBSchema(schema)
+            //defineFPRDBSchema(schema);
             XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
 

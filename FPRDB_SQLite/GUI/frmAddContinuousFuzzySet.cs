@@ -40,7 +40,7 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show("Please fill out all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            var dto = continuosFuzzySetInfo.GetContinuousFuzzySet();
+            var dto = continuosFuzzySetInfo.getContinuousFuzzySet();
             service.createFuzzySet<float>(dto);
             XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
