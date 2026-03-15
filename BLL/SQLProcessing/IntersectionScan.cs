@@ -51,10 +51,69 @@ namespace BLL.SQLProcessing
         public bool next()
         {
             List<string> primaryKey = this.schema.primarykey;
+            AbstractFuzzyProbabilisticValue keyAttrS1;
+            AbstractFuzzyProbabilisticValue keyAttrS2;
+            FieldType fieldType;
+            bool isSameKeyValue;
             while (nextPair())
             {
-                
+                isSameKeyValue = true;
+                //check if two tuples t1 and t2 has same key value
+                foreach(string keyAttrName in primaryKey)
+                {
+                    fieldType = this.schema.getFieldByName(keyAttrName).getFieldInfo().getType();
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    {
+                        keyAttrS1 = this.s1.getFieldContent<int>(keyAttrName);
+                        keyAttrS2 = this.s2.getFieldContent<int>(keyAttrName);
+                    }
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    {
+                        keyAttrS1 = this.s1.getFieldContent<float>(keyAttrName);
+                        keyAttrS2 = this.s2.getFieldContent<float>(keyAttrName);
+                    }
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    {
+                        keyAttrS1 = this.s1.getFieldContent<string>(keyAttrName);
+                        keyAttrS2 = this.s2.getFieldContent<string>(keyAttrName);
+                    }
+                    else //if (fieldType == FieldType.BOOLEAN)
+                    {
+                        keyAttrS1 = this.s1.getFieldContent<bool>(keyAttrName);
+                        keyAttrS2 = this.s2.getFieldContent<bool>(keyAttrName);
+                    }
+
+                    if (!keyAttrS1.hasSameKeyValue(keyAttrS2))
+                    {
+                        isSameKeyValue = false;
+                        break;
+                    }
+                }
+                if (isSameKeyValue)
+                {
+                    //intersection on t1 and t2 to produce the next tuple for the intersection
+                    List<AbstractFuzzyProbabilisticValue> ans = intersectionOnFuzzySet();
+                    bool isValueSetEmpty = false;
+                    //check if any attribute has empty probabilistic value
+                    foreach (AbstractFuzzyProbabilisticValue v in ans)
+                    {
+                        if (v.isValueSetEmpty())
+                        {
+                            isValueSetEmpty = true;
+                            break;
+                        }
+
+                    }
+                    if (!isValueSetEmpty)
+                    {
+                        this.currentTuple = ans;
+                        return true;
+                    }
+
+                }
+
             }
+            this.currentTuple = null;
             return false;
         }
         private List<AbstractFuzzyProbabilisticValue> intersectionOnFuzzySet()

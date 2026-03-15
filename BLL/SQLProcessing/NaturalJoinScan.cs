@@ -53,6 +53,7 @@ namespace BLL.SQLProcessing
             {
                 List<AbstractFuzzyProbabilisticValue> ans = this.naturalJoinOnTuples();
                 isValueSetEmpty = false;
+                //check if any attribute has empty probabilistic value
                 foreach (AbstractFuzzyProbabilisticValue v in ans)
                 {
                     if (v.isValueSetEmpty())

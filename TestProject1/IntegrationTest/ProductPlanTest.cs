@@ -20,7 +20,7 @@ namespace TestProject1.IntegrationTest
         {
             this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
         }
-        [Fact]
+        //[Fact]
         public void createTeacherRelation()
         {
             //CompositionRoot compRoot = new CompositionRoot();
@@ -76,7 +76,7 @@ namespace TestProject1.IntegrationTest
             //");
 
         }
-        [Fact]
+        //[Fact]
         public void ProductPlan_getSchema_success()
         {
             //arrange

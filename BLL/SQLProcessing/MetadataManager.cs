@@ -194,7 +194,7 @@ namespace BLL.SQLProcessing
                 do
                 {
                     ++index;
-                    sql += $" AND {primaryKey[index]}='{value[index]}";
+                    sql += $" AND {primaryKey[index]}='{value[index]}'";
                 } while (index < totalLength - 1);
             }
 

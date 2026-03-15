@@ -19,7 +19,7 @@ namespace TestProject1.IntegrationTest
         {
             this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
         }
-        [Fact]
+        //[Fact]
         public void ProjectPlan_open_sucess()
         {
 

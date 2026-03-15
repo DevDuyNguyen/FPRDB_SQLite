@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Interfaces;
 using System;
@@ -22,6 +23,8 @@ namespace BLL.SQLProcessing
             {
                 throw new InvalidDataException("Relations of the intersection doesn't have the same schema structure");
             }
+            if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombinationStrategy))
+                throw new InvalidDataException("Intersection must be paired with probabilistic conjunction strategy");
             this.p1 = p1;
             this.p2 = p2;
             this.probCombinationStrategy = probCombinationStrategy;
@@ -46,7 +49,10 @@ namespace BLL.SQLProcessing
             }
             return isSameStructure;
         }
-        public Scan open() => throw new NotImplementedException();
-        public FPRDBSchema getSchema() => throw new NotImplementedException();
+        public Scan open()
+        {
+            return new IntersectionScan(this.p1.open(), this.p2.open(), this.probCombinationStrategy, this.schema);
+        }
+        public FPRDBSchema getSchema() => this.schema;
     }
 }
