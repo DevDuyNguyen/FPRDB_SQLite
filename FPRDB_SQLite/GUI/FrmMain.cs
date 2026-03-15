@@ -12,7 +12,7 @@ using BLL.Services;
 using BLL.DomainObject;
 using DevExpress.Xpo.DB.Helpers;
 using BLL.Common;
-using BLL.SQLProcessing;
+using GUI.GlobalStates;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -212,6 +212,8 @@ namespace FPRDB_SQLite.GUI
                     XtraMessageBox.Show("Open database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     isDatabaseLoaded = true;
                     LoadDatabaseTree();
+                    //load field types
+                    AppStates.createSChemaFieldTypes = this.databaseService.getFieldTypes();
                 }
                 catch (IOException ex)
                 {
@@ -240,6 +242,8 @@ namespace FPRDB_SQLite.GUI
                     XtraMessageBox.Show("Create new database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     isDatabaseLoaded = true;
                     LoadDatabaseTree();
+                    //load field types
+                    AppStates.createSChemaFieldTypes = this.databaseService.getFieldTypes();
                 }
             }
             catch (FileNotFoundException ex)

@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
@@ -38,6 +39,11 @@ namespace BLL.SQLProcessing
             if (this.metadataMgr.isConstraintExist(constraintName))
             {
                 throw new SemanticException($"Constraint with name {constraintName} already exists");
+            }
+            foreach(string fldName in data.getPrimarykey())
+            {
+                if (!FieldTypeUtilities.isPrimitive(data.getFieldByName(fldName).getFieldInfo().getType()))
+                    throw new SemanticException("Primary key must be of non fuzzy set type");
             }
             return true;
 
