@@ -9,6 +9,6 @@ namespace BLL.DomainObject
     public abstract class AbstractFuzzyProbabilisticValue
     {
         public abstract bool isValueSetEmpty();
-        public abstract bool hasSameKeyValue(AbstractFuzzyProbabilisticValue v);
+        public abstract bool hasSameValueList(AbstractFuzzyProbabilisticValue v);
     }
 }

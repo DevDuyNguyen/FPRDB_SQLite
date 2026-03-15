@@ -50,7 +50,10 @@ namespace BLL.SQLProcessing
             }
             return isSameStructure;
         }
-        public Scan open() => throw new NotImplementedException();
+        public Scan open()
+        {
+            return new UnionScan(this.p1.open(), this.p2.open(), this.probCombinationStrategy, this.schema);
+        }
         public FPRDBSchema getSchema() => this.schema;
 
     }

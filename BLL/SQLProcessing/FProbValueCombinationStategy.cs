@@ -80,7 +80,7 @@ namespace BLL.SQLProcessing
             List<float> ans_intervalProbLowerBoundList = new List<float>();
             List<float> ans_intervalProbUpperBoundList = new List<float>();
 
-            if (ProbabilisticCombinationStrategyUtilities.isDisjunctionStategy(probCombStrategy))
+            if (!ProbabilisticCombinationStrategyUtilities.isDisjunctionStategy(probCombStrategy))
                 throw new InvalidDataException("Probabilistic combination strategy must be disjunction");
 
 
@@ -158,7 +158,7 @@ namespace BLL.SQLProcessing
             List<float> ans_intervalProbLowerBoundList = new List<float>();
             List<float> ans_intervalProbUpperBoundList = new List<float>();
 
-            if (ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(probCombStrategy))
+            if (!ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(probCombStrategy))
                 throw new InvalidDataException("Probabilistic combination strategy must be disjunction");
 
 

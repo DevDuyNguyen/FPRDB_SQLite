@@ -33,39 +33,45 @@ namespace BLL.SQLProcessing
 
         public void beforeFirst()
         {
-            if (!isReverse)
-            {
-                s1.beforeFirst();
-                s1.next();
-                s2.beforeFirst();
-            }
-            else
-            {
-                var tmp = s1;
-                s1 = s2;
-                s2 = s1;
+            s1.beforeFirst();
+            s2.beforeFirst();
+            if (this.isReverse)
+                this.isReverse = false;
+            //if (!isReverse)
+            //{
+            //    s1.beforeFirst();
+            //    s1.next();
+            //    s2.beforeFirst();
+            //}
+            //else
+            //{
+            //    var tmp = s1;
+            //    s1 = s2;
+            //    s2 = s1;
 
-                s1.beforeFirst();
-                s1.next();
-                s2.beforeFirst();
-            }
+            //    s1.beforeFirst();
+            //    s1.next();
+            //    s2.beforeFirst();
+
+            //    this.isReverse = false;
+            //}
         }
-        private int nextPair()
-        {
+        //private int nextPair()
+        //{
             
-            if (s2.next())
-                return 1;//s2 next
-            else
-            {
-                s2.beforeFirst();
-                bool hasNext= s2.next() && s1.next();
-                if (hasNext)
-                    return 2;//s1 next
-                else
-                    return 0;//run out of next
+        //    if (s2.next())
+        //        return 1;//s2 next
+        //    else
+        //    {
+        //        s2.beforeFirst();
+        //        bool hasNext= s2.next() && s1.next();
+        //        if (hasNext)
+        //            return 2;//s1 next
+        //        else
+        //            return 0;//run out of next
 
-            }
-        }
+        //    }
+        //}
         public bool next()
         {
             bool isMatched;
@@ -75,7 +81,7 @@ namespace BLL.SQLProcessing
             FieldType fieldType;
             bool isSameKeyValue;
 
-            while (s1.next())
+            while (!this.isReverse && s1.next())
             {
                 isMatched = false;
                 while (s2.next())
@@ -106,7 +112,7 @@ namespace BLL.SQLProcessing
                             keyAttrS2 = this.s2.getFieldContent<bool>(keyAttrName);
                         }
 
-                        if (!keyAttrS1.hasSameKeyValue(keyAttrS2))
+                        if (!keyAttrS1.hasSameValueList(keyAttrS2))
                         {
                             isSameKeyValue = false;
                             break;
@@ -114,34 +120,84 @@ namespace BLL.SQLProcessing
                     }
                     if (isSameKeyValue)
                     {
-                        //intersection on t1 and t2 to produce the next tuple for the intersection
-                        List<AbstractFuzzyProbabilisticValue> ans = intersectionOnFuzzySet();
-                        bool isValueSetEmpty = false;
-                        //check if any attribute has empty probabilistic value
-                        foreach (AbstractFuzzyProbabilisticValue v in ans)
-                        {
-                            if (v.isValueSetEmpty())
-                            {
-                                isValueSetEmpty = true;
-                                break;
-                            }
-
-                        }
-                        if (!isValueSetEmpty)
-                        {
-                            this.currentTuple = ans;
-                            return true;
-                        }
+                        //union on t1 and t2 to produce the next tuple for the intersection
+                        this.currentTuple = this.unionOnTuples();
+                        isMatched = true;
+                        return true;
 
                     }
-
-
                 }
+                s2.beforeFirst();
                 if(!isMatched)
                 {
                     this.currentTuple = s1.getCurrentTuple();
+                    return true;
                 }
             }
+
+            
+            if(!this.isReverse)
+            {
+                this.s1.beforeFirst();
+                this.s2.beforeFirst();
+                this.isReverse = true;
+            }
+            //var tmp = this.s1;
+            //this.s1 = this.s2;
+            //this.s2 = tmp;
+
+            while (this.isReverse && s2.next())
+            {
+                isMatched = false;
+                while (s1.next())
+                {
+                    isSameKeyValue = true;
+                    //check if two tuples t1 and t2 has same key value
+                    foreach (string keyAttrName in primaryKey)
+                    {
+                        fieldType = this.schema.getFieldByName(keyAttrName).getFieldInfo().getType();
+                        if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        {
+                            keyAttrS1 = this.s1.getFieldContent<int>(keyAttrName);
+                            keyAttrS2 = this.s2.getFieldContent<int>(keyAttrName);
+                        }
+                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                        {
+                            keyAttrS1 = this.s1.getFieldContent<float>(keyAttrName);
+                            keyAttrS2 = this.s2.getFieldContent<float>(keyAttrName);
+                        }
+                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                        {
+                            keyAttrS1 = this.s1.getFieldContent<string>(keyAttrName);
+                            keyAttrS2 = this.s2.getFieldContent<string>(keyAttrName);
+                        }
+                        else //if (fieldType == FieldType.BOOLEAN)
+                        {
+                            keyAttrS1 = this.s1.getFieldContent<bool>(keyAttrName);
+                            keyAttrS2 = this.s2.getFieldContent<bool>(keyAttrName);
+                        }
+
+                        if (!keyAttrS1.hasSameValueList(keyAttrS2))
+                        {
+                            isSameKeyValue = false;
+                            break;
+                        }
+                    }
+                    if (isSameKeyValue)
+                    {
+                        isMatched = true;
+                        break;
+                    }
+                }
+                s1.beforeFirst();
+                if (!isMatched)
+                {
+                    this.currentTuple = s2.getCurrentTuple();
+                    return true;
+                }
+            }
+            this.currentTuple = null;
+            return false;
 
         }
         private List<AbstractFuzzyProbabilisticValue> unionOnTuples()
@@ -156,25 +212,25 @@ namespace BLL.SQLProcessing
                 {
                     FuzzyProbabilisticValue<int> fprobValue1 = this.s1.getFieldContent<int>(field.getFieldName());
                     FuzzyProbabilisticValue<int> fprobValue2 = this.s2.getFieldContent<int>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.conjunction<int>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    ans.Add(FProbValueCombinationStategy.disjunction<int>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                 }
                 else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
                 {
                     FuzzyProbabilisticValue<float> fprobValue1 = this.s1.getFieldContent<float>(field.getFieldName());
                     FuzzyProbabilisticValue<float> fprobValue2 = this.s2.getFieldContent<float>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.conjunction<float>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    ans.Add(FProbValueCombinationStategy.disjunction<float>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                 }
                 else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
                 {
                     FuzzyProbabilisticValue<string> fprobValue1 = this.s1.getFieldContent<string>(field.getFieldName());
                     FuzzyProbabilisticValue<string> fprobValue2 = this.s2.getFieldContent<string>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.conjunction<string>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    ans.Add(FProbValueCombinationStategy.disjunction<string>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                 }
                 else //if (fieldType == FieldType.BOOLEAN)
                 {
                     FuzzyProbabilisticValue<bool> fprobValue1 = this.s1.getFieldContent<bool>(field.getFieldName());
                     FuzzyProbabilisticValue<bool> fprobValue2 = this.s2.getFieldContent<bool>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.conjunction<bool>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    ans.Add(FProbValueCombinationStategy.disjunction<bool>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                 }
             }
             return ans;

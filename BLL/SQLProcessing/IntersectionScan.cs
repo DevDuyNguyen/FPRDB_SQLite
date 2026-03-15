@@ -83,7 +83,7 @@ namespace BLL.SQLProcessing
                         keyAttrS2 = this.s2.getFieldContent<bool>(keyAttrName);
                     }
 
-                    if (!keyAttrS1.hasSameKeyValue(keyAttrS2))
+                    if (!keyAttrS1.hasSameValueList(keyAttrS2))
                     {
                         isSameKeyValue = false;
                         break;
@@ -92,7 +92,7 @@ namespace BLL.SQLProcessing
                 if (isSameKeyValue)
                 {
                     //intersection on t1 and t2 to produce the next tuple for the intersection
-                    List<AbstractFuzzyProbabilisticValue> ans = intersectionOnFuzzySet();
+                    List<AbstractFuzzyProbabilisticValue> ans = this.intersectionOnTuples();
                     bool isValueSetEmpty = false;
                     //check if any attribute has empty probabilistic value
                     foreach (AbstractFuzzyProbabilisticValue v in ans)
@@ -116,7 +116,7 @@ namespace BLL.SQLProcessing
             this.currentTuple = null;
             return false;
         }
-        private List<AbstractFuzzyProbabilisticValue> intersectionOnFuzzySet()
+        private List<AbstractFuzzyProbabilisticValue> intersectionOnTuples()
         {
             FieldType fieldType;
             List<AbstractFuzzyProbabilisticValue> ans = new List<AbstractFuzzyProbabilisticValue>();

@@ -25,7 +25,7 @@ namespace BLL.DomainObject
         {
             return this.valueList.Count == 0;
         }
-        public override bool hasSameKeyValue(AbstractFuzzyProbabilisticValue v)
+        public override bool hasSameValueList(AbstractFuzzyProbabilisticValue v)
         {
             if (v is FuzzyProbabilisticValue<T>)
             {
