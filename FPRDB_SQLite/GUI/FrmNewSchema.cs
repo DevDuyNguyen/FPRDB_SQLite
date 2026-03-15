@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GUI.GlobalStates;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -47,12 +48,7 @@ namespace FPRDB_SQLite.GUI
         {
             grdcSchemaAttribute.DataSource = new BindingList<SchemaAttribute>();
             grdvSchemaAttribute.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Bottom;
-            repositoryItemComboBox1.Items.AddRange(new object[]
-            {
-                FieldType.INT,
-                FieldType.FLOAT,
-                FieldType.VARCHAR
-            });
+            repositoryItemComboBox1.Items.AddRange(AppStates.createSChemaFieldTypes);
             repositoryItemComboBox1.NullText = "<Choose data type>";
             repositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
         }

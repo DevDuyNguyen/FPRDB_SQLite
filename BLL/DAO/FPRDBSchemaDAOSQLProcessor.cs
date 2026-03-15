@@ -41,7 +41,7 @@ namespace BLL.DAO
             return this.sqlProcessor.executeDataDefinition(fprdSQL);
         }
         public bool removeFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO)=>throw new NotImplementedException();
-        public List<FPRDBSchema> findSchema(string name) => throw new NotImplementedException();;
-        public List<FPRDBRelation> findRelationsOfSchema(FPRDBSchemaDTO schema) => throw new NotImplementedException();;
+        public List<FPRDBSchema> findSchema(string name) => throw new NotImplementedException();
+        public List<FPRDBRelation> findRelationsOfSchema(FPRDBSchemaDTO schema) => throw new NotImplementedException();
     }
 }
