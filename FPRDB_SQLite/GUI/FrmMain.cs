@@ -1,4 +1,12 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL.Common;
+using BLL.DomainObject;
+using BLL.Services;
+using BLL.SQLProcessing;
+using DevExpress.Xpo.DB.Helpers;
+using DevExpress.XtraBars;
+using DevExpress.XtraBars.Ribbon;
+using DevExpress.XtraEditors;
+using DevExpress.XtraTab;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,11 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using BLL.Services;
-using BLL.DomainObject;
-using DevExpress.Xpo.DB.Helpers;
-using BLL.Common;
-using BLL.SQLProcessing;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -20,11 +23,15 @@ namespace FPRDB_SQLite.GUI
     {
         private CompositionRoot compRoot;
         private DatabaseService databaseService;
+        //private SQLFileService sqlFileService;
         private bool isDatabaseLoaded = false;
+        private string currentSQLFilePath = string.Empty;
+        private bool isSQLFileModified = false;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
             this.databaseService = this.compRoot.getDatabaseService();
+            //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
         }
@@ -37,6 +44,7 @@ namespace FPRDB_SQLite.GUI
                 pageFuzzySet.Visible = false;
                 RelationRibbonPage.Visible = false;    // Tab "Relation"
                 QueryRibbonPage.Visible = false;    // Tab "Query"
+                xtraTabControlDatabase.Visible = false;
             }
             else
             {
@@ -44,9 +52,16 @@ namespace FPRDB_SQLite.GUI
                 pageFuzzySet.Visible = true;
                 RelationRibbonPage.Visible = true;    // Tab "Relation"
                 QueryRibbonPage.Visible = true;    // Tab "Query"
+                xtraTabControlDatabase.Visible = true;
+                SetQueryTabState(false);
             }
         }
-
+        private string GetRootPath(string path)
+        {
+            // Hàm này tự động hiểu và lấy ra "C:\", "D:\"... một cách an toàn
+            return System.IO.Path.GetPathRoot(path);
+        }
+        #region Tab Page Fuzzy Set
         private void buttonAdd_groupDis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new frmAddDiscreteFuzzySet(compRoot).ShowDialog();
@@ -56,7 +71,13 @@ namespace FPRDB_SQLite.GUI
         {
             new frmAddContinuousFuzzySet(compRoot).ShowDialog();
         }
-
+        private void iSearchFuzzySet_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new frmManageFuzzySet(compRoot).ShowDialog();
+        }
+        #endregion
+        #region Tab Page Home
+        // Hàm load cây Database sau khi mở hoặc tạo mới Database
         private void LoadDatabaseTree()
         {
             changeStatusTab();
@@ -188,13 +209,7 @@ namespace FPRDB_SQLite.GUI
 
             treeView.ExpandAll();
         }
-
-        private string GetRootPath(string path)
-        {
-            // Hàm này tự động hiểu và lấy ra "C:\", "D:\"... một cách an toàn
-            return System.IO.Path.GetPathRoot(path);
-        }
-
+        // Hàm xử lý khi click "Open" button
         private void buttonOpen_pageHome_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             OpenFileDialog DialogOpen = new OpenFileDialog();
@@ -219,7 +234,7 @@ namespace FPRDB_SQLite.GUI
                 }
             }
         }
-
+        // Hàm xử lý khi click "New" button
         private void buttonNew_pageHome_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //CompositionRoot.databaseService.SaveDB();
@@ -269,11 +284,147 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show(Ex.Message);
             }
         }
-        private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        #endregion
+        #region Tab Page Query
+        #region Page Group File
+        // Hàm enable Query Edtor khi đã load Query thành công
+        private void SetQueryTabState(bool isLoaded, string fileName = "")
         {
-            string sql = memoEditTxtQuery.Text;
+            XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2]; // use your tab name
 
+            if (isLoaded)
+            {
+                queryTab.PageEnabled = true;
+                queryTab.Text = fileName;
+                conjunctionRibbonPageGroup.Enabled = true;
+                disjunctionRibbonPageGroup.Enabled = true;
+                differenceRibbonPageGroup.Enabled = true;
+                operatorRibbonPageGroup.Enabled = true;
+                excuteQueryribbonPageGroup.Enabled = true;
+                iSaveQuery.Enabled = true;
+            }
+            else
+            {
+                queryTab.PageEnabled = false;
+                queryTab.Text = "Query";
+                iSaveQuery.Enabled = false;
+                conjunctionRibbonPageGroup.Enabled = false;
+                disjunctionRibbonPageGroup.Enabled = false;
+                differenceRibbonPageGroup.Enabled = false;
+                operatorRibbonPageGroup.Enabled = false;
+                excuteQueryribbonPageGroup.Enabled = false;
+            }
         }
+        // Hàm tạo mới SQL File
+        private void CreateNewQuery()
+        {
+            try
+            {
+                SaveFileDialog DialogNew = new SaveFileDialog();
+                DialogNew.Title = "Create New SQL File";
+                DialogNew.Filter = "SQL File (*.fprdbsql)|*.fprdbsql";
+                DialogNew.DefaultExt = "fprdbsql";
+                DialogNew.AddExtension = true;
+                DialogNew.RestoreDirectory = true;
+                DialogNew.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
+                DialogNew.SupportMultiDottedExtensions = true;
+
+                if (DialogNew.ShowDialog() == DialogResult.OK)
+                {
+                    //sqlFileService.createFile(DialogNew.FileName)
+                    currentSQLFilePath = DialogNew.FileName;
+                    // Tạo file trống
+                    File.WriteAllText(currentSQLFilePath, string.Empty, Encoding.Unicode);
+                    memoEditTxtQuery.Text = string.Empty;
+                    SetQueryTabState(true, Path.GetFileName(DialogNew.FileName));
+                    XtraMessageBox.Show("Create new SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                XtraMessageBox.Show($"Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (IOException ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+
+        // Hàm mở SQL File đã tồn tại
+        private void OpenQuery()
+        {
+            OpenFileDialog DialogOpen = new OpenFileDialog();
+            DialogOpen.Title = "Open SQL File";
+            DialogOpen.Filter = "SQL File (*.fprdbsql)|*.fprdbsql";
+            DialogOpen.DefaultExt = "fprdbsql";
+            DialogOpen.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
+            if (DialogOpen.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    //string sqlContent = sqlFileService.loadFile(DialogOpen.FileName);
+                    currentSQLFilePath = DialogOpen.FileName;
+                    memoEditTxtQuery.Text = File.ReadAllText(currentSQLFilePath, Encoding.Unicode);
+                    SetQueryTabState(true, Path.GetFileName(DialogOpen.FileName));
+                    XtraMessageBox.Show("Open SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (IOException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+        // Xử lý sự kiện click cho nút New
+        private void iNewQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            CreateNewQuery();
+        }
+        // Xử lý sự kiện click cho nút Open
+        private void iOpenQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            OpenQuery();
+        }
+        private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
+        {
+            if (!isSQLFileModified)
+            {
+                isSQLFileModified = true;
+                XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
+                if (!queryTab.Text.StartsWith("*"))
+                    queryTab.Text = "*" + queryTab.Text;
+            }
+        }
+        // Hàm lưu file SQL
+        private void SaveCurrentFile()
+        {
+            if (string.IsNullOrEmpty(currentSQLFilePath)) return;
+
+            try
+            {
+                // Viết nội dung hiện tại trên editor vào file
+                File.WriteAllText(currentSQLFilePath, memoEditTxtQuery.Text, Encoding.Unicode);
+
+                // Bỏ dấu * sau khi lưu
+                isSQLFileModified = false;
+                XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
+                queryTab.Text = queryTab.Text.TrimStart('*');
+                XtraMessageBox.Show("Save SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"Error saving file: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        // Xử lý sự kiện click cho nút Save
+        private void iSaveQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SaveCurrentFile();
+        }
+        #endregion
+        #region Page Group Conjuntion
         private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string symbol = " ⨂_ig ";
@@ -373,7 +524,8 @@ namespace FPRDB_SQLite.GUI
             // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             memoEditTxtQuery.Focus();
         }
-
+        #endregion
+        #region Page Group Disjunction
         private void iDisjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string symbol = " ⨁_ig ";
@@ -473,7 +625,8 @@ namespace FPRDB_SQLite.GUI
             // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             memoEditTxtQuery.Focus();
         }
-
+        #endregion
+        #region Page Group Difference
         private void iDifferenceIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string symbol = " ⦵_ig ";
@@ -573,7 +726,12 @@ namespace FPRDB_SQLite.GUI
             // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             memoEditTxtQuery.Focus();
         }
+        #endregion
+        private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string sql = memoEditTxtQuery.Text;
 
+        }
         private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string symbol = " ⇒ ";
@@ -598,40 +756,18 @@ namespace FPRDB_SQLite.GUI
             // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             memoEditTxtQuery.Focus();
         }
-
-        private void CreateNewQuery()
-        {
-            try
-            {
-
-                if (this.databaseService == null)
-                {
-                    XtraMessageBox.Show("Error : Cannot find the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-            }
-            catch (Exception Ex)
-            {
-                MessageBox.Show(Ex.Message);
-            }
-        }
-
-
-        // Nút này tạm thời chưa làm gì, để dành cho việc tạo Query mới sau này
-        private void iNewQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            CreateNewQuery();
-        }
-
+        #endregion
+        #region Tab Page Schema
         private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new frmNewSchema(compRoot).ShowDialog();
         }
-
+        #endregion
+        #region Tab Page Relation
         private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new frmNewRelation(compRoot).ShowDialog();
         }
+        #endregion
     }
 }

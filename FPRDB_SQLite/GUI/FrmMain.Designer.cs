@@ -266,6 +266,7 @@
             iSearchFuzzySet.Id = 24;
             iSearchFuzzySet.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSearchFuzzySet.ImageOptions.LargeImage");
             iSearchFuzzySet.Name = "iSearchFuzzySet";
+            iSearchFuzzySet.ItemClick += iSearchFuzzySet_ItemClick;
             // 
             // iNewRelation
             // 
@@ -311,6 +312,7 @@
             iOpenQuery.Id = 31;
             iOpenQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iOpenQuery.ImageOptions.LargeImage");
             iOpenQuery.Name = "iOpenQuery";
+            iOpenQuery.ItemClick += iOpenQuery_ItemClick;
             // 
             // iSaveQuery
             // 
@@ -318,6 +320,7 @@
             iSaveQuery.Id = 32;
             iSaveQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveQuery.ImageOptions.LargeImage");
             iSaveQuery.Name = "iSaveQuery";
+            iSaveQuery.ItemClick += iSaveQuery_ItemClick;
             // 
             // iConjunctionIgnorance
             // 
@@ -638,7 +641,7 @@
             RelationsplitContainerControl.Panel2.Controls.Add(xtraTabControlDatabase);
             RelationsplitContainerControl.Panel2.Text = "Panel2";
             RelationsplitContainerControl.Size = new System.Drawing.Size(970, 376);
-            RelationsplitContainerControl.SplitterPosition = 165;
+            RelationsplitContainerControl.SplitterPosition = 209;
             RelationsplitContainerControl.TabIndex = 5;
             // 
             // treeView
@@ -651,7 +654,7 @@
             treeView.Location = new System.Drawing.Point(0, 0);
             treeView.Name = "treeView";
             treeView.SelectedImageIndex = 0;
-            treeView.Size = new System.Drawing.Size(165, 356);
+            treeView.Size = new System.Drawing.Size(209, 356);
             treeView.TabIndex = 2;
             // 
             // xtraTabControlDatabase
@@ -660,7 +663,7 @@
             xtraTabControlDatabase.Location = new System.Drawing.Point(0, 0);
             xtraTabControlDatabase.Name = "xtraTabControlDatabase";
             xtraTabControlDatabase.SelectedTabPage = SchemaxtraTabPage;
-            xtraTabControlDatabase.Size = new System.Drawing.Size(773, 356);
+            xtraTabControlDatabase.Size = new System.Drawing.Size(729, 356);
             xtraTabControlDatabase.TabIndex = 1;
             xtraTabControlDatabase.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { SchemaxtraTabPage, RelationxtraTabPage, QueryxtraTabPage });
             // 
@@ -669,7 +672,7 @@
             SchemaxtraTabPage.Controls.Add(gridControlScheme);
             SchemaxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             SchemaxtraTabPage.Name = "SchemaxtraTabPage";
-            SchemaxtraTabPage.Size = new System.Drawing.Size(771, 326);
+            SchemaxtraTabPage.Size = new System.Drawing.Size(727, 326);
             SchemaxtraTabPage.Text = "Schema";
             // 
             // gridControlScheme
@@ -680,7 +683,7 @@
             gridControlScheme.MenuManager = ribbonControl;
             gridControlScheme.Name = "gridControlScheme";
             gridControlScheme.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCalcEdit1, repositoryItemButtonEdit1, repositoryItemHeightType1, repositoryItemCheckEdit1 });
-            gridControlScheme.Size = new System.Drawing.Size(771, 326);
+            gridControlScheme.Size = new System.Drawing.Size(727, 326);
             gridControlScheme.TabIndex = 0;
             gridControlScheme.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
             // 
@@ -750,7 +753,7 @@
             RelationxtraTabPage.Controls.Add(splitContainerControl2);
             RelationxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             RelationxtraTabPage.Name = "RelationxtraTabPage";
-            RelationxtraTabPage.Size = new System.Drawing.Size(771, 326);
+            RelationxtraTabPage.Size = new System.Drawing.Size(727, 326);
             RelationxtraTabPage.Text = "Relation";
             // 
             // splitContainerControl2
@@ -770,7 +773,7 @@
             splitContainerControl2.Panel2.Controls.Add(gridControlValueRelation);
             splitContainerControl2.Panel2.Controls.Add(panelControlRelation);
             splitContainerControl2.Panel2.Text = "Panel2";
-            splitContainerControl2.Size = new System.Drawing.Size(771, 326);
+            splitContainerControl2.Size = new System.Drawing.Size(727, 326);
             splitContainerControl2.SplitterPosition = 104;
             splitContainerControl2.TabIndex = 0;
             // 
@@ -781,7 +784,7 @@
             gridControlRelation.MainView = gridView3;
             gridControlRelation.MenuManager = ribbonControl;
             gridControlRelation.Name = "gridControlRelation";
-            gridControlRelation.Size = new System.Drawing.Size(771, 104);
+            gridControlRelation.Size = new System.Drawing.Size(727, 104);
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
@@ -798,7 +801,7 @@
             gridControlValueRelation.MainView = gridView4;
             gridControlValueRelation.MenuManager = ribbonControl;
             gridControlValueRelation.Name = "gridControlValueRelation";
-            gridControlValueRelation.Size = new System.Drawing.Size(771, 165);
+            gridControlValueRelation.Size = new System.Drawing.Size(727, 165);
             gridControlValueRelation.TabIndex = 1;
             gridControlValueRelation.UseEmbeddedNavigator = true;
             gridControlValueRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView4 });
@@ -844,7 +847,7 @@
             panelControlRelation.Dock = System.Windows.Forms.DockStyle.Top;
             panelControlRelation.Location = new System.Drawing.Point(0, 0);
             panelControlRelation.Name = "panelControlRelation";
-            panelControlRelation.Size = new System.Drawing.Size(771, 45);
+            panelControlRelation.Size = new System.Drawing.Size(727, 45);
             panelControlRelation.TabIndex = 0;
             // 
             // QueryxtraTabPage
@@ -852,7 +855,7 @@
             QueryxtraTabPage.Controls.Add(splitContainerControl1);
             QueryxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             QueryxtraTabPage.Name = "QueryxtraTabPage";
-            QueryxtraTabPage.Size = new System.Drawing.Size(771, 326);
+            QueryxtraTabPage.Size = new System.Drawing.Size(727, 326);
             QueryxtraTabPage.Text = "Query";
             // 
             // splitContainerControl1
@@ -871,7 +874,7 @@
             // 
             splitContainerControl1.Panel2.Controls.Add(xtraTabControl1);
             splitContainerControl1.Panel2.Text = "Panel2";
-            splitContainerControl1.Size = new System.Drawing.Size(771, 326);
+            splitContainerControl1.Size = new System.Drawing.Size(727, 326);
             splitContainerControl1.SplitterPosition = 132;
             splitContainerControl1.TabIndex = 0;
             // 
@@ -880,9 +883,10 @@
             memoEditTxtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
             memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
             memoEditTxtQuery.Name = "memoEditTxtQuery";
-            memoEditTxtQuery.Size = new System.Drawing.Size(771, 132);
+            memoEditTxtQuery.Size = new System.Drawing.Size(727, 132);
             memoEditTxtQuery.TabIndex = 0;
             memoEditTxtQuery.Text = "";
+            memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
             // xtraTabControl1
             // 
@@ -890,7 +894,7 @@
             xtraTabControl1.Location = new System.Drawing.Point(0, 0);
             xtraTabControl1.Name = "xtraTabControl1";
             xtraTabControl1.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControl1.Size = new System.Drawing.Size(771, 182);
+            xtraTabControl1.Size = new System.Drawing.Size(727, 182);
             xtraTabControl1.TabIndex = 0;
             xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
             // 
@@ -898,7 +902,7 @@
             // 
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(769, 152);
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(725, 152);
             QueryResultxtraTabPage.Text = "Query Result";
             // 
             // gridControlResultQuery
@@ -908,7 +912,7 @@
             gridControlResultQuery.MainView = gridView2;
             gridControlResultQuery.MenuManager = ribbonControl;
             gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(769, 152);
+            gridControlResultQuery.Size = new System.Drawing.Size(725, 152);
             gridControlResultQuery.TabIndex = 0;
             gridControlResultQuery.UseEmbeddedNavigator = true;
             gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView2 });
@@ -922,7 +926,7 @@
             // MessagextraTabPage
             // 
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(769, 152);
+            MessagextraTabPage.Size = new System.Drawing.Size(725, 152);
             MessagextraTabPage.Text = "Message";
             // 
             // frmMain
