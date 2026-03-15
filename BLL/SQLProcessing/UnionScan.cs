@@ -18,6 +18,7 @@ namespace BLL.SQLProcessing
         private List<AbstractFuzzyProbabilisticValue> currentTuple;
         private ProbabilisticCombinationStrategy probCombinationStrategy;
         private FPRDBSchema schema;
+        private bool isReverse = false;
 
         public UnionScan(Scan s1, Scan s2, ProbabilisticCombinationStrategy probCombinationStrategy, FPRDBSchema schema)
         {
@@ -27,27 +28,59 @@ namespace BLL.SQLProcessing
                 throw new InvalidDataException("Intersection must be paired with probabilistic conjunction strategy");
             this.probCombinationStrategy = probCombinationStrategy;
             this.schema = schema;
-            this.s1.next();
+            //this.s1.next();
         }
 
         public void beforeFirst()
         {
-            s1.beforeFirst();
-            s1.next();
-            s2.beforeFirst();
+            if (!isReverse)
+            {
+                s1.beforeFirst();
+                s1.next();
+                s2.beforeFirst();
+            }
+            else
+            {
+                var tmp = s1;
+                s1 = s2;
+                s2 = s1;
+
+                s1.beforeFirst();
+                s1.next();
+                s2.beforeFirst();
+            }
         }
-        private bool nextPair()
+        private int nextPair()
         {
+            
             if (s2.next())
-                return true;
+                return 1;//s2 next
             else
             {
                 s2.beforeFirst();
-                return s2.next() && s1.next();
+                bool hasNext= s2.next() && s1.next();
+                if (hasNext)
+                    return 2;//s1 next
+                else
+                    return 0;//run out of next
+
             }
         }
         public bool next()
         {
+            bool isMatched;
+            while (s1.next())
+            {
+                isMatched = false;
+                while (s2.next())
+                {
+
+                }
+                if(!isMatched)
+                {
+                    this.currentTuple=
+                }
+            }
 
         }
         private List<AbstractFuzzyProbabilisticValue> unionOnTuples()
