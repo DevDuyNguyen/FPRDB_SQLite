@@ -23,7 +23,7 @@ namespace BLL.DomainObject
         }
         public override bool isValueSetEmpty()
         {
-            return this.valueList.Count != 0;
+            return this.valueList.Count == 0;
         }
 
         //public FieldType getDomain() => this.domain;

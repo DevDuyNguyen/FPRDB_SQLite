@@ -22,7 +22,7 @@ namespace BLL.SQLProcessing
             List<float> ans_intervalProbLowerBoundList= new List<float>();
             List<float> ans_intervalProbUpperBoundList=new List<float>();
 
-            if (ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombStrategy))
+            if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombStrategy))
                 throw new InvalidDataException("Probabilistic combination strategy must be conjunction");
 
 

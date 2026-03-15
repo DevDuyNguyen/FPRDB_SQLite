@@ -24,6 +24,7 @@ namespace BLL.SQLProcessing
             this.commonFields = commonFields;
             this.schema = schema;
             this.probCombinationStrategy = probCombinationStrategy;
+            this.s1.next();
         }
 
         public void beforeFirst()
@@ -32,18 +33,40 @@ namespace BLL.SQLProcessing
             this.s1.next();
             this.s2.beforeFirst();
         }
-        public bool next()
+        private bool nextPair()
         {
             if (s2.next())
-            {
-                List<AbstractFuzzyProbabilisticValue> ans = this.naturalJoinOnTuples();
                 return true;
-            }
             else
             {
                 s2.beforeFirst();
                 return s2.next() && s1.next();
             }
+        }
+        public bool next()
+        {
+            bool isValueSetEmpty;
+            while (this.nextPair())
+            {
+                List<AbstractFuzzyProbabilisticValue> ans = this.naturalJoinOnTuples();
+                isValueSetEmpty = false;
+                foreach (AbstractFuzzyProbabilisticValue v in ans)
+                {
+                    if (v.isValueSetEmpty())
+                    {
+                        isValueSetEmpty = true;
+                        break;
+                    }
+                        
+                }
+                if(!isValueSetEmpty)
+                {
+                    this.currentTuple = ans;
+                    return true;
+                }
+            }
+            return false;
+            
         }
         public void close() { }
 

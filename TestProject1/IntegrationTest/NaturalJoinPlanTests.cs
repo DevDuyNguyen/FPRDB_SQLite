@@ -1,33 +1,32 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DomainObject;
+using BLL.Enums;
 using BLL.Interfaces;
-using BLL.Services;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TestProject1.IntegrationTest
 {
-    public class ProductPlanTest
+    public class NaturalJoinPlanTests
     {
         private string dbFile;
-        public ProductPlanTest()
+        public NaturalJoinPlanTests()
         {
             this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
         }
         [Fact]
         public void createTeacherRelation()
         {
-            //CompositionRoot compRoot = new CompositionRoot();
-            //MetadataManager metaMgr = compRoot.getMetaDataManger();
-            //DatabaseManager dbMgr = compRoot.getDBMgr();
-            //dbMgr.loadDB(this.dbFile);
-            //SQLProcessor processor = compRoot.getSQLProcessor();
+            CompositionRoot compRoot = new CompositionRoot();
+            MetadataManager metaMgr = compRoot.getMetaDataManger();
+            DatabaseManager dbMgr = compRoot.getDBMgr();
+            dbMgr.loadDB(this.dbFile);
+            SQLProcessor processor = compRoot.getSQLProcessor();
             //processor.executeDataDefinition(@"
             //    CREATE SCHEMA DOCTOR1 (
             //        DOCTOR_ID VARCHAR(100),
@@ -77,7 +76,7 @@ namespace TestProject1.IntegrationTest
 
         }
         [Fact]
-        public void ProductPlan_getSchema_success()
+        public void NaturalJoinPlan_getSchema_success()
         {
             //arrange
             CompositionRoot compRoot = new CompositionRoot();
@@ -87,18 +86,14 @@ namespace TestProject1.IntegrationTest
             RelationPlan p1 = new RelationPlan("DOCTOR1", metaMgr, dbMgr, compRoot.getParser());
             RelationPlan p2 = new RelationPlan("DOCTOR2", metaMgr, dbMgr, compRoot.getParser());
 
-
-            Plan p3 = new ProductPlan(p1, p2, metaMgr, dbMgr);
+            Plan p3 = new NaturalJoinPlan(p1, p2, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
             Scan res = p3.open();
             while (res.next())
             {
                 FuzzyProbabilisticValue<string> id = res.getFieldContent<string>("DOCTOR_ID");
                 FuzzyProbabilisticValue<int> age = res.getFieldContent<int>("D_AGE");
                 FuzzyProbabilisticValue<string> name = res.getFieldContent<string>("DOCTOR_NAME");
-                FuzzyProbabilisticValue<int> age1 = res.getFieldContent<int>("D_AGE");
             }
         }
-
-
     }
 }
