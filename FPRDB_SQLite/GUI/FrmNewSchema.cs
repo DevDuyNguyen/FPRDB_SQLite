@@ -2,6 +2,7 @@
 using BLL.Common;
 using BLL.DomainObject;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +29,8 @@ namespace FPRDB_SQLite.GUI
 
             [DisplayName("Data Type")]
             public FieldType dataType { get; set; } = FieldType.INT;
+            [DisplayName("Length")]
+            public int length { get; set; } = 0;
         }
         private CompositionRoot compRoot;
         //private FPRDBSchemaService service;
@@ -91,6 +94,49 @@ namespace FPRDB_SQLite.GUI
                 }
             }
             return new FPRDBSchema(schemaName, fields, primaryKeys);
+        }
+
+        private void grdvSchemaAttribute_ShowingEditor(object sender, CancelEventArgs e)
+        {
+            GridView view = sender as GridView;
+
+            // Only apply logic to the "Length" column
+            if (view.FocusedColumn.FieldName != "length")
+                return;
+
+            // Get the DataType value of the current row
+            object dataType = view.GetRowCellValue(view.FocusedRowHandle, "dataType");
+
+            // Cancel editing if DataType is NOT varchar
+            if (dataType == null || (FieldType)dataType != FieldType.VARCHAR)
+            {
+                e.Cancel = true; // Prevent editor from opening
+            }
+        }
+
+        private void grdvSchemaAttribute_RowCellStyle(object sender, RowCellStyleEventArgs e)
+        {
+            if (e.Column.FieldName != "length")
+                return;
+
+            object dataType = grdvSchemaAttribute.GetRowCellValue(e.RowHandle, "dataType");
+
+            if (dataType == null || (FieldType)dataType != FieldType.VARCHAR)
+            {
+                e.Appearance.BackColor = Color.LightGray;
+                e.Appearance.ForeColor = Color.DarkGray;
+            }
+        }
+
+        private void grdvSchemaAttribute_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+        {
+            if (e.Column.FieldName != "dataType")
+                return;
+
+            if (e.Value == null || (FieldType)e.Value != FieldType.VARCHAR)
+            {
+                grdvSchemaAttribute.SetRowCellValue(e.RowHandle, "length", null);
+            }
         }
     }
 }

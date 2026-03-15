@@ -238,7 +238,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     this.databaseService.createDB(DialogNew.FileName);
                     XtraMessageBox.Show("Create new database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    isDatabaseLoaded = false;
+                    isDatabaseLoaded = true;
                     LoadDatabaseTree();
                 }
             }

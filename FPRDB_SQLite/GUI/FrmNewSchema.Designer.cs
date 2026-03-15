@@ -38,6 +38,7 @@
             grdcolName = new DevExpress.XtraGrid.Columns.GridColumn();
             grdcolType = new DevExpress.XtraGrid.Columns.GridColumn();
             repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            grdcolLength = new DevExpress.XtraGrid.Columns.GridColumn();
             pnlButtonNewSchema = new DevExpress.XtraEditors.PanelControl();
             btnCancel = new DevExpress.XtraEditors.SimpleButton();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
@@ -94,11 +95,14 @@
             // 
             // grdvSchemaAttribute
             // 
-            grdvSchemaAttribute.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolPK, grdcolName, grdcolType });
+            grdvSchemaAttribute.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolPK, grdcolName, grdcolType, grdcolLength });
             grdvSchemaAttribute.GridControl = grdcSchemaAttribute;
             grdvSchemaAttribute.Name = "grdvSchemaAttribute";
             grdvSchemaAttribute.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.True;
             grdvSchemaAttribute.OptionsView.ShowGroupPanel = false;
+            grdvSchemaAttribute.RowCellStyle += grdvSchemaAttribute_RowCellStyle;
+            grdvSchemaAttribute.ShowingEditor += grdvSchemaAttribute_ShowingEditor;
+            grdvSchemaAttribute.CellValueChanged += grdvSchemaAttribute_CellValueChanged;
             // 
             // grdcolPK
             // 
@@ -142,6 +146,16 @@
             repositoryItemComboBox1.AutoHeight = false;
             repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            // 
+            // grdcolLength
+            // 
+            grdcolLength.Caption = "Length";
+            grdcolLength.FieldName = "length";
+            grdcolLength.MinWidth = 25;
+            grdcolLength.Name = "grdcolLength";
+            grdcolLength.Visible = true;
+            grdcolLength.VisibleIndex = 3;
+            grdcolLength.Width = 94;
             // 
             // pnlButtonNewSchema
             // 
@@ -241,5 +255,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn grdcolType;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolLength;
     }
 }

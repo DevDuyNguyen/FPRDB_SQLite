@@ -234,7 +234,7 @@
             // 
             // iNewSchema
             // 
-            iNewSchema.Caption = "New";
+            iNewSchema.Caption = "Create Schema";
             iNewSchema.Id = 19;
             iNewSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
             iNewSchema.Name = "iNewSchema";
