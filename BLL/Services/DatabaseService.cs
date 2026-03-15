@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.Services
 {
@@ -22,18 +23,7 @@ namespace BLL.Services
 
         public void createDB(String filePath)
         {
-            try
-            {
-                this.dbMgr.createDB(filePath);
-            }
-            catch (FileNotFoundException e)
-            {
-                throw e;
-            }
-            catch(IOException e)
-            {
-                throw e;
-            }
+            this.dbMgr.createDB(filePath);
         }
         public string getDatabaseName()
         {
@@ -195,6 +185,11 @@ namespace BLL.Services
             {
                 throw ex;
             }
+        }
+        public List<string> getFieldTypes()
+        {
+            return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
+                "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
         }
     }
 }
