@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -23,6 +24,8 @@ namespace BLL.SQLProcessing
             this.s2 = s2;
             this.commonFields = commonFields;
             this.schema = schema;
+            if (ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombinationStrategy))
+                throw new InvalidDataException("Intersection must be paired with probabilistic conjunction strategy");
             this.probCombinationStrategy = probCombinationStrategy;
             this.s1.next();
         }
