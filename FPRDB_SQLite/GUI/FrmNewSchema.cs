@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
@@ -71,7 +72,8 @@ namespace FPRDB_SQLite.GUI
 
             var rows = grdvSchemaAttribute.DataSource as BindingList<SchemaAttribute>;
 
-            FPRDBSchema schema = convertGridToSchema(schemaName, rows);
+            FPRDBSchemaDTO schema = convertGridToSchema(schemaName, rows);
+
             //defineFPRDBSchema(schema);
             XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
@@ -79,7 +81,7 @@ namespace FPRDB_SQLite.GUI
         }
 
         // Hàm chuyển đổi dữ liệu từ GridControl thành FPRDBSchema
-        private FPRDBSchema convertGridToSchema(string schemaName, BindingList<SchemaAttribute> attributes)
+        private FPRDBSchemaDTO convertGridToSchema(string schemaName, BindingList<SchemaAttribute> attributes)
         {
             List<Field> fields = new List<Field>();
             List<string> primaryKeys = new List<string>();
@@ -93,7 +95,7 @@ namespace FPRDB_SQLite.GUI
                     primaryKeys.Add(attr.attributeName);
                 }
             }
-            return new FPRDBSchema(schemaName, fields, primaryKeys);
+            return new FPRDBSchemaDTO(schemaName, fields, primaryKeys);
         }
 
         private void grdvSchemaAttribute_ShowingEditor(object sender, CancelEventArgs e)

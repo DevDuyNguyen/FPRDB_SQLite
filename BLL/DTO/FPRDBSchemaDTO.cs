@@ -13,5 +13,11 @@ namespace BLL.DTO
         public List<Field> fields;
         public List<string> primarykey;
 
+        public FPRDBSchemaDTO(string schemaName, List<Field> fields, List<string> primarykey)
+        {
+            this.schemaName = schemaName;
+            this.fields = fields;
+            this.primarykey = primarykey;
+        }
     }
 }
