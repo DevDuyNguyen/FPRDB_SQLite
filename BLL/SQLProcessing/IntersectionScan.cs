@@ -38,7 +38,24 @@ namespace BLL.SQLProcessing
             s1.next();
             s2.beforeFirst();
         }
-        public bool next() => throw new NotImplementedException();
+        public bool nextPair()
+        {
+            if (s2.next())
+                return true;
+            else
+            {
+                s2.beforeFirst();
+                return s2.next() && s1.next();
+            }
+        }
+        public bool next()
+        {
+            while (nextPair())
+            {
+
+            }
+            return false;
+        }
         private List<AbstractFuzzyProbabilisticValue> intersectionOnFuzzySet()
         {
             FieldType fieldType;
