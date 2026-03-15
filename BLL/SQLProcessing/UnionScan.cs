@@ -83,7 +83,7 @@ namespace BLL.SQLProcessing
 
             while (!this.isReverse && s1.next())
             {
-                isMatched = false;
+                //isMatched = false;
                 while (s2.next())
                 {
                     isSameKeyValue = true;
@@ -128,11 +128,13 @@ namespace BLL.SQLProcessing
                     }
                 }
                 s2.beforeFirst();
-                if(!isMatched)
-                {
-                    this.currentTuple = s1.getCurrentTuple();
-                    return true;
-                }
+                this.currentTuple = s1.getCurrentTuple();
+                return true;
+                //if(!isMatched)
+                //{
+                //    this.currentTuple = s1.getCurrentTuple();
+                //    return true;
+                //}
             }
 
             
@@ -204,36 +206,61 @@ namespace BLL.SQLProcessing
         {
             FieldType fieldType;
             List<AbstractFuzzyProbabilisticValue> ans = new List<AbstractFuzzyProbabilisticValue>();
+            List<string> primaryKey = this.schema.getPrimarykey();
 
             foreach (Field field in this.schema.getFields())
             {
                 fieldType = field.getFieldInfo().getType();
-                if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                if (primaryKey.Contains(field.getFieldName()))
                 {
-                    FuzzyProbabilisticValue<int> fprobValue1 = this.s1.getFieldContent<int>(field.getFieldName());
-                    FuzzyProbabilisticValue<int> fprobValue2 = this.s2.getFieldContent<int>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.disjunction<int>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    {
+                        ans.Add(this.s1.getFieldContent<int>(field.getFieldName()));
+                    }
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    {
+                        ans.Add(this.s1.getFieldContent<float>(field.getFieldName()));
+                    }
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    {
+                        ans.Add(this.s1.getFieldContent<string>(field.getFieldName()));
+                    }
+                    else //if (fieldType == FieldType.BOOLEAN)
+                    {
+                        ans.Add(this.s1.getFieldContent<bool>(field.getFieldName()));
+                    }
                 }
-                else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                else
                 {
-                    FuzzyProbabilisticValue<float> fprobValue1 = this.s1.getFieldContent<float>(field.getFieldName());
-                    FuzzyProbabilisticValue<float> fprobValue2 = this.s2.getFieldContent<float>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.disjunction<float>(fprobValue1, fprobValue2, this.probCombinationStrategy));
-                }
-                else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
-                {
-                    FuzzyProbabilisticValue<string> fprobValue1 = this.s1.getFieldContent<string>(field.getFieldName());
-                    FuzzyProbabilisticValue<string> fprobValue2 = this.s2.getFieldContent<string>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.disjunction<string>(fprobValue1, fprobValue2, this.probCombinationStrategy));
-                }
-                else //if (fieldType == FieldType.BOOLEAN)
-                {
-                    FuzzyProbabilisticValue<bool> fprobValue1 = this.s1.getFieldContent<bool>(field.getFieldName());
-                    FuzzyProbabilisticValue<bool> fprobValue2 = this.s2.getFieldContent<bool>(field.getFieldName());
-                    ans.Add(FProbValueCombinationStategy.disjunction<bool>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    {
+                        FuzzyProbabilisticValue<int> fprobValue1 = this.s1.getFieldContent<int>(field.getFieldName());
+                        FuzzyProbabilisticValue<int> fprobValue2 = this.s2.getFieldContent<int>(field.getFieldName());
+                        ans.Add(FProbValueCombinationStategy.disjunction<int>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    }
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    {
+                        FuzzyProbabilisticValue<float> fprobValue1 = this.s1.getFieldContent<float>(field.getFieldName());
+                        FuzzyProbabilisticValue<float> fprobValue2 = this.s2.getFieldContent<float>(field.getFieldName());
+                        ans.Add(FProbValueCombinationStategy.disjunction<float>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    }
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    {
+                        FuzzyProbabilisticValue<string> fprobValue1 = this.s1.getFieldContent<string>(field.getFieldName());
+                        FuzzyProbabilisticValue<string> fprobValue2 = this.s2.getFieldContent<string>(field.getFieldName());
+                        ans.Add(FProbValueCombinationStategy.disjunction<string>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    }
+                    else //if (fieldType == FieldType.BOOLEAN)
+                    {
+                        FuzzyProbabilisticValue<bool> fprobValue1 = this.s1.getFieldContent<bool>(field.getFieldName());
+                        FuzzyProbabilisticValue<bool> fprobValue2 = this.s2.getFieldContent<bool>(field.getFieldName());
+                        ans.Add(FProbValueCombinationStategy.disjunction<bool>(fprobValue1, fprobValue2, this.probCombinationStrategy));
+                    }
                 }
             }
             return ans;
+
 
         }
         public void close() { }

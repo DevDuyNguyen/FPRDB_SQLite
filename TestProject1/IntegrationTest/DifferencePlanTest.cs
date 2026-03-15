@@ -12,10 +12,11 @@ using System.Threading.Tasks;
 
 namespace TestProject1.IntegrationTest
 {
-    public class UnionPlanTests
+    public class DifferencePlanTest
     {
+
         private string dbFile;
-        public UnionPlanTests()
+        public DifferencePlanTest()
         {
             this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
         }
@@ -75,8 +76,8 @@ namespace TestProject1.IntegrationTest
             //");
 
         }
-        //[Fact]
-        public void UnionPlan_getSchema_success()
+        [Fact]
+        public void DifferencePlan_getSchema_success()
         {
             //arrange
             CompositionRoot compRoot = new CompositionRoot();
@@ -86,7 +87,7 @@ namespace TestProject1.IntegrationTest
             Plan p1 = new RelationPlan("DIAGNOSE1", metaMgr, dbMgr, compRoot.getParser());
             Plan p2 = new RelationPlan("DIAGNOSE2", metaMgr, dbMgr, compRoot.getParser());
 
-            Plan p3 = new UnionPlan(p1, p2, ProbabilisticCombinationStrategy.DISJUNCTION_INDEPENDANCE);
+            Plan p3 = new DifferencePlan(p1, p2, ProbabilisticCombinationStrategy.DIFFERENCE_INDEPENDANCE);
             Scan res = p3.open();
             while (res.next())
             {

@@ -92,14 +92,17 @@ namespace BLL.SQLProcessing
                     fs2 = v2.valueList[j];
                     fs = fs1.StandardIntersection(fs2);
                     intervalProbabilityConjunction = ProbabilisticCombinationStrategyUtilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], probCombStrategy);
-
-                    if (fs.isNormal() && (intervalProbabilityConjunction[0] > 0 || intervalProbabilityConjunction[1] > 0))
+                    if (fs.isNormal())
                     {
                         isV1ValueListIntersectedNormalHeight[i] = isV2ValueListIntersectedNormalHeight[j] = true;
-                        ans_valueList.Add(fs);
-                        ans_intervalProbLowerBoundList.Add(intervalProbabilityConjunction[0]);
-                        ans_intervalProbUpperBoundList.Add(intervalProbabilityConjunction[1]);
+                        if ((intervalProbabilityConjunction[0] > 0 || intervalProbabilityConjunction[1] > 0))
+                        {
+                            ans_valueList.Add(fs);
+                            ans_intervalProbLowerBoundList.Add(intervalProbabilityConjunction[0]);
+                            ans_intervalProbUpperBoundList.Add(intervalProbabilityConjunction[1]);
+                        }
                     }
+                    
                 }
             }
             for (int i = 0; i < ans_valueList.Count - 1; ++i)
@@ -159,7 +162,7 @@ namespace BLL.SQLProcessing
             List<float> ans_intervalProbUpperBoundList = new List<float>();
 
             if (!ProbabilisticCombinationStrategyUtilities.isDifferenceStategy(probCombStrategy))
-                throw new InvalidDataException("Probabilistic combination strategy must be disjunction");
+                throw new InvalidDataException("Probabilistic combination strategy must be difference");
 
 
             for (int i = 0; i < v1.valueList.Count; ++i)
@@ -170,14 +173,17 @@ namespace BLL.SQLProcessing
                     fs2 = v2.valueList[j];
                     fs = fs1.StandardIntersection(fs2);
                     intervalProbabilityConjunction = ProbabilisticCombinationStrategyUtilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], probCombStrategy);
-
-                    if (fs.isNormal() && (intervalProbabilityConjunction[0] > 0 || intervalProbabilityConjunction[1] > 0))
+                    if (fs.isNormal())
                     {
                         isV1ValueListIntersectedNormalHeight[i] = isV2ValueListIntersectedNormalHeight[j] = true;
-                        ans_valueList.Add(fs);
-                        ans_intervalProbLowerBoundList.Add(intervalProbabilityConjunction[0]);
-                        ans_intervalProbUpperBoundList.Add(intervalProbabilityConjunction[1]);
+                        if (intervalProbabilityConjunction[0] > 0 || intervalProbabilityConjunction[1] > 0)
+                        {
+                            ans_valueList.Add(fs);
+                            ans_intervalProbLowerBoundList.Add(intervalProbabilityConjunction[0]);
+                            ans_intervalProbUpperBoundList.Add(intervalProbabilityConjunction[1]);
+                        }
                     }
+                    
                 }
             }
             for (int i = 0; i < ans_valueList.Count - 1; ++i)
