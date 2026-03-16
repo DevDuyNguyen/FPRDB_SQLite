@@ -77,6 +77,28 @@ namespace FPRDB_SQLite.GUI
         }
         #endregion
         #region Tab Page Home
+        // Hàm xử lý sự kiện khi click "Select top 100 tuples"
+        private void barButtonSelectTuples_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            XtraMessageBox.Show("Select top 100 tuples successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+        // Hàm show popup menu cho node relation
+        private void treeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeNode node = treeView.GetNodeAt(e.X, e.Y);
+                if (node == null) return;
+
+                treeView.SelectedNode = node;
+
+                if (node.Tag?.ToString() == "relation")
+                {
+                    popupMenuTreeView.ShowPopup(treeView.PointToScreen(e.Location));
+                }
+            }
+        }
         // Hàm load cây Database sau khi mở hoặc tạo mới Database
         private void LoadDatabaseTree()
         {
@@ -135,6 +157,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode schemaNode = new TreeNode(schemaName);
                     schemaNode.ImageIndex = 8;
                     schemaNode.SelectedImageIndex = 8;
+                    schemaNode.Tag = "relation";
                     tablesRootNode.Nodes.Add(schemaNode);
 
                     var fields = schema.getFields();
@@ -186,6 +209,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode instanceNode = new TreeNode(relName);
                     instanceNode.ImageIndex = 7;
                     instanceNode.SelectedImageIndex = 7;
+                    //instanceNode.Tag = "relation";
                     relationRootNode.Nodes.Add(instanceNode);
 
                     var refSchema = relation.getSchema();
@@ -291,7 +315,7 @@ namespace FPRDB_SQLite.GUI
         private void SetQueryTabState(bool isLoaded, string fileName = "")
         {
             XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2]; // use your tab name
-
+            splitContainerControl1.PanelVisibility = SplitPanelVisibility.Panel1;
             if (isLoaded)
             {
                 queryTab.PageEnabled = true;
@@ -315,9 +339,27 @@ namespace FPRDB_SQLite.GUI
                 excuteQueryribbonPageGroup.Enabled = false;
             }
         }
+        // Hàm warning file chưa được save
+        private void WarningUnsaved()
+        {
+            if (isSQLFileModified)
+            {
+                DialogResult result = XtraMessageBox.Show(
+                    "You have unsaved changes.",
+                    "Warning",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                    SaveCurrentFile();
+                else if (result == DialogResult.Cancel)
+                    return;
+            }
+        }
         // Hàm tạo mới SQL File
         private void CreateNewQuery()
         {
+            WarningUnsaved();
             try
             {
                 SaveFileDialog DialogNew = new SaveFileDialog();
@@ -336,6 +378,7 @@ namespace FPRDB_SQLite.GUI
                     // Tạo file trống
                     File.WriteAllText(currentSQLFilePath, string.Empty, Encoding.Unicode);
                     memoEditTxtQuery.Text = string.Empty;
+                    // Set trạng thái enable cho tab Query sau khi tạo mới thành công
                     SetQueryTabState(true, Path.GetFileName(DialogNew.FileName));
                     XtraMessageBox.Show("Create new SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -355,6 +398,7 @@ namespace FPRDB_SQLite.GUI
         // Hàm mở SQL File đã tồn tại
         private void OpenQuery()
         {
+            WarningUnsaved();
             OpenFileDialog DialogOpen = new OpenFileDialog();
             DialogOpen.Title = "Open SQL File";
             DialogOpen.Filter = "SQL File (*.fprdbsql)|*.fprdbsql";
@@ -366,7 +410,9 @@ namespace FPRDB_SQLite.GUI
                 {
                     //string sqlContent = sqlFileService.loadFile(DialogOpen.FileName);
                     currentSQLFilePath = DialogOpen.FileName;
+                    // Đọc file và lấy nội dung file gán váo Query Editor
                     memoEditTxtQuery.Text = File.ReadAllText(currentSQLFilePath, Encoding.Unicode);
+                    // Set trạng thái enable cho tab Query sau khi mở file thành công
                     SetQueryTabState(true, Path.GetFileName(DialogOpen.FileName));
                     XtraMessageBox.Show("Open SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -386,6 +432,7 @@ namespace FPRDB_SQLite.GUI
         {
             OpenQuery();
         }
+        // Hàm thêm * nếu file chưa được save
         private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
         {
             if (!isSQLFileModified)
@@ -399,14 +446,12 @@ namespace FPRDB_SQLite.GUI
         // Hàm lưu file SQL
         private void SaveCurrentFile()
         {
-            if (string.IsNullOrEmpty(currentSQLFilePath)) return;
-
             try
             {
                 // Viết nội dung hiện tại trên editor vào file
                 File.WriteAllText(currentSQLFilePath, memoEditTxtQuery.Text, Encoding.Unicode);
 
-                // Bỏ dấu * sau khi lưu
+                // Bỏ dấu * sau khi save
                 isSQLFileModified = false;
                 XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
                 queryTab.Text = queryTab.Text.TrimStart('*');
@@ -727,10 +772,14 @@ namespace FPRDB_SQLite.GUI
             memoEditTxtQuery.Focus();
         }
         #endregion
+        private void ExcuteQuery(string sql)
+        {
+            splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            // createQueryPlan
+        }
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string sql = memoEditTxtQuery.Text;
-
         }
         private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {

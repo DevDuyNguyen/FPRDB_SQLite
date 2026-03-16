@@ -66,6 +66,7 @@
             iDifferencePositive = new DevExpress.XtraBars.BarButtonItem();
             barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonGroup2 = new DevExpress.XtraBars.BarButtonGroup();
+            barButtonSelectTuples = new DevExpress.XtraBars.BarButtonItem();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -115,12 +116,13 @@
             panelControlRelation = new DevExpress.XtraEditors.PanelControl();
             QueryxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
             splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
-            memoEditTxtQuery = new System.Windows.Forms.RichTextBox();
+            memoEditTxtQuery = new DevExpress.XtraEditors.MemoEdit();
             xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             QueryResultxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
             gridControlResultQuery = new DevExpress.XtraGrid.GridControl();
             gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             MessagextraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            popupMenuTreeView = new DevExpress.XtraBars.PopupMenu(components);
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -156,21 +158,23 @@
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).BeginInit();
             splitContainerControl1.Panel2.SuspendLayout();
             splitContainerControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)memoEditTxtQuery.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)xtraTabControl1).BeginInit();
             xtraTabControl1.SuspendLayout();
             QueryResultxtraTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).BeginInit();
             SuspendLayout();
             // 
             // ribbonControl
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2 });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            ribbonControl.MaxItemId = 55;
+            ribbonControl.MaxItemId = 56;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
             ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
@@ -447,6 +451,13 @@
             barButtonGroup2.Id = 54;
             barButtonGroup2.Name = "barButtonGroup2";
             // 
+            // barButtonSelectTuples
+            // 
+            barButtonSelectTuples.Caption = "Select top 100 tuples";
+            barButtonSelectTuples.Id = 55;
+            barButtonSelectTuples.Name = "barButtonSelectTuples";
+            barButtonSelectTuples.ItemClick += barButtonSelectTuples_ItemClick;
+            // 
             // DatabaseRibbonPage
             // 
             DatabaseRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupFile_pageHome, groupExit_pageHome });
@@ -656,6 +667,7 @@
             treeView.SelectedImageIndex = 0;
             treeView.Size = new System.Drawing.Size(209, 356);
             treeView.TabIndex = 2;
+            treeView.MouseDown += treeView_MouseDown;
             // 
             // xtraTabControlDatabase
             // 
@@ -875,17 +887,17 @@
             splitContainerControl1.Panel2.Controls.Add(xtraTabControl1);
             splitContainerControl1.Panel2.Text = "Panel2";
             splitContainerControl1.Size = new System.Drawing.Size(727, 326);
-            splitContainerControl1.SplitterPosition = 132;
+            splitContainerControl1.SplitterPosition = 159;
             splitContainerControl1.TabIndex = 0;
             // 
             // memoEditTxtQuery
             // 
             memoEditTxtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
             memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
+            memoEditTxtQuery.MenuManager = ribbonControl;
             memoEditTxtQuery.Name = "memoEditTxtQuery";
-            memoEditTxtQuery.Size = new System.Drawing.Size(727, 132);
+            memoEditTxtQuery.Size = new System.Drawing.Size(727, 159);
             memoEditTxtQuery.TabIndex = 0;
-            memoEditTxtQuery.Text = "";
             memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
             // xtraTabControl1
@@ -894,7 +906,7 @@
             xtraTabControl1.Location = new System.Drawing.Point(0, 0);
             xtraTabControl1.Name = "xtraTabControl1";
             xtraTabControl1.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControl1.Size = new System.Drawing.Size(727, 182);
+            xtraTabControl1.Size = new System.Drawing.Size(727, 155);
             xtraTabControl1.TabIndex = 0;
             xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
             // 
@@ -902,7 +914,7 @@
             // 
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(725, 152);
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(725, 125);
             QueryResultxtraTabPage.Text = "Query Result";
             // 
             // gridControlResultQuery
@@ -912,7 +924,7 @@
             gridControlResultQuery.MainView = gridView2;
             gridControlResultQuery.MenuManager = ribbonControl;
             gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(725, 152);
+            gridControlResultQuery.Size = new System.Drawing.Size(725, 125);
             gridControlResultQuery.TabIndex = 0;
             gridControlResultQuery.UseEmbeddedNavigator = true;
             gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView2 });
@@ -926,8 +938,14 @@
             // MessagextraTabPage
             // 
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(725, 152);
+            MessagextraTabPage.Size = new System.Drawing.Size(725, 125);
             MessagextraTabPage.Text = "Message";
+            // 
+            // popupMenuTreeView
+            // 
+            popupMenuTreeView.ItemLinks.Add(barButtonSelectTuples);
+            popupMenuTreeView.Name = "popupMenuTreeView";
+            popupMenuTreeView.Ribbon = ribbonControl;
             // 
             // frmMain
             // 
@@ -983,11 +1001,13 @@
             splitContainerControl1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1).EndInit();
             splitContainerControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)memoEditTxtQuery.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)xtraTabControl1).EndInit();
             xtraTabControl1.ResumeLayout(false);
             QueryResultxtraTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -1070,7 +1090,6 @@
         private DevExpress.XtraGrid.GridControl gridControlValueRelation;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView4;
         private DevExpress.XtraEditors.PanelControl panelControlRelation;
-        private System.Windows.Forms.RichTextBox memoEditTxtQuery;
         private DevExpress.XtraBars.BarButtonItem iConjunctionPositive;
         private DevExpress.XtraBars.BarButtonItem iDisjunctionPositive;
         private DevExpress.XtraBars.BarButtonItem iDifferencePositive;
@@ -1086,6 +1105,9 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnMaxProb;
         private DevExpress.XtraBars.BarButtonGroup barButtonGroup1;
         private DevExpress.XtraBars.BarButtonGroup barButtonGroup2;
+        private DevExpress.XtraEditors.MemoEdit memoEditTxtQuery;
+        private DevExpress.XtraBars.BarButtonItem barButtonSelectTuples;
+        private DevExpress.XtraBars.PopupMenu popupMenuTreeView;
     }
 }
 
