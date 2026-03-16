@@ -1,4 +1,5 @@
-﻿using BLL.Common;
+﻿using BLL;
+using BLL.Common;
 using BLL.DomainObject;
 using BLL.Services;
 using BLL.SQLProcessing;
@@ -16,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static FPRDB_SQLite.GUI.frmNewSchema;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -77,6 +79,79 @@ namespace FPRDB_SQLite.GUI
         }
         #endregion
         #region Tab Page Home
+        //
+        private void DisplaySchemaDetail(FPRDBSchema schema)
+        {
+            BindingList<SchemaAttribute> list = new BindingList<SchemaAttribute>();
+            List<Field> fields = schema.getFields();
+            List<string> primaryKeys = schema.getPrimarykey();
+            var sortedFields = fields
+                .OrderByDescending(attr => primaryKeys.Contains(attr.getFieldName()))
+                .ThenBy(attr => attr.getFieldName());
+            foreach (var attr in sortedFields)
+            {
+                var fielInfo = attr.getFieldInfo();
+                list.Add(new SchemaAttribute
+                {
+                    isPrimaryKey = primaryKeys.Contains(attr.getFieldName()),
+                    attributeName = attr.getFieldName(),
+                    dataType = fielInfo.getType(),
+                    length = fielInfo.getTXTLength()
+                });
+            }
+            gridControlScheme.DataSource = null;
+            gridView.Columns.Clear();
+            gridControlScheme.DataSource = list;
+            gridView.BestFitColumns();
+        }
+        private Type MapFieldType(FieldType fieldType)
+        {
+            switch (fieldType)
+            {
+                case FieldType.INT: return typeof(int);
+                default: return null;
+            }
+        }
+        private void DisplayRelationDetail(FPRDBRelation relation)
+        {
+            //var schema = relation.getSchema();
+            //List<Field> fields = schema.getFields();
+            //// Sử dụng DataTable để hiện thị thông tin Relation
+            //DataTable relInfo = new DataTable();
+            //// Thêm cột bằng các thông tin Field có sẵn lấy từ Schema
+            //foreach (var field in fields)
+            //{
+            //    string fieldName = field.getFieldName();
+            //    FieldType fieldType = field.getFieldInfo().getType();
+            //    Type colType = MapFieldType(fieldType);
+            //    relInfo.Columns.Add(fieldName, colType);
+            //}
+
+            ////string sql = "SELECT ...";
+            ////Plan plan = createQueryPlan(sql);
+            ////Scan sc = plan.open();
+            //scan.beforeFirst();
+            //while (scan.next())
+            //{
+            //    DataRow row = relInfo.NewRow();
+            //    foreach (var field in fields)
+            //    {
+            //        FieldType fieldType = field.getFieldInfo().getType();
+            //        Type colType = MapFieldType(fieldType);
+            //        var cellValueNotParsed = scan.getFieldConten<colType>(field.getFieldName());
+            //        // Parse FuzzySetProbabilisticValue ra 1 chuỗi tring
+            //        var cellValueParsed = "";
+            //        row[field.getFieldName()] = cellValueParsed;
+            //    }
+            //    relInfo.Rows.Add(row);
+            //}
+            //scan.close();
+
+            //gridControlRelation.DataSource = null;
+            //gridView3.Columns.Clear();
+            //gridControlRelation.DataSource = relInfo;
+            //gridView3.BestFitColumns();
+        }
         // Hàm xử lý sự kiện khi click "Select top 100 tuples"
         private void barButtonSelectTuples_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -86,16 +161,30 @@ namespace FPRDB_SQLite.GUI
         // Hàm show popup menu cho node relation
         private void treeView_MouseDown(object sender, MouseEventArgs e)
         {
+            TreeNode node = treeView.GetNodeAt(e.X, e.Y);
+            if (node == null) return;
+            treeView.SelectedNode = node;
+
             if (e.Button == MouseButtons.Right)
             {
-                TreeNode node = treeView.GetNodeAt(e.X, e.Y);
-                if (node == null) return;
 
-                treeView.SelectedNode = node;
-
-                if (node.Tag?.ToString() == "relation")
+                if (node.Tag is FPRDBRelation relation)
                 {
                     popupMenuTreeView.ShowPopup(treeView.PointToScreen(e.Location));
+                }
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                if (node.Tag is FPRDBSchema schema)
+                {
+                    XtraTabPage schemaTab = xtraTabControlDatabase.TabPages[0];
+                    schemaTab.Text = schema.getSchemaName();
+                    xtraTabControlDatabase.SelectedTabPageIndex = 0;
+                    DisplaySchemaDetail(schema);
+                }
+                if (node.Tag is FPRDBRelation relation)
+                {
+                    DisplayRelationDetail(relation);
                 }
             }
         }
@@ -157,7 +246,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode schemaNode = new TreeNode(schemaName);
                     schemaNode.ImageIndex = 8;
                     schemaNode.SelectedImageIndex = 8;
-                    schemaNode.Tag = "relation";
+                    schemaNode.Tag = schema;
                     tablesRootNode.Nodes.Add(schemaNode);
 
                     var fields = schema.getFields();
@@ -209,7 +298,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode instanceNode = new TreeNode(relName);
                     instanceNode.ImageIndex = 7;
                     instanceNode.SelectedImageIndex = 7;
-                    //instanceNode.Tag = "relation";
+                    //instanceNode.Tag = relation;
                     relationRootNode.Nodes.Add(instanceNode);
 
                     var refSchema = relation.getSchema();
@@ -314,7 +403,7 @@ namespace FPRDB_SQLite.GUI
         // Hàm enable Query Edtor khi đã load Query thành công
         private void SetQueryTabState(bool isLoaded, string fileName = "")
         {
-            XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2]; // use your tab name
+            XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2]; 
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Panel1;
             if (isLoaded)
             {
@@ -326,6 +415,7 @@ namespace FPRDB_SQLite.GUI
                 operatorRibbonPageGroup.Enabled = true;
                 excuteQueryribbonPageGroup.Enabled = true;
                 iSaveQuery.Enabled = true;
+                xtraTabControlDatabase.SelectedTabPageIndex = 2; // focus vào tab Query
             }
             else
             {

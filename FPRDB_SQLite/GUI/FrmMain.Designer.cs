@@ -101,6 +101,7 @@
             repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             gridColumnAttribute = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumnDataType = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumnLength = new DevExpress.XtraGrid.Columns.GridColumn();
             repositoryItemCalcEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCalcEdit();
             repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             repositoryItemHeightType1 = new DevExpress.XtraRichEdit.Design.RepositoryItemHeightType();
@@ -701,16 +702,18 @@
             // 
             // gridView
             // 
-            gridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnPrimary, gridColumnAttribute, gridColumnDataType });
+            gridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnPrimary, gridColumnAttribute, gridColumnDataType, gridColumnLength });
             gridView.GridControl = gridControlScheme;
             gridView.Name = "gridView";
+            gridView.OptionsBehavior.Editable = false;
             gridView.OptionsPrint.PrintFilterInfo = true;
+            gridView.OptionsView.ShowGroupPanel = false;
             // 
             // gridColumnPrimary
             // 
             gridColumnPrimary.Caption = "Primary Key";
             gridColumnPrimary.ColumnEdit = repositoryItemCheckEdit1;
-            gridColumnPrimary.FieldName = "gridColumnPrimary";
+            gridColumnPrimary.FieldName = "isPrimaryKey";
             gridColumnPrimary.MinWidth = 25;
             gridColumnPrimary.Name = "gridColumnPrimary";
             gridColumnPrimary.Visible = true;
@@ -725,7 +728,7 @@
             // gridColumnAttribute
             // 
             gridColumnAttribute.Caption = "Attribute name";
-            gridColumnAttribute.FieldName = "gridColumnAttribute";
+            gridColumnAttribute.FieldName = "attributeName";
             gridColumnAttribute.MinWidth = 25;
             gridColumnAttribute.Name = "gridColumnAttribute";
             gridColumnAttribute.Visible = true;
@@ -735,12 +738,22 @@
             // gridColumnDataType
             // 
             gridColumnDataType.Caption = "Data Type";
-            gridColumnDataType.FieldName = "gridColumnDataType";
+            gridColumnDataType.FieldName = "dataType";
             gridColumnDataType.MinWidth = 25;
             gridColumnDataType.Name = "gridColumnDataType";
             gridColumnDataType.Visible = true;
             gridColumnDataType.VisibleIndex = 2;
             gridColumnDataType.Width = 247;
+            // 
+            // gridColumnLength
+            // 
+            gridColumnLength.Caption = "Length";
+            gridColumnLength.FieldName = "length";
+            gridColumnLength.MinWidth = 25;
+            gridColumnLength.Name = "gridColumnLength";
+            gridColumnLength.Visible = true;
+            gridColumnLength.VisibleIndex = 3;
+            gridColumnLength.Width = 94;
             // 
             // repositoryItemCalcEdit1
             // 
@@ -786,7 +799,7 @@
             splitContainerControl2.Panel2.Controls.Add(panelControlRelation);
             splitContainerControl2.Panel2.Text = "Panel2";
             splitContainerControl2.Size = new System.Drawing.Size(727, 326);
-            splitContainerControl2.SplitterPosition = 104;
+            splitContainerControl2.SplitterPosition = 142;
             splitContainerControl2.TabIndex = 0;
             // 
             // gridControlRelation
@@ -796,7 +809,7 @@
             gridControlRelation.MainView = gridView3;
             gridControlRelation.MenuManager = ribbonControl;
             gridControlRelation.Name = "gridControlRelation";
-            gridControlRelation.Size = new System.Drawing.Size(727, 104);
+            gridControlRelation.Size = new System.Drawing.Size(727, 142);
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
@@ -805,6 +818,7 @@
             // 
             gridView3.GridControl = gridControlRelation;
             gridView3.Name = "gridView3";
+            gridView3.OptionsView.ShowGroupPanel = false;
             // 
             // gridControlValueRelation
             // 
@@ -813,7 +827,7 @@
             gridControlValueRelation.MainView = gridView4;
             gridControlValueRelation.MenuManager = ribbonControl;
             gridControlValueRelation.Name = "gridControlValueRelation";
-            gridControlValueRelation.Size = new System.Drawing.Size(727, 165);
+            gridControlValueRelation.Size = new System.Drawing.Size(727, 127);
             gridControlValueRelation.TabIndex = 1;
             gridControlValueRelation.UseEmbeddedNavigator = true;
             gridControlValueRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView4 });
@@ -823,6 +837,7 @@
             gridView4.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnValue, gridColumnMinProb, gridColumnMaxProb });
             gridView4.GridControl = gridControlValueRelation;
             gridView4.Name = "gridView4";
+            gridView4.OptionsView.ShowGroupPanel = false;
             // 
             // gridColumnValue
             // 
@@ -1108,6 +1123,7 @@
         private DevExpress.XtraEditors.MemoEdit memoEditTxtQuery;
         private DevExpress.XtraBars.BarButtonItem barButtonSelectTuples;
         private DevExpress.XtraBars.PopupMenu popupMenuTreeView;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
     }
 }
 
