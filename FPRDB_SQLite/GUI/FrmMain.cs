@@ -774,12 +774,178 @@ namespace FPRDB_SQLite.GUI
         #endregion
         private void ExcuteQuery(string sql)
         {
-            splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            //try
+            //{
+            //    // hiển thị 2 panel của SplitContainerControl để show kết quả truy vấn và cây giải thuật
+            //    splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+
+            //    // Hiển thị cả 2 panel (Query Editor và phần Kết quả)
+            //    splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+
+            //    // Xóa dữ liệu cũ trên GridView
+            //    gridControlResultQuery.DataSource = null;
+            //    gridViewResultQuery.Columns.Clear();
+
+            //    if (string.IsNullOrEmpty(sql.Trim()))
+            //    {
+            //        XtraMessageBox.Show("Query does not exist!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        return;
+            //    }
+
+            //    // TODO: Truyền đối tượng database hiện tại vào.
+            //    //query = new QueryExecutionBLL(sql, null /* thay bằng đối tượng probDatabase của bạn */);
+
+
+            //    if (query.ExecuteQuery())
+            //    {
+            //        if (query.relationResult.FproTuples.Count <= 0)
+            //        {
+            //            MessagextraTabPage.Text = "No tuple satisfies the condition";
+            //            // Chuyển sang Tab Message (Index 1)
+            //            xtraTabControlResultQuery.SelectedTabPageIndex = 1;
+            //        }
+            //        else
+            //        {
+            //            // Chuẩn bị DataTable để chứa dữ liệu
+            //            DataTable dtquery = new DataTable();
+            //            dtquery.Columns.Add("NoNumber", typeof(int));
+
+            //            // 1. Khởi tạo cột STT (Number)
+            //            DevExpress.XtraGrid.Columns.GridColumn col = new DevExpress.XtraGrid.Columns.GridColumn();
+            //            col.Caption = "Number";
+            //            col.Name = "NoNumber";
+            //            col.FieldName = "NoNumber";
+            //            col.OptionsColumn.ReadOnly = true;
+            //            col.OptionsColumn.AllowEdit = false;
+            //            col.Visible = true;
+            //            col.VisibleIndex = 0;
+            //            gridViewResultQuery.Columns.Add(col);
+
+            //            // 2. Khởi tạo các cột dữ liệu dựa trên thuộc tính được chọn
+            //            int i = 1;
+            //            foreach (var att in query.selectedAttributes)
+            //            {
+            //                dtquery.Columns.Add("Col" + i, typeof(String));
+            //                DevExpress.XtraGrid.Columns.GridColumn columnDiff = new DevExpress.XtraGrid.Columns.GridColumn();
+            //                columnDiff.Caption = att.AttributeName;
+            //                columnDiff.Name = "Col" + i;
+            //                columnDiff.FieldName = "Col" + i; // FieldName phải map đúng với tên cột trong DataTable
+            //                columnDiff.OptionsColumn.ReadOnly = true;
+            //                columnDiff.OptionsColumn.AllowEdit = false;
+
+            //                // Đổi màu nền cho các tập mờ
+            //                if (att.FproDataType.TypeName == "DiscreteFuzzySet" || att.FproDataType.TypeName == "ContinuousFuzzySet")
+            //                {
+            //                    columnDiff.AppearanceCell.Options.UseBackColor = true;
+            //                    columnDiff.AppearanceCell.BackColor = Color.LightCyan; // Màu nền chính
+            //                    // columnDiff.AppearanceCell.BackColor2 = Color.DeepSkyBlue; // (Tùy chọn) Màu Gradient
+            //                }
+
+            //                columnDiff.Visible = true;
+            //                columnDiff.VisibleIndex = i;
+            //                gridViewResultQuery.Columns.Add(columnDiff);
+            //                i++;
+            //            }
+
+            //            // 3. Đổ dữ liệu từ Tuples vào DataTable
+            //            int k = -1;
+            //            foreach (var tuple in query.relationResult.FproTuples)
+            //            {
+            //                DataRow row = dtquery.NewRow();
+            //                k++;
+            //                int j = 1;
+            //                row[0] = k + 1; // STT
+
+            //                foreach (var triple in tuple.FproTriples)
+            //                {
+            //                    row[j] = triple.GetStrValue();
+            //                    j++;
+            //                }
+            //                dtquery.Rows.Add(row);
+            //            }
+
+            //            // 4. Gán DataSource và hiển thị Tab kết quả
+            //            gridControlResultQuery.DataSource = dtquery;
+            //            // Tự động căn chỉnh độ rộng các cột cho đẹp
+            //            gridViewResultQuery.BestFitColumns();
+
+            //            xtraTabControlResultQuery.SelectedTabPageIndex = 0; // Tab Query Result
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // Truy vấn lỗi (sai cú pháp...)
+            //        MessagextraTabPage.Text = query.MessageError;
+            //        xtraTabControlResultQuery.SelectedTabPageIndex = 1;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    XtraMessageBox.Show($"Error executing query: {ex.Message}", "Error",
+            //        MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
+            //finally
+            //{
+            //    // Dù có lỗi hay không thì vẫn phải đảm bảo tập trung con trỏ vào ô nhập liệu để người dùng tiện sửa lỗi hoặc tiếp tục nhập query
+            //    memoEditTxtQuery.Focus();
+
+            //    // có hàm ClearAll()(nếu có) để xóa sạch dữ liệu cũ trước khi hiển thị kết quả mới, hãy gọi nó ở đây
+            //    // ClearAll();
+            //}
             // createQueryPlan
+
+            // 
+
+            // dữ liệu giả để test giao diện
+            try
+            {
+                // Mở rộng giao diện để xem cả query và kết quả
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+
+                // 1. Tạo một DataTable giả lập cấu trúc
+                DataTable dtMock = new DataTable();
+                dtMock.Columns.Add("Number", typeof(int));
+                dtMock.Columns.Add("doctor1.ID", typeof(string));
+                dtMock.Columns.Add("doctor1.AGE", typeof(string));
+                dtMock.Columns.Add("doctor2.NAME", typeof(string));
+                dtMock.Columns.Add("doctor2.AGE", typeof(string));
+
+                // 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
+                dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+                dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+                dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+                dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+                dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+                dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+
+                // 3. Gán dữ liệu giả vào GridControl
+                gridControlResultQuery.DataSource = dtMock;
+
+                // 4. Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+                gridViewResultQuery.PopulateColumns();
+
+                dtMock.Rows.Add(10, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+
+                // 5. Tùy chỉnh hiển thị cột (Frontend)
+                if (gridViewResultQuery.Columns.Count > 0)
+                {
+                    // Chỉnh độ rộng và không cho phép sửa trực tiếp trên lưới
+                    gridViewResultQuery.OptionsBehavior.Editable = false;
+                    gridViewResultQuery.BestFitColumns();
+                }
+
+                // Chuyển sang Tab hiển thị kết quả (Giả sử index 0 là Query Result)
+                xtraTabControlResultQuery.SelectedTabPageIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Lỗi hiển thị dữ liệu giả: \n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string sql = memoEditTxtQuery.Text;
+            ExcuteQuery(sql);
         }
         private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -818,5 +984,57 @@ namespace FPRDB_SQLite.GUI
             new frmNewRelation(compRoot).ShowDialog();
         }
         #endregion
+
+        // Hàm xử lý sự kiện click chuột phải vào ô dữ liệu trong GridView kết quả truy vấn để vẽ biểu đồ
+        //private void gridViewResultQuery_RowCellClick(object sender, DevExpress.XtraGrid.Views.Grid.RowCellClickEventArgs e)
+        //{
+        //    try
+        //    {
+        //        // 1. Chỉ thực thi khi người dùng click CHUỘT PHẢI
+        //        if (e.Button == MouseButtons.Right)
+        //        {
+        //            // 2. Lấy tên trường dữ liệu thực tế (VD: "doctor1.AGE")
+        //            string fieldName = e.Column.FieldName;
+
+        //            // 3. Tìm thuộc tính trong đối tượng 'query' hiện tại
+        //            // Lưu ý: Biến 'query' phải là biến toàn cục (global) trong Form và đã được gán dữ liệu lúc Execute
+        //            var attribute = query.selectedAttributes.SingleOrDefault(c => c.AttributeName == fieldName);
+
+        //            // Nếu cột này nằm trong danh sách thuộc tính của query
+        //            if (attribute != null)
+        //            {
+        //                string type = attribute.FproDataType.TypeName;
+        //                string cellValueStr = e.CellValue?.ToString(); // Lấy giá trị chuỗi của ô hiện tại
+
+        //                if (!string.IsNullOrEmpty(cellValueStr))
+        //                {
+        //                    // 4. Xử lý Tập mờ rời rạc (Discrete)
+        //                    if (type == "DiscreteFuzzySet")
+        //                    {
+        //                        List<DiscreteFuzzySetBLL> listPoint = DiscreteFuzzySetBLL.DSDisFS(cellValueStr);
+        //                        if (listPoint != null && listPoint.Count > 0)
+        //                        {
+        //                            //DrawChart(listPoint); 
+        //                        }
+        //                    }
+        //                    // 5. Xử lý Tập mờ liên tục (Continuous)
+        //                    else if (type == "ContinuousFuzzySet")
+        //                    {
+        //                        List<ContinuousFuzzySetBLL> listPoint = ContinuousFuzzySetBLL.DSContFS(cellValueStr);
+        //                        if (listPoint != null && listPoint.Count > 0)
+        //                        {
+        //                            //DrawChart(listPoint);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Hiển thị lỗi để dễ dàng gỡ rối (debug)
+        //        MessageBox.Show("Đã xảy ra lỗi khi cố gắng vẽ biểu đồ:\n" + ex.Message, "Lỗi vẽ biểu đồ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
     }
 }
