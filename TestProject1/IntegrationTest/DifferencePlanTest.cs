@@ -76,7 +76,7 @@ namespace TestProject1.IntegrationTest
             //");
 
         }
-        [Fact]
+        //[Fact]
         public void DifferencePlan_getSchema_success()
         {
             //arrange

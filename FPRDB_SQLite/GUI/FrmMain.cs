@@ -94,7 +94,8 @@ namespace FPRDB_SQLite.GUI
             // ====================================================================
             // NHÁNH 1: ĐỔ DỮ LIỆU SCHEMAS VÀ LỌC TRÙNG LẶP
             // ====================================================================
-            var schemas = this.databaseService.getFPRDBSchemas();
+            AppStates.loadFPRDBSchemas= this.databaseService.getFPRDBSchemas();
+            var schemas = AppStates.loadFPRDBSchemas;
 
             if (schemas != null && schemas.Count > 0)
             {
@@ -103,7 +104,7 @@ namespace FPRDB_SQLite.GUI
 
                 foreach (var schema in schemas)
                 {
-                    string schemaName = schema.getSchemaName();
+                    string schemaName = schema.schemaName;
 
                     // LỌC: Nếu Lược đồ này đã vẽ rồi thì bỏ qua luôn, chuyển sang cái tiếp theo
                     if (addedSchemas.Contains(schemaName)) continue;
@@ -116,10 +117,10 @@ namespace FPRDB_SQLite.GUI
                     schemaNode.SelectedImageIndex = 8;
                     tablesRootNode.Nodes.Add(schemaNode);
 
-                    var fields = schema.getFields();
+                    var fields = schema.fields;
                     if (fields != null)
                     {
-                        List<string> primaryKeys = schema.getPrimarykey();
+                        List<string> primaryKeys = schema.primarykey;
 
                         foreach (var field in fields)
                         {
@@ -145,8 +146,8 @@ namespace FPRDB_SQLite.GUI
             // ====================================================================
             // NHÁNH 2: ĐỔ DỮ LIỆU RELATIONS VÀ LỌC TRÙNG LẶP
             // ====================================================================
-            var relations = this.databaseService.getFPRDBRelations();
-
+            AppStates.loadFPRDBSchemaRelations= this.databaseService.getFPRDBRelations();
+            var relations = AppStates.loadFPRDBSchemaRelations;
             if (relations != null && relations.Count > 0)
             {
                 // Cuốn sổ ghi nhớ các Quan hệ đã vẽ
@@ -154,7 +155,7 @@ namespace FPRDB_SQLite.GUI
 
                 foreach (var relation in relations)
                 {
-                    string relName = relation.getRelName();
+                    string relName = relation.relName;
 
                     // LỌC: Nếu Quan hệ này đã vẽ rồi thì bỏ qua luôn
                     if (addedRelations.Contains(relName)) continue;
@@ -167,10 +168,138 @@ namespace FPRDB_SQLite.GUI
                     instanceNode.SelectedImageIndex = 7;
                     relationRootNode.Nodes.Add(instanceNode);
 
-                    var refSchema = relation.getSchema();
+                    var refSchema = relation.fprdbSchema;
                     if (refSchema != null)
                     {
-                        string refSchemaName = refSchema.getSchemaName();
+                        string refSchemaName = refSchema.schemaName;
+                        TreeNode refSchemaNode = new TreeNode(refSchemaName);
+                        refSchemaNode.ImageIndex = 8;
+                        refSchemaNode.SelectedImageIndex = 8;
+                        instanceNode.Nodes.Add(refSchemaNode);
+                    }
+                }
+            }
+            else
+            {
+                TreeNode emptyRelNode = new TreeNode("(Chưa có Quan hệ nào)");
+                emptyRelNode.ImageIndex = 4;
+                emptyRelNode.SelectedImageIndex = 4;
+                relationRootNode.Nodes.Add(emptyRelNode);
+            }
+
+            treeView.ExpandAll();
+        }
+        private void reLoadDatabaseTree()
+        {
+            changeStatusTab();
+            // 1. Xóa cây cũ
+            treeView.Nodes.Clear();
+            // 2. Lấy tên file Database thông qua databaseService
+            string dbName = "DATABASE";
+            if (!string.IsNullOrEmpty(this.databaseService.getDatabaseName()))
+            {
+                dbName = this.databaseService.getDatabaseName();
+            }
+
+            if (string.IsNullOrEmpty(dbName) || dbName == "DATABASE") return;
+            // 3. Tạo Node Root (VD: db1)
+            TreeNode rootNode = new TreeNode(dbName);
+            rootNode.ImageIndex = 3; // Icon Database
+            rootNode.SelectedImageIndex = 3;
+            treeView.Nodes.Add(rootNode);
+
+            // ====================================================================
+            // TẠO 2 THƯ MỤC CHA: Tables VÀ Relation (Ngang hàng nhau)
+            // ====================================================================
+            TreeNode tablesRootNode = new TreeNode("FPRDB Schemas");
+            tablesRootNode.ImageIndex = 4; // Icon Folder màu vàng
+            tablesRootNode.SelectedImageIndex = 4;
+            rootNode.Nodes.Add(tablesRootNode);
+
+            TreeNode relationRootNode = new TreeNode("Relation");
+            relationRootNode.ImageIndex = 4; // Icon Folder màu vàng
+            relationRootNode.SelectedImageIndex = 4;
+            rootNode.Nodes.Add(relationRootNode);
+
+            // ====================================================================
+            // NHÁNH 1: ĐỔ DỮ LIỆU SCHEMAS VÀ LỌC TRÙNG LẶP
+            // ====================================================================
+            var schemas = AppStates.loadFPRDBSchemas;
+
+            if (schemas != null && schemas.Count > 0)
+            {
+                // Cuốn sổ ghi nhớ các Lược đồ đã vẽ
+                HashSet<string> addedSchemas = new HashSet<string>();
+
+                foreach (var schema in schemas)
+                {
+                    string schemaName = schema.schemaName;
+
+                    // LỌC: Nếu Lược đồ này đã vẽ rồi thì bỏ qua luôn, chuyển sang cái tiếp theo
+                    if (addedSchemas.Contains(schemaName)) continue;
+
+                    // Đánh dấu là đã vẽ
+                    addedSchemas.Add(schemaName);
+
+                    TreeNode schemaNode = new TreeNode(schemaName);
+                    schemaNode.ImageIndex = 8;
+                    schemaNode.SelectedImageIndex = 8;
+                    tablesRootNode.Nodes.Add(schemaNode);
+
+                    var fields = schema.fields;
+                    if (fields != null)
+                    {
+                        List<string> primaryKeys = schema.primarykey;
+
+                        foreach (var field in fields)
+                        {
+                            string fieldName = field.getFieldName();
+                            bool isPrimaryKey = primaryKeys != null && primaryKeys.Contains(fieldName);
+
+                            TreeNode fieldNode = new TreeNode(fieldName);
+                            fieldNode.ImageIndex = isPrimaryKey ? 5 : 2;
+                            fieldNode.SelectedImageIndex = isPrimaryKey ? 5 : 2;
+                            schemaNode.Nodes.Add(fieldNode);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                TreeNode emptySchemaNode = new TreeNode("(Chưa có Lược đồ nào)");
+                emptySchemaNode.ImageIndex = 4;
+                emptySchemaNode.SelectedImageIndex = 4;
+                tablesRootNode.Nodes.Add(emptySchemaNode);
+            }
+
+            // ====================================================================
+            // NHÁNH 2: ĐỔ DỮ LIỆU RELATIONS VÀ LỌC TRÙNG LẶP
+            // ====================================================================
+            var relations = AppStates.loadFPRDBSchemaRelations;
+            if (relations != null && relations.Count > 0)
+            {
+                // Cuốn sổ ghi nhớ các Quan hệ đã vẽ
+                HashSet<string> addedRelations = new HashSet<string>();
+
+                foreach (var relation in relations)
+                {
+                    string relName = relation.relName;
+
+                    // LỌC: Nếu Quan hệ này đã vẽ rồi thì bỏ qua luôn
+                    if (addedRelations.Contains(relName)) continue;
+
+                    // Đánh dấu là đã vẽ
+                    addedRelations.Add(relName);
+
+                    TreeNode instanceNode = new TreeNode(relName);
+                    instanceNode.ImageIndex = 7;
+                    instanceNode.SelectedImageIndex = 7;
+                    relationRootNode.Nodes.Add(instanceNode);
+
+                    var refSchema = relation.fprdbSchema;
+                    if (refSchema != null)
+                    {
+                        string refSchemaName = refSchema.schemaName;
                         TreeNode refSchemaNode = new TreeNode(refSchemaName);
                         refSchemaNode.ImageIndex = 8;
                         refSchemaNode.SelectedImageIndex = 8;
@@ -630,12 +759,24 @@ namespace FPRDB_SQLite.GUI
 
         private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new frmNewSchema(compRoot).ShowDialog();
+            using(frmNewSchema childform = new frmNewSchema(compRoot))
+            {
+                if (childform.ShowDialog() == DialogResult.OK)
+                {
+                    reLoadDatabaseTree();
+                }
+            }
+            
         }
 
         private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new frmNewRelation(compRoot).ShowDialog();
+            using(frmNewRelation childForm = new frmNewRelation(compRoot))
+            {
+                if (childForm.ShowDialog() == DialogResult.OK)
+                    reLoadDatabaseTree();
+            }
+            
         }
     }
 }

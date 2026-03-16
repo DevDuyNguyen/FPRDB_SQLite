@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.DTO;
+using BLL.Common;
 
 namespace BLL.Services
 {
@@ -35,9 +37,9 @@ namespace BLL.Services
             return name;
         }
 
-        public List<FPRDBSchema> getFPRDBSchemas()
+        public List<FPRDBSchemaDTO> getFPRDBSchemas()
         {
-            List<FPRDBSchema> schemas = new List<FPRDBSchema>();
+            List<FPRDBSchemaDTO> schemas = new List<FPRDBSchemaDTO>();
             string sql = @"
                 SELECT 
                     rsch.oid                 AS ""rsch.oid"", 
@@ -88,7 +90,7 @@ namespace BLL.Services
                         // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
                         while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
 
-                        schemas.Add(new FPRDBSchema(currentSchemaName, fields, primaryKey));
+                        schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey));
                     }
                 }
                 this.dbMgr.closeConnection();
@@ -100,9 +102,9 @@ namespace BLL.Services
             }
         }
 
-        public List<FPRDBRelation> getFPRDBRelations()
+        public List<FPRDBRelationDTO> getFPRDBRelations()
         {
-            List<FPRDBRelation> rels = new List<FPRDBRelation>();
+            List<FPRDBRelationDTO> rels = new List<FPRDBRelationDTO>();
             string sql = @"
                 SELECT
                     rel.oid             AS ""rel.oid"",
@@ -160,8 +162,8 @@ namespace BLL.Services
                         );
                         fields.Add(field);
                     } while ((hasNext = reader.Read()) && (long)reader["rel.oid"] == currentRelId);
-                    rels.Add(new FPRDBRelation(currentRelName, 
-                        new FPRDBSchema(currentSchemaName, fields, primaryKey))
+                    rels.Add(new FPRDBRelationDTO(currentRelName, 
+                        new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey), currentSchemaName)
                     );
 
                 }
@@ -190,5 +192,11 @@ namespace BLL.Services
             return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
                 "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
         }
+        public List<FieldType> getDefineDomainForDistFuzzSet()
+        {
+            return FieldTypeUtilities.getDefineDomainForFuzzySet();
+        }
+
+
     }
 }

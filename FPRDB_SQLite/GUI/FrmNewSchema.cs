@@ -75,17 +75,23 @@ namespace FPRDB_SQLite.GUI
             try
             {
                 FPRDBSchemaDTO schema = convertGridToSchema(schemaName, rows);
-                this.fprdbSchemaService.defineFPRDBSchema(schema);
-                XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Close();
+                if(this.fprdbSchemaService.defineFPRDBSchema(schema))
+                {
+                    AppStates.loadFPRDBSchemas.Add(schema);
+                    XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.DialogResult = DialogResult.OK;
+                    Close();
+                }
             }
             catch (SemanticException ex)
             {
-                XtraMessageBox.Show($"Semantic error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show($"Error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
             }
             catch(InvalidDataException ex)
             {
-                XtraMessageBox.Show($"Semantic error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show($"Error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
             }
 
         }
