@@ -17,9 +17,10 @@ namespace TestProject1.IntegrationTest
     public class ParserTests
     {
         private RecursiveDescentParser parser;
+        private CompositionRoot compRoot;
         public ParserTests()
         {
-            CompositionRoot compRoot = new CompositionRoot();
+            this.compRoot = new CompositionRoot();
             this.parser = compRoot.getParser();
         }
 
@@ -585,14 +586,16 @@ namespace TestProject1.IntegrationTest
         {
             public PrimarySelectionExpression_positive_testdata()
             {
-                //Add("field=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.EQUAL));
-                //Add("field!='haha'", new AtomicSelectionExpressionFieldConstant("field", new StringConstant("haha"), CompareOperation.NOT_EQUAL));
-                //Add("field>1.1", new AtomicSelectionExpressionFieldConstant("field", new FloatConstant(1.1f), CompareOperation.GREATER_THAN));
-                //Add("field>=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.GREATER_EQUAL));
-                //Add("field<1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_THAN));
-                //Add("field<=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_EQUAL));
-                //Add("field⇒1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.ALSO));
-                //Add("field1=⨂_ig field2", new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE));
+                CompositionRoot compRoot = new CompositionRoot();
+
+                Add("field=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()));
+                Add("field!='haha'", new AtomicSelectionExpressionFieldConstant("field", new StringConstant("haha"), CompareOperation.NOT_EQUAL, compRoot.getMetaDataManger()));
+                Add("field>1.1", new AtomicSelectionExpressionFieldConstant("field", new FloatConstant(1.1f), CompareOperation.GREATER_THAN, compRoot.getMetaDataManger()));
+                Add("field>=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.GREATER_EQUAL, compRoot.getMetaDataManger()));
+                Add("field<1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_THAN, compRoot.getMetaDataManger()));
+                Add("field<=1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.LESS_EQUAL, compRoot.getMetaDataManger()));
+                Add("field⇒1", new AtomicSelectionExpressionFieldConstant("field", new IntConstant(1), CompareOperation.ALSO, compRoot.getMetaDataManger()));
+                Add("field1=⨂_ig field2", new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE));
 
             }
         }
@@ -630,48 +633,48 @@ namespace TestProject1.IntegrationTest
         {
             public CONJUNCTIONSelectionExpression_positive_testdata()
             {
-
+                CompositionRoot compRoot = new CompositionRoot();
                 //PrimarySelectionExpression_positive_testdata
                 foreach (var row in new PrimarySelectionExpression_positive_testdata())
                 {
                     Add((string)row[0], (SelectionExpression)row[1]);
                 }
                 //true content:
-                //Add("field1=1 ⨂_ig field1 =⨂_in field2", new CompoundSelectionExpression(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
-                //    ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE
-                //    )
-                //);
-                //Add("field1=1 ⨂_in field1 =⨂_in field2", new CompoundSelectionExpression(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
-                //    ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE
-                //    )
-                //);
-                //Add("field1=1 ⨂_pc field1 =⨂_in field2", new CompoundSelectionExpression(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
-                //    ProbabilisticCombinationStrategy.CONJUNCTION_POSITIVE_CORRELATION
-                //    )
-                //);
-                //Add("field1=1 ⨂_me field1 =⨂_in field2", new CompoundSelectionExpression(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
-                //    ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION
-                //    )
-                //);
+                Add("field1=1 ⨂_ig field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE
+                    )
+                );
+                Add("field1=1 ⨂_in field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE
+                    )
+                );
+                Add("field1=1 ⨂_pc field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_POSITIVE_CORRELATION
+                    )
+                );
+                Add("field1=1 ⨂_me field1 =⨂_in field2", new CompoundSelectionExpression(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE),
+                    ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION
+                    )
+                );
                 //not done: not enough equivalence class
-                //SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression l1_2= new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
-                //SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //SelectionExpression l2_2= new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
-                //SelectionExpression l3_1 = new CompoundSelectionExpression(l2_1, l2_2, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
-                //SelectionExpression l3_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
-                //SelectionExpression l4_1 = new CompoundSelectionExpression(l3_1, l3_2, ProbabilisticCombinationStrategy.CONJUNCTION_POSITIVE_CORRELATION);
-                //SelectionExpression l4_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
-                //SelectionExpression l5_1 = new CompoundSelectionExpression(l4_1, l4_2, ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION);
-                //Add("field1=1 ⨂_ig field1 =⨂_in field2 ⨂_in field1 =⨂_in field2 ⨂_pc field1 =⨂_in field2 ⨂_me field1 =⨂_in field2", l5_1);
+                SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression l1_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                SelectionExpression l2_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l3_1 = new CompoundSelectionExpression(l2_1, l2_2, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l3_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l4_1 = new CompoundSelectionExpression(l3_1, l3_2, ProbabilisticCombinationStrategy.CONJUNCTION_POSITIVE_CORRELATION);
+                SelectionExpression l4_2 = new AtomicSelectionExpressionFieldField("field1", "field2", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+                SelectionExpression l5_1 = new CompoundSelectionExpression(l4_1, l4_2, ProbabilisticCombinationStrategy.CONJUNCTION_MUTUAL_EXCLUSION);
+                Add("field1=1 ⨂_ig field1 =⨂_in field2 ⨂_in field1 =⨂_in field2 ⨂_pc field1 =⨂_in field2 ⨂_me field1 =⨂_in field2", l5_1);
             }
         }
         [Theory]
@@ -704,48 +707,49 @@ namespace TestProject1.IntegrationTest
         {
             public DISJUNCTION_DIFFERENCE_SelectionExpresion_postive_test_data()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 ////CONJUNCTIONSelectionExpression_positive_testdata
-                //foreach (var row in new CONJUNCTIONSelectionExpression_positive_testdata())
-                //{
-                //    Add((string)row[0], (SelectionExpression)row[1]);
-                //}
+                foreach (var row in new CONJUNCTIONSelectionExpression_positive_testdata())
+                {
+                    Add((string)row[0], (SelectionExpression)row[1]);
+                }
                 //true content:
                 //not done: not enough equivalent class
-                //SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //SelectionExpression r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //SelectionExpression root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
-                //Add("field1=1 ⨂_ig field1=1 ⨁_ig field1=1 ⨂_ig field1=1", root);
+                SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                SelectionExpression r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                SelectionExpression root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
+                Add("field1=1 ⨂_ig field1=1 ⨁_ig field1=1 ⨂_ig field1=1", root);
 
-                //l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_INDEPENDANCE);
-                //Add("field1=1 ⨂_ig field1=1 ⨁_in field1=1 ⨂_ig field1=1", root);
+                l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_INDEPENDANCE);
+                Add("field1=1 ⨂_ig field1=1 ⨁_in field1=1 ⨂_ig field1=1", root);
 
-                //l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_POSITIVE_CORRELATION);
-                //Add("field1=1 ⨂_ig field1=1 ⨁_pc field1=1 ⨂_ig field1=1", root);
+                l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_POSITIVE_CORRELATION);
+                Add("field1=1 ⨂_ig field1=1 ⨁_pc field1=1 ⨂_ig field1=1", root);
 
-                //l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
-                //Add("field1=1 ⨂_ig field1=1 ⨁_me field1=1 ⨂_ig field1=1", root);
+                l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.DISJUNCTION_MUTUAL_EXCLUSION);
+                Add("field1=1 ⨂_ig field1=1 ⨁_me field1=1 ⨂_ig field1=1", root);
 
             }
         }
@@ -768,32 +772,33 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_selectionExpression_postive_testdata()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 //DISJUNCTION_DIFFERENCE_SelectionExpresion_postive_test_data
-                //foreach (var row in new DISJUNCTION_DIFFERENCE_SelectionExpresion_postive_test_data())
-                //{
-                //    Add((string)row[0],(SelectionExpression)row[1]);
-                //}
+                foreach (var row in new DISJUNCTION_DIFFERENCE_SelectionExpresion_postive_test_data())
+                {
+                    Add((string)row[0], (SelectionExpression)row[1]);
+                }
                 //true content:
                 //not done: not enough test coverage, not enough equivalent class
-                //SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
-                //SelectionExpression r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionExpression r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.DIFFERENCE_IGNORANCE);
-                //SelectionExpression root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //Add("(field1=1 ⨁_ig field1=1)⨂_ig(field1=1 ⦵_ig field1=1)", root);
+                SelectionExpression l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
+                SelectionExpression r1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression r1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionExpression r2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.DIFFERENCE_IGNORANCE);
+                SelectionExpression root = new CompoundSelectionExpression(l2_1, r2_1, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                Add("(field1=1 ⨁_ig field1=1)⨂_ig(field1=1 ⦵_ig field1=1)", root);
 
-                //l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
-                //var l2_2= new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL); ;
-                //var l2_3 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL); ;
-                //var l2_4 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL); ;
-                //var l3_1 = new CompoundSelectionExpression(l2_1, l2_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //var l3_2 = new CompoundSelectionExpression(l2_3, l2_4, ProbabilisticCombinationStrategy.DIFFERENCE_IGNORANCE);
-                //root = new CompoundSelectionExpression(l3_1, l3_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
-                //Add("((field1=1 ⨁_ig field1=1) ⨂_ig field1=1)⨂_ig(field1=1 ⦵_ig field1=1)", root);
+                l1_1 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l1_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                l2_1 = new CompoundSelectionExpression(l1_1, l1_2, ProbabilisticCombinationStrategy.DISJUNCTION_IGNORANCE);
+                var l2_2 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                var l2_3 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                var l2_4 = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                var l3_1 = new CompoundSelectionExpression(l2_1, l2_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                var l3_2 = new CompoundSelectionExpression(l2_3, l2_4, ProbabilisticCombinationStrategy.DIFFERENCE_IGNORANCE);
+                root = new CompoundSelectionExpression(l3_1, l3_2, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE);
+                Add("((field1=1 ⨁_ig field1=1) ⨂_ig field1=1)⨂_ig(field1=1 ⦵_ig field1=1)", root);
 
 
             }
@@ -820,9 +825,10 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_PrimarySelectionCondition_positive_testdata()
             {
-                //SelectionExpression selEx = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionCondition root = new AtomicSelectionCondition(selEx, 1, 1);
-                //Add("(field1=1)[1,1]",root);
+                CompositionRoot compRoot = new CompositionRoot();
+                SelectionExpression selEx = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL,compRoot.getMetaDataManger());
+                SelectionCondition root = new AtomicSelectionCondition(selEx, 1, 1);
+                Add("(field1=1)[1,1]", root);
             }
         }
         [Theory]
@@ -846,14 +852,15 @@ namespace TestProject1.IntegrationTest
             //true content:
             public Parser_NOTSelectionCondition_positive_testdata()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 //Parser_PrimarySelectionCondition_positive_testdata
-                //foreach (var row in new Parser_PrimarySelectionCondition_positive_testdata())
-                //    Add((string)row[0], (SelectionCondition)row[1]);
+                foreach (var row in new Parser_PrimarySelectionCondition_positive_testdata())
+                    Add((string)row[0], (SelectionCondition)row[1]);
                 //true content:
-                //SelectionExpression selEx = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL);
-                //SelectionCondition l1 = new AtomicSelectionCondition(selEx, 0.5f, 0.9f);
-                //SelectionCondition root = new CompoundSelectionCondition(l1, null, LogicalConnective.NOT);
-                //Add("NOT (field1=1)[0.5,0.9]", root);
+                SelectionExpression selEx = new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger());
+                SelectionCondition l1 = new AtomicSelectionCondition(selEx, 0.5f, 0.9f);
+                SelectionCondition root = new CompoundSelectionCondition(l1, null, LogicalConnective.NOT);
+                Add("NOT (field1=1)[0.5,0.9]", root);
             }
         }
         [Theory]
@@ -874,56 +881,57 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_ANDSelectionCondition_postive_test()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 //Parser_NOTSelectionCondition_positive_testdata:
                 foreach (var row in new Parser_NOTSelectionCondition_positive_testdata())
                     Add((string)row[0], (SelectionCondition)row[1]);
                 //true content:
-                //SelectionCondition l1_1 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL), 
-                //    1, 
-                //    1
-                //    );
-                //SelectionCondition l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //SelectionCondition root = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.AND);
-                //Add("(field1=1)[1,1] AND (field1=1)[1,1]", root);
+                SelectionCondition l1_1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                SelectionCondition l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                SelectionCondition root = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.AND);
+                Add("(field1=1)[1,1] AND (field1=1)[1,1]", root);
 
-                //l1_1 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //var l2_1 = new CompoundSelectionCondition(l1_1, null, LogicalConnective.NOT);
-                //l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //root = new CompoundSelectionCondition(l2_1, l1_2, LogicalConnective.AND);
-                //Add("NOT (field1=1)[1,1] AND (field1=1)[1,1]", root);
+                l1_1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                var l2_1 = new CompoundSelectionCondition(l1_1, null, LogicalConnective.NOT);
+                l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                root = new CompoundSelectionCondition(l2_1, l1_2, LogicalConnective.AND);
+                Add("NOT (field1=1)[1,1] AND (field1=1)[1,1]", root);
 
-                //l1_1 = new AtomicSelectionCondition(
-                //   new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //   1,
-                //   1
-                //   );
-                //l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.AND);
-                //var l2_2= new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.AND);
+                l1_1 = new AtomicSelectionCondition(
+                   new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                   1,
+                   1
+                   );
+                l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.AND);
+                var l2_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.AND);
 
-                //Add("(field1=1)[1,1] AND (field1=1)[1,1] AND (field1=1)[1,1]", root);
+                Add("(field1=1)[1,1] AND (field1=1)[1,1] AND (field1=1)[1,1]", root);
 
             }
         }
@@ -946,60 +954,61 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_ORSelectionCondition_postive_testdata()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 //Parser_ANDSelectionCondition_postive_test:
                 foreach (var row in new Parser_ANDSelectionCondition_postive_test())
                     Add((string)row[0], (SelectionCondition)row[1]);
                 //true content:
-                //SelectionCondition l1_1 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //SelectionCondition l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //SelectionCondition root = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
-                //Add("(field1=1)[1,1] OR (field1=1)[1,1]",root);
+                SelectionCondition l1_1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL,compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                SelectionCondition l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                SelectionCondition root = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
+                Add("(field1=1)[1,1] OR (field1=1)[1,1]", root);
 
-                //l1_1 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //var l2_1= new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.AND);
-                //var l2_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.OR);
-                //Add("(field1=1)[1,1] AND (field1=1)[1,1] OR (field1=1)[1,1]", root);
+                l1_1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                var l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.AND);
+                var l2_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.OR);
+                Add("(field1=1)[1,1] AND (field1=1)[1,1] OR (field1=1)[1,1]", root);
 
-                //l1_1 = new AtomicSelectionCondition(
-                //   new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //   1,
-                //   1
-                //   );
-                //l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
-                //l2_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.OR);
-                //Add("(field1=1)[1,1] or (field1=1)[1,1] OR (field1=1)[1,1]", root);
+                l1_1 = new AtomicSelectionCondition(
+                   new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                   1,
+                   1
+                   );
+                l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
+                l2_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.OR);
+                Add("(field1=1)[1,1] or (field1=1)[1,1] OR (field1=1)[1,1]", root);
 
             }
         }
@@ -1021,28 +1030,29 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_selectionCondition_positive_testdata()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 //Parser_ANDSelectionCondition_postive_test:
                 foreach (var row in new Parser_ANDSelectionCondition_postive_test())
                     Add((string)row[0], (SelectionCondition)row[1]);
                 //true content
-                //var l1_1 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //var l1_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //var l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
-                //var l2_2 = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //SelectionCondition root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.AND);
-                //Add("((field1=1)[1,1] or (field1=1)[1,1]) AND (field1=1)[1,1]",root);
+                var l1_1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL,compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                var l1_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                var l2_1 = new CompoundSelectionCondition(l1_1, l1_2, LogicalConnective.OR);
+                var l2_2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                SelectionCondition root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.AND);
+                Add("((field1=1)[1,1] or (field1=1)[1,1]) AND (field1=1)[1,1]", root);
 
             }
         }
@@ -1064,43 +1074,44 @@ namespace TestProject1.IntegrationTest
         {
             public Parser_PrimaryQuery_testdata()
             {
+                CompositionRoot compRoot = new CompositionRoot();
                 QueryData root = new BaseCartesianProductQueryData(
                     new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
                     new List<string> { "rel1", "rel2" },
                     null
                     );
-                //Add("select field1,field2 from rel1, rel2", root);
+                Add("select field1,field2 from rel1, rel2", root);
 
-                //SelectionCondition selectionCondt = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //root = new BaseCartesianProductQueryData(
-                //    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                //    new List<string> { "rel1", "rel2" },
-                //    selectionCondt
-                //    );
-                //Add("select field1,field2 from rel1, rel2 where (field1=1)[1,1]", root);
+                SelectionCondition selectionCondt = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                root = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new List<string> { "rel1", "rel2" },
+                    selectionCondt
+                    );
+                Add("select field1,field2 from rel1, rel2 where (field1=1)[1,1]", root);
 
-                //root = new BaseNaturalJoinQueryData(
-                //    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                //    new NaturalJoinList(new List<string> { "rel1", "rel2", "rel3" }, new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE }),
-                //    null
-                //    );
-                //Add("select field1,field2 from rel1 natural join ⨂_ig rel2 natural join ⨂_ig rel3", root);
+                root = new BaseNaturalJoinQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new NaturalJoinList(new List<string> { "rel1", "rel2", "rel3" }, new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE }),
+                    null
+                    );
+                Add("select field1,field2 from rel1 natural join ⨂_ig rel2 natural join ⨂_ig rel3", root);
 
-                //selectionCondt = new AtomicSelectionCondition(
-                //    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL),
-                //    1,
-                //    1
-                //    );
-                //root = new BaseNaturalJoinQueryData(
-                //    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
-                //    new NaturalJoinList(new List<string> { "rel1", "rel2", "rel3" }, new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE }),
-                //    selectionCondt
-                //    );
-                //Add("select field1,field2 from rel1 natural join ⨂_ig rel2 natural join ⨂_ig rel3 where (field1=1)[1,1]", root);
+                selectionCondt = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("field1", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                    1,
+                    1
+                    );
+                root = new BaseNaturalJoinQueryData(
+                    new List<SelectField> { new SelectField("", "field1"), new SelectField("", "field2") },
+                    new NaturalJoinList(new List<string> { "rel1", "rel2", "rel3" }, new List<ProbabilisticCombinationStrategy> { ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE, ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE }),
+                    selectionCondt
+                    );
+                Add("select field1,field2 from rel1 natural join ⨂_ig rel2 natural join ⨂_ig rel3 where (field1=1)[1,1]", root);
             }
         }
         [Theory]
