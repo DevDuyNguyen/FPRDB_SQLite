@@ -24,6 +24,12 @@ namespace BLL.Common
         private BasicUpdatePlanner updatePlanner;
         private SQLProcessor sqlProcessor;
         private ConstraintService constraintService;
+        private FPRDBSchemaService fprdbSchemaService;
+        private FPRDBSchemaDAO fprdbSchemaDAO;
+        private QueryPlanner queryPlanner;
+        private FPRDBRelationDAO fprdbRelationDAO;
+        private FPRDBRelationService fprdbRelationService;
+
         public CompositionRoot()
         {
             Initialize();
@@ -31,18 +37,27 @@ namespace BLL.Common
 
         public void Initialize()
         {
+            //sql processing
             this.dbMgr = new DatabaseManager();
-            this.databaseService = new DatabaseService(this.dbMgr);
-            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
-            this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
             this.lexer = new Lexer();
-            this.parser = new RecursiveDescentParser(this.lexer);
             this.metadataMgr = new MetadataManager(this.dbMgr);
-            this.constraintService = new ConstraintService(this.metadataMgr);
+            this.parser = new RecursiveDescentParser(this.lexer, this.metadataMgr);
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
-            this.updatePlanner=new BasicUpdatePlanner(this.dbMgr);
-            this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor);
+            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr);
+            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.parser);
+            this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
 
+            //dao
+            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
+            this.fprdbSchemaDAO = new FPRDBSchemaDAOSQLProcessor(this.sqlProcessor);
+            this.fprdbRelationDAO = new FPRDBRelationDAOSQLProcessor(this.sqlProcessor);
+
+            //service
+            this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
+            this.databaseService = new DatabaseService(this.dbMgr);
+            this.constraintService = new ConstraintService(this.metadataMgr);
+            this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);
+            this.fprdbRelationService = new FPRDBRelationService(this.fprdbRelationDAO);
         }
 
         public DatabaseService getDatabaseService()
@@ -55,6 +70,8 @@ namespace BLL.Common
         }
         public SQLProcessor getSQLProcessor() => this.sqlProcessor;
         public ConstraintService getConstraintService() => this.constraintService;
+        public FPRDBSchemaService getFPRDBSchemaService() => this.fprdbSchemaService;
+        public FPRDBRelationService getFPRDBRelationService() => this.fprdbRelationService;
 
         //delete: for testing
         public FuzzySetDAO getFuzzySetDAO()

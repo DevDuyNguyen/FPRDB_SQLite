@@ -26,7 +26,8 @@ namespace TestProject1.UnitTest
             Assert.Equal(true, lexer.matchKeyword("select"));
             lexer.eatKeyword("select");
 
-            Assert.Equal("*", lexer.eatIdentifier());
+            Assert.Equal(true, lexer.matchDelimiter("*"));
+            lexer.eatDelimiter("*");
 
             Assert.Equal(true, lexer.matchKeyword("from"));
             lexer.eatKeyword("from");

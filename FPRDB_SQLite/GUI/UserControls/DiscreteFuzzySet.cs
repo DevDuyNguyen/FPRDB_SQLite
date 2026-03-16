@@ -33,10 +33,14 @@ namespace FPRDB_SQLite.GUI.UserControls
         public DiscreteFuzzySet()
         {
             InitializeComponent();
-            cboDataType.Properties.Items.AddRange(new object[] { FieldType.INT, FieldType.FLOAT, FieldType.VARCHAR });
+            //cboDataType.Properties.Items.AddRange(new object[] { FieldType.INT, FieldType.FLOAT, FieldType.VARCHAR });
             textFields = new BaseEdit[] { txtNameDiscFuzzy, cboDataType };
             setValidationRules();
             InitGrid();
+        }
+        public void setDefineDomain4FuzzySet(List<FieldType> domains)
+        {
+            cboDataType.Properties.Items.AddRange(domains);
         }
         // VALIDATE INPUT
         // Hàm set rules cho các control

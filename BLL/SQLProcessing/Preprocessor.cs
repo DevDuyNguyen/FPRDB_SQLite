@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
@@ -38,6 +39,11 @@ namespace BLL.SQLProcessing
             if (this.metadataMgr.isConstraintExist(constraintName))
             {
                 throw new SemanticException($"Constraint with name {constraintName} already exists");
+            }
+            foreach(string fldName in data.getPrimarykey())
+            {
+                if (!FieldTypeUtilities.isPrimitive(data.getFieldByName(fldName).getFieldInfo().getType()))
+                    throw new SemanticException("Primary key must be of non fuzzy set type");
             }
             return true;
 
@@ -86,53 +92,38 @@ namespace BLL.SQLProcessing
 
                 foreach (Constant constant in data[i].valueList)
                 {
-                    if (fieldInfo.getType() == FieldType.INT)
+                    if(constant is IntConstant)
                     {
-                        if (!(constant is IntConstant))
+                        if(fieldInfo.getType()!=FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT && fieldInfo.getType() != FieldType.contFS)
                             throw new SemanticException(generalExceptionMessage);
                     }
-                    else if (fieldInfo.getType() == FieldType.FLOAT)
+                    else if (constant is FloatConstant)
                     {
-                        if (!(constant is FloatConstant))
+                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType()!=FieldType.contFS)
                             throw new SemanticException(generalExceptionMessage);
                     }
-                    else if (fieldInfo.getType() == FieldType.CHAR)
+                    else if (constant is StringConstant)
                     {
-                        if (!(constant is StringConstant) || ((string)constant.getVal()).Length != 1)
+                        if (fieldInfo.getType() != FieldType.VARCHAR && fieldInfo.getType() != FieldType.CHAR && fieldInfo.getType() != FieldType.distFS_TEXT)
                             throw new SemanticException(generalExceptionMessage);
                     }
-                    else if (fieldInfo.getType() == FieldType.VARCHAR)
+                    else if (constant is BooleanConstant)
                     {
-                        if (!(constant is StringConstant) || ((string)constant.getVal()).Length > fieldInfo.getTXTLength())
+                        if (fieldInfo.getType() != FieldType.BOOLEAN)
                             throw new SemanticException(generalExceptionMessage);
                     }
-                    else if (fieldInfo.getType() == FieldType.BOOLEAN)
+                    else if (constant is FuzzySetConstant)
                     {
-                        if (!(constant is BooleanConstant))
-                            throw new SemanticException(generalExceptionMessage);
-                    }
-                    else if (fieldInfo.getType() == FieldType.distFS_INT
-                        || fieldInfo.getType() == FieldType.distFS_FLOAT
-                        || fieldInfo.getType() == FieldType.distFS_TEXT
-                        || fieldInfo.getType() == FieldType.contFS) {
-
-                        if(!(constant is FuzzySetConstant))
-                        {
-                            throw new SemanticException(generalExceptionMessage);
-                        }
-
                         FuzzySetConstant fsContant = (FuzzySetConstant)constant;
                         string fsName = (string)fsContant.getVal();
                         FieldType type = this.metadataMgr.getFuzzySetType(fsName);
                         int fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
                         fsContant.setFuzzySetOID(fuzzySetOID);
                         fsContant.setType(type);
-
-                        if(fieldInfo.getType()!=type)
+                        if (fieldInfo.getType() != type)
                             throw new SemanticException(generalExceptionMessage);
                     }
 
-                    
                 }
             }
             return true;

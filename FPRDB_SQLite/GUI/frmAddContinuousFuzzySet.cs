@@ -1,4 +1,5 @@
 ﻿using BLL.Common;
+using BLL.Exceptions;
 using BLL.Services;
 using DevExpress.Map.Kml.Model;
 using DevExpress.XtraEditors;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,9 +43,20 @@ namespace FPRDB_SQLite.GUI
                 return;
             }
             var dto = continuosFuzzySetInfo.getContinuousFuzzySet();
-            service.createFuzzySet<float>(dto);
-            XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Close();
+            try
+            {
+                service.createFuzzySet<float>(dto);
+                XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+            }
+            catch (InvalidDataException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (SQLExecutionException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

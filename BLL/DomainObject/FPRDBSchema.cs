@@ -60,5 +60,19 @@ namespace BLL.DomainObject
             }
             return null;
         }
+        public void addFieldsFromSchema(FPRDBSchema schema)
+        {
+            //add fields
+            foreach(Field f in schema.getFields())
+            {
+                this.fields.Add(f);
+            }
+            //add primary key
+            this.primarykey = new List<string>();
+            foreach(string keyName in schema.getPrimarykey())
+            {
+                this.primarykey.Add(keyName);
+            }
+        }
     }
 }

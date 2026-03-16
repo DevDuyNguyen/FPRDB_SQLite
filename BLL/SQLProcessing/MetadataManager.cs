@@ -1,12 +1,13 @@
-﻿using System;
+﻿using BLL.DomainObject;
+using BLL.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using BLL.DomainObject;
-using BLL.Exceptions;
 
 namespace BLL.SQLProcessing
 {
@@ -193,7 +194,7 @@ namespace BLL.SQLProcessing
                 do
                 {
                     ++index;
-                    sql += $" AND {primaryKey[index]}='{value[index]}";
+                    sql += $" AND {primaryKey[index]}='{value[index]}'";
                 } while (index < totalLength - 1);
             }
 
@@ -204,6 +205,65 @@ namespace BLL.SQLProcessing
                 ans = reader.Read();
             }
             return ans;
+        }
+        public FuzzySet<T> getFuzzySet<T>(string name, FieldType fuzzSetType)
+        {
+            string sql;
+            Type t = typeof(T);
+            if (
+                (fuzzSetType == FieldType.distFS_INT && t != typeof(int))
+                || ((fuzzSetType == FieldType.distFS_FLOAT && t != typeof(float)))
+                || (fuzzSetType == FieldType.distFS_TEXT && t != typeof(string))
+                || (fuzzSetType == FieldType.contFS && t != typeof(float))
+                )
+                throw new InvalidCastException($"Fuzzy set type {fuzzSetType.ToString()} isn't compatible with defininng domain {t.Name}");
+            if(fuzzSetType != FieldType.contFS)
+            {
+                sql = $@"
+                    SELECT fuzzset_x,fuzzset_membership_degree 
+                    FROM fprdb_DiscreteFuzzySet as distFS
+                    JOIN fprdb_FuzzySet as fs on fs.oid=distFS.oid
+                    where fs.fuzzset_name='{name}';
+                ";
+                IDataReader reader = this.databaseMgr.executeQuery(sql);
+                using (reader)
+                {
+                    if (!reader.Read())
+                        throw new QueryDataNotExistException($"Fuzzy set {name} doesn't exist");
+                    List<T> values = ((string)(reader["fuzzset_x"]))
+                                            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                            .Select(s => (T)Convert.ChangeType(
+                                                s.Trim(),
+                                                typeof(T),
+                                                CultureInfo.InvariantCulture))
+                                            .ToList();
+                    string str = (string)reader["fuzzset_membership_degree"];
+                    List<float> memberships = (str).Split(",").Select(float.Parse).ToList();
+
+                    return new DiscreteFuzzySet<T>(values, memberships, name, fuzzSetType);
+
+                }
+            }
+            else
+            {
+                sql = $@"
+                    SELECT fuzzset_bottom_left,fuzzset_top_left,fuzzset_top_right,fuzzset_bottom_right 
+                    FROM fprdb_ContinousFuzzySet as contFS
+                    JOIN fprdb_FuzzySet as fs on fs.oid=contFS.oid
+                    where fs.fuzzset_name='{name}';
+                ";
+                IDataReader reader = this.databaseMgr.executeQuery(sql);
+                using (reader)
+                {
+                    if (!reader.Read())
+                        throw new QueryDataNotExistException($"Fuzzy set {name} doesn't exist");
+                    float p1 = Convert.ToSingle(reader["fuzzset_bottom_left"]);
+                    float p2 = Convert.ToSingle(reader["fuzzset_top_left"]);
+                    float p3 = Convert.ToSingle(reader["fuzzset_top_right"]);
+                    float p4 = Convert.ToSingle(reader["fuzzset_bottom_right"]);
+                    return (FuzzySet<T>)(object)new ContinuousFuzzySet(p1, p2, p3, p4, name);
+                }
+            }
         }
 
     }
