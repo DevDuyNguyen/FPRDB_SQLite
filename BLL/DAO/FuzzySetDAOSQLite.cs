@@ -111,8 +111,21 @@ namespace BLL.DAO
 
         public ContinuousFuzzySet createContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet)
         {
+            if (fuzzySet.fuzzySetName == "" || fuzzySet.fuzzySetName == null)
+                throw new InvalidDataException("Fuzzy set name is empty");
+            if (!(fuzzySet.leftBottom <= fuzzySet.leftTop && fuzzySet.leftTop <= fuzzySet.rightTop && fuzzySet.rightTop <= fuzzySet.rightBottom))
+            {
+                throw new InvalidDataException("Continuous fuzzy set's memberhsip degree function must be a trapazoid or triangle");
+            }
             try
             {
+                string checkIfFuzzSetExist = $" SELECT 1 FROM fprdb_FuzzySet AS FS  WHERE FS.fuzzset_name = '{fuzzySet.fuzzySetName}';";
+                using (IDataReader r = this.databaseManager.executeQuery(checkIfFuzzSetExist))
+                {
+                    if (r.Read())
+                        throw new InvalidDataException($"Fuzz set {fuzzySet.fuzzySetName} already exists");
+                }
+
                 string fieldTypeName = fuzzySet.fuzzySetType.ToString();
                 long fieldTypeID = this.databaseManager.executeScalar<long>($"SELECT oid FROM fprdb_Type WHERE type_name='{fieldTypeName}'");
                 string insert_fprdb_FuzzySet = $"INSERT INTO fprdb_FuzzySet (fuzzset_name, fuzzset_type_id) " +
@@ -156,9 +169,9 @@ namespace BLL.DAO
                     throw new newlyCreatedTupleNotFoundException();
 
             }
-            catch (Exception ex)
+            catch (SQLiteException ex)
             {
-                throw ex;
+                throw new SQLExecutionException("Something went wrong with sqlite");
             }
 
         }
