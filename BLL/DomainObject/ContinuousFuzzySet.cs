@@ -1,4 +1,5 @@
-﻿using BLL.DTO;
+﻿using BLL.Common;
+using BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -214,7 +215,7 @@ namespace BLL.DomainObject
 
             for (float i = this.leftBottom; i <= this.rightBottom; i += delta)
             {
-                if (this.getMembershipDegree(i) > fs.getMembershipDegree(i))
+                if (CompareOperatorUltilities.CompareFloats(this.getMembershipDegree(i), fs.getMembershipDegree(i))==1)
                     return false;
             }
             return true;
