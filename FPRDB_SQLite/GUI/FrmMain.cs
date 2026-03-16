@@ -1244,8 +1244,8 @@ namespace FPRDB_SQLite.GUI
                 var allRelations = this.databaseService.getFPRDBRelations();
 
                 // Lọc ra các quan hệ đang sử dụng lược đồ này
-                var dependentRelations = allRelations.Where(r => r.getSchema() != null && r.getSchema().getSchemaName() == schemaName)
-                    .Select(r => r.getRelName()).ToList();
+                var dependentRelations = allRelations.Where(r => r.fprdbSchema != null && r.fprdbSchema.schemaName == schemaName)
+                    .Select(r => r.relName).ToList();
 
                 // Xử lý ngoại lệ
                 if (dependentRelations.Count > 0)
