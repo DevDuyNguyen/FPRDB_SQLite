@@ -18,7 +18,7 @@ namespace BLL.SQLProcessing
         }
         public MismatchTokenType(string supposedTokenType, Token currentToken):base()
         {
-            this.Message = $"The current token {currentToken.Value} isn't {supposedTokenType}";
+            this.Message = $"The current token {currentToken?.Value} isn't {supposedTokenType}";
         }
     }
     internal class FPRDBSQLTerminals : Grammar

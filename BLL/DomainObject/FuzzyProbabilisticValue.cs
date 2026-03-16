@@ -46,6 +46,19 @@ namespace BLL.DomainObject
             else
                 return false;
         }
+        public override string ToString()
+        {
+            string content = "{";
+            for(int i=0; i<this.valueList.Count; ++i)
+            {
+                content+= $" ({this.valueList[i].getName()},[{this.intervalProbLowerBoundList[i]},{this.intervalProbUpperBoundList[i]}]),";
+
+            }
+            content = content.TrimEnd(',');
+            content += " }";
+
+            return content;
+        }
 
         //public FieldType getDomain() => this.domain;
         //public FuzzySet<T> getVal(int index) => this.valueList[index];
