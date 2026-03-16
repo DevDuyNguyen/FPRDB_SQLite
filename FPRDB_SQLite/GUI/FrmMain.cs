@@ -148,7 +148,7 @@ namespace FPRDB_SQLite.GUI
             // ====================================================================
             // NHÁNH 1: ĐỔ DỮ LIỆU SCHEMAS VÀ LỌC TRÙNG LẶP
             // ====================================================================
-            AppStates.loadFPRDBSchemas= this.databaseService.getFPRDBSchemas();
+            AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
             var schemas = AppStates.loadFPRDBSchemas;
 
             if (schemas != null && schemas.Count > 0)
@@ -201,7 +201,7 @@ namespace FPRDB_SQLite.GUI
             // ====================================================================
             // NHÁNH 2: ĐỔ DỮ LIỆU RELATIONS VÀ LỌC TRÙNG LẶP
             // ====================================================================
-            AppStates.loadFPRDBSchemaRelations= this.databaseService.getFPRDBRelations();
+            AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
             var relations = AppStates.loadFPRDBSchemaRelations;
             if (relations != null && relations.Count > 0)
             {
@@ -349,7 +349,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode instanceNode = new TreeNode(relName);
                     instanceNode.ImageIndex = 7;
                     instanceNode.SelectedImageIndex = 7;
-                    //instanceNode.Tag = "relation";
+                    instanceNode.Tag = "relation";
                     relationRootNode.Nodes.Add(instanceNode);
 
                     var refSchema = relation.fprdbSchema;
@@ -1107,15 +1107,15 @@ namespace FPRDB_SQLite.GUI
                 Field field;
                 List<Field> fields = schema.getFields();
                 while (s.next())
-                {   
-                    for(int i=0; i<schema.getFields().Count; ++i)
+                {
+                    for (int i = 0; i < schema.getFields().Count; ++i)
                     {
                         field = fields[i];
                         switch (field.getFieldInfo().getType())
                         {
                             case FieldType.INT:
                             case FieldType.distFS_INT:
-                                tupleForGridView[i]=s.getFieldContent<int>(field.getFieldName()).ToString();
+                                tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                                 break;
                             case FieldType.FLOAT:
                             case FieldType.distFS_FLOAT:
@@ -1140,7 +1140,7 @@ namespace FPRDB_SQLite.GUI
 
                 }
                 //bind the result to the grid control
-                gridControlResultQuery.DataSource=resultForGridView;
+                gridControlResultQuery.DataSource = resultForGridView;
                 // Mở rộng giao diện để xem cả query và kết quả
                 splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
                 //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
@@ -1157,11 +1157,11 @@ namespace FPRDB_SQLite.GUI
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch(NotSupportedException ex)
+            catch (NotSupportedException ex)
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch(IndexOutOfRangeException ex)
+            catch (IndexOutOfRangeException ex)
             {
                 XtraMessageBox.Show($"Already out of token", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1214,14 +1214,14 @@ namespace FPRDB_SQLite.GUI
         #region Tab Page Schema
         private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            using(frmNewSchema childform = new frmNewSchema(compRoot))
+            using (frmNewSchema childform = new frmNewSchema(compRoot))
             {
                 if (childform.ShowDialog() == DialogResult.OK)
                 {
                     reLoadDatabaseTree();
                 }
             }
-            
+
         }
         // Hàm xử lý sự kiện click cho nút Xóa lược đồ
         private void iDeleteSchema_ItemClick(object sender, ItemClickEventArgs e)
@@ -1264,18 +1264,41 @@ namespace FPRDB_SQLite.GUI
                     // Ví dụ: bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName);
 
                     // tạm thời giả lập gọi hàm
-                    bool isDeleted = true; // Giả sử xóa thành công
+                    //bool isDeleted = true; // Giả sử xóa thành công
+
+                    //if (isDeleted)
+                    //{
+                    //    XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //    // 4. Cập nhật lại TreeView sau khi xóa thành công
+                    //    LoadDatabaseTree();
+                    //}
+                    //else
+                    //{
+                    //    XtraMessageBox.Show("Failed to delete schema. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //}
+                    // ---- BẮT ĐẦU THỰC THI XÓA DƯỚI DATABASE ----
+
+                    //bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName); hàm nếu có
+                    bool isDeleted = false;
+                    string sqlDropCommand = $"DROP TABLE {schemaName}"; // lệnh string SQL để xóa lược đồ [not don't]
+                    isDeleted = this.sqlProcessor.executeDataDefinition(sqlDropCommand);
 
                     if (isDeleted)
                     {
                         XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        // 4. Cập nhật lại TreeView sau khi xóa thành công
-                        LoadDatabaseTree();
+
+                        // 4. Cập nhật lại cache AppStates từ Database trước khi vẽ lại cây
+                        AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+
+                        // 5. Cập nhật lại TreeView sau khi xóa thành công
+                        reLoadDatabaseTree();
                     }
                     else
                     {
-                        XtraMessageBox.Show("Failed to delete schema. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        XtraMessageBox.Show("Failed to delete schema. Check syntax or database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    // Kết thúc thực thi xóa
                 }
             }
             catch (Exception ex)
@@ -1287,12 +1310,78 @@ namespace FPRDB_SQLite.GUI
         #region Tab Page Relation
         private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            using(frmNewRelation childForm = new frmNewRelation(compRoot))
+            using (frmNewRelation childForm = new frmNewRelation(compRoot))
             {
                 if (childForm.ShowDialog() == DialogResult.OK)
                     reLoadDatabaseTree();
             }
-            
+
+        }
+
+        private void iDeleteRelation_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // 1. Lấy node đang được chọn trên TreeView
+            TreeNode selectedNode = treeView.SelectedNode;
+
+            // Kiểm tra xem người dùng đã chọn đúng node quan hệ chưa
+            if (selectedNode == null || selectedNode.Tag?.ToString() != "relation")
+            {
+                XtraMessageBox.Show("Please select a relation to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string relName = selectedNode.Text;
+
+            try
+            {
+                // 2. Kiểm tra Quy tắc nghiệp vụ B6: Không có base relation nào khác trỏ tới nó (Khóa ngoại)
+                // LƯU Ý: Ở tầng DatabaseService, cần viết hàm (getReferencingRelations) kiểm tra xem có quan hệ nào đang chứa khóa ngoại trỏ tới quan hệ đang xóa không
+                // để query các ConstraintDTO có ConstraintType == REFERENTIAL và referencedRelation trùng với relName.
+                // Dưới đây là cách gọi giả định:
+                //List<string> referencingRelations = this.databaseService.getReferencingRelations(relName);
+                List<string> referencingRelations = null; // giả lập
+                // Xử lý ngoại lệ E1
+                if (referencingRelations != null && referencingRelations.Count > 0)
+                {
+                    string relList = string.Join(", ", referencingRelations);
+                    XtraMessageBox.Show($"Cannot delete relation '{relName}' because it is referenced by foreign keys in the following relations: {relList}",
+                                        "Constraint Violation (B6)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 3. Luồng cơ bản: Xác nhận xóa
+                DialogResult result = XtraMessageBox.Show($"Are you sure you want to delete the relation '{relName}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Lấy đối tượng relation DTO hiện tại từ cache AppStates để truyền vào Service
+                    var relToDelete = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(r => r.relName == relName);
+
+                    if (relToDelete == null) return;
+
+                    // 4. Gọi Service thực thi xóa dữ liệu dưới Database
+                    //bool isDeleted = this.databaseService.removeFPRDBRelation(relToDelete);
+                    bool isDeleted = false;// giả lập khi chưa có hàm removeFPRDBRelation
+                    if (isDeleted)
+                    {
+                        XtraMessageBox.Show("Relation deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // 5. Cập nhật lại cache AppStates từ Database
+                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+
+                        // 6. Cập nhật lại giao diện TreeView
+                        reLoadDatabaseTree();
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Failed to delete relation. Please check database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"An error occurred while trying to delete the relation: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         #endregion
 

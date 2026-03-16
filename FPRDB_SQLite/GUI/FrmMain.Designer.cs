@@ -299,6 +299,7 @@ namespace FPRDB_SQLite.GUI
             iDeleteRelation.Id = 27;
             iDeleteRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
             iDeleteRelation.Name = "iDeleteRelation";
+            iDeleteRelation.ItemClick += iDeleteRelation_ItemClick;
             // 
             // iSaveRelation
             // 
