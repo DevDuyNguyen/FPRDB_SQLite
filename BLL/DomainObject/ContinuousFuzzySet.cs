@@ -9,13 +9,13 @@ namespace BLL.DomainObject
 {
     public class ContinuousFuzzySet : FuzzySet<float>
     {
-        private float leftBottom;
+        private float leftBottom;//also act as left boundary for first non-0 membership degree
         private float leftTop;
         private float rightTop;
-        private float rightBottom;
+        private float rightBottom;//also act as left boundary for first non-0 membership degree
         private ContinuousFuzzySet lParrent;
         private ContinuousFuzzySet rParrent;
-        private bool isNormalFuzzySet = true;
+        private float leftOf1MembershipDegreeRange, rightOf1MembershipDegreeRange;
 
         public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
         {
@@ -23,6 +23,9 @@ namespace BLL.DomainObject
             this.leftTop = leftTop;
             this.rightTop = rightTop;
             this.rightBottom = rightBottom;
+
+            this.leftOf1MembershipDegreeRange = this.leftTop;
+            this.rightOf1MembershipDegreeRange = this.rightTop;
         }
 
         private ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, bool isNormalFuzzySet, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
@@ -33,7 +36,6 @@ namespace BLL.DomainObject
             this.rightBottom = rightBottom;
             this.lParrent = lParrent;
             this.rParrent = rParrent;
-            this.isNormalFuzzySet = isNormalFuzzySet;
         }
 
         public float getLeftBottom() => this.leftBottom;
@@ -181,7 +183,8 @@ namespace BLL.DomainObject
             }
         }
         public override bool isNormal(){
-            return this.isNormalFuzzySet;
+            throw new NotImplementedException();
+            //return this.isNormalFuzzySet;
         }
         public override bool isEqualTo(FuzzySet<float> fs)
         {
@@ -190,7 +193,7 @@ namespace BLL.DomainObject
                 ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
                 //not done: the design of continuous fuzzy set is wrongful, it can accommodates its tasks
                 int maxDiscreteTestPoint = 200;
-                float delta = (this.rightBottom - this.leftBottom) / 200.0f;
+                float delta = (this.rightBottom - this.leftBottom) / (float)maxDiscreteTestPoint;
                 for(float i=this.leftBottom; i<=this.rightBottom; i += delta)
                 {
                     if (this.getMembershipDegree(i) != cfs.getMembershipDegree(i))
@@ -201,5 +204,22 @@ namespace BLL.DomainObject
             else
                 return false;
         }
+
+        public override bool isSubsetOf(FuzzySet<float> fs)
+        {
+            if (fs is DiscreteFuzzySet<float>)
+                return false;
+            int maxDiscreteTestPoint = 200;
+            float delta = (this.rightBottom - this.leftBottom) / (float)maxDiscreteTestPoint;
+
+            for (float i = this.leftBottom; i <= this.rightBottom; i += delta)
+            {
+                if (this.getMembershipDegree(i) > fs.getMembershipDegree(i))
+                    return false;
+            }
+            return true;
+        }
+
+
     }
 }

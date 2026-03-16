@@ -31,6 +31,7 @@ namespace BLL.DomainObject
         public abstract FuzzySet<T> StandardIntersection(FuzzySet<T> fs);
         public abstract bool isNormal();
         public abstract bool isEqualTo(FuzzySet<T> fs);
+        public abstract bool isSubsetOf(FuzzySet<T> fs);
 
     }
 }

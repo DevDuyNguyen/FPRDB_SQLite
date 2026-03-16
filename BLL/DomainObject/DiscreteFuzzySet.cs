@@ -111,5 +111,16 @@ namespace BLL.DomainObject
             }
             
         }
+        public override bool isSubsetOf(FuzzySet<T> fs) { 
+            for(int i=0; i<this.valueSet.Count; ++i)
+            {
+                if (this.membershipDegreeSet[i] > fs.getMembershipDegree((T)Convert.ChangeType(i, typeof(T))))
+                    return false;
+            }
+            return true;
+        }
+
+
+
     }
 }
