@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.DTO;
+using BLL.Common;
 
 namespace BLL.Services
 {
@@ -191,5 +192,11 @@ namespace BLL.Services
             return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
                 "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
         }
+        public List<FieldType> getDefineDomainForDistFuzzSet()
+        {
+            return FieldTypeUtilities.getDefineDomainForFuzzySet();
+        }
+
+
     }
 }

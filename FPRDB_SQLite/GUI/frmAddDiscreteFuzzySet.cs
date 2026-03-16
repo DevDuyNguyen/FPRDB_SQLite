@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DTO;
+using BLL.Exceptions;
 using BLL.Services;
 using DevExpress.Map.Kml.Model;
 using DevExpress.XtraEditors;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,11 +22,17 @@ namespace FPRDB_SQLite.GUI
     {
         CompositionRoot compRoot;
         FuzzySetService service;
+        DatabaseService dbService;
+        List<FieldType> defineDomain4FuzzySet;
         public frmAddDiscreteFuzzySet(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
             this.service = this.compRoot.getFuzzySetService();
+            this.dbService = this.compRoot.getDatabaseService();
             InitializeComponent();
+
+            this.defineDomain4FuzzySet = this.dbService.getDefineDomainForDistFuzzSet();
+            this.discreteFuzzySetInfo.setDefineDomain4FuzzySet(this.defineDomain4FuzzySet);
         }
 
         // Hàm xử lý khi click "Cancel" button
@@ -33,10 +41,24 @@ namespace FPRDB_SQLite.GUI
             Close();
         }
         // Helper để xử lý tạo Discrete Fuzzy Set dựa trên kiểu dữ liệu được chọn
-        private void HandleDiscreteFuzzySet<T>()
+        private bool HandleDiscreteFuzzySet<T>()
         {
             var dto = discreteFuzzySetInfo.getDiscreteFuzzySet<T>();
-            service.createFuzzySet<T>(dto);
+            try
+            {
+                service.createFuzzySet<T>(dto);
+                return true;
+            }
+            catch (SQLExecutionException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            catch(InvalidDataException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
         }
         // Hàm xử lý khi click "Save" button
         private void btnSave_Click(object sender, EventArgs e)
@@ -46,22 +68,27 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show("Please fill out all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            FieldType type = discreteFuzzySetInfo.getFuzzySetType();
-            switch (type)
+            FieldType choosenType = discreteFuzzySetInfo.getFuzzySetType();
+            bool resultState=false;
+            switch (choosenType)
             {
+                
                 case FieldType.INT:
-                    HandleDiscreteFuzzySet<int>();
+                    resultState=HandleDiscreteFuzzySet<int>();
                     break;
                 case FieldType.FLOAT:
-                    HandleDiscreteFuzzySet<float>();
+                    resultState=HandleDiscreteFuzzySet<float>();
                     break;
                 case FieldType.VARCHAR:
-                    HandleDiscreteFuzzySet<string>();
+                    resultState=HandleDiscreteFuzzySet<string>();
                     break;
-
             }
-            XtraMessageBox.Show("Discrete fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Close();
+            if (resultState == true)
+            {
+                XtraMessageBox.Show("Discrete fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+            }
+            
         }
     }
 }

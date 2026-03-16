@@ -63,6 +63,9 @@ namespace BLL.Common
         {
             return type == FieldType.contFS;
         }
-
+        static public List<FieldType> getDefineDomainForFuzzySet()
+        {
+            return new List<FieldType> { FieldType.INT, FieldType.FLOAT, FieldType.VARCHAR};
+        }
     }
 }
