@@ -1384,57 +1384,5 @@ namespace FPRDB_SQLite.GUI
             }
         }
         #endregion
-
-        // Hàm xử lý sự kiện click chuột phải vào ô dữ liệu trong GridView kết quả truy vấn để vẽ biểu đồ
-        //private void gridViewResultQuery_RowCellClick(object sender, DevExpress.XtraGrid.Views.Grid.RowCellClickEventArgs e)
-        //{
-        //    try
-        //    {
-        //        // 1. Chỉ thực thi khi người dùng click CHUỘT PHẢI
-        //        if (e.Button == MouseButtons.Right)
-        //        {
-        //            // 2. Lấy tên trường dữ liệu thực tế (VD: "doctor1.AGE")
-        //            string fieldName = e.Column.FieldName;
-
-        //            // 3. Tìm thuộc tính trong đối tượng 'query' hiện tại
-        //            // Lưu ý: Biến 'query' phải là biến toàn cục (global) trong Form và đã được gán dữ liệu lúc Execute
-        //            var attribute = query.selectedAttributes.SingleOrDefault(c => c.AttributeName == fieldName);
-
-        //            // Nếu cột này nằm trong danh sách thuộc tính của query
-        //            if (attribute != null)
-        //            {
-        //                string type = attribute.FproDataType.TypeName;
-        //                string cellValueStr = e.CellValue?.ToString(); // Lấy giá trị chuỗi của ô hiện tại
-
-        //                if (!string.IsNullOrEmpty(cellValueStr))
-        //                {
-        //                    // 4. Xử lý Tập mờ rời rạc (Discrete)
-        //                    if (type == "DiscreteFuzzySet")
-        //                    {
-        //                        List<DiscreteFuzzySetBLL> listPoint = DiscreteFuzzySetBLL.DSDisFS(cellValueStr);
-        //                        if (listPoint != null && listPoint.Count > 0)
-        //                        {
-        //                            //DrawChart(listPoint); 
-        //                        }
-        //                    }
-        //                    // 5. Xử lý Tập mờ liên tục (Continuous)
-        //                    else if (type == "ContinuousFuzzySet")
-        //                    {
-        //                        List<ContinuousFuzzySetBLL> listPoint = ContinuousFuzzySetBLL.DSContFS(cellValueStr);
-        //                        if (listPoint != null && listPoint.Count > 0)
-        //                        {
-        //                            //DrawChart(listPoint);
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Hiển thị lỗi để dễ dàng gỡ rối (debug)
-        //        MessageBox.Show("Đã xảy ra lỗi khi cố gắng vẽ biểu đồ:\n" + ex.Message, "Lỗi vẽ biểu đồ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
     }
 }
