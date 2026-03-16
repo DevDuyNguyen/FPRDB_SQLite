@@ -35,8 +35,10 @@
             grdvSchemaAttribute = new DevExpress.XtraGrid.Views.Grid.GridView();
             grdcolPK = new DevExpress.XtraGrid.Columns.GridColumn();
             repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            grdcolAttr = new DevExpress.XtraGrid.Columns.GridColumn();
-            grdcolDataType = new DevExpress.XtraGrid.Columns.GridColumn();
+            grdcolName = new DevExpress.XtraGrid.Columns.GridColumn();
+            grdcolType = new DevExpress.XtraGrid.Columns.GridColumn();
+            repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            grdcolLength = new DevExpress.XtraGrid.Columns.GridColumn();
             pnlButtonNewSchema = new DevExpress.XtraEditors.PanelControl();
             btnCancel = new DevExpress.XtraEditors.SimpleButton();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
@@ -50,6 +52,7 @@
             ((System.ComponentModel.ISupportInitialize)grdcSchemaAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grdvSchemaAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemCheckEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemComboBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pnlButtonNewSchema).BeginInit();
             pnlButtonNewSchema.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grpSchemaName).BeginInit();
@@ -84,7 +87,7 @@
             grdcSchemaAttribute.Location = new System.Drawing.Point(2, 28);
             grdcSchemaAttribute.MainView = grdvSchemaAttribute;
             grdcSchemaAttribute.Name = "grdcSchemaAttribute";
-            grdcSchemaAttribute.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCheckEdit1 });
+            grdcSchemaAttribute.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCheckEdit1, repositoryItemComboBox1 });
             grdcSchemaAttribute.Size = new System.Drawing.Size(730, 334);
             grdcSchemaAttribute.TabIndex = 0;
             grdcSchemaAttribute.UseEmbeddedNavigator = true;
@@ -92,15 +95,20 @@
             // 
             // grdvSchemaAttribute
             // 
-            grdvSchemaAttribute.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolPK, grdcolAttr, grdcolDataType });
+            grdvSchemaAttribute.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { grdcolPK, grdcolName, grdcolType, grdcolLength });
             grdvSchemaAttribute.GridControl = grdcSchemaAttribute;
             grdvSchemaAttribute.Name = "grdvSchemaAttribute";
+            grdvSchemaAttribute.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.True;
             grdvSchemaAttribute.OptionsView.ShowGroupPanel = false;
+            grdvSchemaAttribute.RowCellStyle += grdvSchemaAttribute_RowCellStyle;
+            grdvSchemaAttribute.ShowingEditor += grdvSchemaAttribute_ShowingEditor;
+            grdvSchemaAttribute.CellValueChanged += grdvSchemaAttribute_CellValueChanged;
             // 
             // grdcolPK
             // 
             grdcolPK.Caption = "Primary Key";
             grdcolPK.ColumnEdit = repositoryItemCheckEdit1;
+            grdcolPK.FieldName = "isPrimaryKey";
             grdcolPK.MinWidth = 25;
             grdcolPK.Name = "grdcolPK";
             grdcolPK.Visible = true;
@@ -112,23 +120,42 @@
             repositoryItemCheckEdit1.AutoHeight = false;
             repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             // 
-            // grdcolAttr
+            // grdcolName
             // 
-            grdcolAttr.Caption = "Attribute Name";
-            grdcolAttr.MinWidth = 25;
-            grdcolAttr.Name = "grdcolAttr";
-            grdcolAttr.Visible = true;
-            grdcolAttr.VisibleIndex = 1;
-            grdcolAttr.Width = 94;
+            grdcolName.Caption = "Attribute Name";
+            grdcolName.FieldName = "attributeName";
+            grdcolName.MinWidth = 25;
+            grdcolName.Name = "grdcolName";
+            grdcolName.Visible = true;
+            grdcolName.VisibleIndex = 1;
+            grdcolName.Width = 94;
             // 
-            // grdcolDataType
+            // grdcolType
             // 
-            grdcolDataType.Caption = "Data Type";
-            grdcolDataType.MinWidth = 25;
-            grdcolDataType.Name = "grdcolDataType";
-            grdcolDataType.Visible = true;
-            grdcolDataType.VisibleIndex = 2;
-            grdcolDataType.Width = 94;
+            grdcolType.Caption = "Data Type";
+            grdcolType.ColumnEdit = repositoryItemComboBox1;
+            grdcolType.FieldName = "dataType";
+            grdcolType.MinWidth = 25;
+            grdcolType.Name = "grdcolType";
+            grdcolType.Visible = true;
+            grdcolType.VisibleIndex = 2;
+            grdcolType.Width = 94;
+            // 
+            // repositoryItemComboBox1
+            // 
+            repositoryItemComboBox1.AutoHeight = false;
+            repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            // 
+            // grdcolLength
+            // 
+            grdcolLength.Caption = "Length";
+            grdcolLength.FieldName = "length";
+            grdcolLength.MinWidth = 25;
+            grdcolLength.Name = "grdcolLength";
+            grdcolLength.Visible = true;
+            grdcolLength.VisibleIndex = 3;
+            grdcolLength.Width = 94;
             // 
             // pnlButtonNewSchema
             // 
@@ -147,6 +174,7 @@
             btnCancel.Size = new System.Drawing.Size(94, 29);
             btnCancel.TabIndex = 1;
             btnCancel.Text = "&Cancel";
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnSave
             // 
@@ -155,6 +183,7 @@
             btnSave.Size = new System.Drawing.Size(94, 29);
             btnSave.TabIndex = 0;
             btnSave.Text = "&Save";
+            btnSave.Click += btnSave_Click;
             // 
             // grpSchemaName
             // 
@@ -198,6 +227,7 @@
             ((System.ComponentModel.ISupportInitialize)grdcSchemaAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)grdvSchemaAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemCheckEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemComboBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pnlButtonNewSchema).EndInit();
             pnlButtonNewSchema.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)grpSchemaName).EndInit();
@@ -221,8 +251,10 @@
         private DevExpress.XtraEditors.TextEdit txtSchemaName;
         private DevExpress.XtraEditors.LabelControl lblSchemaName;
         private DevExpress.XtraGrid.Columns.GridColumn grdcolPK;
-        private DevExpress.XtraGrid.Columns.GridColumn grdcolAttr;
-        private DevExpress.XtraGrid.Columns.GridColumn grdcolDataType;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolName;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolType;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
+        private DevExpress.XtraGrid.Columns.GridColumn grdcolLength;
     }
 }

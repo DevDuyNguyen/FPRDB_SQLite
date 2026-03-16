@@ -24,7 +24,10 @@ namespace BLL.Common
         private BasicUpdatePlanner updatePlanner;
         private SQLProcessor sqlProcessor;
         private ConstraintService constraintService;
+        private FPRDBSchemaService fprdbSchemaService;
+        private FPRDBSchemaDAO fprdbSchemaDAO;
         private QueryPlanner queryPlanner;
+
         public CompositionRoot()
         {
             Initialize();
@@ -42,6 +45,8 @@ namespace BLL.Common
             this.constraintService = new ConstraintService(this.metadataMgr);
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
             this.updatePlanner=new BasicUpdatePlanner(this.dbMgr);
+            this.fprdbSchemaDAO = new FPRDBSchemaDAOSQLProcessor(this.sqlProcessor);
+            this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);
             this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.parser);
             this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor, this.queryPlanner,this.lexer);
 
@@ -57,6 +62,7 @@ namespace BLL.Common
         }
         public SQLProcessor getSQLProcessor() => this.sqlProcessor;
         public ConstraintService getConstraintService() => this.constraintService;
+        public FPRDBSchemaService getFPRDBSchemaService() => this.fprdbSchemaService;
 
         //delete: for testing
         public FuzzySetDAO getFuzzySetDAO()

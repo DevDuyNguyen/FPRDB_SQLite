@@ -136,7 +136,7 @@ namespace TestProject1.IntegrationTest
 
             }
         }
-        //[Fact]
+        [Fact]
         public void UNION_DIFFERENECE_INTERSECTION()
         {
             //arrange
