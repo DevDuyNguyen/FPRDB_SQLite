@@ -16,12 +16,16 @@ namespace BLL.SQLProcessing
         private RecursiveDescentParser parser;
         private UpdatePlanner updatePlanner;
         private Preprocessor preProcessor;
+        private QueryPlanner queryPlanner;
+        private Lexer lexer;
 
-        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor)
+        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor, QueryPlanner queryPlanner, Lexer lexer)
         {
             this.parser = parser;
             this.updatePlanner = updatePlanner;
             this.preProcessor = preProcessor;
+            this.queryPlanner = queryPlanner;
+            this.lexer = lexer;
         }
 
         public bool executeDataDefinition(string sql)
@@ -99,6 +103,15 @@ namespace BLL.SQLProcessing
             {
                 throw new NotImplementedException();
             }
+        }
+        public Plan createQueryPlan(string sql)
+        {
+            this.parser.parse(sql);
+            QueryData data = this.parser.query();
+
+            //not done: not implement semantic checking
+
+            return this.queryPlanner.createPlan(data);
         }
 
     }

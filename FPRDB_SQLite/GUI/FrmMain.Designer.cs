@@ -275,7 +275,7 @@
             // 
             // iNewRelation
             // 
-            iNewRelation.Caption = "New";
+            iNewRelation.Caption = "Create Relation";
             iNewRelation.Id = 25;
             iNewRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
             iNewRelation.Name = "iNewRelation";
