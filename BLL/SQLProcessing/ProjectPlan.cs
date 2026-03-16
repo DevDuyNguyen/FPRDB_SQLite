@@ -18,14 +18,22 @@ namespace BLL.SQLProcessing
             this.p = p;
             FPRDBSchema schma = this.p.getSchema();
             List<Field> fields=new List<Field>();
-            foreach(Field field in schma.getFields())
+            if(fieldList.Count==1 && fieldList[0] == "*")
             {
-                if (fieldList.Contains(field.getFieldName()))
-                    fields.Add(field);
+                this.schema = schma;
             }
-            if (fieldList.Count > fields.Count)
-                throw new Exception("Some selected fields aren't included");
-            this.schema = new FPRDBSchema(null, fields, null);
+            else
+            {
+                foreach (Field field in schma.getFields())
+                {
+                    if (fieldList.Contains(field.getFieldName()))
+                        fields.Add(field);
+                }
+                if (fieldList.Count > fields.Count)
+                    throw new Exception("Some selected fields aren't included");
+                this.schema = new FPRDBSchema(null, fields, null);
+            }
+            
         }
         public Scan open()
         {

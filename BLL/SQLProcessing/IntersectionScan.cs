@@ -55,6 +55,7 @@ namespace BLL.SQLProcessing
             AbstractFuzzyProbabilisticValue keyAttrS2;
             FieldType fieldType;
             bool isSameKeyValue;
+            //not done: not efficient, when the left tuple match a right tuple, the s1.next() should immediately happens and s2.next() get resets
             while (nextPair())
             {
                 isSameKeyValue = true;

@@ -30,6 +30,7 @@ namespace BLL.SQLProcessing
             List<Field> p2Fields = this.p2.getSchema().getFields();
             List<Field> pfields = new List<Field>();
             List<string> commonFields = new List<string>();
+            //Add fields from p1 and p2, find common fields of p1 and p2
             foreach (Field field in p1Fields)
             {
                 pfields.Add(field);
@@ -52,7 +53,16 @@ namespace BLL.SQLProcessing
                     pfields.Add(field1);
             }
             this.commonFields = commonFields;
-            this.schema = new FPRDBSchema(null, pfields, null);
+
+            //create primary key from p1 and p2
+            List<string> primaryKey = new List<string>();
+            primaryKey.AddRange(this.p1.getSchema().getPrimarykey());
+            foreach(string keyname in this.p2.getSchema().getPrimarykey())
+            {
+                if (!primaryKey.Contains(keyname))
+                    primaryKey.Add(keyname);
+            }
+            this.schema = new FPRDBSchema(null, pfields, primaryKey);
         }
 
         public Scan open()
