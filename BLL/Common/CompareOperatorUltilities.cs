@@ -9,6 +9,18 @@ namespace BLL.Common
 {
     public static class CompareOperatorUltilities
     {
+        public static int CompareFloats(float a, float b, float epsilon = 0.00001f)
+        {
+            // Check for equality within precision
+            if (Math.Abs(a - b) < epsilon)
+            {
+                return 0; // Return 0 for equal
+            }
+
+            // If not equal, check which is larger
+            return a < b ? -1 : 1;
+        }
+
         public static CompareOperation convertStringToEnum(string str)
         {
             switch (str)
