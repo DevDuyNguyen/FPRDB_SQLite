@@ -133,6 +133,7 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
+            memoEditMessage = new DevExpress.XtraEditors.MemoEdit();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -174,9 +175,11 @@ namespace FPRDB_SQLite.GUI
             QueryResultxtraTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).BeginInit();
+            MessagextraTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).BeginInit();
             ContextMenu_RelationNode.SuspendLayout();
             ContextMenu_SchemaNode.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).BeginInit();
             SuspendLayout();
             // 
             // ribbonControl
@@ -967,6 +970,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // MessagextraTabPage
             // 
+            MessagextraTabPage.Controls.Add(memoEditMessage);
             MessagextraTabPage.Name = "MessagextraTabPage";
             MessagextraTabPage.Size = new System.Drawing.Size(725, 155);
             MessagextraTabPage.Text = "Message";
@@ -1029,6 +1033,16 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
             // 
+            // memoEditMessage
+            // 
+            memoEditMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            memoEditMessage.Location = new System.Drawing.Point(0, 0);
+            memoEditMessage.MenuManager = ribbonControl;
+            memoEditMessage.Name = "memoEditMessage";
+            memoEditMessage.Properties.ReadOnly = true;
+            memoEditMessage.Size = new System.Drawing.Size(725, 155);
+            memoEditMessage.TabIndex = 0;
+            // 
             // frmMain
             // 
             AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
@@ -1089,9 +1103,11 @@ namespace FPRDB_SQLite.GUI
             QueryResultxtraTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).EndInit();
+            MessagextraTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).EndInit();
             ContextMenu_RelationNode.ResumeLayout(false);
             ContextMenu_SchemaNode.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -1200,6 +1216,7 @@ namespace FPRDB_SQLite.GUI
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_EditSchema;
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_OpenSchema;
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
+        private DevExpress.XtraEditors.MemoEdit memoEditMessage;
     }
 }
 

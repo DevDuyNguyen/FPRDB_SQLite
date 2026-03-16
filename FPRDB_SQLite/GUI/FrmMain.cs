@@ -2,14 +2,11 @@
 using BLL.Common;
 using BLL.Common;
 using BLL.DomainObject;
-using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
-using BLL.Services;
 using BLL.SQLProcessing;
-using DevExpress.Xpo.DB.Helpers;
 using DevExpress.Xpo.DB.Helpers;
 using DevExpress.XtraBars;
 using DevExpress.XtraBars.Ribbon;
@@ -1146,24 +1143,42 @@ namespace FPRDB_SQLite.GUI
                 //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
                 gridViewResultQuery.PopulateColumns();
 
+                // Sau khi thành công, mở rộng Panel và đảm bảo tab Result được hiển thị
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
 
-
+                // Ghi thông báo thành công vào MemoEdit
+                memoEditMessage.Text = $"Query executed successfully at {DateTime.Now:HH:mm:ss}.";
             }
             catch (SQLSyntaxException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
             catch (MismatchTokenType ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
             catch (NotSupportedException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
             catch (IndexOutOfRangeException ex)
             {
-                XtraMessageBox.Show($"Already out of token", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                memoEditMessage.Text = "[Error] Already out of token.";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (Exception ex)
+            {
+                memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             }
 
             //ExcuteQuery(sql);
