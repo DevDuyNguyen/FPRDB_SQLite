@@ -289,7 +289,7 @@ namespace BLL
                 new List<Constant>
                 {
                     new FuzzySetConstant("fs1"),
-                    new FuzzySetConstant("fs1")
+                    new IntConstant(12)
                 },
                 new List<float> { 0.5f, 0.5f },
                 new List<float> { 0.5f, 0.5f }
@@ -350,14 +350,15 @@ namespace BLL
             dbMgr.loadDB(dbFile);
             SQLProcessor processor = compRoot.getSQLProcessor();
             processor.executeUpdate(@"INSERT INTO student23 (student_id,name,age)
-                VALUES ({(5,[1,1])},{('d2',[1,1]),('d1',[0.1,1])},{(fs1,[0.5, 0.5]),(fs1,[0.5, 0.5])})
+                VALUES ({(5,[1,1])},{('d2',[1,1]),('d1',[0.1,1])},{(fs1,[0.5, 0.5]),(12.1,[0.5, 0.5])})
             ");
         }
         static void Main()
         {
             //CompositionRoot root = new CompositionRoot();
             //root.getDatabaseService().createDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
-            SQLProcessor_executeUpdate_insert();
+            //Preprocessor_checkSemanticInsert_success();
+            //SQLProcessor_executeUpdate_insert();
         }
     }
 }

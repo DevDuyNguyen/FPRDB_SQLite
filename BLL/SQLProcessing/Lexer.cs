@@ -1,4 +1,5 @@
-﻿using Irony.Parsing;
+﻿using BLL.Interfaces;
+using Irony.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL.SQLProcessing
 {
+    //not done: extremely lack test coverage
     public class MismatchTokenType : Exception
     {
         public string Message{
@@ -25,7 +27,7 @@ namespace BLL.SQLProcessing
         {
             var comma = new KeyTerm(",", "delimiter");
             var dot = new KeyTerm(".", "delimiter");
-            var asterisk = new KeyTerm("*", "asterisk");
+            var asterisk = new KeyTerm("*", "delimiter");
             var openParenthesis = new KeyTerm("(", "delimiter");
             var closedParenthesis = new KeyTerm(")", "delimiter");
             var openSquareBracket = new KeyTerm("[", "delimiter");
@@ -68,9 +70,20 @@ namespace BLL.SQLProcessing
             var rightDoubleArrow = ToTerm("⇒", "comparison operator");
 
 
-            var probConjunctionStrategy = ToTerm("⨂", "probabilistic combination strategy");
-            var probDisjunctionStrategy = ToTerm("⨁", "probabilistic combination strategy");
-            var probDifferencetionStrategy = ToTerm("⦵", "probabilistic combination strategy");
+            var conjunction_ig = ToTerm("⨂_ig", "probabilistic combination strategy");
+            var conjunction_in = ToTerm("⨂_in", "probabilistic combination strategy");
+            var conjunction_pc = ToTerm("⨂_pc", "probabilistic combination strategy");
+            var conjunction_me = ToTerm("⨂_me", "probabilistic combination strategy");
+
+            var difference_ig = ToTerm("⦵_ig", "probabilistic combination strategy");
+            var difference_in = ToTerm("⦵_in", "probabilistic combination strategy");
+            var difference_pc = ToTerm("⦵_pc", "probabilistic combination strategy");
+            var difference_me = ToTerm("⦵_me", "probabilistic combination strategy");
+
+            var disjunction_ig = ToTerm("⨁_ig", "probabilistic combination strategy");
+            var disjunction_in = ToTerm("⨁_in", "probabilistic combination strategy");
+            var disjunction_pc = ToTerm("⨁_pc", "probabilistic combination strategy");
+            var disjunction_me = ToTerm("⨁_me", "probabilistic combination strategy");
 
             var negative = ToTerm("-", "unary operator");
             var positive = ToTerm("+", "unary operator");
@@ -79,7 +92,9 @@ namespace BLL.SQLProcessing
             any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket | openCurlyBracket | closedCurlyBracket
                 | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
-                | probConjunctionStrategy | probDisjunctionStrategy | probDifferencetionStrategy
+                | conjunction_ig | conjunction_in | conjunction_pc | conjunction_me 
+                | difference_ig | difference_in | difference_pc | difference_me 
+                | disjunction_ig | disjunction_in | disjunction_pc | disjunction_me
                 | negative | positive;
             //any.Rule = comma | openParenthesis | closedParenthesis
             //    | openSquareBracket | closedSquareBracket
@@ -142,7 +157,6 @@ namespace BLL.SQLProcessing
                 token = this._scanner.VsReadToken(ref state);
                 if (token != null && token.Category == TokenCategory.Content)
                 {
-                    
                     this.tokens.Add(token);
                 }
             } while (token != null && token.Terminal.Name != "EOF");
@@ -172,7 +186,7 @@ namespace BLL.SQLProcessing
         public void eatDelimiter(string delimiter)
         {
             if (!matchDelimiter(delimiter))
-                throw new MismatchTokenType("delimiter", this.currentToken);
+                throw new MismatchTokenType("delimiter "+delimiter, this.currentToken);
             next();
         }
         public bool matchAnyKeyword()
@@ -304,6 +318,23 @@ namespace BLL.SQLProcessing
             next();
             return res;
         }
+        public bool matchConstant()
+        {
+            return matchNumberConstant() || matchStringConstant() || matchBooleanConstant() || matchFuzzySetConstant();
+        }
+        public object eatConstant()
+        {
+            if (matchNumberConstant())
+                return eatNumberConstant();
+            else if (matchStringConstant())
+                return eatStringConstant();
+            else if (matchBooleanConstant())
+                return eatBooleanConstant();
+            else if (matchFuzzySetConstant())
+                return eatFuzzySetConstant();
+            else
+                throw new MismatchTokenType("constant", this.currentToken);
+        } 
 
         public bool matchOperator()
         {
@@ -337,7 +368,7 @@ namespace BLL.SQLProcessing
 
         public bool matchIdentifier()
         {
-            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier") || (this.currentToken.Terminal.Name == "asterisk");
+            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier");
         }
         //not done: this tokenization shouldn't be at here
         //it should be at when you are creating field Tokens
@@ -391,6 +422,22 @@ namespace BLL.SQLProcessing
             }
             else
                 return null;
+        }
+        public void prev()
+        {
+            if (this.currentIndex == 0)
+            {
+                this.currentToken = null;
+            }
+            else
+            {
+                this.currentIndex--;
+                this.currentToken=this.tokens[this.currentIndex];
+            }
+        }
+        public bool hasNext()
+        {
+            return this.currentIndex< this.tokens.Count-1;
         }
     }
 }

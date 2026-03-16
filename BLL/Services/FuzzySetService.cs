@@ -41,9 +41,9 @@ namespace BLL.Services
                 return dto;
 
             }
-            catch(Exception ex)
+            catch(SQLExecutionException ex)
             {
-                throw new Exception("Can't create fuzzy set");
+                throw ex;
             }
         }
     }
