@@ -43,7 +43,7 @@ namespace BLL.DomainObject
 
         public override float getMembershipDegree(float value)
         {
-            if (this.lParrent == this.rParrent == null)
+            if (this.lParrent != null && this.rParrent != null)
             {
                 return Math.Min(this.lParrent.getMembershipDegree(value), this.rParrent.getMembershipDegree(value));
             }
@@ -154,7 +154,7 @@ namespace BLL.DomainObject
                     float left_bot = (this.leftBottom <= cfs.getLeftBottom()) ? this.leftBottom : cfs.getLeftBottom();
                     float right_bot = (this.rightBottom >= cfs.getRightBottom()) ? this.rightBottom : cfs.getRightBottom();
                     //non-overlapping 1 membership degree range
-                    if (this.leftTop > cfs.getRightTop() || this.rightTop <= cfs.getLeftTop())
+                    if (this.leftBottom > cfs.getRightBottom() || this.rightBottom <= cfs.getLeftBottom())
                         return new ContinuousFuzzySet(left_bot, 0, 0, right_bot, this, cfs, false, fuzzSetName);
                     else
                     {

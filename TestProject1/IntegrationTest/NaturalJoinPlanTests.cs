@@ -75,7 +75,7 @@ namespace TestProject1.IntegrationTest
             //");
 
         }
-        //[Fact]
+        [Fact]
         public void NaturalJoinPlan_getSchema_success()
         {
             //arrange

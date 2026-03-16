@@ -352,6 +352,7 @@ namespace BLL.SQLProcessing
         {
             List<SelectField> ans = new List<SelectField>();
             if (lexer.matchDelimiter("*")){
+                lexer.eatDelimiter("*");
                 return new List<SelectField> { new SelectField("", "*") };
             }
             else

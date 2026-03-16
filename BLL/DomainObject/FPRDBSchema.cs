@@ -68,6 +68,7 @@ namespace BLL.DomainObject
                 this.fields.Add(f);
             }
             //add primary key
+            this.primarykey = new List<string>();
             foreach(string keyName in schema.getPrimarykey())
             {
                 this.primarykey.Add(keyName);

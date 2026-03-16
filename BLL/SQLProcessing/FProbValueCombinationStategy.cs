@@ -150,9 +150,9 @@ namespace BLL.SQLProcessing
             List<bool> isV1ValueListIntersectedNormalHeight = new List<bool>();
             for (int i = 0; i < v1.valueList.Count; ++i)
                 isV1ValueListIntersectedNormalHeight.Add(false);
-            List<bool> isV2ValueListIntersectedNormalHeight = new List<bool>();
-            for (int i = 0; i < v2.valueList.Count; ++i)
-                isV2ValueListIntersectedNormalHeight.Add(false);
+            //List<bool> isV2ValueListIntersectedNormalHeight = new List<bool>();
+            //for (int i = 0; i < v2.valueList.Count; ++i)
+            //    isV2ValueListIntersectedNormalHeight.Add(false);
             FuzzySet<T> fs1, fs2, fs;
             List<float> intervalProbabilityConjunction;
 
@@ -175,7 +175,8 @@ namespace BLL.SQLProcessing
                     intervalProbabilityConjunction = ProbabilisticCombinationStrategyUtilities.combine(v1.intervalProbLowerBoundList[i], v1.intervalProbUpperBoundList[i], v2.intervalProbLowerBoundList[j], v2.intervalProbUpperBoundList[j], probCombStrategy);
                     if (fs.isNormal())
                     {
-                        isV1ValueListIntersectedNormalHeight[i] = isV2ValueListIntersectedNormalHeight[j] = true;
+                        //isV1ValueListIntersectedNormalHeight[i] = isV2ValueListIntersectedNormalHeight[j] = true;
+                        isV1ValueListIntersectedNormalHeight[i] = true;
                         if (intervalProbabilityConjunction[0] > 0 || intervalProbabilityConjunction[1] > 0)
                         {
                             ans_valueList.Add(fs);
@@ -212,15 +213,15 @@ namespace BLL.SQLProcessing
                     ans_intervalProbUpperBoundList.Add(v1.intervalProbUpperBoundList[i]);
                 }
             }
-            for (int i = 0; i < isV2ValueListIntersectedNormalHeight.Count; ++i)
-            {
-                if (isV1ValueListIntersectedNormalHeight[i] == false)
-                {
-                    ans_valueList.Add(v2.valueList[i]);
-                    ans_intervalProbLowerBoundList.Add(v2.intervalProbLowerBoundList[i]);
-                    ans_intervalProbUpperBoundList.Add(v2.intervalProbUpperBoundList[i]);
-                }
-            }
+            //for (int i = 0; i < isV2ValueListIntersectedNormalHeight.Count; ++i)
+            //{
+            //    if (isV1ValueListIntersectedNormalHeight[i] == false)
+            //    {
+            //        ans_valueList.Add(v2.valueList[i]);
+            //        ans_intervalProbLowerBoundList.Add(v2.intervalProbLowerBoundList[i]);
+            //        ans_intervalProbUpperBoundList.Add(v2.intervalProbUpperBoundList[i]);
+            //    }
+            //}
             return new FuzzyProbabilisticValue<T>(v1.domain, ans_valueList, ans_intervalProbLowerBoundList, ans_intervalProbUpperBoundList);
         }
 
