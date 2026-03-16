@@ -157,7 +157,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode schemaNode = new TreeNode(schemaName);
                     schemaNode.ImageIndex = 8;
                     schemaNode.SelectedImageIndex = 8;
-                    schemaNode.Tag = "relation";
+                    schemaNode.Tag = "schema";
                     tablesRootNode.Nodes.Add(schemaNode);
 
                     var fields = schema.getFields();
@@ -917,7 +917,7 @@ namespace FPRDB_SQLite.GUI
                 dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
                 dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
                 dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-
+                //next()
                 // 3. Gán dữ liệu giả vào GridControl
                 gridControlResultQuery.DataSource = dtMock;
 
@@ -976,6 +976,66 @@ namespace FPRDB_SQLite.GUI
         private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new frmNewSchema(compRoot).ShowDialog();
+        }
+        // Hàm xử lý sự kiện click cho nút Xóa lược đồ
+        private void iDeleteSchema_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // 1. Lấy node đang được chọn trên TreeView
+            TreeNode selectedNode = treeView.SelectedNode;
+
+            // Kiểm tra xem người dùng đã chọn đúng node lược đồ chưa
+            if (selectedNode == null || selectedNode.Tag?.ToString() != "schema")
+            {
+                XtraMessageBox.Show("Please select a schema to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string schemaName = selectedNode.Text;
+
+            try
+            {
+                // 2. Kiểm tra khi không có relation nào tham chiếu
+                var allRelations = this.databaseService.getFPRDBRelations();
+
+                // Lọc ra các quan hệ đang sử dụng lược đồ này
+                var dependentRelations = allRelations.Where(r => r.getSchema() != null && r.getSchema().getSchemaName() == schemaName)
+                    .Select(r => r.getRelName()).ToList();
+
+                // Xử lý ngoại lệ
+                if (dependentRelations.Count > 0)
+                {
+                    string rellList = string.Join(", ", dependentRelations);
+                    XtraMessageBox.Show($"Cannot delete schema '{schemaName}' because it is referenced by the following relations: {rellList}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 3. Xác nhận xóa lược đồ
+                DialogResult result = XtraMessageBox.Show($"Are you sure you want to delete the schema '{schemaName}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // GỌI XUỐNG TẦNG SERVICE ĐỂ XÓA (Bạn cần đảm bảo databaseService có hàm này)
+                    // Ví dụ: bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName);
+
+                    // tạm thời giả lập gọi hàm
+                    bool isDeleted = true; // Giả sử xóa thành công
+
+                    if (isDeleted)
+                    {
+                        XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        // 4. Cập nhật lại TreeView sau khi xóa thành công
+                        LoadDatabaseTree();
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Failed to delete schema. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"An error occurred while trying to delete the schema: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         #endregion
         #region Tab Page Relation

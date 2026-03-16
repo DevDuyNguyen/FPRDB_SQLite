@@ -125,6 +125,14 @@ namespace FPRDB_SQLite.GUI
             gridViewResultQuery = new DevExpress.XtraGrid.Views.Grid.GridView();
             MessagextraTabPage = new DevExpress.XtraTab.XtraTabPage();
             popupMenuTreeView = new DevExpress.XtraBars.PopupMenu(components);
+            ContextMenu_RelationNode = new System.Windows.Forms.ContextMenuStrip(components);
+            CTMenuRelNode_OpenRelation = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuRelNode_DeleteRelation = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuRelNode_RenameRelation = new System.Windows.Forms.ToolStripMenuItem();
+            ContextMenu_SchemaNode = new System.Windows.Forms.ContextMenuStrip(components);
+            CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -167,6 +175,8 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).BeginInit();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).BeginInit();
+            ContextMenu_RelationNode.SuspendLayout();
+            ContextMenu_SchemaNode.SuspendLayout();
             SuspendLayout();
             // 
             // ribbonControl
@@ -259,6 +269,7 @@ namespace FPRDB_SQLite.GUI
             iDeleteSchema.Id = 22;
             iDeleteSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
             iDeleteSchema.Name = "iDeleteSchema";
+            iDeleteSchema.ItemClick += iDeleteSchema_ItemClick;
             // 
             // iCloseCurrentSchema
             // 
@@ -411,7 +422,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // iExcuteQuery
             // 
-            iExcuteQuery.Caption = "Excute_Query";
+            iExcuteQuery.Caption = "Excute Query";
             iExcuteQuery.Id = 47;
             iExcuteQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
             iExcuteQuery.Name = "iExcuteQuery";
@@ -965,6 +976,58 @@ namespace FPRDB_SQLite.GUI
             popupMenuTreeView.Name = "popupMenuTreeView";
             popupMenuTreeView.Ribbon = ribbonControl;
             // 
+            // ContextMenu_RelationNode
+            // 
+            ContextMenu_RelationNode.Font = new System.Drawing.Font("Lucida Sans Unicode", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            ContextMenu_RelationNode.ImageScalingSize = new System.Drawing.Size(20, 20);
+            ContextMenu_RelationNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { CTMenuRelNode_OpenRelation, CTMenuRelNode_DeleteRelation, CTMenuRelNode_RenameRelation });
+            ContextMenu_RelationNode.Name = "ContextMenu_RelationNode";
+            ContextMenu_RelationNode.Size = new System.Drawing.Size(148, 82);
+            // 
+            // CTMenuRelNode_OpenRelation
+            // 
+            CTMenuRelNode_OpenRelation.Name = "CTMenuRelNode_OpenRelation";
+            CTMenuRelNode_OpenRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_OpenRelation.Text = "&Open";
+            CTMenuRelNode_OpenRelation.ToolTipText = "Tạo quan hệ mới";
+            // 
+            // CTMenuRelNode_DeleteRelation
+            // 
+            CTMenuRelNode_DeleteRelation.Name = "CTMenuRelNode_DeleteRelation";
+            CTMenuRelNode_DeleteRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_DeleteRelation.Text = "&Delete";
+            // 
+            // CTMenuRelNode_RenameRelation
+            // 
+            CTMenuRelNode_RenameRelation.Name = "CTMenuRelNode_RenameRelation";
+            CTMenuRelNode_RenameRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_RenameRelation.Text = "&Rename";
+            // 
+            // ContextMenu_SchemaNode
+            // 
+            ContextMenu_SchemaNode.ImageScalingSize = new System.Drawing.Size(20, 20);
+            ContextMenu_SchemaNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { CTMenuSchNode_EditSchema, CTMenuSchNode_OpenSchema, CTMenuSchNode_DeleteSchema });
+            ContextMenu_SchemaNode.Name = "ContextMenu_SchemaNode";
+            ContextMenu_SchemaNode.Size = new System.Drawing.Size(123, 76);
+            // 
+            // CTMenuSchNode_EditSchema
+            // 
+            CTMenuSchNode_EditSchema.Name = "CTMenuSchNode_EditSchema";
+            CTMenuSchNode_EditSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_EditSchema.Text = "&Edit";
+            // 
+            // CTMenuSchNode_OpenSchema
+            // 
+            CTMenuSchNode_OpenSchema.Name = "CTMenuSchNode_OpenSchema";
+            CTMenuSchNode_OpenSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_OpenSchema.Text = "&Open";
+            // 
+            // CTMenuSchNode_DeleteSchema
+            // 
+            CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
+            CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_DeleteSchema.Text = "&Delete";
+            // 
             // frmMain
             // 
             AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
@@ -1026,6 +1089,8 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).EndInit();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).EndInit();
+            ContextMenu_RelationNode.ResumeLayout(false);
+            ContextMenu_SchemaNode.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
 
@@ -1126,6 +1191,14 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraEditors.MemoEdit memoEditTxtQuery;
         private DevExpress.XtraBars.BarButtonItem barButtonSelectTuples;
         private DevExpress.XtraBars.PopupMenu popupMenuTreeView;
+        private System.Windows.Forms.ContextMenuStrip ContextMenu_RelationNode;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuRelNode_OpenRelation;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuRelNode_DeleteRelation;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuRelNode_RenameRelation;
+        private System.Windows.Forms.ContextMenuStrip ContextMenu_SchemaNode;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_EditSchema;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_OpenSchema;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
     }
 }
 
