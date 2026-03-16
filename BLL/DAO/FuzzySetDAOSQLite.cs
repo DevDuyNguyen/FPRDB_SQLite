@@ -1,13 +1,14 @@
-﻿using BLL.DTO;
+﻿using BLL.DomainObject;
+using BLL.DTO;
+using BLL.Exceptions;
 using BLL.Interfaces;
-using BLL.DomainObject;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data;
-using BLL.Exceptions;
 
 namespace BLL.DAO
 {
@@ -28,7 +29,7 @@ namespace BLL.DAO
             if (type== typeof(int) || type == typeof(float) || type==typeof(string))
             {
                 ans = str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(item => (T)Convert.ChangeType(item.Trim(), typeof(T)))
+                    .Select(item => (T)Convert.ChangeType(item.Trim(), typeof(T), CultureInfo.InvariantCulture))
                     .ToList();
                 return ans;
             }

@@ -28,6 +28,9 @@ namespace BLL.DomainObject
             return this.fuzzySetType;
         }
         public abstract FuzzySetDTO toDTO();
+        public abstract FuzzySet<T> StandardIntersection(FuzzySet<T> fs);
+        public abstract bool isNormal();
+        public abstract bool isEqualTo(FuzzySet<T> fs);
 
     }
 }
