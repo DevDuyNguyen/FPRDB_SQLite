@@ -29,6 +29,7 @@ namespace BLL.SQLProcessing
                 return createPlanForBaseCartesianProductQueryData((BaseCartesianProductQueryData)data);
             else if (data is BaseNaturalJoinQueryData)
                 return createPlanForBaseNaturalJoinQueryData((BaseNaturalJoinQueryData)data);
+            //the query data is compound: union, intersection, difference
             CompoundQueryData compndData = (CompoundQueryData)data;
             Plan lPlan = createPlan(compndData.leftQuery);
             Plan rPlan = createPlan(compndData.rightQuery);
@@ -68,7 +69,23 @@ namespace BLL.SQLProcessing
         }
         private Plan createPlanForBaseNaturalJoinQueryData(BaseNaturalJoinQueryData data)
         {
-            throw new NotImplementedException();
+            //create relation plans for each mentioned relations
+            List<RelationPlan> relPlans = new List<RelationPlan>();
+            foreach (string relName in data.naturalJoinList.relationList)
+            {
+                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr, this.parser));
+            }
+            //create natural join plans
+            Plan plan = relPlans[0];
+            for (int i = 1; i < relPlans.Count; ++i)
+            {
+                plan = new NaturalJoinPlan(plan, relPlans[i], data.naturalJoinList.probCombinationStrategyList[i - 1]);
+            }
+            //create selection plan
+            plan = new SelectPlan(plan, data.selectionCondition);
+            //creat projection plan
+            plan = new ProjectPlan(plan, data.selectList.Select(x => x.field).ToList());
+            return plan;
         }
         
     }
