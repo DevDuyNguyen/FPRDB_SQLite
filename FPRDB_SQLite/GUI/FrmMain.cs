@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using BLL.Services;
-using BLL.DomainObject;
+using BLL.DTO;
 using DevExpress.Xpo.DB.Helpers;
 using BLL.Common;
 using GUI.GlobalStates;
@@ -85,11 +85,11 @@ namespace FPRDB_SQLite.GUI
         #endregion
         #region Tab Page Home
         //
-        private void DisplaySchemaDetail(FPRDBSchema schema)
+        private void DisplaySchemaDetail(FPRDBSchemaDTO schema)
         {
             BindingList<SchemaAttribute> list = new BindingList<SchemaAttribute>();
-            List<Field> fields = schema.getFields();
-            List<string> primaryKeys = schema.getPrimarykey();
+            List<Field> fields = schema.fields;
+            List<string> primaryKeys = schema.primarykey;
             var sortedFields = fields
                 .OrderByDescending(attr => primaryKeys.Contains(attr.getFieldName()))
                 .ThenBy(attr => attr.getFieldName());
@@ -100,7 +100,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     isPrimaryKey = primaryKeys.Contains(attr.getFieldName()),
                     attributeName = attr.getFieldName(),
-                    dataType = fielInfo.getType(),
+                    dataType = FieldTypeUtilities.fromFieldTypeEnumToSQLFieldType(fielInfo.getType()),
                     length = fielInfo.getTXTLength()
                 });
             }
@@ -180,10 +180,10 @@ namespace FPRDB_SQLite.GUI
             }
             else if (e.Button == MouseButtons.Left)
             {
-                if (node.Tag is FPRDBSchema schema)
+                if (node.Tag is FPRDBSchemaDTO schema)
                 {
                     XtraTabPage schemaTab = xtraTabControlDatabase.TabPages[0];
-                    schemaTab.Text = schema.getSchemaName();
+                    schemaTab.Text = schema.schemaName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 0;
                     DisplaySchemaDetail(schema);
                 }
