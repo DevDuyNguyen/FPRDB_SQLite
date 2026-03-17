@@ -177,6 +177,7 @@ namespace BLL.SQLProcessing
                 {
                     constraintData = constraintDef();
                 }
+                
                 return new FPRDBSchema(schemaName
                     ,fieldDefList
                     ,(constraintData!=null)?constraintData.getFields():null
@@ -186,6 +187,10 @@ namespace BLL.SQLProcessing
             catch(MismatchTokenType ex)
             {
                 throw createSQLSyntaxException(ex.Message);
+            }
+            finally
+            {
+                this.lexer.clearTokens();
             }
         }
         public Object create()
@@ -208,12 +213,20 @@ namespace BLL.SQLProcessing
         }
         public FPRDBRelation createRelation()
         {
-            lexer.eatKeyword("CREATE");
-            lexer.eatKeyword("RELATION");
-            string relationName = relation();
-            lexer.eatKeyword("ON");
-            string schemaName = schema();
-            return new FPRDBRelation(relationName, schemaName);
+            try
+            {
+                lexer.eatKeyword("CREATE");
+                lexer.eatKeyword("RELATION");
+                string relationName = relation();
+                lexer.eatKeyword("ON");
+                string schemaName = schema();
+
+                return new FPRDBRelation(relationName, schemaName);
+            }
+            finally
+            {
+                this.lexer.clearTokens();
+            }
         }
         public List<string> fieldList()
         {
@@ -325,17 +338,26 @@ namespace BLL.SQLProcessing
         }
         public InsertData insert()
         {
-            lexer.eatKeyword("INSERT");
-            lexer.eatKeyword("INTO");
-            string relName = relation();
-            lexer.eatDelimiter("(");
-            List<string> fields = fieldList();
-            lexer.eatDelimiter(")");
-            lexer.eatKeyword("VALUES");
-            lexer.eatDelimiter("(");
-            List<FuzzyProbabilisticValueParsingData> insertValues = fuzzyProbabilisticValueList();
-            lexer.eatDelimiter(")");
-            return new InsertData(relName, fields, insertValues);
+            try
+            {
+                lexer.eatKeyword("INSERT");
+                lexer.eatKeyword("INTO");
+                string relName = relation();
+                lexer.eatDelimiter("(");
+                List<string> fields = fieldList();
+                lexer.eatDelimiter(")");
+                lexer.eatKeyword("VALUES");
+                lexer.eatDelimiter("(");
+                List<FuzzyProbabilisticValueParsingData> insertValues = fuzzyProbabilisticValueList();
+                lexer.eatDelimiter(")");
+
+                return new InsertData(relName, fields, insertValues);
+            }
+            finally
+            {
+
+                this.lexer.clearTokens();
+            }
         }
         public Object updateCommand()
         {
@@ -498,7 +520,16 @@ namespace BLL.SQLProcessing
         }
         public SelectionExpression selectionExpression()
         {
-            return DISJUNCTION_DIFFERENCE_SelectionExpresion();
+            try{
+                var expression = DISJUNCTION_DIFFERENCE_SelectionExpresion();
+
+                return expression;
+            }
+            finally
+            {
+
+                this.lexer.clearTokens();
+            }
         }
         public SelectionCondition PrimarySelectionCondition()
         {
@@ -561,7 +592,17 @@ namespace BLL.SQLProcessing
         }
         public SelectionCondition selectionCondition()
         {
-            return ORSelectionCondition();
+            try
+            {
+                var condition = ORSelectionCondition();
+
+                return condition;
+            }
+            finally
+            {
+
+                this.lexer.clearTokens();
+            }
         }
         public QueryData PrimaryQuery()
         {
@@ -643,7 +684,15 @@ namespace BLL.SQLProcessing
         }
         public QueryData query()
         {
-            return UNION_EXCEPT_Query();
+            try{
+                var data = UNION_EXCEPT_Query();
+
+                return data;
+            }
+            finally{
+
+                this.lexer.clearTokens();
+            }
         }
 
     }

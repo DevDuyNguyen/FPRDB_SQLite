@@ -162,7 +162,11 @@ namespace BLL.SQLProcessing
             } while (token != null && token.Terminal.Name != "EOF");
             next();
         }
-
+        public void clearTokens()
+        {
+            this.currentIndex = -1;
+            this.tokens = new List<Token>();
+        }
         public void next()
         {
             if (this.currentIndex < this.tokenListLength - 1)
