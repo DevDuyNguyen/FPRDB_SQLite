@@ -197,6 +197,15 @@ namespace BLL.SQLProcessing
             return true;
 
         }
+        public bool checkSemanticDelete(DeleteData data)
+        {
+            //[not done] check selection condition:
+            if (this.metadataMgr.isRelationExist(data.relation))
+            {
+                return true;
+            }
+            return false;
+        }
 
 
     }

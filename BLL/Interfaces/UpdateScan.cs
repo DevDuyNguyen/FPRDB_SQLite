@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
-    public interface UpdateScan
+    public interface UpdateScan:Scan
     {
         public void setFieldContent<T>(String fldname, FuzzyProbabilisticValue<T> content);
         public void insert();

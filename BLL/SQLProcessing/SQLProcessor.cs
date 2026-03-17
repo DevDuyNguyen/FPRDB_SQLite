@@ -99,10 +99,19 @@ namespace BLL.SQLProcessing
                 }
                 return 0;
             }
+            else if(data is DeleteData)
+            {
+                DeleteData dData = (DeleteData)data;
+                if (this.preProcessor.checkSemanticDelete(dData))
+                {
+                    return this.updatePlanner.executeDelete(dData);
+                }
+            }
             else
             {
                 throw new NotImplementedException();
             }
+            throw new NotImplementedException();
         }
         public Plan createQueryPlan(string sql)
         {

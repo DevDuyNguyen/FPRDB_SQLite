@@ -359,13 +359,45 @@ namespace BLL.SQLProcessing
                 this.lexer.clearTokens();
             }
         }
+        public DeleteData delete()
+        {
+            try
+            {
+                lexer.eatKeyword("DELETE");
+                lexer.eatKeyword("FROM");
+                string rel = relation();
+                SelectionCondition condition = null;
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
+                    condition = selectionCondition();
+                }
+                return new DeleteData(rel, condition);
+            }
+            finally
+            {
+                this.lexer.clearTokens();
+            }
+        }
         public Object updateCommand()
         {
             if (lexer.matchKeyword("INSERT"))
             {
                 return insert();
             }
-            else
+            else if (lexer.matchKeyword("DELETE"))
+            {
+                return delete();
+            }
+            else if (lexer.matchKeyword("MODIFY"))
+            {
+                throw new NotImplementedException();
+            }
+            else if (lexer.matchKeyword("CREATE"))
+            {
+                throw new NotImplementedException();
+            }
+            else //if (lexer.matchKeyword("DROP"))
             {
                 throw new NotImplementedException();
             }
@@ -444,8 +476,29 @@ namespace BLL.SQLProcessing
                 string compareOperator = lexer.eatOperator();
                 if (compareOperator != "=" || !lexer.matchProbabilisticCombinationStrategy())
                 {
-                    object v = lexer.eatConstant();
-                    return new AtomicSelectionExpressionFieldConstant(fieldName1, ConstantUltilities.turnValueIntoConstant(v), CompareOperatorUltilities.convertStringToEnum(compareOperator), this.metaDataManager);
+                    Constant v;
+                    if (this.lexer.matchNumberConstant())
+                    {
+                        object number = this.lexer.eatNumberConstant();
+                        if (number is int)
+                            v = new IntConstant((int)number);
+                        else
+                            v = new FloatConstant((float)number);
+                    }
+                    else if (this.lexer.matchStringConstant())
+                    {
+                        v = new StringConstant(this.lexer.eatStringConstant());
+                    }
+                    else if (this.lexer.matchBooleanConstant())
+                    {
+                        v = new BooleanConstant(this.lexer.eatBooleanConstant());
+                    }
+                    else //if (this.lexer.matchFuzzySetConstant())
+                    {
+                        v = new FuzzySetConstant(this.lexer.eatFuzzySetConstant());
+                    }
+                    return new AtomicSelectionExpressionFieldConstant(fieldName1, v, CompareOperatorUltilities.convertStringToEnum(compareOperator), this.metaDataManager);
+                    //return new AtomicSelectionExpressionFieldConstant(fieldName1, ConstantUltilities.turnValueIntoConstant(v), CompareOperatorUltilities.convertStringToEnum(compareOperator), this.metaDataManager);
                 }
                 else
                 {
@@ -520,16 +573,9 @@ namespace BLL.SQLProcessing
         }
         public SelectionExpression selectionExpression()
         {
-            try{
-                var expression = DISJUNCTION_DIFFERENCE_SelectionExpresion();
+            var expression = DISJUNCTION_DIFFERENCE_SelectionExpresion();
 
-                return expression;
-            }
-            finally
-            {
-
-                this.lexer.clearTokens();
-            }
+            return expression;
         }
         public SelectionCondition PrimarySelectionCondition()
         {
@@ -592,17 +638,9 @@ namespace BLL.SQLProcessing
         }
         public SelectionCondition selectionCondition()
         {
-            try
-            {
-                var condition = ORSelectionCondition();
+            var condition = ORSelectionCondition();
 
-                return condition;
-            }
-            finally
-            {
-
-                this.lexer.clearTokens();
-            }
+            return condition;
         }
         public QueryData PrimaryQuery()
         {

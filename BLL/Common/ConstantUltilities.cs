@@ -26,7 +26,11 @@ namespace BLL.Common
             {
                 string str = (string)v;
                 if (str[0] == '\'' || str[0] == '\"')
-                    return new StringConstant((string)v);
+                {
+                    str = str.TrimStart('\'', '\"');
+                    str = str.TrimEnd('\'', '\"');
+                    return new StringConstant(str);
+                }
                 else
                     return new FuzzySetConstant((string)v);
             }

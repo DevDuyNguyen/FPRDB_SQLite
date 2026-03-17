@@ -10,7 +10,7 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 namespace BLL.SQLProcessing
 {
-    public class RelationScan:Scan
+    public class RelationScan:UpdateScan
     {
         private FPRDBRelation relationInfo;
         private int currentTupleIndex;
@@ -188,6 +188,77 @@ namespace BLL.SQLProcessing
         public List<AbstractFuzzyProbabilisticValue> getCurrentTuple()
         {
             return this.currentTuple;
+        }
+        public void insert() => throw new NotImplementedException();
+        private void decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<T1>(FuzzyProbabilisticValue<T1> fprobValue, int relOid)
+        {
+            string fuzzySetName;
+            string decreaseNoInFPRDB_Rel_FuzzSet;
+            int fsOid;
+            foreach (FuzzySet<T1> fs in fprobValue.valueList)
+            {
+                fuzzySetName = fs.getName();
+                fsOid = this.metaDataMgr.getFuzzySetOID(fuzzySetName);
+                if (fsOid != -1)
+                {
+                    decreaseNoInFPRDB_Rel_FuzzSet = $"UPDATE TABLE FPRDB_Rel_FuzzSet SET no=no-1 WHERE rel_oid={relOid} and fuzzset_oid={fsOid}";
+                    this.dbMgr.executeNonQuery(decreaseNoInFPRDB_Rel_FuzzSet);
+                }
+            }
+        }
+        public void delete()
+        {
+            int relOid=this.metaDataMgr.getRelationOID(this.relationInfo.getRelName());
+
+            //decrease the no in FPRDB_Rel_FuzzSet for each fuzzy set in the current tuple
+            
+            Field field;
+            List<Field> fields = this.relationInfo.getSchema().getFields();
+            for(int i=0; i<fields.Count; ++i)
+            {
+                field = fields[i];
+                switch (field.getFieldInfo().getType())
+                {
+                    case FieldType.INT:
+                    case FieldType.distFS_INT:
+                        decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<int>((FuzzyProbabilisticValue<int>)this.currentTuple[i], relOid);
+                        break;
+                    case FieldType.FLOAT:
+                    case FieldType.distFS_FLOAT:
+                    case FieldType.contFS:
+                        decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<float>((FuzzyProbabilisticValue<float>)this.currentTuple[i], relOid);
+                        break;
+                    case FieldType.VARCHAR:
+                    case FieldType.CHAR:
+                    case FieldType.distFS_TEXT:
+                        decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<string>((FuzzyProbabilisticValue<string>)this.currentTuple[i], relOid);
+                        break;
+                    case FieldType.BOOLEAN:
+                        decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<bool>((FuzzyProbabilisticValue<bool>)this.currentTuple[i], relOid);
+                        break;
+
+                }
+            }
+
+            //delete the fprdb tuple from the fprdb relation
+            string deleteSQL = $"DELETE FROM {relationInfo.getRelName()} WHERE";
+            int keyIndex=0;
+            foreach(string key in this.relationInfo.getSchema().primarykey)
+            {
+                for(int i=0; i<fields.Count; ++i)
+                {
+                    if (fields[i].getFieldName() == key)
+                    {
+                        keyIndex = i;
+                        break;
+                    }
+                }
+                deleteSQL += $" {key}='{this.currentTuple[keyIndex].ToString()}' AND";
+            }
+            int trailingANDIndex = deleteSQL.LastIndexOf("AND");
+            deleteSQL = deleteSQL.Substring(0, trailingANDIndex);
+            this.dbMgr.executeNonQuery(deleteSQL);
+
         }
 
     }

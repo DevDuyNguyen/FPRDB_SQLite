@@ -169,12 +169,12 @@ namespace BLL.SQLProcessing
         public int getFuzzySetOID(string name)
         {
             IDataReader reader = this.databaseMgr.executeQuery($"SELECT OID FROM fprdb_FuzzySet WHERE fuzzset_name='{name}'");
-            int oid;
+            int oid=-1;
             using (reader)
             {
-                if (!reader.Read())
-                    throw new QueryDataNotExistException($"Fuzzy set {name} doesn't exist");
-                oid = Convert.ToInt32(reader["oid"]);
+                if (reader.Read())
+                    oid = Convert.ToInt32(reader["oid"]);
+                
             }
             return oid;
         }
@@ -265,6 +265,24 @@ namespace BLL.SQLProcessing
                 }
             }
         }
+        public int getRelationOID(string name)
+        {
+            int relOid=-1;
+            string getOIDofRelation = $"select oid from fprdb_Relation where rel_name='{name}'";
+            using(IDataReader r = this.databaseMgr.executeQuery(getOIDofRelation))
+            {
+                if (r.Read())
+                {
+                    relOid = Convert.ToInt32(r["oid"]);
+                }
+                else
+                    throw new QueryDataNotExistException($"Relation {name} doesn't exist");
+            }
+            return relOid;
+        }
+
+
+
 
     }
 }

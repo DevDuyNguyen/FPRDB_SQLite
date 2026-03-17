@@ -1130,11 +1130,11 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = "[Error] Already out of token.";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
-            catch (Exception ex)
-            {
-                memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
+            //catch (Exception ex)
+            //{
+            //    memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
+            //    xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            //}
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
@@ -1227,11 +1227,11 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = "[Error] Already out of token.";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
-            catch (Exception ex)
-            {
-                memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
+            //catch (Exception ex)
+            //{
+            //    memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
+            //    xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            //}
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi

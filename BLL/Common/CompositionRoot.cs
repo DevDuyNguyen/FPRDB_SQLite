@@ -45,7 +45,7 @@ namespace BLL.Common
             this.constraintService = new ConstraintService(this.metadataMgr);
 
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
-            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr);
+            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.parser);
             
             this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
 

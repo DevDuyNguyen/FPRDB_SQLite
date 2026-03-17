@@ -15,11 +15,20 @@ namespace BLL.SQLProcessing
     public class BasicUpdatePlanner:UpdatePlanner
     {
         private DatabaseManager dbMgr;
+        private MetadataManager metaDataMgr;
+        private RecursiveDescentParser parser;
 
-        public BasicUpdatePlanner(DatabaseManager dbMgr)
+        public BasicUpdatePlanner(DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser)
         {
             this.dbMgr = dbMgr;
+            this.metaDataMgr = metaDataMgr;
+            this.parser = parser;
         }
+
+        //public BasicUpdatePlanner(DatabaseManager dbMgr)
+        //{
+        //    this.dbMgr = dbMgr;
+        //}
 
         public bool executeCreateSchema(FPRDBSchema data)
         {
@@ -304,6 +313,23 @@ namespace BLL.SQLProcessing
             return 1;
 
         }
+
+        public int executeDelete(DeleteData data)
+        {
+            Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser);
+            p = new SelectPlan(p, data.selectionCondition);
+            UpdateScan us = (UpdateScan)p.open();
+            int count = 0;
+            while (us.next())
+            {
+                us.delete();
+                count++;
+            }
+            us.close();
+            return count;
+
+        }
+
 
 
     }

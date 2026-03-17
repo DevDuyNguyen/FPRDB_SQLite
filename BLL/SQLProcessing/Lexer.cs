@@ -291,6 +291,7 @@ namespace BLL.SQLProcessing
                 throw new MismatchTokenType("string constant", this.currentToken);
             string res= (string)this.currentToken.Value;
             next();
+            //return $"'{res}'";
             return res;
         }
 
