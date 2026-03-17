@@ -46,10 +46,11 @@ namespace BLL.Common
 
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
             this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.parser);
-            
+            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.parser);
+
             this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
 
-            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.parser);
+            
 
             //dao
             this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
