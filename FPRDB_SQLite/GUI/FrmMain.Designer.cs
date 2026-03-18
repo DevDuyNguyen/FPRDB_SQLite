@@ -125,6 +125,7 @@ namespace FPRDB_SQLite.GUI
             gridControlResultQuery = new DevExpress.XtraGrid.GridControl();
             gridViewResultQuery = new DevExpress.XtraGrid.Views.Grid.GridView();
             MessagextraTabPage = new DevExpress.XtraTab.XtraTabPage();
+            memoEditMessage = new DevExpress.XtraEditors.MemoEdit();
             popupMenuTreeView = new DevExpress.XtraBars.PopupMenu(components);
             ContextMenu_RelationNode = new System.Windows.Forms.ContextMenuStrip(components);
             CTMenuRelNode_OpenRelation = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,7 +135,6 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
-            memoEditMessage = new DevExpress.XtraEditors.MemoEdit();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -177,10 +177,10 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).BeginInit();
             MessagextraTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).BeginInit();
             ContextMenu_RelationNode.SuspendLayout();
             ContextMenu_SchemaNode.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).BeginInit();
             SuspendLayout();
             // 
             // ribbonControl
@@ -857,7 +857,9 @@ namespace FPRDB_SQLite.GUI
             gridView4.GridControl = gridControlValueRelation;
             gridView4.Name = "gridView4";
             gridView4.OptionsView.ShowGroupPanel = false;
+            gridView4.InvalidRowException += gridView4_InvalidRowException;
             gridView4.RowDeleting += gridView4_RowDeleting;
+            gridView4.ValidateRow += gridView4_ValidateRow;
             // 
             // gridColumnValue
             // 
@@ -994,6 +996,16 @@ namespace FPRDB_SQLite.GUI
             MessagextraTabPage.Size = new System.Drawing.Size(725, 155);
             MessagextraTabPage.Text = "Message";
             // 
+            // memoEditMessage
+            // 
+            memoEditMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            memoEditMessage.Location = new System.Drawing.Point(0, 0);
+            memoEditMessage.MenuManager = ribbonControl;
+            memoEditMessage.Name = "memoEditMessage";
+            memoEditMessage.Properties.ReadOnly = true;
+            memoEditMessage.Size = new System.Drawing.Size(725, 155);
+            memoEditMessage.TabIndex = 0;
+            // 
             // popupMenuTreeView
             // 
             popupMenuTreeView.ItemLinks.Add(barButtonSelectTuples);
@@ -1051,16 +1063,6 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
             CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
-            // 
-            // memoEditMessage
-            // 
-            memoEditMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            memoEditMessage.Location = new System.Drawing.Point(0, 0);
-            memoEditMessage.MenuManager = ribbonControl;
-            memoEditMessage.Name = "memoEditMessage";
-            memoEditMessage.Properties.ReadOnly = true;
-            memoEditMessage.Size = new System.Drawing.Size(725, 155);
-            memoEditMessage.TabIndex = 0;
             // 
             // frmMain
             // 
@@ -1123,10 +1125,10 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).EndInit();
             MessagextraTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).EndInit();
             ContextMenu_RelationNode.ResumeLayout(false);
             ContextMenu_SchemaNode.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).EndInit();
             ResumeLayout(false);
             PerformLayout();
 

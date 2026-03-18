@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             panelControlListFS = new DevExpress.XtraEditors.PanelControl();
-            panelControlButton = new DevExpress.XtraEditors.PanelControl();
             gridControlListFS = new DevExpress.XtraGrid.GridControl();
             gridViewListFS = new DevExpress.XtraGrid.Views.Grid.GridView();
             gridColumnFSName = new DevExpress.XtraGrid.Columns.GridColumn();
-            simpleButtonOK = new DevExpress.XtraEditors.SimpleButton();
+            panelControlButton = new DevExpress.XtraEditors.PanelControl();
             simpleButtonCancel = new DevExpress.XtraEditors.SimpleButton();
+            simpleButtonOK = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)panelControlListFS).BeginInit();
             panelControlListFS.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)panelControlButton).BeginInit();
-            panelControlButton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridControlListFS).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewListFS).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)panelControlButton).BeginInit();
+            panelControlButton.SuspendLayout();
             SuspendLayout();
             // 
             // panelControlListFS
@@ -51,16 +51,6 @@
             panelControlListFS.Name = "panelControlListFS";
             panelControlListFS.Size = new System.Drawing.Size(463, 357);
             panelControlListFS.TabIndex = 0;
-            // 
-            // panelControlButton
-            // 
-            panelControlButton.Controls.Add(simpleButtonCancel);
-            panelControlButton.Controls.Add(simpleButtonOK);
-            panelControlButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panelControlButton.Location = new System.Drawing.Point(0, 357);
-            panelControlButton.Name = "panelControlButton";
-            panelControlButton.Size = new System.Drawing.Size(463, 50);
-            panelControlButton.TabIndex = 0;
             // 
             // gridControlListFS
             // 
@@ -78,24 +68,28 @@
             gridViewListFS.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnFSName });
             gridViewListFS.GridControl = gridControlListFS;
             gridViewListFS.Name = "gridViewListFS";
+            gridViewListFS.OptionsBehavior.Editable = false;
             gridViewListFS.OptionsView.ShowColumnHeaders = false;
             gridViewListFS.OptionsView.ShowGroupPanel = false;
             // 
             // gridColumnFSName
             // 
+            gridColumnFSName.FieldName = "Name";
             gridColumnFSName.MinWidth = 25;
             gridColumnFSName.Name = "gridColumnFSName";
             gridColumnFSName.Visible = true;
             gridColumnFSName.VisibleIndex = 0;
             gridColumnFSName.Width = 94;
             // 
-            // simpleButtonOK
+            // panelControlButton
             // 
-            simpleButtonOK.Location = new System.Drawing.Point(278, 13);
-            simpleButtonOK.Name = "simpleButtonOK";
-            simpleButtonOK.Size = new System.Drawing.Size(75, 25);
-            simpleButtonOK.TabIndex = 0;
-            simpleButtonOK.Text = "&OK";
+            panelControlButton.Controls.Add(simpleButtonCancel);
+            panelControlButton.Controls.Add(simpleButtonOK);
+            panelControlButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            panelControlButton.Location = new System.Drawing.Point(0, 357);
+            panelControlButton.Name = "panelControlButton";
+            panelControlButton.Size = new System.Drawing.Size(463, 50);
+            panelControlButton.TabIndex = 0;
             // 
             // simpleButtonCancel
             // 
@@ -104,6 +98,16 @@
             simpleButtonCancel.Size = new System.Drawing.Size(75, 25);
             simpleButtonCancel.TabIndex = 1;
             simpleButtonCancel.Text = "&Cancel";
+            simpleButtonCancel.Click += simpleButtonCancel_Click;
+            // 
+            // simpleButtonOK
+            // 
+            simpleButtonOK.Location = new System.Drawing.Point(278, 13);
+            simpleButtonOK.Name = "simpleButtonOK";
+            simpleButtonOK.Size = new System.Drawing.Size(75, 25);
+            simpleButtonOK.TabIndex = 0;
+            simpleButtonOK.Text = "&OK";
+            simpleButtonOK.Click += simpleButtonOK_Click;
             // 
             // frmListFuzzySet
             // 
@@ -116,10 +120,10 @@
             Text = "Fuzzy Set";
             ((System.ComponentModel.ISupportInitialize)panelControlListFS).EndInit();
             panelControlListFS.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)panelControlButton).EndInit();
-            panelControlButton.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridControlListFS).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewListFS).EndInit();
+            ((System.ComponentModel.ISupportInitialize)panelControlButton).EndInit();
+            panelControlButton.ResumeLayout(false);
             ResumeLayout(false);
         }
 

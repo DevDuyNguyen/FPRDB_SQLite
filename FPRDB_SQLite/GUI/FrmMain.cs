@@ -35,6 +35,8 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using GUI.GUI;
+using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
+using DevExpress.XtraGrid.Views.Base;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -51,6 +53,7 @@ namespace FPRDB_SQLite.GUI
         private string _currentEditingColumn;
         private int _currentEditingRow;
         private string _currentEditingColumnType;
+        private bool _isOpeningFuzzySet = false;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -126,27 +129,46 @@ namespace FPRDB_SQLite.GUI
             gridView4.BestFitColumns();
 
             GridColumn col = gridView4.Columns["Value"];
-            if (_currentEditingColumnType == "INT")
+            if (_currentEditingColumnType == "distFS_INT"
+                || _currentEditingColumnType == "distFS_FLOAT"
+                || _currentEditingColumnType == "distFS_TEXT"
+                || _currentEditingColumnType == "contFS")
             {
-                col.OptionsColumn.AllowEdit = false;
-                gridView4.RowCellClick += gridView4_RowCellClick;
+                col.OptionsColumn.AllowEdit = true;
+                var btnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+                btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+                btnEdit.Buttons.Clear();
+                btnEdit.Buttons.Add(new DevExpress.XtraEditors.Controls.EditorButton(
+                    DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis));
+
+                gridView4.OptionsView.ShowButtonMode = ShowButtonModeEnum.ShowAlways;
+                gridControlValueRelation.RepositoryItems.Add(btnEdit);
+
+                btnEdit.ButtonClick += (sender, e) =>
+                {
+                    var frm = new frmListFuzzySet(compRoot, _currentEditingColumnType);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        FuzzySetDTO selected = frm.SelectedFuzzySet;
+                        if (selected != null)
+                            gridView4.SetRowCellValue(gridView4.FocusedRowHandle, "Value", selected.fuzzySetName);
+                    }
+                };
+
+                col.ColumnEdit = btnEdit;
             }
             else
             {
+                col.ColumnEdit = null;
                 col.OptionsColumn.AllowEdit = true;
-                gridView4.RowCellClick -= gridView4_RowCellClick;
             }
         }
-        private void gridView4_RowCellClick(object sender, RowCellClickEventArgs e)
-        {
-            new frmListFuzzySet(compRoot, _currentEditingColumnType).ShowDialog();
-        }
+        // Hàm xử lý khi người dùng nhấp ra khỏi hàng ở Grid liệt kê giá trị
         private void BottomGrid_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action != DataRowAction.Add &&
                 e.Action != DataRowAction.Change &&
                 e.Action != DataRowAction.Delete) return;
-
             string newFuzzyString = BuildFuzzyStringFromBottomGrid();
             DataTable topDt = gridControlRelation.DataSource as DataTable;
             if (topDt != null && _currentEditingRow >= 0)
@@ -154,6 +176,32 @@ namespace FPRDB_SQLite.GUI
                 topDt.Rows[_currentEditingRow][_currentEditingColumn] = newFuzzyString;
             }
         }
+        // Hàm kiểm tra dữ liệu hàng khi người dùng nhấp ra ngoài
+        private void gridView4_ValidateRow(object sender, ValidateRowEventArgs e)
+        {
+            var view = sender as GridView;
+            if (view == null) return;
+
+            foreach (GridColumn col in view.Columns)
+            {
+                var val = view.GetRowCellValue(e.RowHandle, col);
+                if (val == null || val == DBNull.Value ||
+                    string.IsNullOrWhiteSpace(val.ToString()))
+                {
+                    e.Valid = false;
+                    e.ErrorText = $"{col.Caption} cannot be empty!";
+                    return;
+                }
+            }
+        }
+        // Hàm thông báo cho Grid liệt kê giá trị
+        private void gridView4_InvalidRowException(object sender, InvalidRowExceptionEventArgs e)
+        {
+            e.ExceptionMode = ExceptionMode.NoAction;
+            MessageBox.Show(e.ErrorText, "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        // Parse giá trị ngược lại cho Grid relation ở trên (khi có cập nhật)
         private string BuildFuzzyStringFromBottomGrid()
         {
             DataTable dt = gridControlValueRelation.DataSource as DataTable;
@@ -248,24 +296,20 @@ namespace FPRDB_SQLite.GUI
                 col.OptionsColumn.AllowEdit = false;
                 col.Tag = field.getFieldInfo().getType();
             }
-            foreach (GridColumn col in gridView3.Columns)
-            {
-                MessageBox.Show($"Column: {col.FieldName} | Tag: {col.Tag?.ToString() ?? "null"}");
-            }
-            Dictionary<string, string> row1 = new Dictionary<string, string>
-            {
-                {"id", "{(ID01,[1,1])}"},
-                {"name", "{(John,[0.1,0.3]), (Mary,[0.4,0.6]), (Nick,[0.7,0.9])}" }
-            };
-            Dictionary<string, string> row2 = new Dictionary<string, string>
-            {
-                {"id", "{(ID02,[1,1])}"},
-                {"name", "{(Tom,[0.1,0.3]), (Anna,[0.4,0.6]), (James,[0.7,0.9])}" }
-            };
+            //Dictionary<string, string> row1 = new Dictionary<string, string>
+            //{
+            //    {"id", "{(ID01,[1,1])}"},
+            //    {"name", "{(John,[0.1,0.3]), (Mary,[0.4,0.6]), (Nick,[0.7,0.9])}" }
+            //};
+            //Dictionary<string, string> row2 = new Dictionary<string, string>
+            //{
+            //    {"id", "{(ID02,[1,1])}"},
+            //    {"name", "{(Tom,[0.1,0.3]), (Anna,[0.4,0.6]), (James,[0.7,0.9])}" }
+            //};
 
             List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
-            result.Add(row1);
-            result.Add(row2);
+            //result.Add(row1);
+            //result.Add(row2);
 
             // Xét từng dòng trong bảng result (giả dụ)
             foreach (var row in result)
@@ -1721,6 +1765,7 @@ namespace FPRDB_SQLite.GUI
             // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             memoEditTxtQuery.Focus();
         }
+        // 2 hàm parse dữ liệu xuống dưới Grid liệt kê giá trị
         private void gridView3_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
             if (gridView3.FocusedColumn == null) return;
@@ -1741,7 +1786,7 @@ namespace FPRDB_SQLite.GUI
             _currentEditingColumnType = gridView3.FocusedColumn.Tag?.ToString() ?? string.Empty;
             LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
         }
-
+        // Hàm ngăn không cho xóa hết dòng (đối với cột khóa chính)
         private void gridView4_RowDeleting(object sender, DevExpress.Data.RowDeletingEventArgs e)
         {
             DataTable dt = gridControlValueRelation.DataSource as DataTable;
