@@ -819,6 +819,8 @@
             gridView3.GridControl = gridControlRelation;
             gridView3.Name = "gridView3";
             gridView3.OptionsView.ShowGroupPanel = false;
+            gridView3.FocusedRowChanged += gridView3_FocusedRowChanged;
+            gridView3.FocusedColumnChanged += gridView3_FocusedColumnChanged;
             // 
             // gridControlValueRelation
             // 
@@ -838,11 +840,12 @@
             gridView4.GridControl = gridControlValueRelation;
             gridView4.Name = "gridView4";
             gridView4.OptionsView.ShowGroupPanel = false;
+            gridView4.RowDeleting += gridView4_RowDeleting;
             // 
             // gridColumnValue
             // 
             gridColumnValue.Caption = "Value";
-            gridColumnValue.FieldName = "gridColumnValue";
+            gridColumnValue.FieldName = "Value";
             gridColumnValue.MinWidth = 25;
             gridColumnValue.Name = "gridColumnValue";
             gridColumnValue.Visible = true;
@@ -852,7 +855,7 @@
             // gridColumnMinProb
             // 
             gridColumnMinProb.Caption = "MinProb";
-            gridColumnMinProb.FieldName = "gridColumnMinProb";
+            gridColumnMinProb.FieldName = "MinProb";
             gridColumnMinProb.MinWidth = 25;
             gridColumnMinProb.Name = "gridColumnMinProb";
             gridColumnMinProb.Visible = true;
@@ -863,6 +866,7 @@
             // 
             gridColumnMaxProb.AccessibleName = "gridColumnMaxProb";
             gridColumnMaxProb.Caption = "MaxProb";
+            gridColumnMaxProb.FieldName = "MaxProb";
             gridColumnMaxProb.MinWidth = 25;
             gridColumnMaxProb.Name = "gridColumnMaxProb";
             gridColumnMaxProb.Visible = true;

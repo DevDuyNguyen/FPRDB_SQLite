@@ -23,6 +23,10 @@ using DevExpress.Xpo.DB.Helpers;
 using BLL.Common;
 using GUI.GlobalStates;
 using static FPRDB_SQLite.GUI.frmNewSchema;
+using System.Net.Sockets;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Columns;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -34,6 +38,9 @@ namespace FPRDB_SQLite.GUI
         private bool isDatabaseLoaded = false;
         private string currentSQLFilePath = string.Empty;
         private bool isSQLFileModified = false;
+        private FPRDBRelationDTO _selectedRelation;
+        private string _currentEditingColumn;
+        private int _currentEditingRow;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -68,6 +75,82 @@ namespace FPRDB_SQLite.GUI
             // Hàm này tự động hiểu và lấy ra "C:\", "D:\"... một cách an toàn
             return System.IO.Path.GetPathRoot(path);
         }
+        // Load dữ liệu từ chuỗi của Fuzzy Probalistic Value thành 1 bảng liệt kê giá trị
+        private void LoadFuzzyProbalisticValueDetail(string probValue)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Value", typeof(string));
+            dt.Columns.Add("MinProb", typeof(string));
+            dt.Columns.Add("MaxProb", typeof(string));
+
+            if (probValue != null)
+            {
+                // Liệt kê nội dung cần lấy
+                string content = probValue.Trim('{', '}');
+                // Liệt kê các value (1 value -> 1 tuple)
+                string[] tuples = content.Split(new string[] { "), (" }, StringSplitOptions.None);
+
+                // Kiểm tra từng value
+                foreach (string tuple in tuples)
+                {
+                    string clean = tuple.Trim('(', ')');
+                    int bracketIndex = clean.IndexOf(",[");
+                    if (bracketIndex < 0) continue;
+
+                    string value = clean.Substring(0, bracketIndex);
+                    string bounds = clean.Substring(bracketIndex + 2).Trim('[', ']');
+                    // Mảng: lowerBound -> index 0, upperBound -> index 1
+                    string[] boundParts = bounds.Split(',');
+                    if (boundParts.Length < 2) continue;
+
+
+                    dt.Rows.Add(value, boundParts[0].Trim(), boundParts[1].Trim());
+                }
+            }
+
+            dt.RowChanged += BottomGrid_RowChanged;
+            dt.RowDeleted += BottomGrid_RowChanged;
+
+            gridControlValueRelation.DataSource = dt;
+            gridView4.BestFitColumns();
+        }
+        private void BottomGrid_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Add &&
+                e.Action != DataRowAction.Change &&
+                e.Action != DataRowAction.Delete) return;
+
+            string newFuzzyString = BuildFuzzyStringFromBottomGrid();
+            DataTable topDt = gridControlRelation.DataSource as DataTable;
+            if (topDt != null && _currentEditingRow >= 0)
+            {
+                topDt.Rows[_currentEditingRow][_currentEditingColumn] = newFuzzyString;
+            }
+        }
+        private string BuildFuzzyStringFromBottomGrid()
+        {
+            DataTable dt = gridControlValueRelation.DataSource as DataTable;
+            if (dt == null || dt.Rows.Count == 0) return "";
+
+            StringBuilder sb = new StringBuilder("{");
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                DataRow row = dt.Rows[i];
+                if (row.RowState == DataRowState.Deleted) continue;
+
+                string value = row["Value"].ToString();
+                string minProb = row["MinProb"].ToString();
+                string maxProb = row["MaxProb"].ToString();
+
+                if (string.IsNullOrEmpty(value)) continue;
+
+                sb.Append($"({value},[{minProb},{maxProb}])");
+                if (i < dt.Rows.Count - 1)
+                    sb.Append(", ");
+            }
+            sb.Append("}");
+            return sb.ToString();
+        }
         #region Tab Page Fuzzy Set
         private void buttonAdd_groupDis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -84,7 +167,7 @@ namespace FPRDB_SQLite.GUI
         }
         #endregion
         #region Tab Page Home
-        //
+        // Hàm hiển thị thông tin chi tiết của Schema
         private void DisplaySchemaDetail(FPRDBSchemaDTO schema)
         {
             BindingList<SchemaAttribute> list = new BindingList<SchemaAttribute>();
@@ -109,58 +192,83 @@ namespace FPRDB_SQLite.GUI
             gridControlScheme.DataSource = list;
             gridView.BestFitColumns();
         }
-        private Type MapFieldType(FieldType fieldType)
+        // Hàm hiển thị thông tin của Relation
+        private void DisplayRelationDetail(FPRDBRelationDTO relation)
         {
-            switch (fieldType)
+            var schema = relation.fprdbSchema;
+            List<Field> fields = schema.fields;
+            // Sử dụng DataTable để hiện thị thông tin Relation
+            DataTable relInfo = new DataTable();
+
+            foreach (var field in fields)
             {
-                case FieldType.INT: return typeof(int);
-                default: return null;
+                string fieldName = field.getFieldName();
+                DataColumn dataCol = new DataColumn(fieldName, typeof(string));
+                relInfo.Columns.Add(dataCol);
             }
-        }
-        private void DisplayRelationDetail(FPRDBRelation relation)
-        {
-            //var schema = relation.getSchema();
-            //List<Field> fields = schema.getFields();
-            //// Sử dụng DataTable để hiện thị thông tin Relation
-            //DataTable relInfo = new DataTable();
-            //// Thêm cột bằng các thông tin Field có sẵn lấy từ Schema
-            //foreach (var field in fields)
-            //{
-            //    string fieldName = field.getFieldName();
-            //    FieldType fieldType = field.getFieldInfo().getType();
-            //    Type colType = MapFieldType(fieldType);
-            //    relInfo.Columns.Add(fieldName, colType);
-            //}
 
-            ////string sql = "SELECT ...";
-            ////Plan plan = createQueryPlan(sql);
-            ////Scan sc = plan.open();
-            //scan.beforeFirst();
-            //while (scan.next())
-            //{
-            //    DataRow row = relInfo.NewRow();
-            //    foreach (var field in fields)
-            //    {
-            //        FieldType fieldType = field.getFieldInfo().getType();
-            //        Type colType = MapFieldType(fieldType);
-            //        var cellValueNotParsed = scan.getFieldConten<colType>(field.getFieldName());
-            //        // Parse FuzzySetProbabilisticValue ra 1 chuỗi tring
-            //        var cellValueParsed = "";
-            //        row[field.getFieldName()] = cellValueParsed;
-            //    }
-            //    relInfo.Rows.Add(row);
-            //}
-            //scan.close();
+            gridView3.Columns.Clear();
+            gridControlRelation.DataSource = relInfo;
 
-            //gridControlRelation.DataSource = null;
-            //gridView3.Columns.Clear();
-            //gridControlRelation.DataSource = relInfo;
-            //gridView3.BestFitColumns();
+            // Thêm cột bằng các thông tin Field có sẵn lấy từ Schema
+            foreach (var field in fields)
+            {
+                string fieldName = field.getFieldName();
+
+                GridColumn col = gridView3.Columns[fieldName];
+                if (col == null) continue;
+
+                col.Caption = fieldName;
+                col.OptionsColumn.AllowEdit = false;
+            }
+
+            Dictionary<string, string> row1 = new Dictionary<string, string>
+            {
+                {"id", "{(ID01,[1,1])}"},
+                {"name", "{(John,[0.1,0.3]), (Mary,[0.4,0.6]), (Nick,[0.7,0.9])}" }
+            };
+            Dictionary<string, string> row2 = new Dictionary<string, string>
+            {
+                {"id", "{(ID02,[1,1])}"},
+                {"name", "{(Tom,[0.1,0.3]), (Anna,[0.4,0.6]), (James,[0.7,0.9])}" }
+            };
+
+            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
+            result.Add(row1);
+            result.Add(row2);
+
+            // Xét từng dòng trong bảng result (giả dụ)
+            foreach (var row in result)
+            {
+                DataRow fakeRow = relInfo.NewRow();
+                // Lấy từng ô theo fielName
+                foreach (var field in fields)
+                {
+                    string fieldName = field.getFieldName();
+                    string content = "";
+                    // Lấy giá trị tại 1 ô
+                    if (row.TryGetValue(fieldName, out var value))
+                    {
+                        content = value?.ToString();
+                    }
+                    fakeRow[fieldName] = content;
+                }
+                relInfo.Rows.Add(fakeRow);
+            }
+
+            gridView3.BestFitColumns();
+            // Listen for data changes
+            relInfo.RowChanged += RelInfo_RowChanged;
+            relInfo.RowDeleting += RelInfo_RowDeleting;
+
         }
         // Hàm xử lý sự kiện khi click "Select top 100 tuples"
         private void barButtonSelectTuples_ItemClick(object sender, ItemClickEventArgs e)
         {
-            XtraMessageBox.Show("Select top 100 tuples successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            XtraTabPage relationTab = xtraTabControlDatabase.TabPages[1];
+            relationTab.Text = _selectedRelation.relName;
+            xtraTabControlDatabase.SelectedTabPageIndex = 1;
+            DisplayRelationDetail(_selectedRelation);
             return;
         }
         // Hàm show popup menu cho node relation
@@ -173,8 +281,9 @@ namespace FPRDB_SQLite.GUI
             if (e.Button == MouseButtons.Right)
             {
 
-                if (node.Tag is FPRDBRelation relation)
+                if (node.Tag is FPRDBRelationDTO relation)
                 {
+                    _selectedRelation = relation;
                     popupMenuTreeView.ShowPopup(treeView.PointToScreen(e.Location));
                 }
             }
@@ -187,7 +296,7 @@ namespace FPRDB_SQLite.GUI
                     xtraTabControlDatabase.SelectedTabPageIndex = 0;
                     DisplaySchemaDetail(schema);
                 }
-                if (node.Tag is FPRDBRelation relation)
+                if (node.Tag is FPRDBRelationDTO relation)
                 {
                     DisplayRelationDetail(relation);
                 }
@@ -231,7 +340,7 @@ namespace FPRDB_SQLite.GUI
             // ====================================================================
             // NHÁNH 1: ĐỔ DỮ LIỆU SCHEMAS VÀ LỌC TRÙNG LẶP
             // ====================================================================
-            AppStates.loadFPRDBSchemas= this.databaseService.getFPRDBSchemas();
+            AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
             var schemas = AppStates.loadFPRDBSchemas;
 
             if (schemas != null && schemas.Count > 0)
@@ -284,7 +393,7 @@ namespace FPRDB_SQLite.GUI
             // ====================================================================
             // NHÁNH 2: ĐỔ DỮ LIỆU RELATIONS VÀ LỌC TRÙNG LẶP
             // ====================================================================
-            AppStates.loadFPRDBSchemaRelations= this.databaseService.getFPRDBRelations();
+            AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
             var relations = AppStates.loadFPRDBSchemaRelations;
             if (relations != null && relations.Count > 0)
             {
@@ -304,6 +413,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode instanceNode = new TreeNode(relName);
                     instanceNode.ImageIndex = 7;
                     instanceNode.SelectedImageIndex = 7;
+                    instanceNode.Tag = relation;
                     relationRootNode.Nodes.Add(instanceNode);
 
                     var refSchema = relation.fprdbSchema;
@@ -382,6 +492,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode schemaNode = new TreeNode(schemaName);
                     schemaNode.ImageIndex = 8;
                     schemaNode.SelectedImageIndex = 8;
+                    schemaNode.Tag = schema;
                     tablesRootNode.Nodes.Add(schemaNode);
 
                     var fields = schema.fields;
@@ -432,7 +543,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode instanceNode = new TreeNode(relName);
                     instanceNode.ImageIndex = 7;
                     instanceNode.SelectedImageIndex = 7;
-                    //instanceNode.Tag = relation;
+                    instanceNode.Tag = relation;
                     relationRootNode.Nodes.Add(instanceNode);
 
                     var refSchema = relation.fprdbSchema;
@@ -541,7 +652,7 @@ namespace FPRDB_SQLite.GUI
         // Hàm enable Query Edtor khi đã load Query thành công
         private void SetQueryTabState(bool isLoaded, string fileName = "")
         {
-            XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2]; 
+            XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Panel1;
             if (isLoaded)
             {
@@ -1037,26 +1148,155 @@ namespace FPRDB_SQLite.GUI
         #region Tab Page Schema
         private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            using(frmNewSchema childform = new frmNewSchema(compRoot))
+            using (frmNewSchema childform = new frmNewSchema(compRoot))
             {
                 if (childform.ShowDialog() == DialogResult.OK)
                 {
                     reLoadDatabaseTree();
                 }
             }
-            
+
         }
         #endregion
         #region Tab Page Relation
         private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            using(frmNewRelation childForm = new frmNewRelation(compRoot))
+            using (frmNewRelation childForm = new frmNewRelation(compRoot))
             {
                 if (childForm.ShowDialog() == DialogResult.OK)
                     reLoadDatabaseTree();
             }
-            
+
+        }
+
+        private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Add && e.Action != DataRowAction.Change) return;
+
+            DataRow row = e.Row;
+
+            var schema = _selectedRelation.fprdbSchema;
+            List<Field> fields = schema.fields;
+
+            try
+            {
+                StringBuilder sbRow = new StringBuilder();
+                sbRow.AppendLine("--- Row ---");
+
+                foreach (var field in fields)
+                {
+                    string fieldName = field.getFieldName();
+                    var cellValue = row[fieldName];
+
+                    if (cellValue == DBNull.Value || cellValue == null)
+                    {
+                        sbRow.AppendLine($"{fieldName}: (empty)");
+                        continue;
+                    }
+                    sbRow.AppendLine($"{fieldName}: {cellValue}");
+                }
+
+                if (e.Action == DataRowAction.Add)
+                    MessageBox.Show($"Add\n\n{sbRow}", "Saved",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show($"Update\n\n{sbRow}", "Saved",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Auto save failed: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void RelInfo_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Delete) return;
+
+            DataRow row = e.Row;
+
+            try
+            {
+                var schema = _selectedRelation.fprdbSchema;
+                List<string> pks = schema.primarykey;
+                List<string> pkValues = new List<string>();
+                StringBuilder sbRow = new StringBuilder();
+                sbRow.AppendLine("--- Row ---");
+
+                foreach (var pk in pks)
+                {
+                    var cellValue = row[pk];
+
+                    if (cellValue == DBNull.Value || cellValue == null)
+                    {
+                        sbRow.AppendLine($"{pk}: (empty)");
+                        continue;
+                    }
+                    sbRow.AppendLine($"{pk}: {cellValue}");
+                }
+
+                var result = MessageBox.Show(
+                    $"Delete \n\n{sbRow}",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    MessageBox.Show($"Deleted \n\n{sbRow}", "Deleted",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    e.Row.RejectChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Delete failed: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         #endregion
+        private void gridView3_FocusedColumnChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedColumnChangedEventArgs e)
+        {
+            if (e.FocusedColumn == null) return;
+            var cellValue = gridView3.GetFocusedRowCellValue(e.FocusedColumn);
+            string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
+            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
+            _currentEditingRow = gridView3.FocusedRowHandle;
+            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
+        }
+
+        private void gridView3_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        {
+            if (gridView3.FocusedColumn == null) return;
+            var cellValue = gridView3.GetFocusedRowCellValue(gridView3.FocusedColumn);
+            string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
+            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
+            _currentEditingRow = gridView3.FocusedRowHandle;
+            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
+        }
+
+        private void gridView4_RowDeleting(object sender, DevExpress.Data.RowDeletingEventArgs e)
+        {
+            DataTable dt = gridControlValueRelation.DataSource as DataTable;
+            if (dt == null) return;
+
+            var schema = _selectedRelation.fprdbSchema;
+            List<string> pks = schema.primarykey;
+
+            if (!pks.Contains(_currentEditingColumn)) return;
+
+            int validRowCount = dt.Rows.Cast<DataRow>()
+                .Count(r => r.RowState != DataRowState.Deleted) - 1;
+
+            if (validRowCount <= 0)
+            {
+                e.Cancel = true;
+                MessageBox.Show("Primary key cannot be empty! At least 1 row required.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
