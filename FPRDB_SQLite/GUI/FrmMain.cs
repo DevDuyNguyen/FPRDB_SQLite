@@ -34,6 +34,7 @@ using System.Net.Sockets;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
+using GUI.GUI;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -49,6 +50,7 @@ namespace FPRDB_SQLite.GUI
         private FPRDBRelationDTO _selectedRelation;
         private string _currentEditingColumn;
         private int _currentEditingRow;
+        private string _currentEditingColumnType;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -122,6 +124,22 @@ namespace FPRDB_SQLite.GUI
 
             gridControlValueRelation.DataSource = dt;
             gridView4.BestFitColumns();
+
+            GridColumn col = gridView4.Columns["Value"];
+            if (_currentEditingColumnType == "INT")
+            {
+                col.OptionsColumn.AllowEdit = false;
+                gridView4.RowCellClick += gridView4_RowCellClick;
+            }
+            else
+            {
+                col.OptionsColumn.AllowEdit = true;
+                gridView4.RowCellClick -= gridView4_RowCellClick;
+            }
+        }
+        private void gridView4_RowCellClick(object sender, RowCellClickEventArgs e)
+        {
+            new frmListFuzzySet(compRoot, _currentEditingColumnType).ShowDialog();
         }
         private void BottomGrid_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -219,7 +237,6 @@ namespace FPRDB_SQLite.GUI
             gridView3.Columns.Clear();
             gridControlRelation.DataSource = relInfo;
 
-            // Thêm cột bằng các thông tin Field có sẵn lấy từ Schema
             foreach (var field in fields)
             {
                 string fieldName = field.getFieldName();
@@ -229,8 +246,12 @@ namespace FPRDB_SQLite.GUI
 
                 col.Caption = fieldName;
                 col.OptionsColumn.AllowEdit = false;
+                col.Tag = field.getFieldInfo().getType();
             }
-
+            foreach (GridColumn col in gridView3.Columns)
+            {
+                MessageBox.Show($"Column: {col.FieldName} | Tag: {col.Tag?.ToString() ?? "null"}");
+            }
             Dictionary<string, string> row1 = new Dictionary<string, string>
             {
                 {"id", "{(ID01,[1,1])}"},
@@ -1396,15 +1417,6 @@ namespace FPRDB_SQLite.GUI
             }
         }
         #endregion
-        private void gridView3_FocusedColumnChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedColumnChangedEventArgs e)
-        {
-            if (e.FocusedColumn == null) return;
-            var cellValue = gridView3.GetFocusedRowCellValue(e.FocusedColumn);
-            string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
-            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
-            _currentEditingRow = gridView3.FocusedRowHandle;
-            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
-        }
         // Hàm xử lý sự kiện click cho nút Xóa lược đồ
         private void iDeleteSchema_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -1716,6 +1728,17 @@ namespace FPRDB_SQLite.GUI
             string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
             _currentEditingColumn = gridView3.FocusedColumn.FieldName;
             _currentEditingRow = gridView3.FocusedRowHandle;
+            _currentEditingColumnType = gridView3.FocusedColumn.Tag?.ToString() ?? string.Empty;
+            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
+        }
+        private void gridView3_FocusedColumnChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedColumnChangedEventArgs e)
+        {
+            if (gridView3.FocusedColumn == null) return;
+            var cellValue = gridView3.GetFocusedRowCellValue(gridView3.FocusedColumn);
+            string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
+            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
+            _currentEditingRow = gridView3.FocusedRowHandle;
+            _currentEditingColumnType = gridView3.FocusedColumn.Tag?.ToString() ?? string.Empty;
             LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
         }
 
