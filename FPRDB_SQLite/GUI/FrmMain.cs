@@ -1,6 +1,12 @@
 ﻿using BLL;
 using BLL.Common;
+using BLL.Common;
+using BLL;
+using BLL.Common;
 using BLL.DomainObject;
+using BLL.Enums;
+using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.Services;
 using BLL.SQLProcessing;
 using DevExpress.Xpo.DB.Helpers;
@@ -8,6 +14,7 @@ using DevExpress.XtraBars;
 using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
 using DevExpress.XtraTab;
+using GUI.GlobalStates;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,6 +45,7 @@ namespace FPRDB_SQLite.GUI
         private bool isDatabaseLoaded = false;
         private string currentSQLFilePath = string.Empty;
         private bool isSQLFileModified = false;
+        private SQLProcessor sqlProcessor;
         private FPRDBRelationDTO _selectedRelation;
         private string _currentEditingColumn;
         private int _currentEditingRow;
@@ -45,6 +53,7 @@ namespace FPRDB_SQLite.GUI
         {
             this.compRoot = compRoot;
             this.databaseService = this.compRoot.getDatabaseService();
+            this.sqlProcessor = this.compRoot.getSQLProcessor();
             //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
@@ -361,6 +370,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode schemaNode = new TreeNode(schemaName);
                     schemaNode.ImageIndex = 8;
                     schemaNode.SelectedImageIndex = 8;
+                    schemaNode.Tag = "schema";
                     schemaNode.Tag = schema;
                     tablesRootNode.Nodes.Add(schemaNode);
 
@@ -543,6 +553,7 @@ namespace FPRDB_SQLite.GUI
                     TreeNode instanceNode = new TreeNode(relName);
                     instanceNode.ImageIndex = 7;
                     instanceNode.SelectedImageIndex = 7;
+                    instanceNode.Tag = "relation";
                     instanceNode.Tag = relation;
                     relationRootNode.Nodes.Add(instanceNode);
 
@@ -1113,36 +1124,173 @@ namespace FPRDB_SQLite.GUI
         #endregion
         private void ExcuteQuery(string sql)
         {
-            splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            //try
+            //{
+            //    // hiển thị 2 panel của SplitContainerControl để show kết quả truy vấn và cây giải thuật
+            //    splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+
+            //    // Hiển thị cả 2 panel (Query Editor và phần Kết quả)
+            //    splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+
+            //    // Xóa dữ liệu cũ trên GridView
+            //    gridControlResultQuery.DataSource = null;
+            //    gridViewResultQuery.Columns.Clear();
+            //    if (string.IsNullOrEmpty(sql.Trim()))
+            //    {
+            //        XtraMessageBox.Show("Query does not exist!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        return;
+            //    }
+
+            //    // TODO: Truyền đối tượng database hiện tại vào.
+            //    //query = new QueryExecutionBLL(sql, null /* thay bằng đối tượng probDatabase của bạn */);
+
+
+            //    if (query.ExecuteQuery())
+            //    {
+            //        if (query.relationResult.FproTuples.Count <= 0)
+            //        {
+            //            MessagextraTabPage.Text = "No tuple satisfies the condition";
+            //            // Chuyển sang Tab Message (Index 1)
+            //            xtraTabControlResultQuery.SelectedTabPageIndex = 1;
+            //        }
+            //        else
+            //        {
+            //            // Chuẩn bị DataTable để chứa dữ liệu
+            //            DataTable dtquery = new DataTable();
+            //            dtquery.Columns.Add("NoNumber", typeof(int));
+
+            //            // 1. Khởi tạo cột STT (Number)
+            //            DevExpress.XtraGrid.Columns.GridColumn col = new DevExpress.XtraGrid.Columns.GridColumn();
+            //            col.Caption = "Number";
+            //            col.Name = "NoNumber";
+            //            col.FieldName = "NoNumber";
+            //            col.OptionsColumn.ReadOnly = true;
+            //            col.OptionsColumn.AllowEdit = false;
+            //            col.Visible = true;
+            //            col.VisibleIndex = 0;
+            //            gridViewResultQuery.Columns.Add(col);
+
+            //            // 2. Khởi tạo các cột dữ liệu dựa trên thuộc tính được chọn
+            //            int i = 1;
+            //            foreach (var att in query.selectedAttributes)
+            //            {
+            //                dtquery.Columns.Add("Col" + i, typeof(String));
+            //                DevExpress.XtraGrid.Columns.GridColumn columnDiff = new DevExpress.XtraGrid.Columns.GridColumn();
+            //                columnDiff.Caption = att.AttributeName;
+            //                columnDiff.Name = "Col" + i;
+            //                columnDiff.FieldName = "Col" + i; // FieldName phải map đúng với tên cột trong DataTable
+            //                columnDiff.OptionsColumn.ReadOnly = true;
+            //                columnDiff.OptionsColumn.AllowEdit = false;
+
+            //                // Đổi màu nền cho các tập mờ
+            //                if (att.FproDataType.TypeName == "DiscreteFuzzySet" || att.FproDataType.TypeName == "ContinuousFuzzySet")
+            //                {
+            //                    columnDiff.AppearanceCell.Options.UseBackColor = true;
+            //                    columnDiff.AppearanceCell.BackColor = Color.LightCyan; // Màu nền chính
+            //                    // columnDiff.AppearanceCell.BackColor2 = Color.DeepSkyBlue; // (Tùy chọn) Màu Gradient
+            //                }
+
+            //                columnDiff.Visible = true;
+            //                columnDiff.VisibleIndex = i;
+            //                gridViewResultQuery.Columns.Add(columnDiff);
+            //                i++;
+            //            }
+
+            //            // 3. Đổ dữ liệu từ Tuples vào DataTable
+            //            int k = -1;
+            //            foreach (var tuple in query.relationResult.FproTuples)
+            //            {
+            //                DataRow row = dtquery.NewRow();
+            //                k++;
+            //                int j = 1;
+            //                row[0] = k + 1; // STT
+
+            //                foreach (var triple in tuple.FproTriples)
+            //                {
+            //                    row[j] = triple.GetStrValue();
+            //                    j++;
+            //                }
+            //                dtquery.Rows.Add(row);
+            //            }
+
+            //            // 4. Gán DataSource và hiển thị Tab kết quả
+            //            gridControlResultQuery.DataSource = dtquery;
+            //            // Tự động căn chỉnh độ rộng các cột cho đẹp
+            //            gridViewResultQuery.BestFitColumns();
+
+            //            xtraTabControlResultQuery.SelectedTabPageIndex = 0; // Tab Query Result
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // Truy vấn lỗi (sai cú pháp...)
+            //        MessagextraTabPage.Text = query.MessageError;
+            //        xtraTabControlResultQuery.SelectedTabPageIndex = 1;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    XtraMessageBox.Show($"Error executing query: {ex.Message}", "Error",
+            //        MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
+            //finally
+            //{
+            //    // Dù có lỗi hay không thì vẫn phải đảm bảo tập trung con trỏ vào ô nhập liệu để người dùng tiện sửa lỗi hoặc tiếp tục nhập query
+            //    memoEditTxtQuery.Focus();
+
+            //    // có hàm ClearAll()(nếu có) để xóa sạch dữ liệu cũ trước khi hiển thị kết quả mới, hãy gọi nó ở đây
+            //    // ClearAll();
+            //}
             // createQueryPlan
-        }
-        private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string sql = memoEditTxtQuery.Text;
-        }
-        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⇒ ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+
+            // 
+
+            // dữ liệu giả để test giao diện
+            try
             {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
+                // Mở rộng giao diện để xem cả query và kết quả
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+
+                // 1. Tạo một DataTable giả lập cấu trúc
+                DataTable dtMock = new DataTable();
+                dtMock.Columns.Add("Number", typeof(int));
+                dtMock.Columns.Add("doctor1.ID", typeof(string));
+                dtMock.Columns.Add("doctor1.AGE", typeof(string));
+                dtMock.Columns.Add("doctor2.NAME", typeof(string));
+                dtMock.Columns.Add("doctor2.AGE", typeof(string));
+
+                // 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
+                dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+                dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+                dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+                dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+                dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+                dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+                //next()
+                // 3. Gán dữ liệu giả vào GridControl
+                gridControlResultQuery.DataSource = dtMock;
+
+                // 4. Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+                gridViewResultQuery.PopulateColumns();
+
+                dtMock.Rows.Add(10, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+
+                // 5. Tùy chỉnh hiển thị cột (Frontend)
+                if (gridViewResultQuery.Columns.Count > 0)
+                {
+                    // Chỉnh độ rộng và không cho phép sửa trực tiếp trên lưới
+                    gridViewResultQuery.OptionsBehavior.Editable = false;
+                    gridViewResultQuery.BestFitColumns();
+                }
+
+                // Chuyển sang Tab hiển thị kết quả (Giả sử index 0 là Query Result)
+                xtraTabControlResultQuery.SelectedTabPageIndex = 0;
             }
-            else
+            catch (Exception ex)
             {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+                XtraMessageBox.Show("Lỗi hiển thị dữ liệu giả: \n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
         }
         #endregion
         #region Tab Page Schema
@@ -1159,7 +1307,7 @@ namespace FPRDB_SQLite.GUI
         }
         #endregion
         #region Tab Page Relation
-        private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+
         {
             using (frmNewRelation childForm = new frmNewRelation(compRoot))
             {
@@ -1167,7 +1315,7 @@ namespace FPRDB_SQLite.GUI
                     reLoadDatabaseTree();
             }
 
-        }
+            //                    // columnDiff.AppearanceCell.BackColor2 = Color.DeepSkyBlue; // (Tùy chọn) Màu Gradient
 
         private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -1194,7 +1342,7 @@ namespace FPRDB_SQLite.GUI
                         continue;
                     }
                     sbRow.AppendLine($"{fieldName}: {cellValue}");
-                }
+            {
 
                 if (e.Action == DataRowAction.Add)
                     MessageBox.Show($"Add\n\n{sbRow}", "Saved",
@@ -1239,22 +1387,38 @@ namespace FPRDB_SQLite.GUI
                     $"Delete \n\n{sbRow}",
                     "Confirm Delete",
                     MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
 
-                if (result == DialogResult.Yes)
-                {
-                    MessageBox.Show($"Deleted \n\n{sbRow}", "Deleted",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    e.Row.RejectChanges();
-                }
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Delete failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
             }
         }
         #endregion
@@ -1264,39 +1428,922 @@ namespace FPRDB_SQLite.GUI
             var cellValue = gridView3.GetFocusedRowCellValue(e.FocusedColumn);
             string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
             _currentEditingColumn = gridView3.FocusedColumn.FieldName;
-            _currentEditingRow = gridView3.FocusedRowHandle;
-            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
         }
 
-        private void gridView3_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        private void iDisjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (gridView3.FocusedColumn == null) return;
-            var cellValue = gridView3.GetFocusedRowCellValue(gridView3.FocusedColumn);
-            string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
-            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
-            _currentEditingRow = gridView3.FocusedRowHandle;
-            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
-        }
+            string symbol = " ⨁_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
 
-        private void gridView4_RowDeleting(object sender, DevExpress.Data.RowDeletingEventArgs e)
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+            using (frmNewSchema childform = new frmNewSchema(compRoot))
+            {
+                if (childform.ShowDialog() == DialogResult.OK)
+                {
+                    reLoadDatabaseTree();
+                }
+            }
+
+        }
+        // Hàm xử lý sự kiện click cho nút Xóa lược đồ
+        private void iDeleteSchema_ItemClick(object sender, ItemClickEventArgs e)
         {
-            DataTable dt = gridControlValueRelation.DataSource as DataTable;
-            if (dt == null) return;
+            // 1. Lấy node đang được chọn trên TreeView
+            TreeNode selectedNode = treeView.SelectedNode;
+
+            // Kiểm tra xem người dùng đã chọn đúng node lược đồ chưa
+
+        private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Add && e.Action != DataRowAction.Change) return;
+
+            DataRow row = e.Row;
 
             var schema = _selectedRelation.fprdbSchema;
-            List<string> pks = schema.primarykey;
+            List<Field> fields = schema.fields;
 
-            if (!pks.Contains(_currentEditingColumn)) return;
-
-            int validRowCount = dt.Rows.Cast<DataRow>()
-                .Count(r => r.RowState != DataRowState.Deleted) - 1;
-
-            if (validRowCount <= 0)
+            try
             {
-                e.Cancel = true;
-                MessageBox.Show("Primary key cannot be empty! At least 1 row required.", "Error",
+                StringBuilder sbRow = new StringBuilder();
+                sbRow.AppendLine("--- Row ---");
+
+                foreach (var field in fields)
+                {
+                    string fieldName = field.getFieldName();
+                    var cellValue = row[fieldName];
+
+                    if (cellValue == DBNull.Value || cellValue == null)
+                    {
+                        sbRow.AppendLine($"{fieldName}: (empty)");
+                        continue;
+                    }
+                    sbRow.AppendLine($"{fieldName}: {cellValue}");
+
+            {
+                XtraMessageBox.Show("Please select a schema to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string schemaName = selectedNode.Text;
+
+            try
+            {
+                // 2. Kiểm tra khi không có relation nào tham chiếu
+                var allRelations = this.databaseService.getFPRDBRelations();
+
+                // Lọc ra các quan hệ đang sử dụng lược đồ này
+                var dependentRelations = allRelations.Where(r => r.fprdbSchema != null && r.fprdbSchema.schemaName == schemaName)
+                    .Select(r => r.relName).ToList();
+
+                // Xử lý ngoại lệ
+                if (dependentRelations.Count > 0)
+                {
+                    string rellList = string.Join(", ", dependentRelations);
+                    XtraMessageBox.Show($"Cannot delete schema '{schemaName}' because it is referenced by the following relations: {rellList}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 3. Xác nhận xóa lược đồ
+                DialogResult result = XtraMessageBox.Show($"Are you sure you want to delete the schema '{schemaName}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // GỌI XUỐNG TẦNG SERVICE ĐỂ XÓA (Bạn cần đảm bảo databaseService có hàm này)
+                    // Ví dụ: bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName);
+
+                    // tạm thời giả lập gọi hàm
+                    //bool isDeleted = true; // Giả sử xóa thành công
+
+                    //if (isDeleted)
+                    //{
+                    //    XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //    // 4. Cập nhật lại TreeView sau khi xóa thành công
+                    //    LoadDatabaseTree();
+
+                if (e.Action == DataRowAction.Add)
+                    MessageBox.Show($"Add\n\n{sbRow}", "Saved",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show($"Update\n\n{sbRow}", "Saved",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Auto save failed: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void RelInfo_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Delete) return;
+
+            DataRow row = e.Row;
+
+            try
+            {
+                var schema = _selectedRelation.fprdbSchema;
+                List<string> pks = schema.primarykey;
+                List<string> pkValues = new List<string>();
+                StringBuilder sbRow = new StringBuilder();
+                sbRow.AppendLine("--- Row ---");
+
+                foreach (var pk in pks)
+                {
+                    var cellValue = row[pk];
+
+                    if (cellValue == DBNull.Value || cellValue == null)
+                    {
+                        sbRow.AppendLine($"{pk}: (empty)");
+                        continue;
+                    }
+                    sbRow.AppendLine($"{pk}: {cellValue}");
+                }
+
+                var result = MessageBox.Show(
+                    $"Delete \n\n{sbRow}",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo,
+                DialogNew.DefaultExt = "db";
+                    //else
+                    //{
+                    //    XtraMessageBox.Show("Failed to delete schema. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //}
+                    // ---- BẮT ĐẦU THỰC THI XÓA DƯỚI DATABASE ----
+
+                    //bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName); hàm nếu có
+                    bool isDeleted = false;
+                    string sqlDropCommand = $"DROP TABLE {schemaName}"; // lệnh string SQL để xóa lược đồ [not don't]
+                    isDeleted = this.sqlProcessor.executeDataDefinition(sqlDropCommand);
+
+                    if (isDeleted)
+                    {
+                        XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // 4. Cập nhật lại cache AppStates từ Database trước khi vẽ lại cây
+
+                if (result == DialogResult.Yes)
+                {
+                    MessageBox.Show($"Deleted \n\n{sbRow}", "Deleted",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    e.Row.RejectChanges();
+                    LoadDatabaseTree();
+                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+
+                        // 5. Cập nhật lại TreeView sau khi xóa thành công
+                        reLoadDatabaseTree();
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Failed to delete schema. Check syntax or database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Delete failed: {ex.Message}", "Error",
+                return;
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"An error occurred while trying to delete the schema: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+        #region Tab Page Relation
+        private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            using (frmNewRelation childForm = new frmNewRelation(compRoot))
+            {
+                if (childForm.ShowDialog() == DialogResult.OK)
+                    reLoadDatabaseTree();
+            }
+
+        }
+
+        private void iDeleteRelation_ItemClick(object sender, ItemClickEventArgs e)
+            }
+        }
+        #endregion
+        private void gridView3_FocusedColumnChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedColumnChangedEventArgs e)
+        {
+            if (e.FocusedColumn == null) return;
+            var cellValue = gridView3.GetFocusedRowCellValue(e.FocusedColumn);
+            string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
+            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
+                XtraMessageBox.Show(Ex.Message);
+            // 1. Lấy node đang được chọn trên TreeView
+            LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
+        }
+
+        private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string sql = memoEditTxtQuery.Text;
+    string sql = memoEditTxtQuery.Text;
+
+    try
+    {
+        DataTable resultForGridView = new DataTable();
+        Plan p = this.sqlProcessor.createQueryPlan(sql);
+        FPRDBSchema schema = p.getSchema();
+        Scan s = p.open();
+
+        //create columns for grid view of query result
+        foreach (Field f in schema.getFields())
+        {
+            resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
+        }
+        //Extrac the result for grid view
+        string[] tupleForGridView = new string[schema.getFields().Count];
+        Field field;
+        List<Field> fields = schema.getFields();
+        while (s.next())
+        {
+            for (int i = 0; i < schema.getFields().Count; ++i)
+            {
+                field = fields[i];
+                switch (field.getFieldInfo().getType())
+                {
+                    case FieldType.INT:
+                    case FieldType.distFS_INT:
+                        tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
+                        break;
+                    case FieldType.FLOAT:
+                    case FieldType.distFS_FLOAT:
+                    case FieldType.contFS:
+                        //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
+                        tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
+                        break;
+                    case FieldType.CHAR:
+                    case FieldType.VARCHAR:
+                    case FieldType.distFS_TEXT:
+                        //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
+                        tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
+                        break;
+                    case FieldType.BOOLEAN:
+                        //tupleForGridView.Add((s.getFieldContent<bool>(field.getFieldName())).ToString());
+                        tupleForGridView[i] = s.getFieldContent<bool>(field.getFieldName()).ToString();
+                        break;
+                }
+            }
+            resultForGridView.Rows.Add(tupleForGridView);
+
+
+        }
+        //bind the result to the grid control
+        gridControlResultQuery.DataSource = resultForGridView;
+        // Mở rộng giao diện để xem cả query và kết quả
+        splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+        //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+        gridViewResultQuery.PopulateColumns();
+
+        // Sau khi thành công, mở rộng Panel và đảm bảo tab Result được hiển thị
+        splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+        xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
+
+        // Ghi thông báo thành công vào MemoEdit
+        memoEditMessage.Text = $"Query executed successfully at {DateTime.Now:HH:mm:ss}.";
+    }
+    catch (SQLSyntaxException ex)
+    {
+        memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+        xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+    }
+    catch (MismatchTokenType ex)
+    {
+        memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+        xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+    }
+    catch (NotSupportedException ex)
+    {
+        memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+        xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+    }
+    catch (IndexOutOfRangeException ex)
+    {
+        memoEditMessage.Text = "[Error] Already out of token.";
+        xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+    }
+    catch (Exception ex)
+    {
+        memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
+        xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+    }
+    finally
+    {
+        // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+        splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+    }
+
+    //ExcuteQuery(sql);
+    // 1. Tạo một DataTable giả lập cấu trúc
+    //DataTable dtMock = new DataTable();
+    //dtMock.Columns.Add("Number", typeof(int));
+    //dtMock.Columns.Add("doctor1.ID", typeof(string));
+    //dtMock.Columns.Add("doctor1.AGE", typeof(string));
+    //dtMock.Columns.Add("doctor2.NAME", typeof(string));
+    //dtMock.Columns.Add("doctor2.AGE", typeof(string));
+
+    //// 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
+    //dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+    //dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+    //dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+    //dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+    //dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+    //dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+
+    //// 3. Gán dữ liệu giả vào GridControl
+    //gridControlResultQuery.DataSource = dtMock;
+
+}
+private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iConjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_in ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iConjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_me ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iConjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨂_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_in ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_me ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDisjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⨁_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+        private void iDifferenceIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_ig ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDifferenceIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_in ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDiferenceMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_me ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iDifferencePositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⇒ ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+        private void CreateNewQuery()
+        {
+            try
+            {
+
+                if (this.databaseService == null)
+                {
+                    XtraMessageBox.Show("Error : Cannot find the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+            }
+        }
+
+        }
+        // Nút này tạm thời chưa làm gì, để dành cho việc tạo Query mới sau này
+        private void iNewQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            CreateNewQuery();
+        }
+
+        private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            using(frmNewSchema childform = new frmNewSchema(compRoot))
+            {
+                if (childform.ShowDialog() == DialogResult.OK)
+                {
+                    reLoadDatabaseTree();
+                }
+            }
+            
+        }
+
+        private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            using(frmNewRelation childForm = new frmNewRelation(compRoot))
+
+                if (childForm.ShowDialog() == DialogResult.OK)
+                    reLoadDatabaseTree();
+        }
+
+        private void iDifferencePositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⦵_pc ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⇒ ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
+        }
+
+        private void CreateNewQuery()
+        {
+            try
+            {
+
+                if (this.databaseService == null)
+                {
+                    XtraMessageBox.Show("Error : Cannot find the Database, please try again!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+            }
+        }
+
+
+        // Nút này tạm thời chưa làm gì, để dành cho việc tạo Query mới sau này
+        private void iNewQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            CreateNewQuery();
+        }
+
+        private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            using(frmNewSchema childform = new frmNewSchema(compRoot))
+            {
+                if (childform.ShowDialog() == DialogResult.OK)
+                {
+                    reLoadDatabaseTree();
+                }
+            }
+            
+        }
+
+        private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            using(frmNewRelation childForm = new frmNewRelation(compRoot))
+            {
+                if (childForm.ShowDialog() == DialogResult.OK)
+                    reLoadDatabaseTree();
+            }
+        }
+#endregion
+    private void gridView3_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+    {
+        if (gridView3.FocusedColumn == null) return;
+        var cellValue = gridView3.GetFocusedRowCellValue(gridView3.FocusedColumn);
+        string fuzzyProbalisticValue = cellValue?.ToString() ?? string.Empty;
+        _currentEditingColumn = gridView3.FocusedColumn.FieldName;
+        _currentEditingRow = gridView3.FocusedRowHandle;
+        LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
+    }
+
+    private void gridView4_RowDeleting(object sender, DevExpress.Data.RowDeletingEventArgs e)
+    {
+        DataTable dt = gridControlValueRelation.DataSource as DataTable;
+        if (dt == null) return;
+
+        var schema = _selectedRelation.fprdbSchema;
+        List<string> pks = schema.primarykey;
+
+        if (!pks.Contains(_currentEditingColumn)) return;
+
+        int validRowCount = dt.Rows.Cast<DataRow>()
+            .Count(r => r.RowState != DataRowState.Deleted) - 1;
+
+        if (validRowCount <= 0)
+        {
+            e.Cancel = true;
+            MessageBox.Show("Primary key cannot be empty! At least 1 row required.", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+private void iDeleteRelation_ItemClick(object sender, ItemClickEventArgs e)
+{
+    // 1. Lấy node đang được chọn trên TreeView
+    TreeNode selectedNode = treeView.SelectedNode;
+
+    // Kiểm tra xem người dùng đã chọn đúng node quan hệ chưa
+    if (selectedNode == null || selectedNode.Tag?.ToString() != "relation")
+    {
+        XtraMessageBox.Show("Please select a relation to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        return;
+    }
+
+    string relName = selectedNode.Text;
+
+    try
+    {
+        // 2. Kiểm tra Quy tắc nghiệp vụ B6: Không có base relation nào khác trỏ tới nó (Khóa ngoại)
+        // LƯU Ý: Ở tầng DatabaseService, cần viết hàm (getReferencingRelations) kiểm tra xem có quan hệ nào đang chứa khóa ngoại trỏ tới quan hệ đang xóa không
+        // để query các ConstraintDTO có ConstraintType == REFERENTIAL và referencedRelation trùng với relName.
+        // Dưới đây là cách gọi giả định:
+        //List<string> referencingRelations = this.databaseService.getReferencingRelations(relName);
+        List<string> referencingRelations = null; // giả lập
+                                                  // Xử lý ngoại lệ E1
+        if (referencingRelations != null && referencingRelations.Count > 0)
+        {
+            string relList = string.Join(", ", referencingRelations);
+            XtraMessageBox.Show($"Cannot delete relation '{relName}' because it is referenced by foreign keys in the following relations: {relList}",
+                                "Constraint Violation (B6)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        // 3. Luồng cơ bản: Xác nhận xóa
+        DialogResult result = XtraMessageBox.Show($"Are you sure you want to delete the relation '{relName}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+        if (result == DialogResult.Yes)
+        {
+            // Lấy đối tượng relation DTO hiện tại từ cache AppStates để truyền vào Service
+            var relToDelete = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(r => r.relName == relName);
+
+            if (relToDelete == null) return;
+
+            // 4. Gọi Service thực thi xóa dữ liệu dưới Database
+            //bool isDeleted = this.databaseService.removeFPRDBRelation(relToDelete);
+            bool isDeleted = false;// giả lập khi chưa có hàm removeFPRDBRelation
+            if (isDeleted)
+            {
+                XtraMessageBox.Show("Relation deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // 5. Cập nhật lại cache AppStates từ Database
+                AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+
+                // 6. Cập nhật lại giao diện TreeView
+                reLoadDatabaseTree();
+            }
+            else
+            {
+                XtraMessageBox.Show("Failed to delete relation. Please check database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        XtraMessageBox.Show($"An error occurred while trying to delete the relation: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
     }
 }

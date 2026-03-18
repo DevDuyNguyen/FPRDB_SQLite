@@ -1,4 +1,6 @@
-﻿namespace FPRDB_SQLite.GUI
+﻿using DevExpress.XtraVerticalGrid.Internal;
+
+namespace FPRDB_SQLite.GUI
 {
     partial class frmMain
     {
@@ -118,12 +120,21 @@
             QueryxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
             splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             memoEditTxtQuery = new DevExpress.XtraEditors.MemoEdit();
-            xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
+            xtraTabControlResultQuery = new DevExpress.XtraTab.XtraTabControl();
             QueryResultxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
             gridControlResultQuery = new DevExpress.XtraGrid.GridControl();
-            gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gridViewResultQuery = new DevExpress.XtraGrid.Views.Grid.GridView();
             MessagextraTabPage = new DevExpress.XtraTab.XtraTabPage();
             popupMenuTreeView = new DevExpress.XtraBars.PopupMenu(components);
+            ContextMenu_RelationNode = new System.Windows.Forms.ContextMenuStrip(components);
+            CTMenuRelNode_OpenRelation = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuRelNode_DeleteRelation = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuRelNode_RenameRelation = new System.Windows.Forms.ToolStripMenuItem();
+            ContextMenu_SchemaNode = new System.Windows.Forms.ContextMenuStrip(components);
+            CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
+            CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
+            memoEditMessage = new DevExpress.XtraEditors.MemoEdit();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -160,12 +171,16 @@
             splitContainerControl1.Panel2.SuspendLayout();
             splitContainerControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)memoEditTxtQuery.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)xtraTabControl1).BeginInit();
-            xtraTabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)xtraTabControlResultQuery).BeginInit();
+            xtraTabControlResultQuery.SuspendLayout();
             QueryResultxtraTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)gridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).BeginInit();
+            MessagextraTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).BeginInit();
+            ContextMenu_RelationNode.SuspendLayout();
+            ContextMenu_SchemaNode.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).BeginInit();
             SuspendLayout();
             // 
             // ribbonControl
@@ -258,6 +273,7 @@
             iDeleteSchema.Id = 22;
             iDeleteSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
             iDeleteSchema.Name = "iDeleteSchema";
+            iDeleteSchema.ItemClick += iDeleteSchema_ItemClick;
             // 
             // iCloseCurrentSchema
             // 
@@ -287,6 +303,7 @@
             iDeleteRelation.Id = 27;
             iDeleteRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
             iDeleteRelation.Name = "iDeleteRelation";
+            iDeleteRelation.ItemClick += iDeleteRelation_ItemClick;
             // 
             // iSaveRelation
             // 
@@ -410,7 +427,7 @@
             // 
             // iExcuteQuery
             // 
-            iExcuteQuery.Caption = "Excute_Query";
+            iExcuteQuery.Caption = "Excute Query";
             iExcuteQuery.Id = 47;
             iExcuteQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
             iExcuteQuery.Name = "iExcuteQuery";
@@ -903,10 +920,10 @@
             // 
             // splitContainerControl1.Panel2
             // 
-            splitContainerControl1.Panel2.Controls.Add(xtraTabControl1);
+            splitContainerControl1.Panel2.Controls.Add(xtraTabControlResultQuery);
             splitContainerControl1.Panel2.Text = "Panel2";
             splitContainerControl1.Size = new System.Drawing.Size(727, 326);
-            splitContainerControl1.SplitterPosition = 159;
+            splitContainerControl1.SplitterPosition = 129;
             splitContainerControl1.TabIndex = 0;
             // 
             // memoEditTxtQuery
@@ -915,49 +932,66 @@
             memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
             memoEditTxtQuery.MenuManager = ribbonControl;
             memoEditTxtQuery.Name = "memoEditTxtQuery";
-            memoEditTxtQuery.Size = new System.Drawing.Size(727, 159);
+            memoEditTxtQuery.Size = new System.Drawing.Size(727, 129);
             memoEditTxtQuery.TabIndex = 0;
             memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
-            // xtraTabControl1
+            // xtraTabControlResultQuery
             // 
-            xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            xtraTabControl1.Location = new System.Drawing.Point(0, 0);
-            xtraTabControl1.Name = "xtraTabControl1";
-            xtraTabControl1.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControl1.Size = new System.Drawing.Size(727, 155);
-            xtraTabControl1.TabIndex = 0;
-            xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
+            xtraTabControlResultQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            xtraTabControlResultQuery.Location = new System.Drawing.Point(0, 0);
+            xtraTabControlResultQuery.Name = "xtraTabControlResultQuery";
+            xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
+            xtraTabControlResultQuery.Size = new System.Drawing.Size(727, 185);
+            xtraTabControlResultQuery.TabIndex = 0;
+            xtraTabControlResultQuery.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
             // 
             // QueryResultxtraTabPage
             // 
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(725, 125);
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(725, 155);
             QueryResultxtraTabPage.Text = "Query Result";
             // 
             // gridControlResultQuery
             // 
             gridControlResultQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            gridControlResultQuery.EmbeddedNavigator.Buttons.Append.Visible = false;
+            gridControlResultQuery.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
+            gridControlResultQuery.EmbeddedNavigator.Buttons.Edit.Visible = false;
+            gridControlResultQuery.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
+            gridControlResultQuery.EmbeddedNavigator.Buttons.Remove.Visible = false;
+            gridControlResultQuery.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0, true);
             gridControlResultQuery.Location = new System.Drawing.Point(0, 0);
-            gridControlResultQuery.MainView = gridView2;
+            gridControlResultQuery.MainView = gridViewResultQuery;
             gridControlResultQuery.MenuManager = ribbonControl;
             gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(725, 125);
+            gridControlResultQuery.Size = new System.Drawing.Size(725, 155);
             gridControlResultQuery.TabIndex = 0;
             gridControlResultQuery.UseEmbeddedNavigator = true;
-            gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView2 });
+            gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridViewResultQuery });
             // 
-            // gridView2
+            // gridViewResultQuery
             // 
-            gridView2.GridControl = gridControlResultQuery;
-            gridView2.Name = "gridView2";
-            gridView2.OptionsView.ShowGroupPanel = false;
+            gridViewResultQuery.Appearance.DetailTip.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            gridViewResultQuery.Appearance.DetailTip.Options.UseFont = true;
+            gridViewResultQuery.Appearance.HeaderPanel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            gridViewResultQuery.Appearance.HeaderPanel.Options.UseFont = true;
+            gridViewResultQuery.Appearance.Row.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            gridViewResultQuery.Appearance.Row.Options.UseFont = true;
+            gridViewResultQuery.Appearance.ViewCaption.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            gridViewResultQuery.Appearance.ViewCaption.Options.UseFont = true;
+            gridViewResultQuery.GridControl = gridControlResultQuery;
+            gridViewResultQuery.Name = "gridViewResultQuery";
+            gridViewResultQuery.OptionsBehavior.Editable = false;
+            gridViewResultQuery.OptionsBehavior.ReadOnly = true;
+            gridViewResultQuery.OptionsView.ShowGroupPanel = false;
             // 
             // MessagextraTabPage
             // 
+            MessagextraTabPage.Controls.Add(memoEditMessage);
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(725, 125);
+            MessagextraTabPage.Size = new System.Drawing.Size(725, 155);
             MessagextraTabPage.Text = "Message";
             // 
             // popupMenuTreeView
@@ -965,6 +999,68 @@
             popupMenuTreeView.ItemLinks.Add(barButtonSelectTuples);
             popupMenuTreeView.Name = "popupMenuTreeView";
             popupMenuTreeView.Ribbon = ribbonControl;
+            // 
+            // ContextMenu_RelationNode
+            // 
+            ContextMenu_RelationNode.Font = new System.Drawing.Font("Lucida Sans Unicode", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            ContextMenu_RelationNode.ImageScalingSize = new System.Drawing.Size(20, 20);
+            ContextMenu_RelationNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { CTMenuRelNode_OpenRelation, CTMenuRelNode_DeleteRelation, CTMenuRelNode_RenameRelation });
+            ContextMenu_RelationNode.Name = "ContextMenu_RelationNode";
+            ContextMenu_RelationNode.Size = new System.Drawing.Size(148, 82);
+            // 
+            // CTMenuRelNode_OpenRelation
+            // 
+            CTMenuRelNode_OpenRelation.Name = "CTMenuRelNode_OpenRelation";
+            CTMenuRelNode_OpenRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_OpenRelation.Text = "&Open";
+            CTMenuRelNode_OpenRelation.ToolTipText = "Tạo quan hệ mới";
+            // 
+            // CTMenuRelNode_DeleteRelation
+            // 
+            CTMenuRelNode_DeleteRelation.Name = "CTMenuRelNode_DeleteRelation";
+            CTMenuRelNode_DeleteRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_DeleteRelation.Text = "&Delete";
+            // 
+            // CTMenuRelNode_RenameRelation
+            // 
+            CTMenuRelNode_RenameRelation.Name = "CTMenuRelNode_RenameRelation";
+            CTMenuRelNode_RenameRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_RenameRelation.Text = "&Rename";
+            // 
+            // ContextMenu_SchemaNode
+            // 
+            ContextMenu_SchemaNode.ImageScalingSize = new System.Drawing.Size(20, 20);
+            ContextMenu_SchemaNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { CTMenuSchNode_EditSchema, CTMenuSchNode_OpenSchema, CTMenuSchNode_DeleteSchema });
+            ContextMenu_SchemaNode.Name = "ContextMenu_SchemaNode";
+            ContextMenu_SchemaNode.Size = new System.Drawing.Size(123, 76);
+            // 
+            // CTMenuSchNode_EditSchema
+            // 
+            CTMenuSchNode_EditSchema.Name = "CTMenuSchNode_EditSchema";
+            CTMenuSchNode_EditSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_EditSchema.Text = "&Edit";
+            // 
+            // CTMenuSchNode_OpenSchema
+            // 
+            CTMenuSchNode_OpenSchema.Name = "CTMenuSchNode_OpenSchema";
+            CTMenuSchNode_OpenSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_OpenSchema.Text = "&Open";
+            // 
+            // CTMenuSchNode_DeleteSchema
+            // 
+            CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
+            CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_DeleteSchema.Text = "&Delete";
+            // 
+            // memoEditMessage
+            // 
+            memoEditMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            memoEditMessage.Location = new System.Drawing.Point(0, 0);
+            memoEditMessage.MenuManager = ribbonControl;
+            memoEditMessage.Name = "memoEditMessage";
+            memoEditMessage.Properties.ReadOnly = true;
+            memoEditMessage.Size = new System.Drawing.Size(725, 155);
+            memoEditMessage.TabIndex = 0;
             // 
             // frmMain
             // 
@@ -1021,12 +1117,16 @@
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1).EndInit();
             splitContainerControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)memoEditTxtQuery.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)xtraTabControl1).EndInit();
-            xtraTabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)xtraTabControlResultQuery).EndInit();
+            xtraTabControlResultQuery.ResumeLayout(false);
             QueryResultxtraTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
-            ((System.ComponentModel.ISupportInitialize)gridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).EndInit();
+            MessagextraTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).EndInit();
+            ContextMenu_RelationNode.ResumeLayout(false);
+            ContextMenu_SchemaNode.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -1093,11 +1193,11 @@
         private DevExpress.XtraGrid.GridControl gridControlScheme;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView;
         private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
-        private DevExpress.XtraTab.XtraTabControl xtraTabControl1;
+        private DevExpress.XtraTab.XtraTabControl xtraTabControlResultQuery;
         private DevExpress.XtraTab.XtraTabPage QueryResultxtraTabPage;
         private DevExpress.XtraTab.XtraTabPage MessagextraTabPage;
         private DevExpress.XtraGrid.GridControl gridControlResultQuery;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView2;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridViewResultQuery;
         private DevExpress.XtraBars.BarButtonItem iDifferenceIgnorance;
         private DevExpress.XtraBars.BarButtonItem iDifferenceIndependence;
         private DevExpress.XtraBars.BarButtonItem iDiferenceMutual;
@@ -1127,6 +1227,15 @@
         private DevExpress.XtraEditors.MemoEdit memoEditTxtQuery;
         private DevExpress.XtraBars.BarButtonItem barButtonSelectTuples;
         private DevExpress.XtraBars.PopupMenu popupMenuTreeView;
+        private System.Windows.Forms.ContextMenuStrip ContextMenu_RelationNode;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuRelNode_OpenRelation;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuRelNode_DeleteRelation;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuRelNode_RenameRelation;
+        private System.Windows.Forms.ContextMenuStrip ContextMenu_SchemaNode;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_EditSchema;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_OpenSchema;
+        private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
+        private DevExpress.XtraEditors.MemoEdit memoEditMessage;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
     }
 }

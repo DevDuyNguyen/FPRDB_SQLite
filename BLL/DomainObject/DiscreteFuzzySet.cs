@@ -1,4 +1,5 @@
-﻿using BLL.DTO;
+﻿using BLL.Common;
+using BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,5 +112,19 @@ namespace BLL.DomainObject
             }
             
         }
+        public override bool isSubsetOf(FuzzySet<T> fs) {
+            float tmp_degree;
+            for(int i=0; i<this.valueSet.Count; ++i)
+            {
+                //var t = fs.getMembershipDegree((T)Convert.ChangeType(this.valueSet[i], typeof(T)));
+                tmp_degree = fs.getMembershipDegree((T)Convert.ChangeType(this.valueSet[i], typeof(T)));
+                if (CompareOperatorUltilities.CompareFloats(this.membershipDegreeSet[i], tmp_degree)==1)
+                    return false;
+            }
+            return true;
+        }
+
+
+
     }
 }

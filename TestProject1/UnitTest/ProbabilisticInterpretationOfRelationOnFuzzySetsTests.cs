@@ -247,6 +247,40 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected, actual, 0.03);
         }
 
+        class compareContinuousFuzzySet_theory_testdata : TheoryData<FuzzySet<float>, FuzzySet<float>, CompareOperation, float>
+        {
+            public compareContinuousFuzzySet_theory_testdata()
+            {
+                ContinuousFuzzySet young = new ContinuousFuzzySet(0, 0, 20, 35, "young");
+                ContinuousFuzzySet middle_aged = new ContinuousFuzzySet(20, 35, 45, 60, "middle_aged");
+                ContinuousFuzzySet approx_15 = new ContinuousFuzzySet(10, 15, 15, 20, "approx_15");
+                
+                Add(
+                    new DiscreteFuzzySet<float>(new List<float> { 30}, new List<float> { 1}, null, FieldType.distFS_FLOAT),
+                    middle_aged,
+                    CompareOperation.ALSO,
+                    0.666f
+                    );
+
+                Add(
+                    new DiscreteFuzzySet<float>(new List<float> { 38 }, new List<float> { 1 }, null, FieldType.distFS_FLOAT),
+                    middle_aged,
+                    CompareOperation.ALSO,
+                    1
+                    );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(compareContinuousFuzzySet_theory_testdata))]
+        public void compareTheory_success(FuzzySet<float> fs1, FuzzySet<float> fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1, fs2, op);
+            //assert
+            Assert.Equal(expected, actual, 0.01);
+        }
 
 
     }
