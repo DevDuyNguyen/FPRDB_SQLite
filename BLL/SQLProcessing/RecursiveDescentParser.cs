@@ -399,6 +399,33 @@ namespace BLL.SQLProcessing
             else
                 throw createSQLSyntaxException("After DROP keyword must be either SCHEMA or RELATIOM");
         }
+        public ModifyData modify()
+        {
+            lexer.eatKeyword("UPDATE");
+            string relName = relation();
+            lexer.eatKeyword("SET");
+            string assignedField = field();
+            string assignSymbol = lexer.eatOperator();
+            if (assignSymbol != "=")
+                throw createSQLSyntaxException("assign symbol = is expected");
+            if (lexer.matchIdentifier())
+            {
+                string assigningField = field();
+                SelectionCondition condition = null;
+                if (lexer.matchKeyword("WHERE "))
+                    condition = this.selectionCondition();
+                return new FieldFieldModifyData(assignedField, relName, assigningField, condition);
+            }
+            else
+            {
+                FuzzyProbabilisticValueParsingData assigningFProbValue = this.fuzzyProbabilisticValue();
+                SelectionCondition condition = null;
+                if (lexer.matchKeyword("WHERE "))
+                    condition = this.selectionCondition();
+                return new FieldFuzzProbValueModifyData(assigningFProbValue, relName, assignedField, condition);
+            }
+
+        }
         public Object updateCommand()
         {
             if (lexer.matchKeyword("INSERT"))
@@ -417,9 +444,13 @@ namespace BLL.SQLProcessing
             {
                 return drop();
             }
+            else if (lexer.matchKeyword("UPDATE"))
+            {
+                return modify();
+            }
             else
             {
-                throw new NotImplementedException();
+                throw createSQLSyntaxException("Not a update command");
             }
         }
         public List<SelectField> selectList()

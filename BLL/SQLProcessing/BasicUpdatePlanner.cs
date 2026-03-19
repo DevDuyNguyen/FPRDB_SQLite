@@ -318,7 +318,8 @@ namespace BLL.SQLProcessing
         public int executeDelete(DeleteData data)
         {
             Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser);
-            p = new SelectPlan(p, data.selectionCondition);
+            if(data.selectionCondition!=null)
+                p = new SelectPlan(p, data.selectionCondition);
             UpdateScan us = (UpdateScan)p.open();
             int count = 0;
             while (us.next())

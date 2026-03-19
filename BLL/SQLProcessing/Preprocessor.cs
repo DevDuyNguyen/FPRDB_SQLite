@@ -221,7 +221,10 @@ namespace BLL.SQLProcessing
                 throw new SemanticException($"Can't delete schema {data.schema}, because there are still relation defined on it exist");
             return true;
         }
-
+        public bool checkSemanticModify(ModifyData data)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }
