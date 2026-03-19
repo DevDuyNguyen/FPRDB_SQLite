@@ -340,6 +340,16 @@ namespace BLL.SQLProcessing
             this.dbMgr.executeNonQuery($"DROP TABLE IF EXISTS {name}");
             
         }
+        public void executeDropSchema(string name)
+        {
+            int schemaOID = this.metaDataMgr.getSchemaOID(name);
+            //Delete the schema's attributes from fprdb_Attribute
+            this.dbMgr.executeNonQuery($"delete from fprdb_Attribute where att_relschema_id={schemaOID}");
+            //Delete the primary key constrain of schema from fprdb_Constraint
+            this.dbMgr.executeNonQuery($"delete from fprdb_Constraint where con_relschema_id={schemaOID}"); ;
+            //Delete the schema from fprdb_RelationSchema
+            this.dbMgr.executeNonQuery($"delete from fprdb_RelationSchema where oid={schemaOID}");
+        }
 
 
     }

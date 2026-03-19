@@ -386,6 +386,7 @@ namespace BLL.SQLProcessing
         }
         public DropSchemaData dropSchema()
         {
+            lexer.eatKeyword("SCHEMA");
             return new DropSchemaData(schema());
         }
         public object drop()

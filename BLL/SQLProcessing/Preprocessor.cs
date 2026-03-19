@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {
@@ -212,6 +213,15 @@ namespace BLL.SQLProcessing
                 throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
             return true;
         }
+        public bool checkSemanticDropSchema(DropSchemaData data)
+        {
+            if (!this.metadataMgr.isSchemaExist(data.schema))
+                throw new SemanticException($"Can't delete schema {data.schema}, because it doesn't exist");
+            if (this.metadataMgr.isRelationOnSchemaExist(data.schema))
+                throw new SemanticException($"Can't delete schema {data.schema}, because there are still relation defined on it exist");
+            return true;
+        }
+
 
     }
 }

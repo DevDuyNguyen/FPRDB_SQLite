@@ -280,6 +280,29 @@ namespace BLL.SQLProcessing
             }
             return relOid;
         }
+        public int getSchemaOID(string name)
+        {
+            int schemaOID = -1;
+            using (IDataReader r = this.databaseMgr.executeQuery($"select oid from fprdb_RelationSchema where relschema_name='{name}'"))
+            {
+                if (r.Read())
+                {
+                    schemaOID = Convert.ToInt32(r["oid"]);
+                }
+            }
+            return schemaOID;
+        }
+        public bool isRelationOnSchemaExist(string schemaName)
+        {
+            int schemaOID=getSchemaOID(schemaName);
+            if(schemaOID==-1)
+                throw new QueryDataNotExistException($"Schema {schemaName} doesn't exist");
+            using (IDataReader r = this.databaseMgr.executeQuery($"select 1 from fprdb_Relation where rel_relation_schema={schemaOID}"))
+            {
+                return r.Read();
+            }
+
+        }
 
     }
 }

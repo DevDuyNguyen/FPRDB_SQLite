@@ -116,6 +116,15 @@ namespace BLL.SQLProcessing
                     return 0;
                 }
             }
+            else if (data is DropSchemaData)
+            {
+                DropSchemaData DropData = (DropSchemaData)data;
+                if (this.preProcessor.checkSemanticDropSchema(DropData))
+                {
+                    this.updatePlanner.executeDropSchema(DropData.schema);
+                    return 0;
+                }
+            }
             else
             {
                 throw new NotImplementedException();

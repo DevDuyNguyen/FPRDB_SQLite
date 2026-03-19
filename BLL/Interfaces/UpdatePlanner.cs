@@ -16,5 +16,6 @@ namespace BLL.Interfaces
         public int executeInsert(InsertData data);
         public int executeDelete(DeleteData data);
         public void executeDropRelation(string name);
+        public void executeDropSchema(string name);
     }
 }

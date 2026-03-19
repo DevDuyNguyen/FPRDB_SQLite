@@ -38,7 +38,6 @@ namespace TestProject1.IntegrationTest
         public void dropRelationSuccess()
         {
             //arrange
-            //string sql = "DELETE FROM DOCTOR1 WHERE (DOCTOR_ID='DT103')[1,1]";
             string relName = "rel1";
             string schemaName = "rel";
             //act
@@ -50,6 +49,17 @@ namespace TestProject1.IntegrationTest
             this.sqlProcessor.executeUpdate($"drop relation {relName}");
 
         }
+        //[Fact]
+        public void dropSchemaSuccess()
+        {
+            //arrange
+            string schemaName = "schema1";
+            //act
+            this.sqlProcessor.executeDataDefinition($"CREATE SCHEMA {schemaName} (id int, age CONT_FUZZYSET, CONSTRAINT pk_schema primary key (id))");
+            this.sqlProcessor.executeUpdate($"drop schema {schemaName}");
+
+        }
+
 
     }
 }
