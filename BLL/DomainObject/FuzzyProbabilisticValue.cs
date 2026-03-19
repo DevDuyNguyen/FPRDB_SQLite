@@ -51,11 +51,14 @@ namespace BLL.DomainObject
             string content = "{";
             for(int i=0; i<this.valueList.Count; ++i)
             {
-                content+= $" ({this.valueList[i].getName()},[{this.intervalProbLowerBoundList[i]},{this.intervalProbUpperBoundList[i]}]),";
+                if(content is FuzzySet<string>)
+                    content += $"(\"{this.valueList[i].getName()}\",[{this.intervalProbLowerBoundList[i]},{this.intervalProbUpperBoundList[i]}]),";
+                else
+                    content += $"({this.valueList[i].getName()},[{this.intervalProbLowerBoundList[i]},{this.intervalProbUpperBoundList[i]}]),";
 
             }
             content = content.TrimEnd(',');
-            content += " }";
+            content += "}";
 
             return content;
         }

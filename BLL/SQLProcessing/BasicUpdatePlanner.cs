@@ -325,7 +325,6 @@ namespace BLL.SQLProcessing
                 us.delete();
                 count++;
             }
-            us.close();
             return count;
 
         }
