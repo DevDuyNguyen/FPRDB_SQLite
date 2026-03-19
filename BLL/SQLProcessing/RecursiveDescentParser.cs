@@ -106,7 +106,7 @@ namespace BLL.SQLProcessing
             }
             else
             {
-                throw createSQLSyntaxException("Not a data type");
+                throw createSQLSyntaxException($"{lexer.getCurrentToken().Value} isnt' a data type");
             }
             return new FieldInfo(type, txtLength);
 
@@ -379,6 +379,25 @@ namespace BLL.SQLProcessing
                 this.lexer.clearTokens();
             }
         }
+        public DropRelationData dropRelation()
+        {
+            lexer.eatKeyword("RELATION");
+            return new DropRelationData(relation());
+        }
+        public DropSchemaData dropSchema()
+        {
+            return new DropSchemaData(schema());
+        }
+        public object drop()
+        {
+            lexer.eatKeyword("DROP");
+            if (lexer.matchKeyword("RELATION"))
+                return dropRelation();
+            else if (lexer.matchKeyword("SCHEMA"))
+                return dropSchema();
+            else
+                throw createSQLSyntaxException("After DROP keyword must be either SCHEMA or RELATIOM");
+        }
         public Object updateCommand()
         {
             if (lexer.matchKeyword("INSERT"))
@@ -393,11 +412,11 @@ namespace BLL.SQLProcessing
             {
                 throw new NotImplementedException();
             }
-            else if (lexer.matchKeyword("CREATE"))
+            else if (lexer.matchKeyword("DROP"))
             {
-                throw new NotImplementedException();
+                return drop();
             }
-            else //if (lexer.matchKeyword("DROP"))
+            else
             {
                 throw new NotImplementedException();
             }

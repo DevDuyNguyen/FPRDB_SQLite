@@ -281,8 +281,5 @@ namespace BLL.SQLProcessing
             return relOid;
         }
 
-
-
-
     }
 }

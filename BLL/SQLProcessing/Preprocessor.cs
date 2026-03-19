@@ -206,7 +206,12 @@ namespace BLL.SQLProcessing
             }
             return false;
         }
-
+        public bool checkSemanticDropRelation(DropRelationData data)
+        {
+            if (!this.metadataMgr.isRelationExist(data.relation))
+                throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
+            return true;
+        }
 
     }
 }

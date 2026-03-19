@@ -107,6 +107,15 @@ namespace BLL.SQLProcessing
                     return this.updatePlanner.executeDelete(dData);
                 }
             }
+            else if(data is DropRelationData)
+            {
+                DropRelationData DropData = (DropRelationData)data;
+                if (this.preProcessor.checkSemanticDropRelation(DropData))
+                {
+                    this.updatePlanner.executeDropRelation(DropData.relation);
+                    return 0;
+                }
+            }
             else
             {
                 throw new NotImplementedException();

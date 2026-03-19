@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace BLL.SQLProcessing
 {
@@ -328,7 +329,17 @@ namespace BLL.SQLProcessing
             return count;
 
         }
-
+        public void executeDropRelation(string name)
+        {
+            int relOid = this.metaDataMgr.getRelationOID(name);
+            //Delete tupples in FPRDB_Rel_FuzzSet that contain ID of relation
+            this.dbMgr.executeNonQuery($"delete from FPRDB_Rel_FuzzSet where rel_oid='{relOid}'");
+            //Delete relation from fprdb_Relation 
+            this.dbMgr.executeNonQuery($"delete from fprdb_Relation where oid={relOid}");
+            //Drop table of relation
+            this.dbMgr.executeNonQuery($"DROP TABLE IF EXISTS {name}");
+            
+        }
 
 
     }

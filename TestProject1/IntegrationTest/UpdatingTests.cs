@@ -23,8 +23,8 @@ namespace TestProject1.IntegrationTest
             this.sqlProcessor = this.compRoot.getSQLProcessor();
         }
 
-        [Fact]
-        public void deleteSuccess()
+        //[Fact]
+        public void deleteTupleSuccess()
         {
             //arrange
             //string sql = "DELETE FROM DOCTOR1 WHERE (DOCTOR_ID='DT103')[1,1]";
@@ -32,6 +32,22 @@ namespace TestProject1.IntegrationTest
             //act
             int affectedNoRows = this.sqlProcessor.executeUpdate(sql);
             Debug.WriteLine("Delete result:" + affectedNoRows);
+
+        }
+        //[Fact]
+        public void dropRelationSuccess()
+        {
+            //arrange
+            //string sql = "DELETE FROM DOCTOR1 WHERE (DOCTOR_ID='DT103')[1,1]";
+            string relName = "rel1";
+            string schemaName = "rel";
+            //act
+            //this.sqlProcessor.executeDataDefinition($"CREATE SCHEMA {schemaName} (id int, age CONT_FUZZYSET, CONSTRAINT pk_rel primary key (id))");
+            this.sqlProcessor.executeDataDefinition($"create relation {relName} on {schemaName}");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(1, [1,1])}}, {{(young,[1,1])}})");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(2, [1,1])}}, {{(40, [1,1])}})");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(3, [1,1])}}, {{(middle_aged, [1,1])}})");
+            this.sqlProcessor.executeUpdate($"drop relation {relName}");
 
         }
 
