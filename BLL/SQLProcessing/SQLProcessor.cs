@@ -86,18 +86,10 @@ namespace BLL.SQLProcessing
             if(data is InsertData)
             {
                 InsertData idata = (InsertData)data;
-                try
+                if (this.preProcessor.checkSemanticInsert(idata))
                 {
-                    if(this.preProcessor.checkSemanticInsert(idata))
-                    {
-                        return this.updatePlanner.executeInsert(idata);
-                    }
+                    return this.updatePlanner.executeInsert(idata);
                 }
-                catch (SemanticException ex)
-                {
-                    throw ex;
-                }
-                return 0;
             }
             else if(data is DeleteData)
             {
@@ -125,11 +117,15 @@ namespace BLL.SQLProcessing
                     return 0;
                 }
             }
-            else
+            else //if(data is ModifyData)
             {
-                throw new NotImplementedException();
+                ModifyData mData = (ModifyData)data;
+                if (this.preProcessor.checkSemanticModify(mData))
+                {
+                    return this.updatePlanner.executeModify(mData);
+                }
             }
-            throw new NotImplementedException();
+            return 0;
         }
         public Plan createQueryPlan(string sql)
         {

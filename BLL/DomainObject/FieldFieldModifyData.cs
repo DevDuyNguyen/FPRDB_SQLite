@@ -8,13 +8,13 @@ namespace BLL.DomainObject
 {
     public class FieldFieldModifyData:ModifyData
     {
-        private string field;
+        private string assigningField;
 
         public FieldFieldModifyData(string assignedField, string relation, string assigningField, SelectionCondition selectionCondition):base(relation, assigningField, selectionCondition)
         {
-            this.field = assignedField;
+            this.assigningField = assignedField;
         }
 
-        public override object getAssignValue() => this.field;
+        public override object getAssignValue() => this.assigningField;
     }
 }

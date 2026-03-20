@@ -59,6 +59,22 @@ namespace TestProject1.IntegrationTest
             this.sqlProcessor.executeUpdate($"drop schema {schemaName}");
 
         }
+        [Fact]
+        public void updateTupleSuccess()
+        {
+            //arrange
+            string relName = "rel4";
+            string schemaName = "rel";
+            //act
+            //this.sqlProcessor.executeDataDefinition($"CREATE SCHEMA {schemaName} (id int, age CONT_FUZZYSET, CONSTRAINT pk_rel primary key (id))");
+            this.sqlProcessor.executeDataDefinition($"create relation {relName} on {schemaName}");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(1, [1,1])}}, {{(young,[1,1])}})");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(2, [1,1])}}, {{(40, [1,1])}})");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(3, [1,1])}}, {{(middle_aged, [1,1])}})");
+
+            this.sqlProcessor.executeUpdate($"update {relName} set age={{(middle_aged,[1,1])}} where (id=1)[1,1]");
+
+        }
 
 
     }

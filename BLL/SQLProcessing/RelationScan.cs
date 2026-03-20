@@ -1,13 +1,13 @@
-﻿using System;
+﻿using BLL.Common;
+using BLL.DomainObject;
+using BLL.Exceptions;
+using BLL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.Common;
-using BLL.DomainObject;
-using BLL.Exceptions;
-using BLL.Interfaces;
 namespace BLL.SQLProcessing
 {
     public class RelationScan:UpdateScan
@@ -44,7 +44,7 @@ namespace BLL.SQLProcessing
             }
             return -1;
         }
-        public FuzzyProbabilisticValue<T> getFieldContent<T>(String fldName)
+        public FuzzyProbabilisticValue<T> getFieldContent<T>(string fldName)
         {
             int index = getFieldIndexInTuple(fldName);
             if (index == -1)
@@ -56,60 +56,7 @@ namespace BLL.SQLProcessing
 
         }
         
-        //not done:mocking for private
-        public FuzzyProbabilisticValue<T> turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<T>(FuzzyProbabilisticValueParsingData data, FieldType fieldType)
-        {
-            FuzzyProbabilisticValue<T> ans;
-            //extract FieldType domain
-            FieldType domain;
-            FieldType fuzzSetType;
-            Type t = typeof(T);
-            if (
-                ((fieldType == FieldType.INT || fieldType == FieldType.distFS_INT) && t != typeof(int))
-                || ((fieldType == FieldType.FLOAT || fieldType == FieldType.contFS || fieldType == FieldType.distFS_FLOAT) && t != typeof(float))
-                || ((fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR) && t != typeof(string))
-                || ((fieldType == FieldType.BOOLEAN) && t != typeof(bool))
-            )
-            {
-                throw new NotSupportedException($"Field type {fieldType.ToString()} isn't compatible with fuzzy probabilistic values of domain {t.Name}");
-            }
-            if (t == typeof(int))
-            {
-                domain = FieldType.INT;
-            }
-            else if (t == typeof(float))
-            {
-                domain = FieldType.FLOAT;
-            }
-            else if (t == typeof(string))
-            {
-                domain = FieldType.VARCHAR;
-            }
-            else if (t == typeof(bool))
-            {
-                domain = FieldType.BOOLEAN;
-            }
-            else
-            {
-                throw new NotSupportedException($"{typeof(T)} isn't supported");
-            }
-            //extract List<FuzzySet<T>> valueList
-            List<FuzzySet<T>> valueList=new List<FuzzySet<T>>();
-            foreach(Constant c in data.valueList)
-            {
-                valueList.Add(FuzzySetUltilities.turnConstantToFuzzySet<T>(c, this.metaDataMgr));
-            }
-            //extract lower bound, upper boud
-            List<float> lowerBounds = new List<float>();
-            List<float> upperBounds = new List<float>();
-            for(int i=0; i<data.intervalProbUpperBoundList.Count; ++i)
-            {
-                lowerBounds.Add(data.intervalProbLowerBoundList[i]);
-                upperBounds.Add(data.intervalProbUpperBoundList[i]);
-            }
-            return new FuzzyProbabilisticValue<T>(domain, valueList, lowerBounds, upperBounds);
-
-        }
+        
         public bool next()
         {
             List<string> primaryKey = this.relationInfo.getSchema().getPrimarykey();
@@ -138,22 +85,22 @@ namespace BLL.SQLProcessing
                         FieldType fieldType = fields[i].getFieldInfo().getType();
                         if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
                         {
-                            FuzzyProbabilisticValue<int> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsingData, fieldType);
+                            FuzzyProbabilisticValue<int> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
                         }
                         else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
                         {
-                            FuzzyProbabilisticValue<float> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsingData, fieldType);
+                            FuzzyProbabilisticValue<float> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
                         }
                         else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
                         {
-                            FuzzyProbabilisticValue<string> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsingData, fieldType);
+                            FuzzyProbabilisticValue<string> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
                         }
                         else //if (fieldType == FieldType.BOOLEAN)
                         {
-                            FuzzyProbabilisticValue<bool> fprobValue = this.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<bool>(parsingData, fieldType);
+                            FuzzyProbabilisticValue<bool> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<bool>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
                         }
                         
@@ -173,13 +120,63 @@ namespace BLL.SQLProcessing
             if (index == -1)
                 throw new QueryDataNotExistException($"Relation {this.relationInfo.getRelName()} doesn't have attribute {fldname}");
             Field field=this.relationInfo.getSchema().getFields()[index];
-            if(typeof(T)==typeof(int))
-            {
-                if (field.getFieldInfo().getType() != FieldType.INT && field.getFieldInfo().getType() != FieldType.distFS_INT)
-                    throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain fuzzy sets defined on domain of int");
+            FieldType fieldType = field.getFieldInfo().getType();
 
+            //check if domain of content matches the domain of Field named fldname
+            if (typeof(T) == typeof(int))
+            {
+                if (fieldType != FieldType.INT && fieldType != FieldType.distFS_INT && fieldType != FieldType.FLOAT && fieldType != FieldType.distFS_FLOAT && fieldType != FieldType.contFS)
+                    throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of int");
             }
-               
+            else if (typeof(T) == typeof(float))
+            {
+                if (fieldType != FieldType.FLOAT && fieldType != FieldType.distFS_FLOAT && fieldType != FieldType.contFS)
+                    throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of float");
+            }
+            else if (typeof(T) == typeof(string))
+            {
+                if (fieldType != FieldType.CHAR && fieldType != FieldType.VARCHAR && fieldType != FieldType.distFS_TEXT)
+                    throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of string");
+            }
+            else if (typeof(T) == typeof(bool))
+            {
+                if (fieldType != FieldType.BOOLEAN)
+                    throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of boolean");
+            }
+            else
+            {
+                throw new InvalidCastException($"Type {typeof(T).Name} isn't supported");
+            }
+
+
+            //foreach fuzzy set in the current interested tuple's attribute, decrease the ammount of time this fuzzy set is stored in the current relation by 1
+            int relOid = this.metaDataMgr.getRelationOID(this.relationInfo.getRelName());
+            this.decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<T>((FuzzyProbabilisticValue<T>)this.currentTuple[index], relOid);
+            //update stored current tuple attribute:
+            string updateSQL = $"UPDATE {this.relationInfo.getRelName()} SET {fldname}='{content.ToString()}' WHERE";
+            List<Field> fields = this.relationInfo.getSchema().getFields();
+            int keyIndex = 0;
+            foreach (string key in this.relationInfo.getSchema().primarykey)
+            {
+                for (int i = 0; i < fields.Count; ++i)
+                {
+                    if (fields[i].getFieldName() == key)
+                    {
+                        keyIndex = i;
+                        break;
+                    }
+                }
+                updateSQL += $" {key}='{this.currentTuple[keyIndex].ToString()}' AND";
+            }
+            int trailingANDIndex = updateSQL.LastIndexOf("AND");
+            updateSQL = updateSQL.Substring(0, trailingANDIndex);
+            this.dbMgr.executeNonQuery(updateSQL);
+            //foreach fuzzy set in the assigning fuzzy probabilistic value content, increase the ammount of time this fuzzy set is stored in the current relation by 1
+            this.increaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<T>(content);
+
+            //update in-memory current tuple attribute
+            //this.currentTuple[index] = content;
+
         }
         public FPRDBSchema getSchema()
         {
@@ -201,10 +198,42 @@ namespace BLL.SQLProcessing
                 fsOid = this.metaDataMgr.getFuzzySetOID(fuzzySetName);
                 if (fsOid != -1)
                 {
-                    decreaseNoInFPRDB_Rel_FuzzSet = $"UPDATE TABLE FPRDB_Rel_FuzzSet SET no=no-1 WHERE rel_oid={relOid} and fuzzset_oid={fsOid}";
+                    decreaseNoInFPRDB_Rel_FuzzSet = $"UPDATE FPRDB_Rel_FuzzSet SET no=no-1 WHERE rel_oid={relOid} and fuzzset_oid={fsOid}";
                     this.dbMgr.executeNonQuery(decreaseNoInFPRDB_Rel_FuzzSet);
                 }
             }
+        }
+        private void increaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<T1>(FuzzyProbabilisticValue<T1> fprobValue)
+        {
+            int relOID;
+            IDataReader reader = this.dbMgr.executeQuery($"SELECT oid FROM fprdb_Relation WHERE rel_name='{this.relationInfo.getRelName()}'");
+            using (reader)
+            {
+                if (!reader.Read())
+                    throw new QueryDataNotExistException($"Relation {this.relationInfo.getRelName()} doesn't exist");
+                relOID = Convert.ToInt32(reader["oid"]);
+            }
+            //if inserted data is a fuzzy set, then increase the field "no" of fprdb_Relation_Fuzzyset by 1
+            foreach (FuzzySet<T1> c in fprobValue.valueList)
+            {
+                if (c.getOID() != -1)
+                {
+                    reader = this.dbMgr.executeQuery($"SELECT 1 FROM FPRDB_Rel_FuzzSet WHERE rel_oid={relOID} AND fuzzset_oid={c.getOID()}");
+                    bool relHasFuzzySet;
+                    using (reader)
+                    {
+                        relHasFuzzySet = reader.Read();
+                    }
+                    if (!relHasFuzzySet)
+                        this.dbMgr.executeNonQuery($"INSERT INTO FPRDB_Rel_FuzzSet (rel_oid, fuzzset_oid, no) VALUES ({relOID},{c.getOID()},1)");
+                    else
+                    {
+                        this.dbMgr.executeNonQuery($"UPDATE FPRDB_Rel_FuzzSet SET no=no+1 WHERE rel_oid={relOID} AND fuzzset_oid={c.getOID()}");
+                    }
+                }
+                
+            }
+            
         }
         public void delete()
         {

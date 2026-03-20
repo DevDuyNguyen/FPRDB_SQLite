@@ -412,16 +412,22 @@ namespace BLL.SQLProcessing
             {
                 string assigningField = field();
                 SelectionCondition condition = null;
-                if (lexer.matchKeyword("WHERE "))
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
                     condition = this.selectionCondition();
+                }
                 return new FieldFieldModifyData(assignedField, relName, assigningField, condition);
             }
             else
             {
                 FuzzyProbabilisticValueParsingData assigningFProbValue = this.fuzzyProbabilisticValue();
                 SelectionCondition condition = null;
-                if (lexer.matchKeyword("WHERE "))
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
                     condition = this.selectionCondition();
+                }
                 return new FieldFuzzProbValueModifyData(assigningFProbValue, relName, assignedField, condition);
             }
 

@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -288,19 +289,18 @@ namespace BLL.SQLProcessing
                     }
                 }
             }
-            int relOID;
-            IDataReader reader = this.dbMgr.executeQuery($"SELECT oid FROM fprdb_Relation WHERE rel_name='{data.relation}'");
-            using (reader)
-            {
-                if (!reader.Read())
-                    throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
-                relOID=Convert.ToInt32(reader["oid"]);
+            //not done: what if the same fuzzy set appear more than one in a fuzzy probabilistic value
+            int relOID = this.metaDataMgr.getRelationOID(data.relation);
+            if (relOID==-1)
+            { 
+                throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
             }
+
             foreach(KeyValuePair<string, int> entry in fuzzySetOIDs)
             {
-                reader = this.dbMgr.executeQuery($"SELECT 1 FROM FPRDB_Rel_FuzzSet WHERE rel_oid={relOID} AND fuzzset_oid={fuzzySetOIDs[entry.Key]}");
+                
                 bool relHasFuzzySet;
-                using (reader)
+                using (IDataReader reader = this.dbMgr.executeQuery($"SELECT 1 FROM FPRDB_Rel_FuzzSet WHERE rel_oid={relOID} AND fuzzset_oid={fuzzySetOIDs[entry.Key]}"))
                 {
                     relHasFuzzySet = reader.Read();
                 }
@@ -351,7 +351,58 @@ namespace BLL.SQLProcessing
             //Delete the schema from fprdb_RelationSchema
             this.dbMgr.executeNonQuery($"delete from fprdb_RelationSchema where oid={schemaOID}");
         }
-
+        public int executeModify(ModifyData data)
+        {
+            Plan p = new RelationPlan(data.getRelation(), this.metaDataMgr, this.dbMgr, this.parser);
+            if (data.getSelectionCondition() != null)
+                p = new SelectPlan(p, data.getSelectionCondition());
+            UpdateScan us = (UpdateScan)p.open();
+            string fldName = data.getAssignedField();
+            FieldType fieldType = p.getSchema().getFieldByName(fldName).getFieldInfo().getType();
+            
+            int count = 0;
+            while (us.next())
+            {
+                //not done: refactor by delegate or c# equivalent of pass function as member in js
+                if(data is FieldFieldModifyData)
+                {
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        us.setFieldContent<int>(fldName, us.getFieldContent<int>(fldName));
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                        us.setFieldContent<float>(fldName, us.getFieldContent<float>(fldName));
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                        us.setFieldContent<string>(fldName, us.getFieldContent<string>(fldName));
+                    else //if (fieldType == FieldType.BOOLEAN)
+                        us.setFieldContent<bool>(fldName, us.getFieldContent<bool>(fldName));
+                }
+                else
+                {
+                    FuzzyProbabilisticValueParsingData parsed_fprobValue = (FuzzyProbabilisticValueParsingData)data.getAssignValue();
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    {
+                        FuzzyProbabilisticValue<int> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<int>(fldName, v);
+                    }
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    {
+                        FuzzyProbabilisticValue<float> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<float>(fldName, v);
+                    }
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    {
+                        FuzzyProbabilisticValue<string> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<string>(fldName, v);
+                    }
+                    else //if (fieldType == FieldType.BOOLEAN)
+                    {
+                        FuzzyProbabilisticValue<bool> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<bool>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<bool>(fldName, v);
+                    }
+                }
+                ++count;
+            }
+            return count;
+        }
 
     }
 }

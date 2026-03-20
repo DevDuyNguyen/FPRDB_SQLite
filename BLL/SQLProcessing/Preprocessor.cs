@@ -223,7 +223,8 @@ namespace BLL.SQLProcessing
         }
         public bool checkSemanticModify(ModifyData data)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return true;
         }
 
     }

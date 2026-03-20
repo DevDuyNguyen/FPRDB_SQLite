@@ -68,7 +68,11 @@ namespace BLL.SQLProcessing
         }
         public List<AbstractFuzzyProbabilisticValue> getCurrentTuple() => this.currentTuple;
 
-        public void setFieldContent<T>(String fldname, FuzzyProbabilisticValue<T> content)=> throw new NotImplementedException();
+        public void setFieldContent<T>(String fldname, FuzzyProbabilisticValue<T> content)
+        {
+            UpdateScan us = (UpdateScan)s;
+            us.setFieldContent<T>(fldname, content);
+        }
         public void insert() => throw new NotImplementedException();
         public void delete()
         {

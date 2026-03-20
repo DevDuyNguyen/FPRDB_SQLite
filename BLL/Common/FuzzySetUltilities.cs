@@ -46,7 +46,7 @@ namespace BLL.Common
                 }
                 else
                     fuzzSetType = FieldType.BOOLEAN;
-                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
+                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType, -1);
             }
             else
             {
@@ -87,7 +87,7 @@ namespace BLL.Common
             {
                 values.Add(Convert.ToSingle(v));
             }
-            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT);
+            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT, fs.getOID());
         }
     }
 }

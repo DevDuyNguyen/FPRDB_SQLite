@@ -102,7 +102,7 @@ namespace BLL.SQLProcessing
                     rfs2_memberships.Add(fs2.getMembershipDegree(fs2_left_bottom));
                 }
             }
-            return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.distFS_FLOAT), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.distFS_FLOAT));
+            return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.distFS_FLOAT,-1), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.distFS_FLOAT, -1));
         }
         public static DiscreteFuzzySet<float> discretizeContinuousFSFromDiscreteFS<T>(ContinuousFuzzySet fs1, DiscreteFuzzySet<T> fs2) where T : INumber<T>{
             //discretization for continuous fuzzy set
@@ -127,7 +127,7 @@ namespace BLL.SQLProcessing
                     fs1_Memberships.Add(fs1.getMembershipDegree(tmp_v));
                 }
             }
-            return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.distFS_FLOAT);
+            return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.distFS_FLOAT, -1);
 
         }
         //not done: mocking for private

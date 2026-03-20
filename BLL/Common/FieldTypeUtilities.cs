@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.DomainObject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,5 +68,6 @@ namespace BLL.Common
         {
             return new List<FieldType> { FieldType.INT, FieldType.FLOAT, FieldType.VARCHAR};
         }
+        //static public genericActionByFieldType(FieldType, Action<string, FuzzyProbabilisticValue>)
     }
 }

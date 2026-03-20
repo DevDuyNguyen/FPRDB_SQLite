@@ -18,7 +18,7 @@ namespace BLL.Common
         private FuzzySetDAO fuzzySetDAO;
         private DatabaseManager databseExportImport;
         private Lexer lexer;
-        private RecursiveDescentParser parser;
+        //private RecursiveDescentParser parser, parser1, parser2;
         private Preprocessor preprocessor;
         private MetadataManager metadataMgr;
         private BasicUpdatePlanner updatePlanner;
@@ -41,14 +41,13 @@ namespace BLL.Common
             this.dbMgr = new DatabaseManager();
             this.lexer = new Lexer();
             this.metadataMgr = new MetadataManager(this.dbMgr);
-            this.parser = new RecursiveDescentParser(this.lexer, this.metadataMgr);
             this.constraintService = new ConstraintService(this.metadataMgr);
 
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
-            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.parser);
-            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.parser);
+            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.getParser());
+            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.getParser());
 
-            this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
+            this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
 
             
 
@@ -65,7 +64,10 @@ namespace BLL.Common
             this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);
             this.fprdbRelationService = new FPRDBRelationService(this.fprdbRelationDAO);
         }
-
+        private Lexer getLexer()
+        {
+            return new Lexer();
+        }
         public DatabaseService getDatabaseService()
         {
             return this.databaseService;
@@ -90,7 +92,7 @@ namespace BLL.Common
             return this.dbMgr;
         }
         //delete: for testing
-        public RecursiveDescentParser getParser() => this.parser;
+        public RecursiveDescentParser getParser() => new RecursiveDescentParser(this.getLexer(), this.metadataMgr);
         //delete: for testing
         public Preprocessor getPreprocessor() => this.preprocessor;
         //delete: for testing

@@ -118,7 +118,7 @@ namespace BLL.SQLProcessing
         private Token currentToken;
         private Scanner _scanner;
         private int currentIndex = -1;
-        private List<Token> tokens = new List<Token>();
+        private List<Token> tokens;
         private int tokenListLength { get => this.tokens.Count;}
         private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
             "union", "intersect", "except", "not", "and", "or",
@@ -143,6 +143,10 @@ namespace BLL.SQLProcessing
 
         public void analyze(string s)
         {
+            this.currentIndex = -1;
+            this.currentToken = null;
+            this.tokens = new List<Token>();
+
             this.terminals = new FPRDBSQLTerminals();
             this._parser = new Parser(this.terminals);
             this._scanner = this._parser.Scanner;
