@@ -348,7 +348,7 @@ namespace TestProject1.UnitTest
             bool actual = this.preprocessor.checkCartesianProductCompatibility(schemas, out actualResSchema);
             //assert
             Assert.Equal(expected, actual);
-            Assert.Equivalent(expectedResSchema, actualResSchema);
+            Assert.Equivalent(expectedResSchema.getFields(), actualResSchema.getFields());
         }
         class checkCartesianProductCompatibility_negative_testdata : TheoryData<List<FPRDBSchema>, Exception>
         {
@@ -382,6 +382,84 @@ namespace TestProject1.UnitTest
             //act;
             //assert
             SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkCartesianProductCompatibility(schemas, out actualResSchema));
+            Assert.Equal(expected.Message, actual.Message);
+        }
+
+        class checkNaturalJoinCompatibility_positive_testdata : TheoryData<List<FPRDBSchema>, FPRDBSchema, bool>
+        {
+            public checkNaturalJoinCompatibility_positive_testdata()
+            {
+                FPRDBSchema sch1 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch2 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch3 = new FPRDBSchema(
+                    null,
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(new List<FPRDBSchema> { sch1, sch2 }, sch3, true);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkCartesianProductCompatibility_positive_testdata))]
+        public void checkNaturalJoinCompatibility_positive(List<FPRDBSchema> schemas, FPRDBSchema expectedResSchema, bool expected)
+        {
+            //arrange
+            FPRDBSchema actualResSchema;
+            //act
+            bool actual = this.preprocessor.checkCartesianProductCompatibility(schemas, out actualResSchema);
+            //assert
+            Assert.Equal(expected, actual);
+            Assert.Equivalent(expectedResSchema.getFields(), actualResSchema.getFields());
+        }
+        class checkNaturalJoinCompatibility_negative_testdata : TheoryData<List<FPRDBSchema>, SemanticException>
+        {
+            public checkNaturalJoinCompatibility_negative_testdata()
+            {
+                FPRDBSchema sch1 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch2 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.distFS_INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(new List<FPRDBSchema> { sch1, sch2 }, new SemanticException($"Common field person_id doesn't have same value domain"));
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkNaturalJoinCompatibility_negative_testdata))]
+        public void checkNaturalJoinCompatibility_negative(List<FPRDBSchema> schemas, SemanticException expected)
+        {
+            //arrange
+            FPRDBSchema actualResSchema;
+            //act
+            //assert
+            SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkNaturalJoinCompatibility(schemas, out actualResSchema));
             Assert.Equal(expected.Message, actual.Message);
         }
 

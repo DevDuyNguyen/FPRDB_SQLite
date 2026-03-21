@@ -343,8 +343,8 @@ namespace BLL.SQLProcessing
                 {
                     if (meetFields.ContainsKey(f.getFieldName()))
                     {
-                        if (meetFields[f.getFieldName()].getFieldInfo().getType() == f.getFieldInfo().getType()
-                            && meetFields[f.getFieldName()].getFieldInfo().getTXTLength() == f.getFieldInfo().getTXTLength())
+                        if (meetFields[f.getFieldName()].getFieldInfo().getType() != f.getFieldInfo().getType()
+                            || meetFields[f.getFieldName()].getFieldInfo().getTXTLength()!= f.getFieldInfo().getTXTLength())
                             throw new SemanticException($"Common field {f.getFieldName()} doesn't have same value domain");
                     }
                     else
