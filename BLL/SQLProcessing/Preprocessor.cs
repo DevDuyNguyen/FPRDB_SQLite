@@ -255,15 +255,23 @@ namespace BLL.SQLProcessing
 
             //}
             FieldType fieldType1 = field1.getFieldInfo().getType();
-            string errorMess = $"{field1.getFieldName()} {op.ToString()} {c.getVal() as string} is invalid";
+            string errorMess = $"{field1.getFieldName()} {op.ToString()} {c.getVal().ToString()} is invalid";
             if (CompareOperatorUltilities.isScalarComparison(op) || op == CompareOperation.ALSO)
             {
-                if (FieldTypeUtilities.getDomainType(fieldType1)==typeof(int) && ConstantUltilities.getDomainType(c, metaDataMgr)!=typeof(int)
+                if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(int))
+                {
+                    if (ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
                     && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(float))
-                    throw new SemanticException(errorMess);
-                else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float) && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
+                        throw new SemanticException(errorMess);
+                    return true;
+                }
+                else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float))
+                {
+                    if(ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
                     && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(float))
-                    throw new SemanticException(errorMess);
+                        throw new SemanticException(errorMess);
+                    return true;
+                }
                 else if (FieldTypeUtilities.getDomainType(fieldType1) != ConstantUltilities.getDomainType(c, metaDataMgr))
                     throw new SemanticException(errorMess);
             }
@@ -280,12 +288,20 @@ namespace BLL.SQLProcessing
             FieldType fieldType1 = f1.getFieldInfo().getType();
             FieldType fieldType2 = f2.getFieldInfo().getType();
             string errorMess = $"{f1.getFieldName()} = {f2.getFieldName()} is invalid";
-            if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(int) && FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
+            if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(int))
+            {
+                if(FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
                     && FieldTypeUtilities.getDomainType(fieldType2) != typeof(float))
-                throw new SemanticException(errorMess);
-            else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float) && FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
+                    throw new SemanticException(errorMess);
+                return true;
+            }
+            else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float))
+            {
+                if(FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
                     && FieldTypeUtilities.getDomainType(fieldType2) != typeof(float))
-                throw new SemanticException(errorMess);
+                    throw new SemanticException(errorMess);
+                return true;
+            }
             else if (FieldTypeUtilities.getDomainType(fieldType1) != FieldTypeUtilities.getDomainType(fieldType2))
                 throw new SemanticException(errorMess);
             return true;

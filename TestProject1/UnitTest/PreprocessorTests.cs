@@ -7,9 +7,9 @@ using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Interfaces;
 
 namespace TestProject1.UnitTest
 {
@@ -20,8 +20,10 @@ namespace TestProject1.UnitTest
         public PreprocessorTests()
         {
             this.compRoot = new CompositionRoot();
+            this.compRoot.getDBMgr().loadDB("C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db");
             this.preprocessor = this.compRoot.getPreprocessor();
         }
+        //not done: no systematic test case generation, weak foundation
 
         class checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_positive_testdata : TheoryData<List<FPRDBRelation>, List<string>, List<string>, bool>
         {
@@ -132,8 +134,105 @@ namespace TestProject1.UnitTest
             //assert
             SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(relations, attributesInSelect, attributesInSelectionCondition));
             Assert.Equal(expected.Message, actual.Message);
+        }
+        //not done: mocking
+        public class checkComparisonOperatorOnFieldConstant_positive_testdata:TheoryData<Field, Constant, CompareOperation, bool>
+        {
+            
+            public checkComparisonOperatorOnFieldConstant_positive_testdata()
+            {
+                //not done: wrong equivalence class
+
+                //Field is INT, constant is int, =
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
+                //Field is INT, constant is float, =
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new FloatConstant(12), CompareOperation.EQUAL, true);
+                //Field is float, constant is int, =
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
+                //Field is float, constant is float, =
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new FloatConstant(12), CompareOperation.EQUAL, true);
+
+                //Field is dist_INT, constant is float, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FloatConstant(12.1f), CompareOperation.EQUAL, true);
+                //Field is dist_INT, constant is int, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
+                //Field is dist_FLOAT, constant is float, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FloatConstant(12.1f), CompareOperation.EQUAL, true);
+                //Field is dist_FLOAT, constant is int, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
+
+                //Field is dist_FLOAT, constant is dist_INT fuzzy set, ->
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("distFS1"), CompareOperation.ALSO, true);
+                //Field is dist_FLOAT, constant is dist_INT fuzzy set, ->
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("young"), CompareOperation.ALSO, true);
+                //Field is dist_INT, constant is dist_INT fuzzy set, ->
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("distFS1"), CompareOperation.ALSO, true);
+                //Field is dist_INT, constant is dist_INT fuzzy set, ->
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("young"), CompareOperation.ALSO, true);
+
+
+                //Field is varchar, constant is string, =
+                Add(new Field("attr1", new FieldInfo(FieldType.VARCHAR, 10)), new StringConstant("a"), CompareOperation.EQUAL, true);
+                //Field is varchar, constant is string fuzzy set, =
+                Add(new Field("attr1", new FieldInfo(FieldType.VARCHAR, 10)), new FuzzySetConstant("distFS2"), CompareOperation.EQUAL, true);
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkComparisonOperatorOnFieldConstant_positive_testdata))]
+        public void checkComparisonOperatorOnFieldConstant_positive_test(Field field, Constant c, CompareOperation op, bool expected)
+        {
+            //arrange
+            //act
+            bool actual = this.preprocessor.checkComparisonOperatorOnFieldConstant(field, c, op, this.compRoot.getMetaDataManger());
+            //assert
+            Assert.Equal(expected, actual);
 
         }
+        public class checkComparisonOperatorOnFieldConstant_negative_testdata : TheoryData<Field, Constant, CompareOperation, Exception>
+        {
+
+            public checkComparisonOperatorOnFieldConstant_negative_testdata()
+            {
+                //not done: wrong equivalence class
+
+                //Field is INT, constant is string, =
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
+                //Field is INT, constant is bool, =
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
+                //Field is float, constant is string, =
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
+                //Field is float, constant is bool, =
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
+
+                //Field is dist_INT, constant is string, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
+                //Field is dist_INT, constant is bool, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
+                //Field is dist_FLOAT, constant is string, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
+                //Field is dist_FLOAT, constant is bool, =
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
+
+                //Field is dist_FLOAT, constant is dist_TEXT fuzzy set, ->
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
+                //Field is dist_INT, constant is dist_TEXT fuzzy set, ->
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkComparisonOperatorOnFieldConstant_negative_testdata))]
+        public void checkComparisonOperatorOnFieldConstant_negative_test(Field field, Constant c, CompareOperation op, Exception expected)
+        {
+            //arrange
+            //act
+            //assert
+            SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkComparisonOperatorOnFieldConstant(field, c, op, this.compRoot.getMetaDataManger()));
+            Assert.Equal(expected.Message, actual.Message);
+
+        }
+
 
 
     }
