@@ -89,6 +89,8 @@ namespace BLL.DomainObject
         {
             return new List<SelectionExpression> { this };
         }
+        public override List<string> getMentionedAttributes() => new List<string> { this.field };
+
 
     }
 }

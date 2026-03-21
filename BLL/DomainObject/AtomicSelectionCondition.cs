@@ -32,7 +32,7 @@ namespace BLL.DomainObject
         {
             return this.selectionExpression.getAtomicSelectionExpression();
         }
-
+        public override List<string> getMentionedAttributes() => this.selectionExpression.getMentionedAttributes();
 
     }
 }

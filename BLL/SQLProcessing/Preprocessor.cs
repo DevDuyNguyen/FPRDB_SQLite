@@ -355,6 +355,46 @@ namespace BLL.SQLProcessing
             }
             return true;
         }
+        public bool checkAttributeUseInSelectClauseAndAtomicExpression(List<FPRDBRelation> relations, List<string> attributesInSelect, List<string> attributesInAtomicExpression)
+        {
+            Dictionary<string, bool> attributeList = new Dictionary<string, bool>();
+            foreach(string attrName in attributesInSelect)
+            {
+                if (!attributeList.ContainsKey(attrName))
+                {
+                    attributeList[attrName] = true;
+                }
+            }
+            foreach (string attrName in attributesInAtomicExpression)
+            {
+                if (!attributeList.ContainsKey(attrName))
+                {
+                    attributeList[attrName] = true;
+                    attributesInSelect.Add(attrName);
+                }
+            }
+
+            int matchCount;
+            foreach(string attrName in attributesInSelect)
+            {
+                matchCount = 0;
+                foreach (FPRDBRelation rel in relations)
+                {
+                    if (rel.getSchema().hasField(attrName))
+                    {
+                        ++matchCount;
+                        if (matchCount == 2)
+                        {
+                            throw new SemanticException($"Ambiguity: field {attrName} appears in more than on relations");
+                        }
+                    }
+                }
+                if (matchCount == 0)
+                    throw new SemanticException($"field {attrName} doesn't appears in any mentioned relation");
+            }
+            return true;
+
+        }
         public bool checkSemanticQuery(QueryData data)
         {
 
@@ -362,6 +402,7 @@ namespace BLL.SQLProcessing
             {
                 List<FPRDBRelation> relations = new List<FPRDBRelation>();
                 List<SelectField> selectList=null;
+                List<string> attributesInSelectionCondition = null;
                 List<SelectionExpression> atomicSelectionExpressions=null;
                 FPRDBSchema atomicQuerySchema;
 
@@ -374,6 +415,8 @@ namespace BLL.SQLProcessing
                         selectList.Add(f);
 
                     atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
+
+                    attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
 
                     //Every relation mentioned in a FROM-clause must be a relation in the current database.
                     foreach (string relName in data1.relationList)
@@ -411,6 +454,8 @@ namespace BLL.SQLProcessing
 
                     atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
 
+                    attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
+
                     //Every relation mentioned in a FROM-clause must be a relation in the current database.
                     foreach (string relName in data1.naturalJoinList.relationList)
                     {
@@ -440,22 +485,7 @@ namespace BLL.SQLProcessing
                 /*Checking: Every attribute that is mentioned in the SELECT- or WHERE-clause 
                  * must be an attribute of some relation in the current scope. It also checks ambiguity, 
                  * signaling an error if the attribute is in the scope of two or more relations with that attribute.*/
-                int matchCount;
-                foreach (SelectField f1 in selectList)
-                {
-                    matchCount = 0;
-                    foreach (FPRDBRelation rel in relations)
-                    {
-                        if (rel.getSchema().hasField(f1.field))
-                        {
-                            ++matchCount;
-                            if (matchCount == 2)
-                            {
-                                throw new SemanticException($"Ambiguity: field {f1.field} appears in more than on relations");
-                            }
-                        }
-                    }
-                }
+                checkAttributeUseInSelectClauseAndAtomicExpression(relations, selectList.Select(f => f.field).ToList(), attributesInSelectionCondition);
 
                 //Check operator is applicable on attribute:
                 AtomicSelectionExpressionFieldConstant fieldConstantEx;

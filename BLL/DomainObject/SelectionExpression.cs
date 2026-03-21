@@ -11,5 +11,6 @@ namespace BLL.DomainObject
     {
         public abstract List<SelectionExpression> getAtomicSelectionExpression();
         public abstract List<float> calculateProbabilisticInterpretation(Scan currentTuple, FPRDBSchema schema);
+        public abstract List<string> getMentionedAttributes();
     }
 }
