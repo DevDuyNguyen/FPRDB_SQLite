@@ -232,6 +232,78 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected.Message, actual.Message);
 
         }
+        //not done: mocking
+        public class checkCompatibleFieldEqualField_positive_testdata : TheoryData<Field, Field, bool>
+        {
+
+            public checkCompatibleFieldEqualField_positive_testdata()
+            {
+                //not done: wrong equivalence class
+
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
+
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
+
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.contFS, 0)), true);
+
+
+                Add(new Field("attr1", new FieldInfo(FieldType.VARCHAR, 10)), new Field("attr1", new FieldInfo(FieldType.distFS_TEXT, 10)), true);
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkCompatibleFieldEqualField_positive_testdata))]
+        public void checkCompatibleFieldEqualField_positive_test(Field f1, Field f2, bool expected)
+        {
+            //arrange
+            //act
+            bool actual = this.preprocessor.checkCompatibleFieldEqualField(f1,f2);
+            //assert
+            Assert.Equal(expected, actual);
+
+        }
+        public class checkCompatibleFieldEqualField_negative_testdata : TheoryData<Field, Field, Exception>
+        {
+
+            public checkCompatibleFieldEqualField_negative_testdata()
+            {
+                //not done: wrong equivalence class
+
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.INT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.distFS_TEXT, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr2", new FieldInfo(FieldType.distFS_TEXT, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkCompatibleFieldEqualField_negative_testdata))]
+        public void checkCompatibleFieldEqualField_negative_test(Field f1, Field f2, Exception expected)
+        {
+            //arrange
+            //act
+            //assert
+            SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkCompatibleFieldEqualField(f1, f2));
+            Assert.Equal(expected.Message, actual.Message);
+
+        }
 
 
 
