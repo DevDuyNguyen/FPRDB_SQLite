@@ -32,5 +32,12 @@ namespace BLL.DomainObject
         {
             return this.lSelectionExpresion.getAtomicSelectionExpression().Concat(this.rSelectionExpresion.getAtomicSelectionExpression()).ToList();
         }
+        public override List<string> getMentionedAttributes()
+        {
+            List<string> ans = new List<string>(this.lSelectionExpresion.getMentionedAttributes());
+            ans.AddRange(this.rSelectionExpresion.getMentionedAttributes());
+            return ans;
+        }
+
     }
 }

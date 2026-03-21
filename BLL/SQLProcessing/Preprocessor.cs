@@ -286,7 +286,7 @@ namespace BLL.SQLProcessing
             else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float) && FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
                     && FieldTypeUtilities.getDomainType(fieldType2) != typeof(float))
                 throw new SemanticException(errorMess);
-            else if (FieldTypeUtilities.getDomainType(fieldType1) != ConstantUltilities.getDomainType(c, metaDataMgr))
+            else if (FieldTypeUtilities.getDomainType(fieldType1) != FieldTypeUtilities.getDomainType(fieldType2))
                 throw new SemanticException(errorMess);
             return true;
         }
@@ -349,13 +349,16 @@ namespace BLL.SQLProcessing
             List<Field> fields2 = sch2.getFields();
             for (int i=0; i<fields1.Count; ++i)
             {
-                if (fields1[i].getFieldName()!= fields2[i].getFieldName() 
-                    || fields1[i].getFieldInfo().getType()!= fields2[i].getFieldInfo().getType())
-                    throw new SemanticException($"Set opeation is incompatible because field {fields1[i].getFieldName()} and field {fields2[i].getFieldName()}")
+                if (fields1[i].getFieldName() != fields2[i].getFieldName()
+                    || fields1[i].getFieldInfo().getType() != fields2[i].getFieldInfo().getType())
+                    throw new SemanticException($"Set opeation is incompatible because field {fields1[i].getFieldName()} and field {fields2[i].getFieldName()}");
             }
             return true;
         }
-        public bool checkAttributeUseInSelectClauseAndAtomicExpression(List<FPRDBRelation> relations, List<string> attributesInSelect, List<string> attributesInAtomicExpression)
+        /*Every attribute that is mentioned in the SELECT- or WHERE-clause must be an attribute 
+         * of some relation in the current scope. It also checks ambiguity, signaling an error 
+         * if the attribute is in the scope of two or more relations with that attribute*/
+        public bool checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(List<FPRDBRelation> relations, List<string> attributesInSelect, List<string> attributesInAtomicExpression)
         {
             Dictionary<string, bool> attributeList = new Dictionary<string, bool>();
             foreach(string attrName in attributesInSelect)
@@ -485,7 +488,7 @@ namespace BLL.SQLProcessing
                 /*Checking: Every attribute that is mentioned in the SELECT- or WHERE-clause 
                  * must be an attribute of some relation in the current scope. It also checks ambiguity, 
                  * signaling an error if the attribute is in the scope of two or more relations with that attribute.*/
-                checkAttributeUseInSelectClauseAndAtomicExpression(relations, selectList.Select(f => f.field).ToList(), attributesInSelectionCondition);
+                checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(relations, selectList.Select(f => f.field).ToList(), attributesInSelectionCondition);
 
                 //Check operator is applicable on attribute:
                 AtomicSelectionExpressionFieldConstant fieldConstantEx;
@@ -525,7 +528,7 @@ namespace BLL.SQLProcessing
             {
                 //Check set operation compatibility
                 CompoundQueryData data1 = data as CompoundQueryData;
-                this.checkSetOperationCompatibility(data1.leftQuery.getSchema(), data1.rightQuery.getSchema())
+                this.checkSetOperationCompatibility(data1.leftQuery.getSchema(), data1.rightQuery.getSchema());
                 return true;
             }
         }
