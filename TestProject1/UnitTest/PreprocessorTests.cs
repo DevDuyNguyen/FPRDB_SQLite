@@ -305,6 +305,85 @@ namespace TestProject1.UnitTest
 
         }
 
+        class checkCartesianProductCompatibility_positive_testdata:TheoryData<List<FPRDBSchema>, FPRDBSchema, bool>
+        {
+            public checkCartesianProductCompatibility_positive_testdata()
+            {
+                FPRDBSchema sch1 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch2 = new FPRDBSchema(
+                    "sch2",
+                    new List<Field> {
+                        new Field("dept_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("location", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch3 = new FPRDBSchema(
+                    "sch3",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50)),
+                        new Field("dept_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("location", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(new List<FPRDBSchema> { sch1, sch2 }, sch3, true);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkCartesianProductCompatibility_positive_testdata))]
+        public void checkCartesianProductCompatibility_positive(List<FPRDBSchema> schemas, FPRDBSchema expectedResSchema, bool expected)
+        {
+            //arrange
+            FPRDBSchema actualResSchema;
+            //act
+            bool actual = this.preprocessor.checkCartesianProductCompatibility(schemas, out actualResSchema);
+            //assert
+            Assert.Equal(expected, actual);
+            Assert.Equivalent(expectedResSchema, actualResSchema);
+        }
+        class checkCartesianProductCompatibility_negative_testdata : TheoryData<List<FPRDBSchema>, Exception>
+        {
+            public checkCartesianProductCompatibility_negative_testdata()
+            {
+                FPRDBSchema sch1 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch2 = new FPRDBSchema(
+                    "sch2",
+                    new List<Field> {
+                        new Field("id", new FieldInfo(FieldType.INT,0)),
+                        new Field("location", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(new List<FPRDBSchema> { sch1, sch2 }, new SemanticException($"Not cartesian product compatible because of common field id"));
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkCartesianProductCompatibility_negative_testdata))]
+        public void checkCartesianProductCompatibility_negative(List<FPRDBSchema> schemas, SemanticException expected)
+        {
+            //arrange
+            FPRDBSchema actualResSchema;
+            //act;
+            //assert
+            SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkCartesianProductCompatibility(schemas, out actualResSchema));
+            Assert.Equal(expected.Message, actual.Message);
+        }
 
 
     }
