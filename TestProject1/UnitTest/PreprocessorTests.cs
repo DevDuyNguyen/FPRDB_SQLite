@@ -538,5 +538,112 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected.Message, actual.Message);
         }
 
+        class checkSemanticQuery_positive_testdata:TheoryData<QueryData, bool>
+        {
+            //not done: wrong equivalence class
+            public checkSemanticQuery_positive_testdata()
+            {
+                CompositionRoot comp = new CompositionRoot();
+
+                //BaseCartesianProductQueryData dL1 = new BaseCartesianProductQueryData(
+                //    new List<SelectField> { new SelectField(null, "DOCTOR_ID"), new SelectField(null, "DOCTOR_NAME") },
+                //    new List<string> { "DOCTOR1", "DOCTOR2" },
+                //    new AtomicSelectionCondition(new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new IntConstant(1), CompareOperation.EQUAL,comp.getMetaDataManger()), 1,1)
+                //    );
+                //Add(dL1, true);
+
+                BaseNaturalJoinQueryData dL1 = new BaseNaturalJoinQueryData(
+                    new List<SelectField> { new SelectField(null, "DOCTOR_ID"), new SelectField(null, "DOCTOR_NAME") },
+                    new NaturalJoinList(new List<string>{ "DOCTOR1", "DOCTOR2"}, null),
+                    new AtomicSelectionCondition(new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new StringConstant("abc"), CompareOperation.EQUAL, comp.getMetaDataManger()), 1, 1)
+                    );
+                Add(dL1, true);
+
+                CompoundQueryData dL2 = new CompoundQueryData(
+                    new BaseCartesianProductQueryData(new List<SelectField> { new SelectField(null, "*")}, new List<string> { "DIAGNOSE1"}, null),
+                    new BaseCartesianProductQueryData(new List<SelectField> { new SelectField(null, "*") }, new List<string> { "DIAGNOSE2" }, null),
+                    SetConnective.INTERSECT,
+                    ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE
+                    );
+                Add(dL2, true);
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkSemanticQuery_positive_testdata))]
+        public void checkSemanticQuery_positive(QueryData data, bool expected)
+        {
+            //arrange
+            //act
+            bool actual = this.preprocessor.checkSemanticQuery(data);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+        class checkSemanticQuery_negative_testdata : TheoryData<QueryData, SemanticException>
+        {
+            //not done: wrong equivalence class
+            public checkSemanticQuery_negative_testdata()
+            {
+                CompositionRoot comp = new CompositionRoot();
+
+
+                BaseCartesianProductQueryData dL1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField(null, "DOCTOR_ID"), new SelectField(null, "DOCTOR_NAME") },
+                    new List<string> { "DOCTOR1"},
+                    null
+                    );
+                Add(dL1, new SemanticException($"field DOCTOR_NAME doesn't appears in any mentioned relation"));
+
+                dL1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField(null, "DOCTOR_ID")},
+                    new List<string> { "DOCTOR1" },
+                    new AtomicSelectionCondition(new AtomicSelectionExpressionFieldConstant("DOCTOR_NAME", new StringConstant("abc"), CompareOperation.EQUAL, comp.getMetaDataManger()), 1, 1)
+                    );
+                Add(dL1, new SemanticException($"field DOCTOR_NAME doesn't appears in any mentioned relation"));
+
+                dL1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField(null, "DOCTOR_ID"), new SelectField(null, "DOCTOR_NAME") },
+                    new List<string> { "DOCTOR1", "DOCTOR2" },
+                    new AtomicSelectionCondition(new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new StringConstant("abc"), CompareOperation.EQUAL, comp.getMetaDataManger()), 1, 1)
+                    );
+                Add(dL1, new SemanticException($"Not cartesian product compatible because of common field D_AGE"));
+
+                dL1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField(null, "DOCTOR_ID")},
+                    new List<string> { "DOCTOR1" },
+                    new AtomicSelectionCondition(new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new IntConstant(1), CompareOperation.EQUAL, comp.getMetaDataManger()), 1, 1)
+                    );
+                Add(dL1, new SemanticException($"DOCTOR_ID EQUAL 1 is invalid"));
+
+                dL1 = new BaseCartesianProductQueryData(
+                    new List<SelectField> { new SelectField(null, "DOCTOR_ID")},
+                    new List<string> { "DOCTOR1" },
+                    new AtomicSelectionCondition(new AtomicSelectionExpressionFieldField("DOCTOR_ID", "D_AGE", ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE), 1, 1)
+                    );
+                Add(dL1, new SemanticException($"DOCTOR_ID = D_AGE is invalid"));
+
+
+                CompoundQueryData dL2 = new CompoundQueryData(
+                    new BaseCartesianProductQueryData(new List<SelectField> { new SelectField(null, "*") }, new List<string> { "DIAGNOSE1" }, null),
+                    new BaseCartesianProductQueryData(new List<SelectField> { new SelectField(null, "*") }, new List<string> { "DOCTOR1" }, null),
+                    SetConnective.INTERSECT,
+                    ProbabilisticCombinationStrategy.CONJUNCTION_IGNORANCE
+                    );
+                Add(dL2, new SemanticException($"Set opeation is incompatible because field P_ID and field DOCTOR_ID"));
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkSemanticQuery_negative_testdata))]
+        public void checkSemanticQuery_negative(QueryData data, SemanticException expected)
+        {
+            //arrange
+            //act;
+            //assert
+            SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkSemanticQuery(data));
+            Assert.Equal(expected.Message, actual.Message);
+        }
+
+
     }
 }

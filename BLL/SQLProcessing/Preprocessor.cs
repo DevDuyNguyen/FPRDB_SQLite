@@ -384,6 +384,8 @@ namespace BLL.SQLProcessing
                     attributeList[attrName] = true;
                 }
             }
+            if (attributesInAtomicExpression == null)
+                attributesInAtomicExpression = new List<string>();
             foreach (string attrName in attributesInAtomicExpression)
             {
                 if (!attributeList.ContainsKey(attrName))
@@ -397,6 +399,8 @@ namespace BLL.SQLProcessing
             foreach(string attrName in attributesInSelect)
             {
                 matchCount = 0;
+                if (attrName == "*")
+                    continue;
                 foreach (FPRDBRelation rel in relations)
                 {
                     if (rel.getSchema().hasField(attrName))
@@ -432,10 +436,11 @@ namespace BLL.SQLProcessing
                     selectList = new List<SelectField>();
                     foreach (SelectField f in data1.selectList)
                         selectList.Add(f);
-
-                    atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
-
-                    attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
+                    if(data1.selectionCondition!=null)
+                    {
+                        atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
+                        attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
+                    }
 
                     //Every relation mentioned in a FROM-clause must be a relation in the current database.
                     foreach (string relName in data1.relationList)
@@ -448,18 +453,25 @@ namespace BLL.SQLProcessing
                     checkCartesianProductCompatibility(relations.Select(rel => rel.getSchema()).ToList(), out atomicQuerySchema);
 
                     //create schema for BaseCartesianProductQueryData for later set opeartion semantic check
-                    List<Field> tmpField = new List<Field>();
-                    foreach(Field f in atomicQuerySchema.getFields())
+                    List<Field> tmpField;
+                    if (data1.selectList.Count == 1 && data1.selectList[0].field == "*")
+                        tmpField = atomicQuerySchema.getFields();
+                    else
                     {
-                        foreach(SelectField sf in data1.selectList)
+                        tmpField = new List<Field>();
+                        foreach (Field f in atomicQuerySchema.getFields())
                         {
-                            if(sf.field==f.getFieldName())
+                            foreach (SelectField sf in data1.selectList)
                             {
-                                tmpField.Add(f);
-                                break;
+                                if (sf.field == f.getFieldName())
+                                {
+                                    tmpField.Add(f);
+                                    break;
+                                }
                             }
                         }
                     }
+                    
                     data1.schema = new FPRDBSchema(null, tmpField, null);
 
                 }
@@ -470,10 +482,11 @@ namespace BLL.SQLProcessing
                     selectList = new List<SelectField>();
                     foreach (SelectField f in data1.selectList)
                         selectList.Add(f);
-
-                    atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
-
-                    attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
+                    if (data1.selectionCondition != null)
+                    {
+                        atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
+                        attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
+                    }
 
                     //Every relation mentioned in a FROM-clause must be a relation in the current database.
                     foreach (string relName in data1.naturalJoinList.relationList)
@@ -486,15 +499,21 @@ namespace BLL.SQLProcessing
                     this.checkNaturalJoinCompatibility(relations.Select(rel => rel.getSchema()).ToList(), out atomicQuerySchema);
 
                     //create schema for BaseCartesianProductQueryData for later set opeartion semantic check
-                    List<Field> tmpField = new List<Field>();
-                    foreach (Field f in atomicQuerySchema.getFields())
+                    List<Field> tmpField;
+                    if (data1.selectList.Count == 1 && data1.selectList[0].field == "*")
+                        tmpField = atomicQuerySchema.getFields();
+                    else
                     {
-                        foreach (SelectField sf in data1.selectList)
+                        tmpField = new List<Field>();
+                        foreach (Field f in atomicQuerySchema.getFields())
                         {
-                            if (sf.field == f.getFieldName())
+                            foreach (SelectField sf in data1.selectList)
                             {
-                                tmpField.Add(f);
-                                break;
+                                if (sf.field == f.getFieldName())
+                                {
+                                    tmpField.Add(f);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -506,35 +525,38 @@ namespace BLL.SQLProcessing
                  * signaling an error if the attribute is in the scope of two or more relations with that attribute.*/
                 checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(relations, selectList.Select(f => f.field).ToList(), attributesInSelectionCondition);
 
-                //Check operator is applicable on attribute:
-                AtomicSelectionExpressionFieldConstant fieldConstantEx;
-                AtomicSelectionExpressionFieldField fieldfieldEx;
-                Field tmpField1 = null;
-                Field tmpField2 = null;
-
-                List<Field> allFieldsFromMentionedRelations = new List<Field>();
-                foreach (FPRDBRelation rel in relations)
+                if (atomicSelectionExpressions!=null)
                 {
-                    allFieldsFromMentionedRelations.AddRange(rel.getSchema().getFields());
-                }
-                foreach (SelectionExpression ex in atomicSelectionExpressions)
-                {
+                    //Check operator is applicable on attribute:
+                    AtomicSelectionExpressionFieldConstant fieldConstantEx;
+                    AtomicSelectionExpressionFieldField fieldfieldEx;
+                    Field tmpField1 = null;
+                    Field tmpField2 = null;
 
-                    //check on AtomicSelectionExpressionFieldConstant
-                    if (ex is AtomicSelectionExpressionFieldConstant)
+                    List<Field> allFieldsFromMentionedRelations = new List<Field>();
+                    foreach (FPRDBRelation rel in relations)
                     {
-                        fieldConstantEx = ex as AtomicSelectionExpressionFieldConstant;
-                        tmpField1 = allFieldsFromMentionedRelations.FirstOrDefault(f => f.getFieldName() == fieldConstantEx.field);
-                        this.checkComparisonOperatorOnFieldConstant(tmpField1, fieldConstantEx.constant, fieldConstantEx.compareOperator, this.metadataMgr);
+                        allFieldsFromMentionedRelations.AddRange(rel.getSchema().getFields());
                     }
-
-                    //check on AtomicSelectionExpressionFieldField
-                    if(ex is AtomicSelectionExpressionFieldField)
+                    foreach (SelectionExpression ex in atomicSelectionExpressions)
                     {
-                        fieldfieldEx = ex as AtomicSelectionExpressionFieldField;
-                        tmpField1 = allFieldsFromMentionedRelations.FirstOrDefault(f => f.getFieldName() == fieldfieldEx.lField);
-                        tmpField2 = allFieldsFromMentionedRelations.FirstOrDefault(f => f.getFieldName() == fieldfieldEx.rField);
-                        this.checkCompatibleFieldEqualField(tmpField1, tmpField2);
+
+                        //check on AtomicSelectionExpressionFieldConstant
+                        if (ex is AtomicSelectionExpressionFieldConstant)
+                        {
+                            fieldConstantEx = ex as AtomicSelectionExpressionFieldConstant;
+                            tmpField1 = allFieldsFromMentionedRelations.FirstOrDefault(f => f.getFieldName() == fieldConstantEx.field);
+                            this.checkComparisonOperatorOnFieldConstant(tmpField1, fieldConstantEx.constant, fieldConstantEx.compareOperator, this.metadataMgr);
+                        }
+
+                        //check on AtomicSelectionExpressionFieldField
+                        if (ex is AtomicSelectionExpressionFieldField)
+                        {
+                            fieldfieldEx = ex as AtomicSelectionExpressionFieldField;
+                            tmpField1 = allFieldsFromMentionedRelations.FirstOrDefault(f => f.getFieldName() == fieldfieldEx.lField);
+                            tmpField2 = allFieldsFromMentionedRelations.FirstOrDefault(f => f.getFieldName() == fieldfieldEx.rField);
+                            this.checkCompatibleFieldEqualField(tmpField1, tmpField2);
+                        }
                     }
                 }
 
@@ -544,7 +566,10 @@ namespace BLL.SQLProcessing
             {
                 //Check set operation compatibility
                 CompoundQueryData data1 = data as CompoundQueryData;
+                this.checkSemanticQuery(data1.leftQuery);
+                this.checkSemanticQuery(data1.rightQuery);
                 this.checkSetOperationCompatibility(data1.leftQuery.getSchema(), data1.rightQuery.getSchema());
+                
                 return true;
             }
         }
