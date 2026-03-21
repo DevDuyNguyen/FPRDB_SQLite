@@ -462,7 +462,81 @@ namespace TestProject1.UnitTest
             SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkNaturalJoinCompatibility(schemas, out actualResSchema));
             Assert.Equal(expected.Message, actual.Message);
         }
-
+        class checkSetOperationCompatibility_positive_testdata : TheoryData<FPRDBSchema, FPRDBSchema, bool>
+        {
+            public checkSetOperationCompatibility_positive_testdata()
+            {
+                FPRDBSchema sch1 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch2 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(sch1, sch2, true);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkSetOperationCompatibility_positive_testdata))]
+        public void checkSetOperationCompatibility_positive(FPRDBSchema sch1, FPRDBSchema sch2, bool expected)
+        {
+            //arrange
+            //act
+            bool actual = this.preprocessor.checkSetOperationCompatibility(sch1, sch2);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+        class checkSetOperationCompatibility_negative_testdata : TheoryData<FPRDBSchema, FPRDBSchema, SemanticException>
+        {
+            public checkSetOperationCompatibility_negative_testdata()
+            {
+                FPRDBSchema sch1 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                FPRDBSchema sch2 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person", new FieldInfo(FieldType.INT,0)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(sch1, sch2, new SemanticException($"Set opeation is incompatible because field person_id and field person"));
+                 sch2 = new FPRDBSchema(
+                    "sch1",
+                    new List<Field> {
+                        new Field("person_id", new FieldInfo(FieldType.VARCHAR,50)),
+                        new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
+                        },
+                    null
+                    );
+                Add(sch1, sch2, new SemanticException($"Set opeation is incompatible because field person_id and field person_id"));
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkSetOperationCompatibility_negative_testdata))]
+        public void checkSetOperationCompatibility_negative(FPRDBSchema sch1, FPRDBSchema sch2, SemanticException expected)
+        {
+            //arrange
+            //act
+            //assert
+            SemanticException actual = Assert.Throws<SemanticException>(() => this.preprocessor.checkSetOperationCompatibility(sch1, sch2));
+            Assert.Equal(expected.Message, actual.Message);
+        }
 
     }
 }
