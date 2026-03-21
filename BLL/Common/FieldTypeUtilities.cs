@@ -9,6 +9,14 @@ namespace BLL.Common
 {
     public static class FieldTypeUtilities
     {
+        //static public bool isPrimitive(FieldType type)
+        //{
+        //    return !(type == FieldType.distFS_INT || type == FieldType.distFS_FLOAT || type == FieldType.distFS_TEXT || type == FieldType.contFS);
+        //}
+        //static public bool isContinuousFuzzySet(FieldType type)
+        //{
+        //    return type == FieldType.contFS;
+        //}
         public static string fromFieldTypeEnumToSQLFieldType(FieldType type)
         {
             if (type == FieldType.INT)
@@ -69,5 +77,21 @@ namespace BLL.Common
             return new List<FieldType> { FieldType.INT, FieldType.FLOAT, FieldType.VARCHAR};
         }
         //static public genericActionByFieldType(FieldType, Action<string, FuzzyProbabilisticValue>)
+        static public bool isPrimitiveNumberFieldType(FieldType fType)
+        {
+            return fType == FieldType.INT || fType == FieldType.FLOAT;
+        }
+        static public Type getDomainType(FieldType fType)
+        {
+            if (fType == FieldType.INT || fType == FieldType.distFS_INT)
+                return typeof(int);
+            else if (fType == FieldType.FLOAT || fType == FieldType.distFS_FLOAT || fType==FieldType.contFS)
+                return typeof(float);
+            else if (fType == FieldType.CHAR || fType == FieldType.VARCHAR || fType == FieldType.distFS_TEXT)
+                return typeof(string);
+            else //if (fType == FieldType.BOOLEAN)
+                return typeof(bool);
+        }
+
     }
 }

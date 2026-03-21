@@ -8,6 +8,6 @@ namespace BLL.DomainObject
 {
     public abstract class QueryData
     {
-
+        public abstract FPRDBSchema getSchema();
     }
 }

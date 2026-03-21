@@ -74,5 +74,14 @@ namespace BLL.DomainObject
                 this.primarykey.Add(keyName);
             }
         }
+        public bool hasField(string fldName)
+        {
+            foreach(Field f in this.fields)
+            {
+                if (f.getFieldName() == fldName)
+                    return true;
+            }
+            return false;
+        }
     }
 }

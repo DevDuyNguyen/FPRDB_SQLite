@@ -305,6 +305,56 @@ namespace BLL.SQLProcessing
             }
 
         }
+        public FPRDBSchema getFPRDBSchema(string name)
+        {
+            string getSchemaSQL = $@"
+                SELECT
+	                relSch.oid as 'relSch.oid',
+	                relSch.relschema_name,
+	                attr.att_name,
+	                attr.att_not_null,
+                    attr.att_type_mod,
+	                type.oid as 'type.oid',
+	                type.type_name,
+                    cons.con_attributes,
+                    cons.con_name
+                FROM fprdb_RelationSchema as relSch
+                JOIN fprdb_Attribute as attr on relSch.oid=attr.att_relschema_id
+                JOIN fprdb_Type as type on attr.att_type_id=type.oid
+                JOIN fprdb_Constraint AS cons ON cons.con_relschema_id = relSch.oid
+                WHERE rel.rel_name='{name}' AND cons.con_type = 'IDENTITY'
+                ORDER BY 'rel.oid';
+            ";
+            IDataReader reader = this.databaseMgr.executeQuery(getSchemaSQL);
 
+            string schemaName;
+            List<Field> fields = new List<Field>();
+            List<string> primarykey = new List<string>();
+            string primaryConstraintName;
+
+            using (reader)
+            {
+
+                if (!reader.Read())
+                {
+                    throw new QueryDataNotExistException($"Relation {name} doesn't exist");
+                }
+                schemaName = (string)reader["relschema_name"];
+                primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
+                primaryConstraintName = (string)reader["con_name"];
+                do
+                {
+                    fields.Add(
+                        new Field(
+                            (string)reader["att_name"],
+                            new FieldInfo(Enum.Parse<FieldType>((string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
+                        )
+                    );
+
+                } while (reader.Read());
+            }
+            return new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName);
+
+        }
     }
 }
