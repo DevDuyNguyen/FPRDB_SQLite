@@ -109,8 +109,19 @@ namespace BLL.SQLProcessing
                     {
                         FuzzySetConstant fsContant = (FuzzySetConstant)constant;
                         string fsName = (string)fsContant.getVal();
-                        FieldType type = this.metadataMgr.getFuzzySetType(fsName);
-                        int fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
+                        FieldType type;
+                        int fuzzySetOID;
+                        //check fuzzy set use in insert data really exist
+                        try
+                        {
+                            type=this.metadataMgr.getFuzzySetType(fsName);
+                            fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
+                        }
+                        catch (QueryDataNotExistException ex)
+                        {
+                            throw new SemanticException(ex.Message);
+                        }
+                        
                         fsContant.setFuzzySetOID(fuzzySetOID);
                         fsContant.setType(type);
                         if (fieldInfo.getType() == FieldType.distFS_FLOAT)
