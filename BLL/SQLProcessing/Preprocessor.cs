@@ -265,22 +265,29 @@ namespace BLL.SQLProcessing
             string errorMess = $"{field1.getFieldName()} {op.ToString()} {c.getVal().ToString()} is invalid";
             if (CompareOperatorUltilities.isScalarComparison(op) || op == CompareOperation.ALSO)
             {
-                if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(int))
+                try
                 {
-                    if (ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
-                    && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(float))
+                    if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(int))
+                    {
+                        if (ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
+                        && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(float))
+                            throw new SemanticException(errorMess);
+                        return true;
+                    }
+                    else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float))
+                    {
+                        if (ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
+                        && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(float))
+                            throw new SemanticException(errorMess);
+                        return true;
+                    }
+                    else if (FieldTypeUtilities.getDomainType(fieldType1) != ConstantUltilities.getDomainType(c, metaDataMgr))
                         throw new SemanticException(errorMess);
-                    return true;
                 }
-                else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float))
+                catch(QueryDataNotExistException ex)
                 {
-                    if(ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(int)
-                    && ConstantUltilities.getDomainType(c, metaDataMgr) != typeof(float))
-                        throw new SemanticException(errorMess);
-                    return true;
+                    throw new SemanticException(ex.Message);
                 }
-                else if (FieldTypeUtilities.getDomainType(fieldType1) != ConstantUltilities.getDomainType(c, metaDataMgr))
-                    throw new SemanticException(errorMess);
             }
             else
             {

@@ -3,13 +3,14 @@ using BLL.Common;
 using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.Interfaces;
+using System.Xml.Linq;
 
 namespace TestProject1.UnitTest
 {
@@ -218,6 +219,10 @@ namespace TestProject1.UnitTest
                 Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
                 //Field is dist_INT, constant is dist_TEXT fuzzy set, ->
                 Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
+
+                //Fuzzy set doesn't exist
+                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("not exist"), CompareOperation.ALSO, new SemanticException($"Fuzzy set not exist doesn't exist"));
+                
 
             }
         }
