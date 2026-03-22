@@ -132,9 +132,11 @@ namespace BLL.SQLProcessing
             this.parser.parse(sql);
             QueryData data = this.parser.query();
 
-            //not done: not implement semantic checking
+            if(this.preProcessor.checkSemanticQuery(data))
+                return this.queryPlanner.createPlan(data);
 
-            return this.queryPlanner.createPlan(data);
+            return null;
+
         }
 
     }
