@@ -82,18 +82,6 @@ namespace BLL.SQLProcessing
                 FieldType fieldType = fieldInfo.getType();
                 string generalExceptionMessage = $"Inserted data and field type of {field.getFieldName()} aren't compatible";
                 
-                //the inserted value for primitive type field must has only one possible value and probability interval of that value is [1,1]
-                //if (fieldType!=FieldType.distFS_INT && fieldType != FieldType.distFS_FLOAT && fieldType != FieldType.distFS_TEXT && fieldType != FieldType.contFS)
-                //{
-                //    if (data[i].valueList.Count > 1)
-                //    {
-                //        throw new SemanticException($"Primitive field {field.getFieldName()} must only has one possible value");
-                //    }
-                //    if (data[i].intervalProbLowerBoundList[0] != 1 || data[i].intervalProbUpperBoundList[0] != 1)
-                //    {
-                //        throw new SemanticException($"Primitive field {field.getFieldName()} must has interval probability of [1,1]");
-                //    }
-                //}
 
                 foreach (Constant constant in data[i].valueList)
                 {
@@ -125,8 +113,16 @@ namespace BLL.SQLProcessing
                         int fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
                         fsContant.setFuzzySetOID(fuzzySetOID);
                         fsContant.setType(type);
-                        if (fieldInfo.getType() != type)
-                            throw new SemanticException(generalExceptionMessage);
+                        if (fieldInfo.getType() == FieldType.distFS_FLOAT)
+                        {
+                            if(type!=FieldType.distFS_FLOAT && type != FieldType.distFS_INT)
+                                throw new SemanticException(generalExceptionMessage);
+                        }
+                        else
+                        {
+                            if (fieldInfo.getType() != type)
+                                throw new SemanticException(generalExceptionMessage);
+                        }
                     }
 
                 }
