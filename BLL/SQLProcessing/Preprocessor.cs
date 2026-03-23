@@ -166,7 +166,7 @@ namespace BLL.SQLProcessing
                     }
                 }
                 if (!exist)
-                    throw new SemanticException($"Attribute {fieldName} doesn't exist in relation {relation.getRelName} on schema {schema.getSchemaName()}");
+                    throw new SemanticException($"Attribute {fieldName} doesn't exist in relation {relation.getRelName()} on schema {schema.getSchemaName()}");
             }
             //Check compatible attribute list and insert data list sizes
             if (data.fieldList.Count != data.fuzzyProbabilisticValues.Count)
@@ -200,11 +200,16 @@ namespace BLL.SQLProcessing
         public bool checkSemanticDelete(DeleteData data)
         {
             //[not done] check selection condition:
-            if (this.metadataMgr.isRelationExist(data.relation))
+            if (!this.metadataMgr.isRelationExist(data.relation))
             {
-                return true;
+                throw new SemanticException($"Relation {data.relation} doesn't exist");
             }
-            return false;
+            //check fields mentioned in selection condition exist
+            FPRDBRelation relation = this.metadataMgr.getRelation(data.relation);
+            this.checkFieldsMentionedInSelectionConditionExist(relation.getSchema(), data.selectionCondition);
+            
+            
+            return true;
         }
         public bool checkSemanticDropRelation(DropRelationData data)
         {
@@ -641,6 +646,17 @@ namespace BLL.SQLProcessing
                 
                 return true;
             }
+        }
+
+        private bool checkFieldsMentionedInSelectionConditionExist(FPRDBSchema schema, SelectionCondition condition)
+        {
+            List<string> fieldsInSelectCondition = condition.getMentionedAttributes();
+            foreach(string fieldName in fieldsInSelectCondition)
+            {
+                if (!schema.hasField(fieldName))
+                    throw new SemanticException($"Field {fieldName} doesn't exist");
+            }
+            return true;
         }
 
 

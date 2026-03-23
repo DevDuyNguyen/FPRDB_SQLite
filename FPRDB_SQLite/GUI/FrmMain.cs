@@ -913,7 +913,7 @@ namespace FPRDB_SQLite.GUI
             memoEditTxtQuery.Focus();
         }
         #endregion
-        private void ExcuteQuery(string sql)
+        private void ExcuteQueryDemo(string sql)
         {
             //try
             //{
@@ -1091,16 +1091,58 @@ namespace FPRDB_SQLite.GUI
             {
                 case "INSERT":
                 case "DELETE":
-                case "MODIFY":
-                case "CREATE":
+                case "UPDATE":
                 case "DROP":
                     ExecuteUpdate(sql);
+                    break;
+                case "CREATE":
+                    ExecuteDataDefinition(sql);
                     break;
                 default:
                     ExecuteQuery(sql);
                     break;
             }
             
+        }
+        private void ExecuteDataDefinition(string sql)
+        {
+            try
+            {
+                this.sqlProcessor.executeDataDefinition(sql);
+                memoEditMessage.Text = $"Success";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SQLSyntaxException ex)
+            {
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (MismatchTokenType ex)
+            {
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (NotSupportedException ex)
+            {
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            }
+
         }
         private void ExecuteUpdate(string sql)
         {
@@ -1115,6 +1157,16 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
             catch (MismatchTokenType ex)
             {
                 memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
@@ -1125,16 +1177,6 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
-            catch (IndexOutOfRangeException ex)
-            {
-                memoEditMessage.Text = "[Error] Already out of token.";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            //catch (Exception ex)
-            //{
-            //    memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
-            //    xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            //}
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
@@ -1156,7 +1198,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
                 }
-                //Extrac the result for grid view
+                //Extract the result for grid view
                 string[] tupleForGridView = new string[schema.getFields().Count];
                 Field field;
                 List<Field> fields = schema.getFields();
@@ -1205,11 +1247,21 @@ namespace FPRDB_SQLite.GUI
                 xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
 
                 // Ghi thông báo thành công vào MemoEdit
-                memoEditMessage.Text = $"Query executed successfully at {DateTime.Now:HH:mm:ss}.";
+                memoEditMessage.Text = $"Query executed successfully";
             }
             catch (SQLSyntaxException ex)
             {
                 memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
             catch (MismatchTokenType ex)
@@ -1222,16 +1274,6 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
-            catch (IndexOutOfRangeException ex)
-            {
-                memoEditMessage.Text = "[Error] Already out of token.";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            //catch (Exception ex)
-            //{
-            //    memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
-            //    xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            //}
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi

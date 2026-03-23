@@ -73,7 +73,7 @@ namespace BLL.Services
             else
             {
                 if (this.constraintDAO.isTupleWithFuzzyProbabilisticValuesExist(relation.getRelName(), relation.getSchema().getPrimarykey(), newKeyValue))
-                    throw new SemanticException($"Key value value already exist");
+                    throw new SemanticException($"Key value already exist");
                 else
                     return true;
             }

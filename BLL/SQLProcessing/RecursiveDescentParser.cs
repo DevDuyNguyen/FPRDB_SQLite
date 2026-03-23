@@ -308,12 +308,12 @@ namespace BLL.SQLProcessing
             {
                 lexer.eatDelimiter(",");
                 possibleValueData = possibleValue();
-                if(valueList.Count!=0 
-                    && !(possibleValueData.constant is FuzzySetConstant)
-                    && valueList[0].GetType()!= possibleValueData.constant.GetType())
-                {
-                    throw new SemanticException("Values within a fuzzy probabilistic value must come from the same domain");
-                }
+                //if(valueList.Count!=0 
+                //    && !(possibleValueData.constant is FuzzySetConstant)
+                //    && valueList[0].GetType()!= possibleValueData.constant.GetType())
+                //{
+                //    throw new SemanticException("Values within a fuzzy probabilistic value must come from the same domain");
+                //}
                 valueList.Add(possibleValueData.constant);
                 lowerBoundList.Add(possibleValueData.lowerBound);
                 upperBoundList.Add(possibleValueData.upperBound);
