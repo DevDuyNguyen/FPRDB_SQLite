@@ -63,6 +63,25 @@ namespace BLL.DomainObject
 
             return content;
         }
+        public override bool equals(AbstractFuzzyProbabilisticValue v)
+        {
+            if (v is FuzzyProbabilisticValue<T>)
+            {
+                FuzzyProbabilisticValue<T> v1 = (FuzzyProbabilisticValue<T>)v;
+                if (this.valueList.Count != v1.valueList.Count)
+                    return false;
+                for (int i=0; i<this.valueList.Count; ++i)
+                {
+                    if (this.valueList[i] != v1.valueList[i]
+                        || this.intervalProbLowerBoundList[i] != v1.intervalProbLowerBoundList[i]
+                        || this.intervalProbUpperBoundList[i] != v1.intervalProbUpperBoundList[i])
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
 
         //public FieldType getDomain() => this.domain;
         //public FuzzySet<T> getVal(int index) => this.valueList[index];

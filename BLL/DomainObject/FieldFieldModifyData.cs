@@ -10,9 +10,9 @@ namespace BLL.DomainObject
     {
         private string assigningField;
 
-        public FieldFieldModifyData(string assignedField, string relation, string assigningField, SelectionCondition selectionCondition):base(relation, assigningField, selectionCondition)
+        public FieldFieldModifyData(string assignedField, string relation, string assigningField, SelectionCondition selectionCondition):base(relation, assignedField, selectionCondition)
         {
-            this.assigningField = assignedField;
+            this.assigningField = assigningField;
         }
 
         public override object getAssignValue() => this.assigningField;

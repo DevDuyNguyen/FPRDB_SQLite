@@ -28,7 +28,7 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            Plan p = new RelationPlan("PATIENT", metaMgr, dbMgr, compRoot.getParser());
+            Plan p = new RelationPlan("PATIENT", metaMgr, dbMgr, compRoot.getParser(), compRoot.getConstraintService());
 
             SelectionExpression se1 = new AtomicSelectionExpressionFieldConstant("P_AGE", new FuzzySetConstant("approx_15"), CompareOperation.ALSO, metaMgr);
             SelectionExpression se2 = new AtomicSelectionExpressionFieldConstant("P_DISEASE", new StringConstant("hepatitis"), CompareOperation.EQUAL, metaMgr);

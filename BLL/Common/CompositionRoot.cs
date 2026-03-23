@@ -29,6 +29,7 @@ namespace BLL.Common
         private QueryPlanner queryPlanner;
         private FPRDBRelationDAO fprdbRelationDAO;
         private FPRDBRelationService fprdbRelationService;
+        private ConstraintDAO constraintDAO;
 
         public CompositionRoot()
         {
@@ -41,11 +42,13 @@ namespace BLL.Common
             this.dbMgr = new DatabaseManager();
             this.lexer = new Lexer();
             this.metadataMgr = new MetadataManager(this.dbMgr);
-            this.constraintService = new ConstraintService(this.metadataMgr);
+
+            this.constraintDAO = new ConstraintDAOSQLite(this.dbMgr);
+            this.constraintService = new ConstraintService(this.metadataMgr, this.constraintDAO);
 
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
-            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.getParser());
-            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.getParser());
+            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.getParser(), this.constraintService);
+            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.getParser(), this.constraintService);
 
             this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
 

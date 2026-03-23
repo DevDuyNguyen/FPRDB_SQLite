@@ -3,6 +3,7 @@ using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,12 +20,14 @@ namespace BLL.SQLProcessing
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;
         private RecursiveDescentParser parser;
+        private ConstraintService constraintService;
 
-        public BasicUpdatePlanner(DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser)
+        public BasicUpdatePlanner(DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser, ConstraintService constraintService)
         {
             this.dbMgr = dbMgr;
             this.metaDataMgr = metaDataMgr;
             this.parser = parser;
+            this.constraintService = constraintService;
         }
 
         //public BasicUpdatePlanner(DatabaseManager dbMgr)
@@ -317,7 +320,7 @@ namespace BLL.SQLProcessing
 
         public int executeDelete(DeleteData data)
         {
-            Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser);
+            Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser, this.constraintService);
             if(data.selectionCondition!=null)
                 p = new SelectPlan(p, data.selectionCondition);
             UpdateScan us = (UpdateScan)p.open();
@@ -353,7 +356,7 @@ namespace BLL.SQLProcessing
         }
         public int executeModify(ModifyData data)
         {
-            Plan p = new RelationPlan(data.getRelation(), this.metaDataMgr, this.dbMgr, this.parser);
+            Plan p = new RelationPlan(data.getRelation(), this.metaDataMgr, this.dbMgr, this.parser, this.constraintService);
             if (data.getSelectionCondition() != null)
                 p = new SelectPlan(p, data.getSelectionCondition());
             UpdateScan us = (UpdateScan)p.open();

@@ -84,7 +84,7 @@ namespace TestProject1.IntegrationTest
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
             FPRDBRelation relInfo = metaMgr.getRelation("student23");
-            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser(), compRoot.getConstraintService());
             //act
             while (scan.next())
             {
@@ -100,7 +100,7 @@ namespace TestProject1.IntegrationTest
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
             FPRDBRelation relInfo = metaMgr.getRelation("student23");
-            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser(), compRoot.getConstraintService());
             //act
             while (scan.next())
             {

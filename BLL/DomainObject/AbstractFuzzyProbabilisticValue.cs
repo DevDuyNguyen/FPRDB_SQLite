@@ -10,5 +10,6 @@ namespace BLL.DomainObject
     {
         public abstract bool isValueSetEmpty();
         public abstract bool hasSameValueList(AbstractFuzzyProbabilisticValue v);
+        public abstract bool equals(AbstractFuzzyProbabilisticValue v);
     }
 }

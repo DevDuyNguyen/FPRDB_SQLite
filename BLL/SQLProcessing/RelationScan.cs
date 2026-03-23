@@ -2,6 +2,7 @@
 using BLL.DomainObject;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +19,8 @@ namespace BLL.SQLProcessing
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;
         private RecursiveDescentParser parser;
-        public RelationScan(FPRDBRelation relationInfo, DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser)
+        private ConstraintService constraintService;
+        public RelationScan(FPRDBRelation relationInfo, DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser, ConstraintService constraintService)
         {
             CompositionRoot compRoot = new CompositionRoot();
             this.parser = compRoot.getParser();
@@ -27,6 +29,7 @@ namespace BLL.SQLProcessing
             this.relationInfo = relationInfo;
             this.currentTupleIndex = 0;
             this.parser = parser;
+            this.constraintService = constraintService;
         }
         public void beforeFirst()=> this.currentTupleIndex = 0;
         public bool hasField(string fldname)
@@ -121,6 +124,37 @@ namespace BLL.SQLProcessing
                 throw new QueryDataNotExistException($"Relation {this.relationInfo.getRelName()} doesn't have attribute {fldname}");
             Field field=this.relationInfo.getSchema().getFields()[index];
             FieldType fieldType = field.getFieldInfo().getType();
+            //List<Field> schemaFields = this.relationInfo.getSchema().getFields();
+            FPRDBSchema schema = this.relationInfo.getSchema();
+
+            //if a key attribute is updated, check if integrity constraint is violated
+            if (this.relationInfo.getSchema().getPrimarykey().Contains(fldname)){
+                List<AbstractFuzzyProbabilisticValue> oldKeyValue = new List<AbstractFuzzyProbabilisticValue>();
+                List<AbstractFuzzyProbabilisticValue> newKeyValue = new List<AbstractFuzzyProbabilisticValue>();
+                Type type;
+                AbstractFuzzyProbabilisticValue tmp;
+                foreach (string keyName in schema.getPrimarykey())
+                {
+                    if (FieldTypeUtilities.getDomainType(schema.getFieldByName(keyName).getFieldInfo().getType()) == typeof(int))
+                    {
+                        tmp = this.getFieldContent<int>(keyName);
+                    }
+                    else if (FieldTypeUtilities.getDomainType(schema.getFieldByName(keyName).getFieldInfo().getType()) == typeof(float))
+                    {
+                        tmp = this.getFieldContent<float>(keyName);
+                    }
+                    else //if (FieldTypeUtilities.getDomainType(schema.getFieldByName(keyName).getFieldInfo().getType()) == typeof(string))
+                    {
+                        tmp = this.getFieldContent<string>(keyName);
+                    }
+                    oldKeyValue.Add(tmp);
+                    if (keyName == fldname)
+                        newKeyValue.Add(content);
+                    else
+                        newKeyValue.Add(tmp);
+                }
+                this.constraintService.checkUpdateIntegrityConstraintViolation(this.relationInfo, schema.getPrimarykey(), oldKeyValue, newKeyValue);
+            }
 
             //check if domain of content matches the domain of Field named fldname
             if (typeof(T) == typeof(int))

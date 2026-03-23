@@ -222,7 +222,62 @@ namespace BLL.SQLProcessing
         }
         public bool checkSemanticModify(ModifyData data)
         {
-            //throw new NotImplementedException();
+            //relation exist
+            FPRDBRelation relation=null;
+            FPRDBSchema schema = null;
+            List<Field> fieldsInSchema = null;
+            try
+            {
+                relation = this.metadataMgr.getRelation(data.getRelation());
+                schema = relation.getSchema();
+                fieldsInSchema = schema.getFields();
+            }
+            catch (QueryDataNotExistException ex)
+            {
+                throw new SemanticException(ex.Message);
+            }
+            //Mentiond fields exists
+            if (!relation.getSchema().hasField(data.getAssignedField())){
+                throw new SemanticException($"Field {data.getAssignedField()} doesn't exist in relation {relation.getRelName()}");
+            }
+            if(data is FieldFieldModifyData)
+            {
+                FieldFieldModifyData data1 = (FieldFieldModifyData)data;
+                if (!relation.getSchema().hasField(data1.getAssignValue() as string))
+                {
+                    throw new SemanticException($"Field {data1.getAssignValue() as string} doesn't exist in relation {relation.getRelName()}");
+                }
+            }
+            if (data.getSelectionCondition() != null)
+            {
+                List<string> fieldsInSelectionCondition = data.getSelectionCondition().getMentionedAttributes();
+                foreach (string fieldName in fieldsInSelectionCondition)
+                {
+                    if (!schema.hasField(fieldName))
+                        throw new SemanticException($"Field {fieldName} doesn't exist in relation {relation.getRelName()}");
+                }
+            }
+
+            //Compatible update value
+            if(data is FieldFieldModifyData)
+            {
+                FieldFieldModifyData data1 = (FieldFieldModifyData)data;
+                Field assignedField = relation.getSchema().getFieldByName(data1.getAssignedField());
+                Field assigningField = relation.getSchema().getFieldByName(data1.getAssignValue() as string);
+                if (assignedField.getFieldInfo().getType() != assigningField.getFieldInfo().getType() || assignedField.getFieldInfo().getTXTLength() != assigningField.getFieldInfo().getTXTLength())
+                    throw new SemanticException($"Can't assign the content of {assigningField.getFieldInfo().getType().ToString()} field to {assignedField.getFieldInfo().getType()} field");
+            }
+            else if(data is FieldFuzzProbValueModifyData)
+            {
+                FieldFuzzProbValueModifyData data1 = (FieldFuzzProbValueModifyData)data;
+                checkCompatibleInsertTypeAndFillFuzzySetConstant(
+                    new List<string> { data1.getAssignedField()}, 
+                    new List<FuzzyProbabilisticValueParsingData>{ data1.getAssignValue() as FuzzyProbabilisticValueParsingData},
+                    relation.getSchema()
+                    );
+            }
+            
+
             return true;
         }
         //not done: mocking for private

@@ -1,5 +1,6 @@
 ﻿using BLL.DomainObject;
 using BLL.Interfaces;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +14,22 @@ namespace BLL.SQLProcessing
         private FPRDBRelation relationInfo;
         private MetadataManager metaDataMgr;
         private DatabaseManager dbMgr;
-        RecursiveDescentParser parser;
+        private RecursiveDescentParser parser;
+        private ConstraintService constraintService;
 
-        public RelationPlan(string relName, MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser)
+        public RelationPlan(string relName, MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser, ConstraintService constraintService)
         {
             this.relationInfo = relationInfo;
             this.metaDataMgr = metaDataMgr;
             this.relationInfo = this.metaDataMgr.getRelation(relName);
             this.dbMgr = dbMgr;
             this.parser = parser;
+            this.constraintService = constraintService;
         }
 
         public Scan open()
         {
-            return new RelationScan(this.relationInfo, this.dbMgr, this.metaDataMgr, this.parser);
+            return new RelationScan(this.relationInfo, this.dbMgr, this.metaDataMgr, this.parser, this.constraintService);
         }
         public FPRDBSchema getSchema()
         {

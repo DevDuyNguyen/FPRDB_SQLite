@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestProject1.UnitTest
 {
@@ -649,6 +650,199 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected.Message, actual.Message);
         }
 
+        class checkSemanticModify_positive_testdata : TheoryData<ModifyData, bool>
+        {
+            public checkSemanticModify_positive_testdata()
+            {
+                CompositionRoot compRoot = new CompositionRoot();
+                FieldFuzzProbValueModifyData data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new StringConstant("Test101") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "DOCTOR_ID",
+                    null
+                    );
+                Add(data1, true);
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new StringConstant("Test101") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "DOCTOR_ID",
+                    new AtomicSelectionCondition(
+                        new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new StringConstant("DT122"), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                        1,
+                        1
+                        )
+                    );
+                Add(data1, true);
+
+                FieldFieldModifyData data2 = new FieldFieldModifyData(
+                    "DOCTOR_ID",
+                    "DOCTOR1",
+                    "DOCTOR_ID",
+                    new AtomicSelectionCondition(
+                        new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new StringConstant("DT122"), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                        1,
+                        1
+                        )
+                    );
+                Add(data2, true);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkSemanticModify_positive_testdata))]
+        public void checkSemanticModify_success(ModifyData data, bool expected)
+        {
+            //arrange
+            //act
+            bool actual = this.preprocessor.checkSemanticModify(data);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+        class checkSemanticModify_negative_testdata : TheoryData<ModifyData, SemanticException>
+        {
+            public checkSemanticModify_negative_testdata()
+            {
+                CompositionRoot compRoot = new CompositionRoot();
+                FieldFuzzProbValueModifyData data1;
+                FieldFieldModifyData data2;
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new StringConstant("Test101") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "nonExistintRelation",
+                    "DOCTOR_ID",
+                    null
+                    );
+                Add(data1, new SemanticException("Relation nonExistintRelation doesn't exist"));
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new StringConstant("Test101") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "nonExisitngInsertField",
+                    null
+                    );
+                Add(data1, new SemanticException($"Field nonExisitngInsertField doesn't exist in relation DOCTOR1"));
+
+                data2 = new FieldFieldModifyData(
+                    "DOCTOR_ID",
+                    "DOCTOR1",
+                    "nonExistAssigningField",
+                    new AtomicSelectionCondition(
+                        new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new StringConstant("DT122"), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                        1,
+                        1
+                        )
+                    );
+                Add(data2, new SemanticException($"Field nonExistAssigningField doesn't exist in relation DOCTOR1"));
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new StringConstant("Test101") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "DOCTOR_ID",
+                    new AtomicSelectionCondition(
+                        new AtomicSelectionExpressionFieldConstant("nonExistingField", new StringConstant("DT122"), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                        1,
+                        1
+                        )
+                    );
+                Add(data1, new SemanticException("Field nonExistingField doesn't exist in relation DOCTOR1"));
+
+                data2 = new FieldFieldModifyData(
+                    "DOCTOR_ID",
+                    "DOCTOR1",
+                    "D_AGE",
+                    new AtomicSelectionCondition(
+                        new AtomicSelectionExpressionFieldConstant("DOCTOR_ID", new StringConstant("DT122"), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                        1,
+                        1
+                        )
+                    );
+                Add(data2, new SemanticException($"Can't assign the content of contFS field to VARCHAR field"));
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new IntConstant(12) },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "DOCTOR_ID",
+                    null
+                    );
+                Add(data1, new SemanticException("Inserted data and field type of DOCTOR_ID aren't compatible"));
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new FuzzySetConstant("distFS1") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "DOCTOR_ID",
+                    null
+                    );
+                Add(data1, new SemanticException("Inserted data and field type of DOCTOR_ID aren't compatible"));
+
+                data1 = new FieldFuzzProbValueModifyData(
+                    new FuzzyProbabilisticValueParsingData(
+                        new List<Constant> { new FuzzySetConstant("distFS1") },
+                        new List<float> { 1 },
+                        new List<float> { 1 }
+                        ),
+                    "DOCTOR1",
+                    "D_AGE",
+                    null
+                    );
+                Add(data1, new SemanticException("Inserted data and field type of D_AGE aren't compatible"));
+
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkSemanticModify_negative_testdata))]
+        public void checkSemanticModify_negative(ModifyData data, SemanticException expected)
+        {
+            //arrange
+            //act
+            SemanticException actual = Assert.Throws<SemanticException>(()=> this.preprocessor.checkSemanticModify(data));
+            //assert
+            Assert.Equal(expected.Message, actual.Message);
+        }
+        [Fact]
+        public void checkSemanticModify_integrityConstraintViolation()
+        {
+            //arrange
+            //integrity constraint violation
+            string sql = "update DOCTOR1 set DOCTOR_ID={('DT093',[1,1])} where (DOCTOR_ID='DT005')[1,1]";
+            SemanticException expected = new SemanticException($"Key value value already exist");
+
+            //act
+            SemanticException actual = Assert.Throws<SemanticException>(() =>
+            {
+                this.compRoot.getSQLProcessor().executeUpdate(sql);
+            });
+            //assert
+            Assert.Equal(expected.Message, actual.Message);
+        }
 
 
     }
