@@ -14,7 +14,6 @@ namespace BLL.DomainObject
         public List<float> intervalProbLowerBoundList;
         public List<float> intervalProbUpperBoundList;
         public FuzzyProbabilisticValueParsingData() { }
-
         public FuzzyProbabilisticValueParsingData(List<Constant> valueList, List<float> intervalProbLowerBoundList, List<float> intervalProbUpperBoundList)
         {
             this.valueList = valueList;
@@ -34,6 +33,16 @@ namespace BLL.DomainObject
             str = str.TrimEnd(',');
             str+="}";
             return str;
+        }
+        public bool equals(FuzzyProbabilisticValueParsingData v)
+        {
+            for(int i=0; i<this.valueList.Count; ++i)
+            {
+                if (this.valueList[i] != v.valueList[i] || this.intervalProbLowerBoundList[i] != v.intervalProbLowerBoundList[i]
+                    || this.intervalProbUpperBoundList[i] != v.intervalProbUpperBoundList[i])
+                    return false;
+            }
+            return true;
         }
     }
 }

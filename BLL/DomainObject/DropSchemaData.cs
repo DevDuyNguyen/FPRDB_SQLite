@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace BLL.DomainObject
 {
-    public abstract class QueryData
+    public class DropSchemaData
     {
-        public abstract FPRDBSchema getSchema();
+        public string schema;
+
+        public DropSchemaData(string schema)
+        {
+            this.schema = schema;
+        }
     }
 }

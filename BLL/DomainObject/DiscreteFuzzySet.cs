@@ -13,7 +13,7 @@ namespace BLL.DomainObject
         public List<T> valueSet;
         public List<float> membershipDegreeSet;
 
-        public DiscreteFuzzySet(List<T> valueSet, List<float> membershipDegreeSet, string fuzzySetName, FieldType fuzzySetType) :base(fuzzySetName, fuzzySetType)
+        public DiscreteFuzzySet(List<T> valueSet, List<float> membershipDegreeSet, string fuzzySetName, FieldType fuzzySetType, int oid) :base(fuzzySetName, fuzzySetType, oid)
         {
             this.valueSet = valueSet;
             this.membershipDegreeSet = membershipDegreeSet;
@@ -38,6 +38,12 @@ namespace BLL.DomainObject
         }
         public override FuzzySet<T> StandardIntersection(FuzzySet<T> fs)
         {
+            if (this.Equals(fs))
+                return this;
+            else if (this.isSubsetOf(fs))
+                return this;
+            else if (fs.isSubsetOf(this))
+                return fs;
 
             List<T> values = new List<T>();
             List<float> memberships = new List<float>();
@@ -59,16 +65,12 @@ namespace BLL.DomainObject
                     }   
                     
                 }
-                if (this.getName() != fs.getName())
-                    fuzzSetName = this.getName() + "⋂" + fs.getName();
+                //if (this.getName() != fs.getName())
+                //    fuzzSetName = this.getName() + "⋂" + fs.getName();
+                fuzzSetName = this.getName() + "⋂" + fs.getName();
             }
-            //else
-            //{
-            //    ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
-
-
-            //}
-            return new DiscreteFuzzySet<T>(values, memberships, fuzzSetName, this.getFuzzysetType());
+            
+            return new DiscreteFuzzySet<T>(values, memberships, fuzzSetName, this.getFuzzysetType(), -1);
 
         }
         public override bool isNormal()

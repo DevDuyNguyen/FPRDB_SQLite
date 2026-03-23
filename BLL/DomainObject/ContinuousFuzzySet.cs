@@ -19,7 +19,7 @@ namespace BLL.DomainObject
         private float leftOf1MembershipDegreeRange, rightOf1MembershipDegreeRange;
         private bool has1MemberShipDegreeRange;
 
-        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
+        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, string fuzzySetName, int oid) : base(fuzzySetName, FieldType.FLOAT, oid)
         {
             this.leftBottom = leftBottom;
             this.leftTop = leftTop;
@@ -31,7 +31,7 @@ namespace BLL.DomainObject
             this.has1MemberShipDegreeRange = true;
         }
 
-        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, float leftOf1MembershipDegreeRange, float rightOf1MembershipDegreeRangestring,string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
+        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, float leftOf1MembershipDegreeRange, float rightOf1MembershipDegreeRangestring,string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT, -1)
         {
             this.leftBottom = leftBottom;
             this.leftTop = leftTop;
@@ -42,8 +42,9 @@ namespace BLL.DomainObject
             this.leftOf1MembershipDegreeRange = leftOf1MembershipDegreeRange;
             this.rightOf1MembershipDegreeRange = rightOf1MembershipDegreeRange;
             this.has1MemberShipDegreeRange = true;
+          
         }
-        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT)
+        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT, -1)
         {
             this.leftBottom = leftBottom;
             this.leftTop = leftTop;
@@ -215,7 +216,7 @@ namespace BLL.DomainObject
                     values.Add(v1);
                     memberships.Add(Math.Min(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
                 }
-                return new DiscreteFuzzySet<float>(values, memberships, dfs.getName(), FieldType.distFS_FLOAT);
+                return new DiscreteFuzzySet<float>(values, memberships, dfs.getName(), FieldType.distFS_FLOAT, -1);
             }
         }
         public override bool isNormal(){

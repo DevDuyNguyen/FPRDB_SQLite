@@ -17,26 +17,26 @@ namespace TestProject1.UnitTest
             {
 
                 Add(
-                new ContinuousFuzzySet(19, 20, 30, 40, null),
-                new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
+                new ContinuousFuzzySet(19, 20, 30, 40, null, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
                 false
                 );
 
                 Add(
-                new ContinuousFuzzySet(19, 20, 30, 40, null),
-                new ContinuousFuzzySet(19, 22, 30, 40, null),
+                new ContinuousFuzzySet(19, 20, 30, 40, null, -1),
+                new ContinuousFuzzySet(19, 22, 30, 40, null, -1),
                 false
                 );
 
                 Add(
-                new ContinuousFuzzySet(19, 20, 30, 40, null),
-                new ContinuousFuzzySet(19, 18, 30, 40, null),
+                new ContinuousFuzzySet(19, 20, 30, 40, null, -1),
+                new ContinuousFuzzySet(19, 18, 30, 40, null, -1),
                 true
                 );
 
                 Add(
-                new ContinuousFuzzySet(19, 20, 30, 40, null),
-                new ContinuousFuzzySet(10, 20, 30, 40, null),
+                new ContinuousFuzzySet(19, 20, 30, 40, null, -1),
+                new ContinuousFuzzySet(10, 20, 30, 40, null, -1),
                 true
                 );
             }
@@ -55,17 +55,17 @@ namespace TestProject1.UnitTest
         {
             public StandardIntersection_postive_negative_testdata()
             {
-                var young = new ContinuousFuzzySet(19, 20, 30, 40, "young");
-                var fs1 = new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f}, "fs1", FieldType.distFS_FLOAT);
-                var upperYoung= new ContinuousFuzzySet(18, 19, 25, 40, "young1");
-                var lowerYoung = new ContinuousFuzzySet(20, 25, 30, 40, "young1");
-                var approx_25= new ContinuousFuzzySet(19, 25, 25, 40, "approx_25");
-                var middle_aged= new ContinuousFuzzySet(35, 50, 50, 60, "middle_aged");
+                var young = new ContinuousFuzzySet(19, 20, 30, 40, "young", -1);
+                var fs1 = new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f}, "fs1", FieldType.distFS_FLOAT, -1);
+                var upperYoung= new ContinuousFuzzySet(18, 19, 25, 40, "young1", -1);
+                var lowerYoung = new ContinuousFuzzySet(20, 25, 30, 40, "young1", -1);
+                var approx_25= new ContinuousFuzzySet(19, 25, 25, 40, "approx_25", -1);
+                var middle_aged= new ContinuousFuzzySet(35, 50, 50, 60, "middle_aged", -1);
 
                 Add(
                 young,
                 fs1,
-                 new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { young.getMembershipDegree(0.2f), young.getMembershipDegree(0.3f), young.getMembershipDegree(0.3f) }, "fs1", FieldType.distFS_FLOAT)
+                 new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { young.getMembershipDegree(0.2f), young.getMembershipDegree(0.3f), young.getMembershipDegree(0.3f) }, "fs1", FieldType.distFS_FLOAT, -1)
                 );
 
                 Add(

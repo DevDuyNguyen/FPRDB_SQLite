@@ -40,36 +40,39 @@ namespace TestProject1.IntegrationTest
         {
             //arrange
             CompositionRoot compRoot = new CompositionRoot();
-            MetadataManager metaMgr = compRoot.getMetaDataManger();
-            DatabaseManager dbMgr = compRoot.getDBMgr();
-            dbMgr.loadDB(this.dbFile);
-            FPRDBRelation relInfo = metaMgr.getRelation("student23");
-            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
+            //MetadataManager metaMgr = compRoot.getMetaDataManger();
+            //DatabaseManager dbMgr = compRoot.getDBMgr();
+            //dbMgr.loadDB(this.dbFile);
+            //FPRDBRelation relInfo = metaMgr.getRelation("student23");
+            //RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
             //act
-            FuzzyProbabilisticValue<int> actual1 = scan.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(
+            FuzzyProbabilisticValue<int> actual1 = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(
                 new FuzzyProbabilisticValueParsingData(
                     new List<Constant> { new IntConstant(1), new IntConstant(2) },
                     new List<float> { 1, 0.5f },
                     new List<float> { 1, 0.5f }
                     ),
-                FieldType.INT
+                FieldType.INT,
+                compRoot.getMetaDataManger()
                 );
 
-            FuzzyProbabilisticValue<int> actual2 = scan.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(
+            FuzzyProbabilisticValue<int> actual2 = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(
                 new FuzzyProbabilisticValueParsingData(
                     new List<Constant> { new IntConstant(1), new FuzzySetConstant("distFS1") },
                     new List<float> { 1, 0.5f },
                     new List<float> { 1, 0.5f }
                     ),
-                FieldType.distFS_INT
+                FieldType.distFS_INT,
+                compRoot.getMetaDataManger()
                 );
-            FuzzyProbabilisticValue<float> actual3 = scan.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(
+            FuzzyProbabilisticValue<float> actual3 = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(
                 new FuzzyProbabilisticValueParsingData(
                     new List<Constant> { new FloatConstant(1.1f), new FuzzySetConstant("contFS1") },
                     new List<float> { 1, 0.5f },
                     new List<float> { 1, 0.5f }
                     ),
-                FieldType.contFS
+                FieldType.contFS,
+                compRoot.getMetaDataManger()
                 );
         }
         //[Fact]
@@ -81,7 +84,7 @@ namespace TestProject1.IntegrationTest
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
             FPRDBRelation relInfo = metaMgr.getRelation("student23");
-            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser(), compRoot.getConstraintService());
             //act
             while (scan.next())
             {
@@ -97,7 +100,7 @@ namespace TestProject1.IntegrationTest
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
             FPRDBRelation relInfo = metaMgr.getRelation("student23");
-            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser());
+            RelationScan scan = new RelationScan(relInfo, dbMgr, metaMgr, compRoot.getParser(), compRoot.getConstraintService());
             //act
             while (scan.next())
             {

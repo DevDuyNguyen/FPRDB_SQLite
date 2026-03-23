@@ -11,6 +11,7 @@ namespace BLL.DomainObject
         public List<SelectField> selectList;
         public List<string> relationList;
         public SelectionCondition selectionCondition;
+        public FPRDBSchema schema;
 
         public BaseCartesianProductQueryData(List<SelectField> selectList, List<string> relationList, SelectionCondition selectionCondition)
         {
@@ -18,5 +19,8 @@ namespace BLL.DomainObject
             this.relationList = relationList;
             this.selectionCondition = selectionCondition;
         }
+        public override FPRDBSchema getSchema() => this.schema;
+
+
     }
 }
