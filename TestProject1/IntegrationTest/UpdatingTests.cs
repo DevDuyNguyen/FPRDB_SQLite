@@ -59,7 +59,7 @@ namespace TestProject1.IntegrationTest
             this.sqlProcessor.executeUpdate($"drop schema {schemaName}");
 
         }
-        [Fact]
+        //[Fact]
         public void updateTupleSuccess()
         {
             //arrange

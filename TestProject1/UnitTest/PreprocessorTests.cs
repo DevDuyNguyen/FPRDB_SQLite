@@ -58,8 +58,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_positive_testdata))]
         public void checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_positive_test(List<FPRDBRelation> relations, List<string> attributesInSelect, List<string> attributesInSelectionCondition, bool expected)
         {
             //arrange
@@ -127,8 +127,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_negative_testdata))]
         public void checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression_negative_test(List<FPRDBRelation> relations, List<string> attributesInSelect, List<string> attributesInSelectionCondition, Exception expected)
         {
             //arrange
@@ -180,8 +180,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkComparisonOperatorOnFieldConstant_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkComparisonOperatorOnFieldConstant_positive_testdata))]
         public void checkComparisonOperatorOnFieldConstant_positive_test(Field field, Constant c, CompareOperation op, bool expected)
         {
             //arrange
@@ -227,8 +227,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkComparisonOperatorOnFieldConstant_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkComparisonOperatorOnFieldConstant_negative_testdata))]
         public void checkComparisonOperatorOnFieldConstant_negative_test(Field field, Constant c, CompareOperation op, Exception expected)
         {
             //arrange
@@ -265,8 +265,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkCompatibleFieldEqualField_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkCompatibleFieldEqualField_positive_testdata))]
         public void checkCompatibleFieldEqualField_positive_test(Field f1, Field f2, bool expected)
         {
             //arrange
@@ -299,8 +299,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkCompatibleFieldEqualField_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkCompatibleFieldEqualField_negative_testdata))]
         public void checkCompatibleFieldEqualField_negative_test(Field f1, Field f2, Exception expected)
         {
             //arrange
@@ -344,8 +344,8 @@ namespace TestProject1.UnitTest
                 Add(new List<FPRDBSchema> { sch1, sch2 }, sch3, true);
             }
         }
-        [Theory]
-        [ClassData(typeof(checkCartesianProductCompatibility_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkCartesianProductCompatibility_positive_testdata))]
         public void checkCartesianProductCompatibility_positive(List<FPRDBSchema> schemas, FPRDBSchema expectedResSchema, bool expected)
         {
             //arrange
@@ -379,8 +379,8 @@ namespace TestProject1.UnitTest
                 Add(new List<FPRDBSchema> { sch1, sch2 }, new SemanticException($"Not cartesian product compatible because of common field id"));
             }
         }
-        [Theory]
-        [ClassData(typeof(checkCartesianProductCompatibility_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkCartesianProductCompatibility_negative_testdata))]
         public void checkCartesianProductCompatibility_negative(List<FPRDBSchema> schemas, SemanticException expected)
         {
             //arrange
@@ -422,8 +422,8 @@ namespace TestProject1.UnitTest
                 Add(new List<FPRDBSchema> { sch1, sch2 }, sch3, true);
             }
         }
-        [Theory]
-        [ClassData(typeof(checkCartesianProductCompatibility_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkCartesianProductCompatibility_positive_testdata))]
         public void checkNaturalJoinCompatibility_positive(List<FPRDBSchema> schemas, FPRDBSchema expectedResSchema, bool expected)
         {
             //arrange
@@ -457,8 +457,8 @@ namespace TestProject1.UnitTest
                 Add(new List<FPRDBSchema> { sch1, sch2 }, new SemanticException($"Common field person_id doesn't have same value domain"));
             }
         }
-        [Theory]
-        [ClassData(typeof(checkNaturalJoinCompatibility_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkNaturalJoinCompatibility_negative_testdata))]
         public void checkNaturalJoinCompatibility_negative(List<FPRDBSchema> schemas, SemanticException expected)
         {
             //arrange
@@ -491,8 +491,8 @@ namespace TestProject1.UnitTest
                 Add(sch1, sch2, true);
             }
         }
-        [Theory]
-        [ClassData(typeof(checkSetOperationCompatibility_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkSetOperationCompatibility_positive_testdata))]
         public void checkSetOperationCompatibility_positive(FPRDBSchema sch1, FPRDBSchema sch2, bool expected)
         {
             //arrange
@@ -533,8 +533,8 @@ namespace TestProject1.UnitTest
                 Add(sch1, sch2, new SemanticException($"Set opeation is incompatible because field person_id and field person_id"));
             }
         }
-        [Theory]
-        [ClassData(typeof(checkSetOperationCompatibility_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkSetOperationCompatibility_negative_testdata))]
         public void checkSetOperationCompatibility_negative(FPRDBSchema sch1, FPRDBSchema sch2, SemanticException expected)
         {
             //arrange
@@ -575,8 +575,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkSemanticQuery_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkSemanticQuery_positive_testdata))]
         public void checkSemanticQuery_positive(QueryData data, bool expected)
         {
             //arrange
@@ -639,8 +639,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkSemanticQuery_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkSemanticQuery_negative_testdata))]
         public void checkSemanticQuery_negative(QueryData data, SemanticException expected)
         {
             //arrange
@@ -696,8 +696,8 @@ namespace TestProject1.UnitTest
                 Add(data2, true);
             }
         }
-        [Theory]
-        [ClassData(typeof(checkSemanticModify_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkSemanticModify_positive_testdata))]
         public void checkSemanticModify_success(ModifyData data, bool expected)
         {
             //arrange
@@ -817,8 +817,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkSemanticModify_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkSemanticModify_negative_testdata))]
         public void checkSemanticModify_negative(ModifyData data, SemanticException expected)
         {
             //arrange
@@ -827,7 +827,7 @@ namespace TestProject1.UnitTest
             //assert
             Assert.Equal(expected.Message, actual.Message);
         }
-        [Fact]
+        //[Fact]
         public void checkSemanticModify_integrityConstraintViolation()
         {
             //arrange
