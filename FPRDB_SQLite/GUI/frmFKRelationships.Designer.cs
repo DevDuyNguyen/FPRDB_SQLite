@@ -168,6 +168,7 @@
             // grdcolPKAttr
             // 
             grdcolPKAttr.ColumnEdit = repositoryItemLookUpEdit2;
+            grdcolPKAttr.FieldName = "PKAttr";
             grdcolPKAttr.MinWidth = 25;
             grdcolPKAttr.Name = "grdcolPKAttr";
             grdcolPKAttr.Visible = true;
@@ -183,6 +184,7 @@
             // grdcolFKAttr
             // 
             grdcolFKAttr.ColumnEdit = repositoryItemLookUpEdit1;
+            grdcolFKAttr.FieldName = "FKAttr";
             grdcolFKAttr.MinWidth = 25;
             grdcolFKAttr.Name = "grdcolFKAttr";
             grdcolFKAttr.Visible = true;

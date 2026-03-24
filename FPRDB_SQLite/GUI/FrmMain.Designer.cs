@@ -137,6 +137,7 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
+            barButtonRelationships = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -189,10 +190,10 @@ namespace FPRDB_SQLite.GUI
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS, barButtonRelationships });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            ribbonControl.MaxItemId = 58;
+            ribbonControl.MaxItemId = 59;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
             ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
@@ -1030,6 +1031,7 @@ namespace FPRDB_SQLite.GUI
             // popupMenuTreeView
             // 
             popupMenuTreeView.ItemLinks.Add(barButtonSelectTuples);
+            popupMenuTreeView.ItemLinks.Add(barButtonRelationships);
             popupMenuTreeView.Name = "popupMenuTreeView";
             popupMenuTreeView.Ribbon = ribbonControl;
             // 
@@ -1084,6 +1086,13 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
             CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
+            // 
+            // barButtonRelationships
+            // 
+            barButtonRelationships.Caption = "Relationships";
+            barButtonRelationships.Id = 58;
+            barButtonRelationships.Name = "barButtonRelationships";
+            barButtonRelationships.ItemClick += barButtonRelationships_ItemClick;
             // 
             // frmMain
             // 
@@ -1262,6 +1271,7 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
         private DevExpress.XtraBars.BarButtonItem iExportFS;
         private DevExpress.XtraBars.BarButtonItem iImportFS;
+        private DevExpress.XtraBars.BarButtonItem barButtonRelationships;
     }
 }
 

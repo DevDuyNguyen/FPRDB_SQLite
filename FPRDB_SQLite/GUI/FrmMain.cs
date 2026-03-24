@@ -376,7 +376,8 @@ namespace FPRDB_SQLite.GUI
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
                 {
-                    DisplayRelationDetail(relation);
+                    _selectedRelation = relation;
+                    DisplayRelationDetail(_selectedRelation);
                 }
             }
         }
@@ -1654,6 +1655,11 @@ namespace FPRDB_SQLite.GUI
                     XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void barButtonRelationships_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            new frmFKRelationships(compRoot, _selectedRelation).ShowDialog();
         }
     }
 }
