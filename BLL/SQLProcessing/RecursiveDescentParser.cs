@@ -106,7 +106,7 @@ namespace BLL.SQLProcessing
             }
             else
             {
-                throw createSQLSyntaxException("Not a data type");
+                throw createSQLSyntaxException($"{lexer.getCurrentToken().Value} isnt' a data type");
             }
             return new FieldInfo(type, txtLength);
 
@@ -177,6 +177,7 @@ namespace BLL.SQLProcessing
                 {
                     constraintData = constraintDef();
                 }
+                
                 return new FPRDBSchema(schemaName
                     ,fieldDefList
                     ,(constraintData!=null)?constraintData.getFields():null
@@ -186,6 +187,10 @@ namespace BLL.SQLProcessing
             catch(MismatchTokenType ex)
             {
                 throw createSQLSyntaxException(ex.Message);
+            }
+            finally
+            {
+                this.lexer.clearTokens();
             }
         }
         public Object create()
@@ -208,12 +213,20 @@ namespace BLL.SQLProcessing
         }
         public FPRDBRelation createRelation()
         {
-            lexer.eatKeyword("CREATE");
-            lexer.eatKeyword("RELATION");
-            string relationName = relation();
-            lexer.eatKeyword("ON");
-            string schemaName = schema();
-            return new FPRDBRelation(relationName, schemaName);
+            try
+            {
+                lexer.eatKeyword("CREATE");
+                lexer.eatKeyword("RELATION");
+                string relationName = relation();
+                lexer.eatKeyword("ON");
+                string schemaName = schema();
+
+                return new FPRDBRelation(relationName, schemaName);
+            }
+            finally
+            {
+                this.lexer.clearTokens();
+            }
         }
         public List<string> fieldList()
         {
@@ -295,12 +308,12 @@ namespace BLL.SQLProcessing
             {
                 lexer.eatDelimiter(",");
                 possibleValueData = possibleValue();
-                if(valueList.Count!=0 
-                    && !(possibleValueData.constant is FuzzySetConstant)
-                    && valueList[0].GetType()!= possibleValueData.constant.GetType())
-                {
-                    throw new SemanticException("Values within a fuzzy probabilistic value must come from the same domain");
-                }
+                //if(valueList.Count!=0 
+                //    && !(possibleValueData.constant is FuzzySetConstant)
+                //    && valueList[0].GetType()!= possibleValueData.constant.GetType())
+                //{
+                //    throw new SemanticException("Values within a fuzzy probabilistic value must come from the same domain");
+                //}
                 valueList.Add(possibleValueData.constant);
                 lowerBoundList.Add(possibleValueData.lowerBound);
                 upperBoundList.Add(possibleValueData.upperBound);
@@ -325,17 +338,99 @@ namespace BLL.SQLProcessing
         }
         public InsertData insert()
         {
-            lexer.eatKeyword("INSERT");
-            lexer.eatKeyword("INTO");
+            try
+            {
+                lexer.eatKeyword("INSERT");
+                lexer.eatKeyword("INTO");
+                string relName = relation();
+                lexer.eatDelimiter("(");
+                List<string> fields = fieldList();
+                lexer.eatDelimiter(")");
+                lexer.eatKeyword("VALUES");
+                lexer.eatDelimiter("(");
+                List<FuzzyProbabilisticValueParsingData> insertValues = fuzzyProbabilisticValueList();
+                lexer.eatDelimiter(")");
+
+                return new InsertData(relName, fields, insertValues);
+            }
+            finally
+            {
+
+                this.lexer.clearTokens();
+            }
+        }
+        public DeleteData delete()
+        {
+            try
+            {
+                lexer.eatKeyword("DELETE");
+                lexer.eatKeyword("FROM");
+                string rel = relation();
+                SelectionCondition condition = null;
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
+                    condition = selectionCondition();
+                }
+                return new DeleteData(rel, condition);
+            }
+            finally
+            {
+                this.lexer.clearTokens();
+            }
+        }
+        public DropRelationData dropRelation()
+        {
+            lexer.eatKeyword("RELATION");
+            return new DropRelationData(relation());
+        }
+        public DropSchemaData dropSchema()
+        {
+            lexer.eatKeyword("SCHEMA");
+            return new DropSchemaData(schema());
+        }
+        public object drop()
+        {
+            lexer.eatKeyword("DROP");
+            if (lexer.matchKeyword("RELATION"))
+                return dropRelation();
+            else if (lexer.matchKeyword("SCHEMA"))
+                return dropSchema();
+            else
+                throw createSQLSyntaxException("After DROP keyword must be either SCHEMA or RELATIOM");
+        }
+        public ModifyData modify()
+        {
+            lexer.eatKeyword("UPDATE");
             string relName = relation();
-            lexer.eatDelimiter("(");
-            List<string> fields = fieldList();
-            lexer.eatDelimiter(")");
-            lexer.eatKeyword("VALUES");
-            lexer.eatDelimiter("(");
-            List<FuzzyProbabilisticValueParsingData> insertValues = fuzzyProbabilisticValueList();
-            lexer.eatDelimiter(")");
-            return new InsertData(relName, fields, insertValues);
+            lexer.eatKeyword("SET");
+            string assignedField = field();
+            string assignSymbol = lexer.eatOperator();
+            if (assignSymbol != "=")
+                throw createSQLSyntaxException("assign symbol = is expected");
+            if (lexer.matchIdentifier())
+            {
+                string assigningField = field();
+                SelectionCondition condition = null;
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
+                    condition = this.selectionCondition();
+                }
+                return new FieldFieldModifyData(assignedField, relName, assigningField, condition);
+            }
+            else
+            {
+                FuzzyProbabilisticValueParsingData assigningFProbValue = this.fuzzyProbabilisticValue();
+                SelectionCondition condition = null;
+                if (lexer.matchKeyword("WHERE"))
+                {
+                    lexer.eatKeyword("WHERE");
+                    condition = this.selectionCondition();
+                }
+                return new FieldFuzzProbValueModifyData(assigningFProbValue, relName, assignedField, condition);
+            }
+
         }
         public Object updateCommand()
         {
@@ -343,9 +438,25 @@ namespace BLL.SQLProcessing
             {
                 return insert();
             }
-            else
+            else if (lexer.matchKeyword("DELETE"))
+            {
+                return delete();
+            }
+            else if (lexer.matchKeyword("MODIFY"))
             {
                 throw new NotImplementedException();
+            }
+            else if (lexer.matchKeyword("DROP"))
+            {
+                return drop();
+            }
+            else if (lexer.matchKeyword("UPDATE"))
+            {
+                return modify();
+            }
+            else
+            {
+                throw createSQLSyntaxException("Not a update command");
             }
         }
         public List<SelectField> selectList()
@@ -422,8 +533,29 @@ namespace BLL.SQLProcessing
                 string compareOperator = lexer.eatOperator();
                 if (compareOperator != "=" || !lexer.matchProbabilisticCombinationStrategy())
                 {
-                    object v = lexer.eatConstant();
-                    return new AtomicSelectionExpressionFieldConstant(fieldName1, ConstantUltilities.turnValueIntoConstant(v), CompareOperatorUltilities.convertStringToEnum(compareOperator), this.metaDataManager);
+                    Constant v;
+                    if (this.lexer.matchNumberConstant())
+                    {
+                        object number = this.lexer.eatNumberConstant();
+                        if (number is int)
+                            v = new IntConstant((int)number);
+                        else
+                            v = new FloatConstant((float)number);
+                    }
+                    else if (this.lexer.matchStringConstant())
+                    {
+                        v = new StringConstant(this.lexer.eatStringConstant());
+                    }
+                    else if (this.lexer.matchBooleanConstant())
+                    {
+                        v = new BooleanConstant(this.lexer.eatBooleanConstant());
+                    }
+                    else //if (this.lexer.matchFuzzySetConstant())
+                    {
+                        v = new FuzzySetConstant(this.lexer.eatFuzzySetConstant());
+                    }
+                    return new AtomicSelectionExpressionFieldConstant(fieldName1, v, CompareOperatorUltilities.convertStringToEnum(compareOperator), this.metaDataManager);
+                    //return new AtomicSelectionExpressionFieldConstant(fieldName1, ConstantUltilities.turnValueIntoConstant(v), CompareOperatorUltilities.convertStringToEnum(compareOperator), this.metaDataManager);
                 }
                 else
                 {
@@ -498,7 +630,9 @@ namespace BLL.SQLProcessing
         }
         public SelectionExpression selectionExpression()
         {
-            return DISJUNCTION_DIFFERENCE_SelectionExpresion();
+            var expression = DISJUNCTION_DIFFERENCE_SelectionExpresion();
+
+            return expression;
         }
         public SelectionCondition PrimarySelectionCondition()
         {
@@ -561,7 +695,9 @@ namespace BLL.SQLProcessing
         }
         public SelectionCondition selectionCondition()
         {
-            return ORSelectionCondition();
+            var condition = ORSelectionCondition();
+
+            return condition;
         }
         public QueryData PrimaryQuery()
         {
@@ -643,7 +779,15 @@ namespace BLL.SQLProcessing
         }
         public QueryData query()
         {
-            return UNION_EXCEPT_Query();
+            try{
+                var data = UNION_EXCEPT_Query();
+
+                return data;
+            }
+            finally{
+
+                this.lexer.clearTokens();
+            }
         }
 
     }

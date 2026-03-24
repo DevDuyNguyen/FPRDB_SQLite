@@ -1,7 +1,9 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,17 +11,29 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace BLL.SQLProcessing
 {
     public class BasicUpdatePlanner:UpdatePlanner
     {
         private DatabaseManager dbMgr;
+        private MetadataManager metaDataMgr;
+        private RecursiveDescentParser parser;
+        private ConstraintService constraintService;
 
-        public BasicUpdatePlanner(DatabaseManager dbMgr)
+        public BasicUpdatePlanner(DatabaseManager dbMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser, ConstraintService constraintService)
         {
             this.dbMgr = dbMgr;
+            this.metaDataMgr = metaDataMgr;
+            this.parser = parser;
+            this.constraintService = constraintService;
         }
+
+        //public BasicUpdatePlanner(DatabaseManager dbMgr)
+        //{
+        //    this.dbMgr = dbMgr;
+        //}
 
         public bool executeCreateSchema(FPRDBSchema data)
         {
@@ -278,19 +292,18 @@ namespace BLL.SQLProcessing
                     }
                 }
             }
-            int relOID;
-            IDataReader reader = this.dbMgr.executeQuery($"SELECT oid FROM fprdb_Relation WHERE rel_name='{data.relation}'");
-            using (reader)
-            {
-                if (!reader.Read())
-                    throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
-                relOID=Convert.ToInt32(reader["oid"]);
+            //not done: what if the same fuzzy set appear more than one in a fuzzy probabilistic value
+            int relOID = this.metaDataMgr.getRelationOID(data.relation);
+            if (relOID==-1)
+            { 
+                throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
             }
+
             foreach(KeyValuePair<string, int> entry in fuzzySetOIDs)
             {
-                reader = this.dbMgr.executeQuery($"SELECT 1 FROM FPRDB_Rel_FuzzSet WHERE rel_oid={relOID} AND fuzzset_oid={fuzzySetOIDs[entry.Key]}");
+                
                 bool relHasFuzzySet;
-                using (reader)
+                using (IDataReader reader = this.dbMgr.executeQuery($"SELECT 1 FROM FPRDB_Rel_FuzzSet WHERE rel_oid={relOID} AND fuzzset_oid={fuzzySetOIDs[entry.Key]}"))
                 {
                     relHasFuzzySet = reader.Read();
                 }
@@ -305,6 +318,94 @@ namespace BLL.SQLProcessing
 
         }
 
+        public int executeDelete(DeleteData data)
+        {
+            Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser, this.constraintService);
+            if(data.selectionCondition!=null)
+                p = new SelectPlan(p, data.selectionCondition);
+            UpdateScan us = (UpdateScan)p.open();
+            int count = 0;
+            while (us.next())
+            {
+                us.delete();
+                count++;
+            }
+            return count;
+
+        }
+        public void executeDropRelation(string name)
+        {
+            int relOid = this.metaDataMgr.getRelationOID(name);
+            //Delete tupples in FPRDB_Rel_FuzzSet that contain ID of relation
+            this.dbMgr.executeNonQuery($"delete from FPRDB_Rel_FuzzSet where rel_oid='{relOid}'");
+            //Delete relation from fprdb_Relation 
+            this.dbMgr.executeNonQuery($"delete from fprdb_Relation where oid={relOid}");
+            //Drop table of relation
+            this.dbMgr.executeNonQuery($"DROP TABLE IF EXISTS {name}");
+            
+        }
+        public void executeDropSchema(string name)
+        {
+            int schemaOID = this.metaDataMgr.getSchemaOID(name);
+            //Delete the schema's attributes from fprdb_Attribute
+            this.dbMgr.executeNonQuery($"delete from fprdb_Attribute where att_relschema_id={schemaOID}");
+            //Delete the primary key constrain of schema from fprdb_Constraint
+            this.dbMgr.executeNonQuery($"delete from fprdb_Constraint where con_relschema_id={schemaOID}"); ;
+            //Delete the schema from fprdb_RelationSchema
+            this.dbMgr.executeNonQuery($"delete from fprdb_RelationSchema where oid={schemaOID}");
+        }
+        public int executeModify(ModifyData data)
+        {
+            Plan p = new RelationPlan(data.getRelation(), this.metaDataMgr, this.dbMgr, this.parser, this.constraintService);
+            if (data.getSelectionCondition() != null)
+                p = new SelectPlan(p, data.getSelectionCondition());
+            UpdateScan us = (UpdateScan)p.open();
+            string fldName = data.getAssignedField();
+            FieldType fieldType = p.getSchema().getFieldByName(fldName).getFieldInfo().getType();
+            
+            int count = 0;
+            while (us.next())
+            {
+                //not done: refactor by delegate or c# equivalent of pass function as member in js
+                if(data is FieldFieldModifyData)
+                {
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        us.setFieldContent<int>(fldName, us.getFieldContent<int>(fldName));
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                        us.setFieldContent<float>(fldName, us.getFieldContent<float>(fldName));
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                        us.setFieldContent<string>(fldName, us.getFieldContent<string>(fldName));
+                    else //if (fieldType == FieldType.BOOLEAN)
+                        us.setFieldContent<bool>(fldName, us.getFieldContent<bool>(fldName));
+                }
+                else
+                {
+                    FuzzyProbabilisticValueParsingData parsed_fprobValue = (FuzzyProbabilisticValueParsingData)data.getAssignValue();
+                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    {
+                        FuzzyProbabilisticValue<int> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<int>(fldName, v);
+                    }
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    {
+                        FuzzyProbabilisticValue<float> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<float>(fldName, v);
+                    }
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    {
+                        FuzzyProbabilisticValue<string> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<string>(fldName, v);
+                    }
+                    else //if (fieldType == FieldType.BOOLEAN)
+                    {
+                        FuzzyProbabilisticValue<bool> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<bool>(parsed_fprobValue, fieldType, this.metaDataMgr);
+                        us.setFieldContent<bool>(fldName, v);
+                    }
+                }
+                ++count;
+            }
+            return count;
+        }
 
     }
 }

@@ -169,12 +169,12 @@ namespace BLL.SQLProcessing
         public int getFuzzySetOID(string name)
         {
             IDataReader reader = this.databaseMgr.executeQuery($"SELECT OID FROM fprdb_FuzzySet WHERE fuzzset_name='{name}'");
-            int oid;
+            int oid=-1;
             using (reader)
             {
-                if (!reader.Read())
-                    throw new QueryDataNotExistException($"Fuzzy set {name} doesn't exist");
-                oid = Convert.ToInt32(reader["oid"]);
+                if (reader.Read())
+                    oid = Convert.ToInt32(reader["oid"]);
+                
             }
             return oid;
         }
@@ -220,7 +220,7 @@ namespace BLL.SQLProcessing
             if(fuzzSetType != FieldType.contFS)
             {
                 sql = $@"
-                    SELECT fuzzset_x,fuzzset_membership_degree 
+                    SELECT fuzzset_x,fuzzset_membership_degree, fs.oid as ""fs_oid""
                     FROM fprdb_DiscreteFuzzySet as distFS
                     JOIN fprdb_FuzzySet as fs on fs.oid=distFS.oid
                     where fs.fuzzset_name='{name}';
@@ -239,15 +239,16 @@ namespace BLL.SQLProcessing
                                             .ToList();
                     string str = (string)reader["fuzzset_membership_degree"];
                     List<float> memberships = (str).Split(",").Select(float.Parse).ToList();
+                    int oid = Convert.ToInt32(reader["fs_oid"]);
 
-                    return new DiscreteFuzzySet<T>(values, memberships, name, fuzzSetType);
+                    return new DiscreteFuzzySet<T>(values, memberships, name, fuzzSetType, oid);
 
                 }
             }
             else
             {
                 sql = $@"
-                    SELECT fuzzset_bottom_left,fuzzset_top_left,fuzzset_top_right,fuzzset_bottom_right 
+                    SELECT fuzzset_bottom_left,fuzzset_top_left,fuzzset_top_right,fuzzset_bottom_right, fs.oid as ""fs_oid""
                     FROM fprdb_ContinousFuzzySet as contFS
                     JOIN fprdb_FuzzySet as fs on fs.oid=contFS.oid
                     where fs.fuzzset_name='{name}';
@@ -261,10 +262,99 @@ namespace BLL.SQLProcessing
                     float p2 = Convert.ToSingle(reader["fuzzset_top_left"]);
                     float p3 = Convert.ToSingle(reader["fuzzset_top_right"]);
                     float p4 = Convert.ToSingle(reader["fuzzset_bottom_right"]);
-                    return (FuzzySet<T>)(object)new ContinuousFuzzySet(p1, p2, p3, p4, name);
+                    int oid = Convert.ToInt32(reader["fs_oid"]);
+                    return (FuzzySet<T>)(object)new ContinuousFuzzySet(p1, p2, p3, p4, name, oid);
                 }
             }
         }
+        public int getRelationOID(string name)
+        {
+            int relOid=-1;
+            string getOIDofRelation = $"select oid from fprdb_Relation where rel_name='{name}'";
+            using(IDataReader r = this.databaseMgr.executeQuery(getOIDofRelation))
+            {
+                if (r.Read())
+                {
+                    relOid = Convert.ToInt32(r["oid"]);
+                }
+                else
+                    throw new QueryDataNotExistException($"Relation {name} doesn't exist");
+            }
+            return relOid;
+        }
+        public int getSchemaOID(string name)
+        {
+            int schemaOID = -1;
+            using (IDataReader r = this.databaseMgr.executeQuery($"select oid from fprdb_RelationSchema where relschema_name='{name}'"))
+            {
+                if (r.Read())
+                {
+                    schemaOID = Convert.ToInt32(r["oid"]);
+                }
+            }
+            return schemaOID;
+        }
+        public bool isRelationOnSchemaExist(string schemaName)
+        {
+            int schemaOID=getSchemaOID(schemaName);
+            if(schemaOID==-1)
+                throw new QueryDataNotExistException($"Schema {schemaName} doesn't exist");
+            using (IDataReader r = this.databaseMgr.executeQuery($"select 1 from fprdb_Relation where rel_relation_schema={schemaOID}"))
+            {
+                return r.Read();
+            }
 
+        }
+        public FPRDBSchema getFPRDBSchema(string name)
+        {
+            string getSchemaSQL = $@"
+                SELECT
+	                relSch.oid as 'relSch.oid',
+	                relSch.relschema_name,
+	                attr.att_name,
+	                attr.att_not_null,
+                    attr.att_type_mod,
+	                type.oid as 'type.oid',
+	                type.type_name,
+                    cons.con_attributes,
+                    cons.con_name
+                FROM fprdb_RelationSchema as relSch
+                JOIN fprdb_Attribute as attr on relSch.oid=attr.att_relschema_id
+                JOIN fprdb_Type as type on attr.att_type_id=type.oid
+                JOIN fprdb_Constraint AS cons ON cons.con_relschema_id = relSch.oid
+                WHERE rel.rel_name='{name}' AND cons.con_type = 'IDENTITY'
+                ORDER BY 'rel.oid';
+            ";
+            IDataReader reader = this.databaseMgr.executeQuery(getSchemaSQL);
+
+            string schemaName;
+            List<Field> fields = new List<Field>();
+            List<string> primarykey = new List<string>();
+            string primaryConstraintName;
+
+            using (reader)
+            {
+
+                if (!reader.Read())
+                {
+                    throw new QueryDataNotExistException($"Relation {name} doesn't exist");
+                }
+                schemaName = (string)reader["relschema_name"];
+                primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
+                primaryConstraintName = (string)reader["con_name"];
+                do
+                {
+                    fields.Add(
+                        new Field(
+                            (string)reader["att_name"],
+                            new FieldInfo(Enum.Parse<FieldType>((string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
+                        )
+                    );
+
+                } while (reader.Read());
+            }
+            return new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName);
+
+        }
     }
 }

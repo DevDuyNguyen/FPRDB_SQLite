@@ -22,14 +22,16 @@ namespace TestProject1.UnitTest
                 new List<float>() { 1, 0.5f, 0.1f},
                 "",
                 FieldType.CHAR
+                , -1
                 );
             this.doubleDistFuzzSet = new DiscreteFuzzySet<float>(
                 new List<float>() { 12,23,40 },
                 new List<float>() { 1, 0.5f, 0.1f },
                 "",
                 FieldType.CHAR
+                , -1
                 );
-            this.ContFuzzSet = new ContinuousFuzzySet(10,20,30,40, "");
+            this.ContFuzzSet = new ContinuousFuzzySet(10,20,30,40, "", -1);
         }
 
         [Theory]

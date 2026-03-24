@@ -84,8 +84,8 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(this.dbFile);
-            Plan p1 = new RelationPlan("DIAGNOSE1", metaMgr, dbMgr, compRoot.getParser());
-            Plan p2 = new RelationPlan("DIAGNOSE2", metaMgr, dbMgr, compRoot.getParser());
+            Plan p1 = new RelationPlan("DIAGNOSE1", metaMgr, dbMgr, compRoot.getParser(), compRoot.getConstraintService());
+            Plan p2 = new RelationPlan("DIAGNOSE2", metaMgr, dbMgr, compRoot.getParser(), compRoot.getConstraintService());
 
             Plan p3 = new UnionPlan(p1, p2, ProbabilisticCombinationStrategy.DISJUNCTION_INDEPENDANCE);
             Scan res = p3.open();

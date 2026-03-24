@@ -40,6 +40,11 @@ namespace BLL.DomainObject
         {
             return this.lSelectionCondition.getAtomicSelectionExpressions().Concat(this.rSelectionCondition.getAtomicSelectionExpressions()).ToList();
         }
-
+        public override List<string> getMentionedAttributes()
+        {
+            List<string> ans = new List<string>(this.lSelectionCondition.getMentionedAttributes());
+            ans.AddRange(this.rSelectionCondition.getMentionedAttributes());
+            return ans;
+        }
     }
 }

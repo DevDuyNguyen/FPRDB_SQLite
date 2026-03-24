@@ -884,310 +884,40 @@ namespace FPRDB_SQLite.GUI
             SaveCurrentFile();
         }
         #endregion
+        //hàm chèn ký tự
+        private void InsertSymbol(string symbol)
+        {
+            // 1. Đảm bảo ô nhập liệu được focus trước khi thao tác
+            memoEditTxtQuery.Focus();
+
+            // 2. Thay thế đoạn đang chọn (nếu có) bằng symbol, 
+            // hoặc chèn symbol vào đúng vị trí con trỏ nếu không chọn gì.
+            // Cách này không làm thay đổi toàn bộ thuộc tính .Text nên không gây bôi đen lại từ đầu.
+            memoEditTxtQuery.SelectedText = symbol;
+
+            // 3. Đưa con trỏ về sau ký tự vừa chèn (phòng trường hợp DevExpress tự reset)
+            memoEditTxtQuery.SelectionStart = memoEditTxtQuery.SelectionStart;
+            memoEditTxtQuery.SelectionLength = 0;
+        }
         #region Page Group Conjuntion
-        private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨂_ig ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iConjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨂_in ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iConjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨂_me ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iConjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨂_pc ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
+        private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨂_ig ");
+        private void iConjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨂_in ");
+        private void iConjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨂_me ");
+        private void iConjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨂_pc ");
         #endregion
         #region Page Group Disjunction
-        private void iDisjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨁_ig ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iDisjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨁_in ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iDisjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨁_me ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iDisjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⨁_pc ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
+        private void iDisjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨁_ig ");
+        private void iDisjunctionIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨁_in ");
+        private void iDisjunctionMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨁_me ");
+        private void iDisjunctionPositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨁_pc ");
         #endregion
         #region Page Group Difference
-        private void iDifferenceIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⦵_ig ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iDifferenceIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⦵_in ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iDiferenceMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⦵_me ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
-
-        private void iDifferencePositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⦵_pc ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
+        private void iDifferenceIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⦵_ig ");
+        private void iDifferenceIndependence_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⦵_in ");
+        private void iDiferenceMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⦵_me ");
+        private void iDifferencePositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⦵_pc ");
         #endregion
-        private void ExcuteQuery(string sql)
+        private void ExcuteQueryDemo(string sql)
         {
             //try
             //{
@@ -1355,7 +1085,227 @@ namespace FPRDB_SQLite.GUI
             {
                 XtraMessageBox.Show("Lỗi hiển thị dữ liệu giả: \n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+        private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string sql = memoEditTxtQuery.Text;
+            string firstString = sql.Split(' ')[0];
+            switch (firstString.ToUpper())
+            {
+                case "INSERT":
+                case "DELETE":
+                case "UPDATE":
+                case "DROP":
+                    ExecuteUpdate(sql);
+                    break;
+                case "CREATE":
+                    ExecuteDataDefinition(sql);
+                    break;
+                default:
+                    ExecuteQuery(sql);
+                    break;
+            }
+            
+        }
+        private void ExecuteDataDefinition(string sql)
+        {
+            try
+            {
+                this.sqlProcessor.executeDataDefinition(sql);
+                memoEditMessage.Text = $"Success";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SQLSyntaxException ex)
+            {
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (MismatchTokenType ex)
+            {
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (NotSupportedException ex)
+            {
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            }
 
+        }
+        private void ExecuteUpdate(string sql)
+        {
+            try
+            {
+                int noRowsAffected = this.sqlProcessor.executeUpdate(sql);
+                memoEditMessage.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SQLSyntaxException ex)
+            {
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (MismatchTokenType ex)
+            {
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (NotSupportedException ex)
+            {
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            }
+
+        }
+        private void ExecuteQuery(string sql)
+        {
+            try
+            {
+                DataTable resultForGridView = new DataTable();
+                Plan p = this.sqlProcessor.createQueryPlan(sql);
+                FPRDBSchema schema = p.getSchema();
+                Scan s = p.open();
+
+                //create columns for grid view of query result
+                foreach (Field f in schema.getFields())
+                {
+                    resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
+                }
+                //Extract the result for grid view
+                string[] tupleForGridView = new string[schema.getFields().Count];
+                Field field;
+                List<Field> fields = schema.getFields();
+                while (s.next())
+                {
+                    for (int i = 0; i < schema.getFields().Count; ++i)
+                    {
+                        field = fields[i];
+                        switch (field.getFieldInfo().getType())
+                        {
+                            case FieldType.INT:
+                            case FieldType.distFS_INT:
+                                tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
+                                break;
+                            case FieldType.FLOAT:
+                            case FieldType.distFS_FLOAT:
+                            case FieldType.contFS:
+                                //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
+                                tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
+                                break;
+                            case FieldType.CHAR:
+                            case FieldType.VARCHAR:
+                            case FieldType.distFS_TEXT:
+                                //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
+                                tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
+                                break;
+                            case FieldType.BOOLEAN:
+                                //tupleForGridView.Add((s.getFieldContent<bool>(field.getFieldName())).ToString());
+                                tupleForGridView[i] = s.getFieldContent<bool>(field.getFieldName()).ToString();
+                                break;
+                        }
+                    }
+                    resultForGridView.Rows.Add(tupleForGridView);
+
+
+                }
+                //bind the result to the grid control
+                gridControlResultQuery.DataSource = resultForGridView;
+                // Mở rộng giao diện để xem cả query và kết quả
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+                gridViewResultQuery.PopulateColumns();
+
+                // Sau khi thành công, mở rộng Panel và đảm bảo tab Result được hiển thị
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
+
+                // Ghi thông báo thành công vào MemoEdit
+                memoEditMessage.Text = $"Query executed successfully";
+            }
+            catch (SQLSyntaxException ex)
+            {
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (MismatchTokenType ex)
+            {
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (NotSupportedException ex)
+            {
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            }
+        }
+        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            string symbol = " ⇒ ";
+            // Kiểm tra nếu ô query đang trống thì gán thẳng
+            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
+            {
+                memoEditTxtQuery.Text = symbol;
+                memoEditTxtQuery.SelectionStart = symbol.Length;
+            }
+            else
+            {
+                // Lấy vị trí con trỏ hiện tại
+                int index = memoEditTxtQuery.SelectionStart;
+
+                // Chèn ký hiệu vào đúng vị trí con trỏ
+                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
+
+                // Đặt lại vị trí con trỏ sau khi chèn
+                memoEditTxtQuery.SelectionStart = index + symbol.Length;
+            }
+
+            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
+            memoEditTxtQuery.Focus();
         }
         #endregion
         #region Tab Page Schema
@@ -1367,97 +1317,6 @@ namespace FPRDB_SQLite.GUI
                 {
                     reLoadDatabaseTree();
                 }
-            }
-
-        }
-        #endregion
-        #region Tab Page Relation
-
-        private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (e.Action != DataRowAction.Add && e.Action != DataRowAction.Change) return;
-
-            DataRow row = e.Row;
-
-            var schema = _selectedRelation.fprdbSchema;
-            List<Field> fields = schema.fields;
-
-            try
-            {
-                StringBuilder sbRow = new StringBuilder();
-                sbRow.AppendLine("--- Row ---");
-
-                foreach (var field in fields)
-                {
-                    string fieldName = field.getFieldName();
-                    var cellValue = row[fieldName];
-
-                    if (cellValue == DBNull.Value || cellValue == null)
-                    {
-                        sbRow.AppendLine($"{fieldName}: (empty)");
-                        continue;
-                    }
-                    sbRow.AppendLine($"{fieldName}: {cellValue}");
-                }
-                if (e.Action == DataRowAction.Add)
-                    MessageBox.Show($"Add\n\n{sbRow}", "Saved",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                else
-                    MessageBox.Show($"Update\n\n{sbRow}", "Saved",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Auto save failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void RelInfo_RowDeleting(object sender, DataRowChangeEventArgs e)
-        {
-            if (e.Action != DataRowAction.Delete) return;
-
-            DataRow row = e.Row;
-
-            try
-            {
-                var schema = _selectedRelation.fprdbSchema;
-                List<string> pks = schema.primarykey;
-                List<string> pkValues = new List<string>();
-                StringBuilder sbRow = new StringBuilder();
-                sbRow.AppendLine("--- Row ---");
-
-                foreach (var pk in pks)
-                {
-                    var cellValue = row[pk];
-
-                    if (cellValue == DBNull.Value || cellValue == null)
-                    {
-                        sbRow.AppendLine($"{pk}: (empty)");
-                        continue;
-                    }
-                    sbRow.AppendLine($"{pk}: {cellValue}");
-                }
-
-                var result = MessageBox.Show(
-                   $"Delete \n\n{sbRow}",
-                   "Confirm Delete",
-                   MessageBoxButtons.YesNo,
-                   MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Yes)
-                {
-                    MessageBox.Show($"Deleted \n\n{sbRow}", "Deleted",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    e.Row.RejectChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Delete failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -1804,6 +1663,93 @@ namespace FPRDB_SQLite.GUI
             {
                 e.Cancel = true;
                 MessageBox.Show("Primary key cannot be empty! At least 1 row required.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Add && e.Action != DataRowAction.Change) return;
+
+            DataRow row = e.Row;
+
+            var schema = _selectedRelation.fprdbSchema;
+            List<Field> fields = schema.fields;
+
+            try
+            {
+                StringBuilder sbRow = new StringBuilder();
+                sbRow.AppendLine("--- Row ---");
+
+                foreach (var field in fields)
+                {
+                    string fieldName = field.getFieldName();
+                    var cellValue = row[fieldName];
+
+                    if (cellValue == DBNull.Value || cellValue == null)
+                    {
+                        sbRow.AppendLine($"{fieldName}: (empty)");
+                        continue;
+                    }
+                    sbRow.AppendLine($"{fieldName}: {cellValue}");
+                }
+                if (e.Action == DataRowAction.Add)
+                    MessageBox.Show($"Add\n\n{sbRow}", "Saved",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show($"Update\n\n{sbRow}", "Saved",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Auto save failed: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void RelInfo_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Delete) return;
+
+            DataRow row = e.Row;
+
+            try
+            {
+                var schema = _selectedRelation.fprdbSchema;
+                List<string> pks = schema.primarykey;
+                List<string> pkValues = new List<string>();
+                StringBuilder sbRow = new StringBuilder();
+                sbRow.AppendLine("--- Row ---");
+
+                foreach (var pk in pks)
+                {
+                    var cellValue = row[pk];
+
+                    if (cellValue == DBNull.Value || cellValue == null)
+                    {
+                        sbRow.AppendLine($"{pk}: (empty)");
+                        continue;
+                    }
+                    sbRow.AppendLine($"{pk}: {cellValue}");
+                }
+
+                var result = MessageBox.Show(
+                   $"Delete \n\n{sbRow}",
+                   "Confirm Delete",
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    MessageBox.Show($"Deleted \n\n{sbRow}", "Deleted",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    e.Row.RejectChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Delete failed: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

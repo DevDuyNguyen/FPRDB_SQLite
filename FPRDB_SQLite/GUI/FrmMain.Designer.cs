@@ -655,6 +655,7 @@ namespace FPRDB_SQLite.GUI
             // RelationsplitContainerControl
             // 
             RelationsplitContainerControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            RelationsplitContainerControl.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
             RelationsplitContainerControl.Location = new System.Drawing.Point(0, 193);
             RelationsplitContainerControl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             RelationsplitContainerControl.Name = "RelationsplitContainerControl";
@@ -670,7 +671,7 @@ namespace FPRDB_SQLite.GUI
             RelationsplitContainerControl.Panel2.Controls.Add(xtraTabControlDatabase);
             RelationsplitContainerControl.Panel2.Text = "Panel2";
             RelationsplitContainerControl.Size = new System.Drawing.Size(970, 376);
-            RelationsplitContainerControl.SplitterPosition = 209;
+            RelationsplitContainerControl.SplitterPosition = 250;
             RelationsplitContainerControl.TabIndex = 5;
             // 
             // treeView
@@ -683,7 +684,7 @@ namespace FPRDB_SQLite.GUI
             treeView.Location = new System.Drawing.Point(0, 0);
             treeView.Name = "treeView";
             treeView.SelectedImageIndex = 0;
-            treeView.Size = new System.Drawing.Size(209, 356);
+            treeView.Size = new System.Drawing.Size(250, 356);
             treeView.TabIndex = 2;
             treeView.MouseDown += treeView_MouseDown;
             // 
@@ -693,7 +694,7 @@ namespace FPRDB_SQLite.GUI
             xtraTabControlDatabase.Location = new System.Drawing.Point(0, 0);
             xtraTabControlDatabase.Name = "xtraTabControlDatabase";
             xtraTabControlDatabase.SelectedTabPage = SchemaxtraTabPage;
-            xtraTabControlDatabase.Size = new System.Drawing.Size(729, 356);
+            xtraTabControlDatabase.Size = new System.Drawing.Size(688, 356);
             xtraTabControlDatabase.TabIndex = 1;
             xtraTabControlDatabase.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { SchemaxtraTabPage, RelationxtraTabPage, QueryxtraTabPage });
             // 
@@ -702,7 +703,7 @@ namespace FPRDB_SQLite.GUI
             SchemaxtraTabPage.Controls.Add(gridControlScheme);
             SchemaxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             SchemaxtraTabPage.Name = "SchemaxtraTabPage";
-            SchemaxtraTabPage.Size = new System.Drawing.Size(727, 326);
+            SchemaxtraTabPage.Size = new System.Drawing.Size(686, 326);
             SchemaxtraTabPage.Text = "Schema";
             // 
             // gridControlScheme
@@ -713,7 +714,7 @@ namespace FPRDB_SQLite.GUI
             gridControlScheme.MenuManager = ribbonControl;
             gridControlScheme.Name = "gridControlScheme";
             gridControlScheme.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCalcEdit1, repositoryItemButtonEdit1, repositoryItemHeightType1, repositoryItemCheckEdit1 });
-            gridControlScheme.Size = new System.Drawing.Size(727, 326);
+            gridControlScheme.Size = new System.Drawing.Size(686, 326);
             gridControlScheme.TabIndex = 0;
             gridControlScheme.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
             // 
@@ -795,7 +796,7 @@ namespace FPRDB_SQLite.GUI
             RelationxtraTabPage.Controls.Add(splitContainerControl2);
             RelationxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             RelationxtraTabPage.Name = "RelationxtraTabPage";
-            RelationxtraTabPage.Size = new System.Drawing.Size(727, 326);
+            RelationxtraTabPage.Size = new System.Drawing.Size(669, 326);
             RelationxtraTabPage.Text = "Relation";
             // 
             // splitContainerControl2
@@ -815,8 +816,8 @@ namespace FPRDB_SQLite.GUI
             splitContainerControl2.Panel2.Controls.Add(gridControlValueRelation);
             splitContainerControl2.Panel2.Controls.Add(panelControlRelation);
             splitContainerControl2.Panel2.Text = "Panel2";
-            splitContainerControl2.Size = new System.Drawing.Size(727, 326);
-            splitContainerControl2.SplitterPosition = 142;
+            splitContainerControl2.Size = new System.Drawing.Size(669, 326);
+            splitContainerControl2.SplitterPosition = 167;
             splitContainerControl2.TabIndex = 0;
             // 
             // gridControlRelation
@@ -826,7 +827,7 @@ namespace FPRDB_SQLite.GUI
             gridControlRelation.MainView = gridView3;
             gridControlRelation.MenuManager = ribbonControl;
             gridControlRelation.Name = "gridControlRelation";
-            gridControlRelation.Size = new System.Drawing.Size(727, 142);
+            gridControlRelation.Size = new System.Drawing.Size(669, 167);
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
@@ -846,7 +847,7 @@ namespace FPRDB_SQLite.GUI
             gridControlValueRelation.MainView = gridView4;
             gridControlValueRelation.MenuManager = ribbonControl;
             gridControlValueRelation.Name = "gridControlValueRelation";
-            gridControlValueRelation.Size = new System.Drawing.Size(727, 127);
+            gridControlValueRelation.Size = new System.Drawing.Size(669, 102);
             gridControlValueRelation.TabIndex = 1;
             gridControlValueRelation.UseEmbeddedNavigator = true;
             gridControlValueRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView4 });
@@ -897,7 +898,7 @@ namespace FPRDB_SQLite.GUI
             panelControlRelation.Dock = System.Windows.Forms.DockStyle.Top;
             panelControlRelation.Location = new System.Drawing.Point(0, 0);
             panelControlRelation.Name = "panelControlRelation";
-            panelControlRelation.Size = new System.Drawing.Size(727, 45);
+            panelControlRelation.Size = new System.Drawing.Size(669, 45);
             panelControlRelation.TabIndex = 0;
             // 
             // QueryxtraTabPage
@@ -905,7 +906,7 @@ namespace FPRDB_SQLite.GUI
             QueryxtraTabPage.Controls.Add(splitContainerControl1);
             QueryxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             QueryxtraTabPage.Name = "QueryxtraTabPage";
-            QueryxtraTabPage.Size = new System.Drawing.Size(727, 326);
+            QueryxtraTabPage.Size = new System.Drawing.Size(669, 326);
             QueryxtraTabPage.Text = "Query";
             // 
             // splitContainerControl1
@@ -924,7 +925,7 @@ namespace FPRDB_SQLite.GUI
             // 
             splitContainerControl1.Panel2.Controls.Add(xtraTabControlResultQuery);
             splitContainerControl1.Panel2.Text = "Panel2";
-            splitContainerControl1.Size = new System.Drawing.Size(727, 326);
+            splitContainerControl1.Size = new System.Drawing.Size(669, 326);
             splitContainerControl1.SplitterPosition = 129;
             splitContainerControl1.TabIndex = 0;
             // 
@@ -934,7 +935,7 @@ namespace FPRDB_SQLite.GUI
             memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
             memoEditTxtQuery.MenuManager = ribbonControl;
             memoEditTxtQuery.Name = "memoEditTxtQuery";
-            memoEditTxtQuery.Size = new System.Drawing.Size(727, 129);
+            memoEditTxtQuery.Size = new System.Drawing.Size(669, 129);
             memoEditTxtQuery.TabIndex = 0;
             memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
@@ -944,7 +945,7 @@ namespace FPRDB_SQLite.GUI
             xtraTabControlResultQuery.Location = new System.Drawing.Point(0, 0);
             xtraTabControlResultQuery.Name = "xtraTabControlResultQuery";
             xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControlResultQuery.Size = new System.Drawing.Size(727, 185);
+            xtraTabControlResultQuery.Size = new System.Drawing.Size(669, 185);
             xtraTabControlResultQuery.TabIndex = 0;
             xtraTabControlResultQuery.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
             // 
@@ -952,7 +953,7 @@ namespace FPRDB_SQLite.GUI
             // 
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(725, 155);
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(667, 155);
             QueryResultxtraTabPage.Text = "Query Result";
             // 
             // gridControlResultQuery
@@ -968,7 +969,7 @@ namespace FPRDB_SQLite.GUI
             gridControlResultQuery.MainView = gridViewResultQuery;
             gridControlResultQuery.MenuManager = ribbonControl;
             gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(725, 155);
+            gridControlResultQuery.Size = new System.Drawing.Size(667, 155);
             gridControlResultQuery.TabIndex = 0;
             gridControlResultQuery.UseEmbeddedNavigator = true;
             gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridViewResultQuery });
@@ -993,7 +994,7 @@ namespace FPRDB_SQLite.GUI
             // 
             MessagextraTabPage.Controls.Add(memoEditMessage);
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(725, 155);
+            MessagextraTabPage.Size = new System.Drawing.Size(667, 155);
             MessagextraTabPage.Text = "Message";
             // 
             // memoEditMessage
@@ -1003,7 +1004,7 @@ namespace FPRDB_SQLite.GUI
             memoEditMessage.MenuManager = ribbonControl;
             memoEditMessage.Name = "memoEditMessage";
             memoEditMessage.Properties.ReadOnly = true;
-            memoEditMessage.Size = new System.Drawing.Size(725, 155);
+            memoEditMessage.Size = new System.Drawing.Size(667, 155);
             memoEditMessage.TabIndex = 0;
             // 
             // popupMenuTreeView

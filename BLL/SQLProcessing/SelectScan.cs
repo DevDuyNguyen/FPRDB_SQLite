@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL.SQLProcessing
 {
-    public class SelectScan:Scan
+    public class SelectScan : UpdateScan
     {
         private Scan s;
         private SelectionCondition selectionCondition;
@@ -67,6 +67,18 @@ namespace BLL.SQLProcessing
             return (FuzzyProbabilisticValue<T>)(object)fprobValue;
         }
         public List<AbstractFuzzyProbabilisticValue> getCurrentTuple() => this.currentTuple;
+
+        public void setFieldContent<T>(String fldname, FuzzyProbabilisticValue<T> content)
+        {
+            UpdateScan us = (UpdateScan)s;
+            us.setFieldContent<T>(fldname, content);
+        }
+        public void insert() => throw new NotImplementedException();
+        public void delete()
+        {
+            UpdateScan us = (UpdateScan)s;
+            us.delete();
+        }
 
     }
 }
