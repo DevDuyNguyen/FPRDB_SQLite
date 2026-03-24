@@ -1,8 +1,5 @@
 ﻿using BLL;
 using BLL.Common;
-using BLL.Common;
-using BLL;
-using BLL.Common;
 using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
@@ -267,25 +264,58 @@ namespace FPRDB_SQLite.GUI
             gridControlScheme.DataSource = list;
             gridView.BestFitColumns();
         }
-        // Hàm hiển thị thông tin của Relation
-        private void DisplayRelationDetail(FPRDBRelationDTO relation)
+        private DataRow getTupleAsDataRow(List<Field> schemaFields, Scan s, DataTable table)
         {
-            var schema = relation.fprdbSchema;
-            List<Field> fields = schema.fields;
-            // Sử dụng DataTable để hiện thị thông tin Relation
-            DataTable relInfo = new DataTable();
+            DataRow row = table.NewRow();
+            Type domainType;
+            string fieldName;
+            foreach(Field f in schemaFields)
+            {
+                domainType = FieldTypeUtilities.getDomainType(f.getFieldInfo().getType());
+                fieldName = f.getFieldName();
+                if (domainType == typeof(int))
+                {
+                    FuzzyProbabilisticValue<int> fprobValue = s.getFieldContent<int>(fieldName);
+                    row[fieldName] = fprobValue.ToString();
+                }
+                else if (domainType == typeof(float))
+                {
+                    FuzzyProbabilisticValue<float> fprobValue = s.getFieldContent<float>(fieldName);
+                    row[fieldName] = fprobValue.ToString();
+                }
+                else if (domainType == typeof(string))
+                {
+                    FuzzyProbabilisticValue<string> fprobValue = s.getFieldContent<string>(fieldName);
+                    row[fieldName] = fprobValue.ToString();
+                }
+                else //if (domainType == typeof(bool))
+                {
+                    FuzzyProbabilisticValue<bool> fprobValue = s.getFieldContent<bool>(fieldName);
+                    row[fieldName] = fprobValue.ToString();
+                }
+            }
+            return row;
+        }
 
-            foreach (var field in fields)
+        // Hàm hiển thị nội dung của Relation
+        private void DisplayRelationDetail(FPRDBRelationDTO relInfo)
+        {
+            var schema = relInfo.fprdbSchema;
+            List<Field> schemaFields = schema.fields;
+            // Sử dụng DataTable để hiện thị thông tin Relation
+            DataTable relationContent = new DataTable();
+
+            foreach (var field in schemaFields)
             {
                 string fieldName = field.getFieldName();
                 DataColumn dataCol = new DataColumn(fieldName, typeof(string));
-                relInfo.Columns.Add(dataCol);
+                relationContent.Columns.Add(dataCol);
             }
 
             gridView3.Columns.Clear();
-            gridControlRelation.DataSource = relInfo;
+            gridControlRelation.DataSource = relationContent;
 
-            foreach (var field in fields)
+            foreach (var field in schemaFields)
             {
                 string fieldName = field.getFieldName();
 
@@ -296,6 +326,7 @@ namespace FPRDB_SQLite.GUI
                 col.OptionsColumn.AllowEdit = false;
                 col.Tag = field.getFieldInfo().getType();
             }
+            //fake data
             //Dictionary<string, string> row1 = new Dictionary<string, string>
             //{
             //    {"id", "{(ID01,[1,1])}"},
@@ -306,33 +337,43 @@ namespace FPRDB_SQLite.GUI
             //    {"id", "{(ID02,[1,1])}"},
             //    {"name", "{(Tom,[0.1,0.3]), (Anna,[0.4,0.6]), (James,[0.7,0.9])}" }
             //};
-
-            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
+            //List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
             //result.Add(row1);
             //result.Add(row2);
-
             // Xét từng dòng trong bảng result (giả dụ)
-            foreach (var row in result)
+            //foreach (var row in result)
+            //{
+            //    DataRow fakeRow = relInfo.NewRow();
+            //    // Lấy từng ô theo fielName
+            //    foreach (var field in fields)
+            //    {
+            //        string fieldName = field.getFieldName();
+            //        string content = "";
+            //        // Lấy giá trị tại 1 ô
+            //        if (row.TryGetValue(fieldName, out var value))
+            //        {
+            //            content = value?.ToString();
+            //        }
+            //        fakeRow[fieldName] = content;
+            //    }
+            //    relInfo.Rows.Add(fakeRow);
+            //}
+
+            //extract the top 100 tuples from the current selected relation for grid view
+            //not done: Doesn’t have LIMIT OFFSET for “select top 100 row”
+            Plan relPlan = new RelationPlan(relInfo.relName, this.compRoot.getMetaDataManger(), this.compRoot.getDBMgr(), this.compRoot.getParser(), this.compRoot.getConstraintService());
+            Scan relScan = relPlan.open();
+            int count = 0;
+            while (relScan.next() && count<AppStates.maxSelectTop)
             {
-                DataRow fakeRow = relInfo.NewRow();
-                // Lấy từng ô theo fielName
-                foreach (var field in fields)
-                {
-                    string fieldName = field.getFieldName();
-                    string content = "";
-                    // Lấy giá trị tại 1 ô
-                    if (row.TryGetValue(fieldName, out var value))
-                    {
-                        content = value?.ToString();
-                    }
-                    fakeRow[fieldName] = content;
-                }
-                relInfo.Rows.Add(fakeRow);
+                relationContent.Rows.Add(this.getTupleAsDataRow(schemaFields, relScan, relationContent));
+                count++;
             }
+
 
             gridView3.BestFitColumns();
             // Listen for data changes
-            relInfo.RowChanged += RelInfo_RowChanged;
+            relationContent.RowChanged += RelInfo_RowChanged;
 
             gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
             gridControlRelation.EmbeddedNavigator.ButtonClick += Navigator_ButtonClick;
