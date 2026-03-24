@@ -333,7 +333,9 @@ namespace FPRDB_SQLite.GUI
             gridView3.BestFitColumns();
             // Listen for data changes
             relInfo.RowChanged += RelInfo_RowChanged;
-            relInfo.RowDeleting += RelInfo_RowDeleting;
+
+            gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
+            gridControlRelation.EmbeddedNavigator.ButtonClick += Navigator_ButtonClick;
 
         }
         // Hàm xử lý sự kiện khi click "Select top 100 tuples"
@@ -1480,150 +1482,6 @@ namespace FPRDB_SQLite.GUI
             }
         }
         #endregion
-
-        private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string sql = memoEditTxtQuery.Text;
-
-            try
-            {
-                DataTable resultForGridView = new DataTable();
-                Plan p = this.sqlProcessor.createQueryPlan(sql);
-                FPRDBSchema schema = p.getSchema();
-                Scan s = p.open();
-
-                //create columns for grid view of query result
-                foreach (Field f in schema.getFields())
-                {
-                    resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
-                }
-                //Extrac the result for grid view
-                string[] tupleForGridView = new string[schema.getFields().Count];
-                Field field;
-                List<Field> fields = schema.getFields();
-                while (s.next())
-                {
-                    for (int i = 0; i < schema.getFields().Count; ++i)
-                    {
-                        field = fields[i];
-                        switch (field.getFieldInfo().getType())
-                        {
-                            case FieldType.INT:
-                            case FieldType.distFS_INT:
-                                tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
-                                break;
-                            case FieldType.FLOAT:
-                            case FieldType.distFS_FLOAT:
-                            case FieldType.contFS:
-                                //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
-                                tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
-                                break;
-                            case FieldType.CHAR:
-                            case FieldType.VARCHAR:
-                            case FieldType.distFS_TEXT:
-                                //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
-                                tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
-                                break;
-                            case FieldType.BOOLEAN:
-                                //tupleForGridView.Add((s.getFieldContent<bool>(field.getFieldName())).ToString());
-                                tupleForGridView[i] = s.getFieldContent<bool>(field.getFieldName()).ToString();
-                                break;
-                        }
-                    }
-                    resultForGridView.Rows.Add(tupleForGridView);
-
-
-                }
-                //bind the result to the grid control
-                gridControlResultQuery.DataSource = resultForGridView;
-                // Mở rộng giao diện để xem cả query và kết quả
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
-                //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
-                gridViewResultQuery.PopulateColumns();
-
-                // Sau khi thành công, mở rộng Panel và đảm bảo tab Result được hiển thị
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
-                xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
-
-                // Ghi thông báo thành công vào MemoEdit
-                memoEditMessage.Text = $"Query executed successfully at {DateTime.Now:HH:mm:ss}.";
-            }
-            catch (SQLSyntaxException ex)
-            {
-                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            catch (MismatchTokenType ex)
-            {
-                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            catch (NotSupportedException ex)
-            {
-                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            catch (IndexOutOfRangeException ex)
-            {
-                memoEditMessage.Text = "[Error] Already out of token.";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            catch (Exception ex)
-            {
-                memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            finally
-            {
-                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
-            }
-
-            //ExcuteQuery(sql);
-            // 1. Tạo một DataTable giả lập cấu trúc
-            //DataTable dtMock = new DataTable();
-            //dtMock.Columns.Add("Number", typeof(int));
-            //dtMock.Columns.Add("doctor1.ID", typeof(string));
-            //dtMock.Columns.Add("doctor1.AGE", typeof(string));
-            //dtMock.Columns.Add("doctor2.NAME", typeof(string));
-            //dtMock.Columns.Add("doctor2.AGE", typeof(string));
-
-            //// 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
-            //dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
-            //dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
-            //dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-            //dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
-            //dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
-            //dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-
-            //// 3. Gán dữ liệu giả vào GridControl
-            //gridControlResultQuery.DataSource = dtMock;
-        }
-
-        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⇒ ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
-
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
         // 2 hàm parse dữ liệu xuống dưới Grid liệt kê giá trị
         private void gridView3_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
@@ -1705,53 +1563,41 @@ namespace FPRDB_SQLite.GUI
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void RelInfo_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void Navigator_ButtonClick(object sender, NavigatorButtonClickEventArgs e)
         {
-            if (e.Action != DataRowAction.Delete) return;
+            if (e.Button.ButtonType != NavigatorButtonType.Remove) return;
 
-            DataRow row = e.Row;
+            var schema = _selectedRelation.fprdbSchema;
+            List<string> pks = schema.primarykey;
 
-            try
+            StringBuilder sbRow = new StringBuilder();
+            sbRow.AppendLine("--- Row ---");
+
+            foreach (var pk in pks)
             {
-                var schema = _selectedRelation.fprdbSchema;
-                List<string> pks = schema.primarykey;
-                List<string> pkValues = new List<string>();
-                StringBuilder sbRow = new StringBuilder();
-                sbRow.AppendLine("--- Row ---");
-
-                foreach (var pk in pks)
+                var val = gridView3.GetFocusedRowCellValue(pk);
+                if (val == null || val == DBNull.Value)
                 {
-                    var cellValue = row[pk];
-
-                    if (cellValue == DBNull.Value || cellValue == null)
-                    {
-                        sbRow.AppendLine($"{pk}: (empty)");
-                        continue;
-                    }
-                    sbRow.AppendLine($"{pk}: {cellValue}");
+                    sbRow.AppendLine($"{pk}: (empty)");
+                    continue;
                 }
-
-                var result = MessageBox.Show(
-                   $"Delete \n\n{sbRow}",
-                   "Confirm Delete",
-                   MessageBoxButtons.YesNo,
-                   MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Yes)
-                {
-                    MessageBox.Show($"Deleted \n\n{sbRow}", "Deleted",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    e.Row.RejectChanges();
-                }
+                sbRow.AppendLine($"{pk}: {val}");
             }
-            catch (Exception ex)
+
+            var result = MessageBox.Show(
+                $"Delete?\n\n{sbRow}",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.No)
             {
-                MessageBox.Show($"Delete failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Handled = true;
+                return;
             }
+
+            MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
