@@ -4,20 +4,24 @@ using BLL.Exceptions;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Xml.Linq;
+using BLL.Interfaces;
 
 namespace BLL.Services
 {
     public class ConstraintService
     {
         private MetadataManager metadataMgr;
+        private ConstraintDAO constraintDAO;
 
-        public ConstraintService(MetadataManager metadataMgr)
+        public ConstraintService(MetadataManager metadataMgr, ConstraintDAO constraintDAO)
         {
             this.metadataMgr = metadataMgr;
+            this.constraintDAO = constraintDAO;
         }
 
         public bool checkIntegrityConstraint(FPRDBRelation rel, InsertData data)
@@ -50,5 +54,32 @@ namespace BLL.Services
                 throw new SemanticException("IDENTITY constraint violation");
             return true;
         }
+        
+        public bool checkUpdateIntegrityConstraintViolation(FPRDBRelation relation, List<string> primarykeyOrder, List<AbstractFuzzyProbabilisticValue> oldKeyValue, List<AbstractFuzzyProbabilisticValue> newKeyValue)
+        {
+            bool sameKeyValue = true;
+            if (oldKeyValue.Count != newKeyValue.Count)
+                throw new SemanticException("Old key value has different length in comparison to new key value");
+            for(int i=0; i<oldKeyValue.Count; ++i)
+            {
+                if (!oldKeyValue[i].equals(newKeyValue[i]))
+                {
+                    sameKeyValue = false;
+                    break;
+                }
+            }
+            if (sameKeyValue)
+                return true;
+            else
+            {
+                if (this.constraintDAO.isTupleWithFuzzyProbabilisticValuesExist(relation.getRelName(), relation.getSchema().getPrimarykey(), newKeyValue))
+                    throw new SemanticException($"Key value already exist");
+                else
+                    return true;
+            }
+            
+
+        }
+
     }
 }

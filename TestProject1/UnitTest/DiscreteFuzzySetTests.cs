@@ -17,9 +17,9 @@ namespace TestProject1.UnitTest
             public StandardIntersection_positive_testdata()
             {
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f}, new List<float> { 0.2f, 0.2f, 0.3f, 1f}, "fs1", FieldType.distFS_FLOAT),
-                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 1f }, "fs2", FieldType.distFS_FLOAT),
-                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.2f, 1.3f, 4 }, new List<float> { 0.1f, 0, 0, 0,0 }, "fs1⋂fs2", FieldType.distFS_FLOAT)
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f}, new List<float> { 0.2f, 0.2f, 0.3f, 1f}, "fs1", FieldType.distFS_FLOAT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 1f }, "fs2", FieldType.distFS_FLOAT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.2f, 1.3f, 4 }, new List<float> { 0.1f, 0, 0, 0,0 }, "fs1⋂fs2", FieldType.distFS_FLOAT, -1)
                     );
             }
 
@@ -80,20 +80,20 @@ namespace TestProject1.UnitTest
             public isEqualTo_postive_negative_testdata()
             {
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT, -1),
                 false
                 );
 
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
                 true
                 );
 
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT, -1),
                 true
                 );
             }
@@ -113,26 +113,26 @@ namespace TestProject1.UnitTest
             public isSubsetOf_postive_negative_testdata()
             {
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT, -1),
                 false
                 );
 
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
                 true
                 );
 
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 1.2f, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.2f }, "fs2", FieldType.distFS_FLOAT, -1),
                 true
                 );
 
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT),
-                new ContinuousFuzzySet(-5, 1, 2, 4, null),
+                new DiscreteFuzzySet<float>(new List<float> { 1.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.2f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
+                new ContinuousFuzzySet(-5, 1, 2, 4, null, -1),
                 true
                 );
             }

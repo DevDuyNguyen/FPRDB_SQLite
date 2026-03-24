@@ -21,5 +21,7 @@ namespace BLL.DomainObject
             this.setConnective = setConnective;
             this.probCombinationStrategy = probCombinationStrategy;
         }
+        public override FPRDBSchema getSchema() => this.leftQuery.getSchema();
+
     }
 }

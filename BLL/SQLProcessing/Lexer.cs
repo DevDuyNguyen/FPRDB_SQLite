@@ -118,7 +118,7 @@ namespace BLL.SQLProcessing
         private Token currentToken;
         private Scanner _scanner;
         private int currentIndex = -1;
-        private List<Token> tokens = new List<Token>();
+        private List<Token> tokens;
         private int tokenListLength { get => this.tokens.Count;}
         private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
             "union", "intersect", "except", "not", "and", "or",
@@ -143,6 +143,10 @@ namespace BLL.SQLProcessing
 
         public void analyze(string s)
         {
+            this.currentIndex = -1;
+            this.currentToken = null;
+            this.tokens = new List<Token>();
+
             this.terminals = new FPRDBSQLTerminals();
             this._parser = new Parser(this.terminals);
             this._scanner = this._parser.Scanner;
@@ -162,7 +166,11 @@ namespace BLL.SQLProcessing
             } while (token != null && token.Terminal.Name != "EOF");
             next();
         }
-
+        public void clearTokens()
+        {
+            this.currentIndex = -1;
+            this.tokens = new List<Token>();
+        }
         public void next()
         {
             if (this.currentIndex < this.tokenListLength - 1)
@@ -287,6 +295,7 @@ namespace BLL.SQLProcessing
                 throw new MismatchTokenType("string constant", this.currentToken);
             string res= (string)this.currentToken.Value;
             next();
+            //return $"'{res}'";
             return res;
         }
 

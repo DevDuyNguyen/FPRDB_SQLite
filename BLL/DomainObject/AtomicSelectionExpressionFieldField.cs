@@ -75,5 +75,6 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
         {
             return new List<SelectionExpression> { this };
         }
+        public override List<string> getMentionedAttributes() => new List<string> { this.lField, this.rField };
     }
 }

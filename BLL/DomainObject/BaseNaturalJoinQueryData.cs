@@ -11,6 +11,7 @@ namespace BLL.DomainObject
         public List<SelectField> selectList;
         public NaturalJoinList naturalJoinList;
         public SelectionCondition selectionCondition;
+        public FPRDBSchema schema;
 
         public BaseNaturalJoinQueryData(List<SelectField> selectList, NaturalJoinList naturalJoinList, SelectionCondition selectionCondition)
         {
@@ -18,5 +19,7 @@ namespace BLL.DomainObject
             this.naturalJoinList = naturalJoinList;
             this.selectionCondition = selectionCondition;
         }
+
+        public override FPRDBSchema getSchema() => this.schema;
     }
 }

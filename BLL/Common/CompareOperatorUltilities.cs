@@ -82,6 +82,20 @@ namespace BLL.Common
             else
                 return false;
         }
+        public static bool isScalarComparison(CompareOperation op)
+        {
+            return op == CompareOperation.EQUAL || op == CompareOperation.NOT_EQUAL ||
+                op == CompareOperation.LESS_THAN || op == CompareOperation.LESS_EQUAL ||
+                op == CompareOperation.GREATER_THAN || op == CompareOperation.GREATER_EQUAL;
+        }
+        public static bool isSetComparison(CompareOperation op)
+        {
+            return op == CompareOperation.SUBSET || op == CompareOperation.IN ||
+                op == CompareOperation.ALSO;
+        }
+
+
+
     }
     
  }

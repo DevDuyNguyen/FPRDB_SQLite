@@ -1,12 +1,13 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
+using BLL.Enums;
 using BLL.Interfaces;
-using BLL.Common;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.Enums;
 
 namespace BLL.SQLProcessing
 {
@@ -14,13 +15,14 @@ namespace BLL.SQLProcessing
     {
         private MetadataManager metaDataMgr;
         private DatabaseManager dbMgr;
-        RecursiveDescentParser parser;
-
-        public BasicQueryPlanner(MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser)
+        private RecursiveDescentParser parser;
+        private ConstraintService constraintService;
+        public BasicQueryPlanner(MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser, ConstraintService constraintService)
         {
             this.metaDataMgr = metaDataMgr;
             this.dbMgr = dbMgr;
             this.parser = parser;
+            this.constraintService= constraintService;
         }
 
         public Plan createPlan(QueryData data)
@@ -54,7 +56,7 @@ namespace BLL.SQLProcessing
             List<RelationPlan> relPlans = new List<RelationPlan>();
             foreach(string relName in data.relationList)
             {
-                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr, this.parser));
+                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr, this.parser, this.constraintService));
             }
             //create product plans 
             Plan plan = relPlans[0];
@@ -75,7 +77,7 @@ namespace BLL.SQLProcessing
             List<RelationPlan> relPlans = new List<RelationPlan>();
             foreach (string relName in data.naturalJoinList.relationList)
             {
-                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr, this.parser));
+                relPlans.Add(new RelationPlan(relName, this.metaDataMgr, this.dbMgr, this.parser, this.constraintService));
             }
             //create natural join plans
             Plan plan = relPlans[0];

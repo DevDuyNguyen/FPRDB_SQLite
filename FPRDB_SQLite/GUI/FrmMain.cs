@@ -642,7 +642,7 @@ namespace FPRDB_SQLite.GUI
         private void iDiferenceMutual_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⦵_me ");
         private void iDifferencePositive_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⦵_pc ");
         #endregion
-        private void ExcuteQuery(string sql)
+        private void ExcuteQueryDemo(string sql)
         {
             //try
             //{
@@ -815,7 +815,106 @@ namespace FPRDB_SQLite.GUI
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             string sql = memoEditTxtQuery.Text;
+            string firstString = sql.Split(' ')[0];
+            switch (firstString.ToUpper())
+            {
+                case "INSERT":
+                case "DELETE":
+                case "UPDATE":
+                case "DROP":
+                    ExecuteUpdate(sql);
+                    break;
+                case "CREATE":
+                    ExecuteDataDefinition(sql);
+                    break;
+                default:
+                    ExecuteQuery(sql);
+                    break;
+            }
+            
+        }
+        private void ExecuteDataDefinition(string sql)
+        {
+            try
+            {
+                this.sqlProcessor.executeDataDefinition(sql);
+                memoEditMessage.Text = $"Success";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SQLSyntaxException ex)
+            {
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (MismatchTokenType ex)
+            {
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (NotSupportedException ex)
+            {
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            }
 
+        }
+        private void ExecuteUpdate(string sql)
+        {
+            try
+            {
+                int noRowsAffected = this.sqlProcessor.executeUpdate(sql);
+                memoEditMessage.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SQLSyntaxException ex)
+            {
+                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (MismatchTokenType ex)
+            {
+                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (NotSupportedException ex)
+            {
+                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            finally
+            {
+                // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            }
+
+        }
+        private void ExecuteQuery(string sql)
+        {
             try
             {
                 DataTable resultForGridView = new DataTable();
@@ -828,7 +927,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
                 }
-                //Extrac the result for grid view
+                //Extract the result for grid view
                 string[] tupleForGridView = new string[schema.getFields().Count];
                 Field field;
                 List<Field> fields = schema.getFields();
@@ -877,11 +976,21 @@ namespace FPRDB_SQLite.GUI
                 xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
 
                 // Ghi thông báo thành công vào MemoEdit
-                memoEditMessage.Text = $"Query executed successfully at {DateTime.Now:HH:mm:ss}.";
+                memoEditMessage.Text = $"Query executed successfully";
             }
             catch (SQLSyntaxException ex)
             {
                 memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (SemanticException ex)
+            {
+                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
+            catch (InvalidCastException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
             catch (MismatchTokenType ex)
@@ -894,41 +1003,11 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
-            catch (IndexOutOfRangeException ex)
-            {
-                memoEditMessage.Text = "[Error] Already out of token.";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
-            catch (Exception ex)
-            {
-                memoEditMessage.Text = $"[System Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
-            }
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
                 splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             }
-
-            //ExcuteQuery(sql);
-            // 1. Tạo một DataTable giả lập cấu trúc
-            //DataTable dtMock = new DataTable();
-            //dtMock.Columns.Add("Number", typeof(int));
-            //dtMock.Columns.Add("doctor1.ID", typeof(string));
-            //dtMock.Columns.Add("doctor1.AGE", typeof(string));
-            //dtMock.Columns.Add("doctor2.NAME", typeof(string));
-            //dtMock.Columns.Add("doctor2.AGE", typeof(string));
-
-            //// 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
-            //dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
-            //dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
-            //dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-            //dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
-            //dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
-            //dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-
-            //// 3. Gán dữ liệu giả vào GridControl
-            //gridControlResultQuery.DataSource = dtMock;
         }
         private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {

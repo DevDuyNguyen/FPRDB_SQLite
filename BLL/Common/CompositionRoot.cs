@@ -18,7 +18,7 @@ namespace BLL.Common
         private FuzzySetDAO fuzzySetDAO;
         private DatabaseManager databseExportImport;
         private Lexer lexer;
-        private RecursiveDescentParser parser;
+        //private RecursiveDescentParser parser, parser1, parser2;
         private Preprocessor preprocessor;
         private MetadataManager metadataMgr;
         private BasicUpdatePlanner updatePlanner;
@@ -29,6 +29,7 @@ namespace BLL.Common
         private QueryPlanner queryPlanner;
         private FPRDBRelationDAO fprdbRelationDAO;
         private FPRDBRelationService fprdbRelationService;
+        private ConstraintDAO constraintDAO;
 
         public CompositionRoot()
         {
@@ -41,11 +42,17 @@ namespace BLL.Common
             this.dbMgr = new DatabaseManager();
             this.lexer = new Lexer();
             this.metadataMgr = new MetadataManager(this.dbMgr);
-            this.parser = new RecursiveDescentParser(this.lexer, this.metadataMgr);
+
+            this.constraintDAO = new ConstraintDAOSQLite(this.dbMgr);
+            this.constraintService = new ConstraintService(this.metadataMgr, this.constraintDAO);
+
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
-            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr);
-            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.parser);
-            this.sqlProcessor = new SQLProcessor(this.parser, this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
+            this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.getParser(), this.constraintService);
+            this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.getParser(), this.constraintService);
+
+            this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
+
+            
 
             //dao
             this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
@@ -55,11 +62,15 @@ namespace BLL.Common
             //service
             this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
             this.databaseService = new DatabaseService(this.dbMgr);
-            this.constraintService = new ConstraintService(this.metadataMgr);
+            
+            
             this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);
             this.fprdbRelationService = new FPRDBRelationService(this.fprdbRelationDAO);
         }
-
+        private Lexer getLexer()
+        {
+            return new Lexer();
+        }
         public DatabaseService getDatabaseService()
         {
             return this.databaseService;
@@ -84,7 +95,7 @@ namespace BLL.Common
             return this.dbMgr;
         }
         //delete: for testing
-        public RecursiveDescentParser getParser() => this.parser;
+        public RecursiveDescentParser getParser() => new RecursiveDescentParser(this.getLexer(), this.metadataMgr);
         //delete: for testing
         public Preprocessor getPreprocessor() => this.preprocessor;
         //delete: for testing

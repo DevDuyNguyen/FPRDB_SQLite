@@ -16,7 +16,7 @@ namespace TestProject1.UnitTest
             public createMassAssignment_positive_testdata()
             {
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> {0.2f, 0.5f, 0.9f, 1f },null,FieldType.distFS_FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> {0.2f, 0.5f, 0.9f, 1f },null,FieldType.distFS_FLOAT, -1),
                     new List<VoteCrispDefinition<float>> {
                         new VoteCrispDefinition<float>(new List<float>{ 6.0f}, 0.1f),
                         new VoteCrispDefinition<float>(new List<float>{ 6.0f, 5.0f }, 0.4f),
@@ -27,7 +27,7 @@ namespace TestProject1.UnitTest
                     );
 
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.distFS_FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.distFS_FLOAT, -1),
                     new List<VoteCrispDefinition<float>> {
                         new VoteCrispDefinition<float>(new List<float>{ 5.0f },0.7f),
                         new VoteCrispDefinition<float>(new List<float>{ 5.0f, 4.0f, 6.0f }, 0.3f)

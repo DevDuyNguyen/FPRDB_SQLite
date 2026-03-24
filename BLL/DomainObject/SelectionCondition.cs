@@ -11,5 +11,6 @@ namespace BLL.DomainObject
     {
         public abstract bool isSatisfied(Scan currentTuple, FPRDBSchema schema);
         public abstract List<SelectionExpression> getAtomicSelectionExpressions();
+        public abstract List<string> getMentionedAttributes();
     }
 }

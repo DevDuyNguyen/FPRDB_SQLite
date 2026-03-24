@@ -39,21 +39,43 @@ namespace BLL.Common
                 else if (c is FloatConstant)
                     fuzzSetType = FieldType.distFS_FLOAT;
                 else if (c is StringConstant)
+                {
                     fuzzSetType = FieldType.distFS_TEXT;
+                    fuzzySetName = $"\"{fuzzySetName}\"";
+                    //valueSet[0] = (T)Convert.ChangeType($"\"{valueSet[0]}\"",typeof(T));
+                }
                 else
                     fuzzSetType = FieldType.BOOLEAN;
-                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
+                return new DiscreteFuzzySet<T>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType, -1);
             }
             else
             {
+                //string fsName = (string)(c.getVal());
+                //int fsOID = metaDataMgr.getFuzzySetOID(fsName);
+                //if (fsOID == -1)
+                //{
+                //    return new DiscreteFuzzySet<string>(valueSet, membershipDegreeSet, fuzzySetName, fuzzSetType);
+                //}
+                //else
+                //{
+                //    FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
+                //    FieldType fuzzSetType = metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
+                //    if (FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
+                //        return metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
+                //    else
+                //    {
+                //        return metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);
+                //    }
+                //}
                 FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
                 FieldType fuzzSetType = metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
-                if (FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
+                if (FieldTypeUtilities.isContinuousFuzzySet(fuzzSetType))
                     return metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
                 else
                 {
                     return metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);
                 }
+
 
             }
 
@@ -65,7 +87,7 @@ namespace BLL.Common
             {
                 values.Add(Convert.ToSingle(v));
             }
-            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT);
+            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT, fs.getOID());
         }
     }
 }

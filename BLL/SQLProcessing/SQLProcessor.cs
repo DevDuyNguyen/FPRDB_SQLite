@@ -86,32 +86,57 @@ namespace BLL.SQLProcessing
             if(data is InsertData)
             {
                 InsertData idata = (InsertData)data;
-                try
+                if (this.preProcessor.checkSemanticInsert(idata))
                 {
-                    if(this.preProcessor.checkSemanticInsert(idata))
-                    {
-                        return this.updatePlanner.executeInsert(idata);
-                    }
+                    return this.updatePlanner.executeInsert(idata);
                 }
-                catch (SemanticException ex)
-                {
-                    throw ex;
-                }
-                return 0;
             }
-            else
+            else if(data is DeleteData)
             {
-                throw new NotImplementedException();
+                DeleteData dData = (DeleteData)data;
+                if (this.preProcessor.checkSemanticDelete(dData))
+                {
+                    return this.updatePlanner.executeDelete(dData);
+                }
             }
+            else if(data is DropRelationData)
+            {
+                DropRelationData DropData = (DropRelationData)data;
+                if (this.preProcessor.checkSemanticDropRelation(DropData))
+                {
+                    this.updatePlanner.executeDropRelation(DropData.relation);
+                    return 0;
+                }
+            }
+            else if (data is DropSchemaData)
+            {
+                DropSchemaData DropData = (DropSchemaData)data;
+                if (this.preProcessor.checkSemanticDropSchema(DropData))
+                {
+                    this.updatePlanner.executeDropSchema(DropData.schema);
+                    return 0;
+                }
+            }
+            else //if(data is ModifyData)
+            {
+                ModifyData mData = (ModifyData)data;
+                if (this.preProcessor.checkSemanticModify(mData))
+                {
+                    return this.updatePlanner.executeModify(mData);
+                }
+            }
+            return 0;
         }
         public Plan createQueryPlan(string sql)
         {
             this.parser.parse(sql);
             QueryData data = this.parser.query();
 
-            //not done: not implement semantic checking
+            if(this.preProcessor.checkSemanticQuery(data))
+                return this.queryPlanner.createPlan(data);
 
-            return this.queryPlanner.createPlan(data);
+            return null;
+
         }
 
     }
