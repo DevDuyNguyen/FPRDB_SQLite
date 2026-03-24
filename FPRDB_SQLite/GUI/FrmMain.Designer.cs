@@ -103,6 +103,7 @@ namespace FPRDB_SQLite.GUI
             repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             gridColumnAttribute = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumnDataType = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumnLength = new DevExpress.XtraGrid.Columns.GridColumn();
             repositoryItemCalcEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCalcEdit();
             repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             repositoryItemHeightType1 = new DevExpress.XtraRichEdit.Design.RepositoryItemHeightType();
@@ -719,16 +720,18 @@ namespace FPRDB_SQLite.GUI
             // 
             // gridView
             // 
-            gridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnPrimary, gridColumnAttribute, gridColumnDataType });
+            gridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnPrimary, gridColumnAttribute, gridColumnDataType, gridColumnLength });
             gridView.GridControl = gridControlScheme;
             gridView.Name = "gridView";
+            gridView.OptionsBehavior.Editable = false;
             gridView.OptionsPrint.PrintFilterInfo = true;
+            gridView.OptionsView.ShowGroupPanel = false;
             // 
             // gridColumnPrimary
             // 
             gridColumnPrimary.Caption = "Primary Key";
             gridColumnPrimary.ColumnEdit = repositoryItemCheckEdit1;
-            gridColumnPrimary.FieldName = "gridColumnPrimary";
+            gridColumnPrimary.FieldName = "isPrimaryKey";
             gridColumnPrimary.MinWidth = 25;
             gridColumnPrimary.Name = "gridColumnPrimary";
             gridColumnPrimary.Visible = true;
@@ -743,7 +746,7 @@ namespace FPRDB_SQLite.GUI
             // gridColumnAttribute
             // 
             gridColumnAttribute.Caption = "Attribute name";
-            gridColumnAttribute.FieldName = "gridColumnAttribute";
+            gridColumnAttribute.FieldName = "attributeName";
             gridColumnAttribute.MinWidth = 25;
             gridColumnAttribute.Name = "gridColumnAttribute";
             gridColumnAttribute.Visible = true;
@@ -753,12 +756,22 @@ namespace FPRDB_SQLite.GUI
             // gridColumnDataType
             // 
             gridColumnDataType.Caption = "Data Type";
-            gridColumnDataType.FieldName = "gridColumnDataType";
+            gridColumnDataType.FieldName = "dataType";
             gridColumnDataType.MinWidth = 25;
             gridColumnDataType.Name = "gridColumnDataType";
             gridColumnDataType.Visible = true;
             gridColumnDataType.VisibleIndex = 2;
             gridColumnDataType.Width = 247;
+            // 
+            // gridColumnLength
+            // 
+            gridColumnLength.Caption = "Length";
+            gridColumnLength.FieldName = "length";
+            gridColumnLength.MinWidth = 25;
+            gridColumnLength.Name = "gridColumnLength";
+            gridColumnLength.Visible = true;
+            gridColumnLength.VisibleIndex = 3;
+            gridColumnLength.Width = 94;
             // 
             // repositoryItemCalcEdit1
             // 
@@ -823,6 +836,9 @@ namespace FPRDB_SQLite.GUI
             // 
             gridView3.GridControl = gridControlRelation;
             gridView3.Name = "gridView3";
+            gridView3.OptionsView.ShowGroupPanel = false;
+            gridView3.FocusedRowChanged += gridView3_FocusedRowChanged;
+            gridView3.FocusedColumnChanged += gridView3_FocusedColumnChanged;
             // 
             // gridControlValueRelation
             // 
@@ -841,11 +857,15 @@ namespace FPRDB_SQLite.GUI
             gridView4.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumnValue, gridColumnMinProb, gridColumnMaxProb });
             gridView4.GridControl = gridControlValueRelation;
             gridView4.Name = "gridView4";
+            gridView4.OptionsView.ShowGroupPanel = false;
+            gridView4.InvalidRowException += gridView4_InvalidRowException;
+            gridView4.RowDeleting += gridView4_RowDeleting;
+            gridView4.ValidateRow += gridView4_ValidateRow;
             // 
             // gridColumnValue
             // 
             gridColumnValue.Caption = "Value";
-            gridColumnValue.FieldName = "gridColumnValue";
+            gridColumnValue.FieldName = "Value";
             gridColumnValue.MinWidth = 25;
             gridColumnValue.Name = "gridColumnValue";
             gridColumnValue.Visible = true;
@@ -855,7 +875,7 @@ namespace FPRDB_SQLite.GUI
             // gridColumnMinProb
             // 
             gridColumnMinProb.Caption = "MinProb";
-            gridColumnMinProb.FieldName = "gridColumnMinProb";
+            gridColumnMinProb.FieldName = "MinProb";
             gridColumnMinProb.MinWidth = 25;
             gridColumnMinProb.Name = "gridColumnMinProb";
             gridColumnMinProb.Visible = true;
@@ -866,6 +886,7 @@ namespace FPRDB_SQLite.GUI
             // 
             gridColumnMaxProb.AccessibleName = "gridColumnMaxProb";
             gridColumnMaxProb.Caption = "MaxProb";
+            gridColumnMaxProb.FieldName = "MaxProb";
             gridColumnMaxProb.MinWidth = 25;
             gridColumnMaxProb.Name = "gridColumnMaxProb";
             gridColumnMaxProb.Visible = true;
@@ -1218,6 +1239,7 @@ namespace FPRDB_SQLite.GUI
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_OpenSchema;
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
         private DevExpress.XtraEditors.MemoEdit memoEditMessage;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
     }
 }
 
