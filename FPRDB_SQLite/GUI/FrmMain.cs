@@ -167,10 +167,19 @@ namespace FPRDB_SQLite.GUI
                 e.Action != DataRowAction.Change &&
                 e.Action != DataRowAction.Delete) return;
             string newFuzzyString = BuildFuzzyStringFromBottomGrid();
-            DataTable topDt = gridControlRelation.DataSource as DataTable;
-            if (topDt != null && _currentEditingRow >= 0)
+            int rowHandle = gridView3.GetRowHandle(_currentEditingRow);
+
+            if (rowHandle != DevExpress.XtraGrid.GridControl.InvalidRowHandle)
             {
-                topDt.Rows[_currentEditingRow][_currentEditingColumn] = newFuzzyString;
+                gridView3.SetRowCellValue(rowHandle, gridView3.Columns[_currentEditingColumn], newFuzzyString);
+
+                gridView3.FocusedRowHandle = rowHandle;
+                gridView3.ShowEditor();
+
+                if (gridView3.ActiveEditor != null)
+                {
+                    gridView3.ActiveEditor.IsModified = true;
+                }
             }
         }
         // Hàm kiểm tra dữ liệu hàng khi người dùng nhấp ra ngoài
@@ -323,7 +332,8 @@ namespace FPRDB_SQLite.GUI
                 if (col == null) continue;
 
                 col.Caption = fieldName;
-                col.OptionsColumn.AllowEdit = false;
+                col.OptionsColumn.AllowEdit = true;
+                col.OptionsColumn.ReadOnly = true;
                 col.Tag = field.getFieldInfo().getType();
             }
             //fake data
@@ -370,10 +380,8 @@ namespace FPRDB_SQLite.GUI
                 count++;
             }
 
-
+            relationContent.AcceptChanges();
             gridView3.BestFitColumns();
-            // Listen for data changes
-            relationContent.RowChanged += RelInfo_RowChanged;
 
             gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
             gridControlRelation.EmbeddedNavigator.ButtonClick += Navigator_ButtonClick;
@@ -1566,80 +1574,107 @@ namespace FPRDB_SQLite.GUI
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void Navigator_ButtonClick(object sender, NavigatorButtonClickEventArgs e)
         {
-            if (e.Action != DataRowAction.Add && e.Action != DataRowAction.Change) return;
+            if (e.Button.ButtonType != NavigatorButtonType.Remove
+                && e.Button.ButtonType != NavigatorButtonType.EndEdit) return;
 
-            DataRow row = e.Row;
-
-            var schema = _selectedRelation.fprdbSchema;
-            List<Field> fields = schema.fields;
-
-            try
+            if (e.Button.ButtonType == NavigatorButtonType.Remove)
             {
+                var schema = _selectedRelation.fprdbSchema;
+                List<string> pks = schema.primarykey;
+
                 StringBuilder sbRow = new StringBuilder();
                 sbRow.AppendLine("--- Row ---");
 
-                foreach (var field in fields)
+                foreach (var pk in pks)
                 {
-                    string fieldName = field.getFieldName();
-                    var cellValue = row[fieldName];
-
-                    if (cellValue == DBNull.Value || cellValue == null)
+                    var val = gridView3.GetFocusedRowCellValue(pk);
+                    if (val == null || val == DBNull.Value)
                     {
-                        sbRow.AppendLine($"{fieldName}: (empty)");
+                        sbRow.AppendLine($"{pk}: (empty)");
                         continue;
                     }
-                    sbRow.AppendLine($"{fieldName}: {cellValue}");
+                    sbRow.AppendLine($"{pk}: {val}");
                 }
-                if (e.Action == DataRowAction.Add)
-                    MessageBox.Show($"Add\n\n{sbRow}", "Saved",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                else
-                    MessageBox.Show($"Update\n\n{sbRow}", "Saved",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Auto save failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void Navigator_ButtonClick(object sender, NavigatorButtonClickEventArgs e)
-        {
-            if (e.Button.ButtonType != NavigatorButtonType.Remove) return;
 
-            var schema = _selectedRelation.fprdbSchema;
-            List<string> pks = schema.primarykey;
+                var result = MessageBox.Show(
+                    $"Delete?\n\n{sbRow}",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
 
-            StringBuilder sbRow = new StringBuilder();
-            sbRow.AppendLine("--- Row ---");
-
-            foreach (var pk in pks)
-            {
-                var val = gridView3.GetFocusedRowCellValue(pk);
-                if (val == null || val == DBNull.Value)
+                if (result == DialogResult.No)
                 {
-                    sbRow.AppendLine($"{pk}: (empty)");
-                    continue;
+                    e.Handled = true;
+                    return;
                 }
-                sbRow.AppendLine($"{pk}: {val}");
+
+                MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            var result = MessageBox.Show(
-                $"Delete?\n\n{sbRow}",
-                "Confirm Delete",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
-
-            if (result == DialogResult.No)
+            else
             {
-                e.Handled = true;
-                return;
-            }
+                gridView3.CloseEditor();
+                gridView3.UpdateCurrentRow();
 
-            MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DataRowView currentRow = gridView3.GetFocusedRow() as DataRowView;
+
+                if (currentRow != null)
+                {
+                    DataRow row = currentRow.Row;
+                    var schema = _selectedRelation.fprdbSchema;
+                    List<Field> fields = schema.fields;
+                    StringBuilder sbRow = new StringBuilder();
+                    sbRow.AppendLine("--- Row ---");
+                    if (row.RowState == DataRowState.Added)
+                    {
+                        foreach (var field in fields)
+                        {
+                            string fieldName = field.getFieldName();
+                            var cellValue = currentRow[fieldName];
+
+                            if (cellValue == DBNull.Value || cellValue == null)
+                            {
+                                sbRow.AppendLine($"{fieldName}: (empty)");
+                                continue;
+                            }
+                            sbRow.AppendLine($"{fieldName}: {cellValue}");
+                        }
+                        MessageBox.Show($"Add\n\n{sbRow}", "Saved",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        row.AcceptChanges(); // Added -> Unchanged
+                    }else if (row.RowState == DataRowState.Modified)
+                    {
+                        List<string> pks = schema.primarykey;
+                        List<string> setClauses = new List<string>();
+                        foreach (var field in fields)
+                        {
+                            string fName = field.getFieldName();
+                            object newVal = row[fName, DataRowVersion.Current];
+
+                            string formattedVal = (newVal == DBNull.Value) ? "NULL" : $"'{newVal.ToString().Replace("'", "''")}'";
+                            setClauses.Add($"{fName} = {formattedVal}");
+                        }
+
+                        // 2. Xây dựng phần WHERE (Dữ liệu ĐỊNH DANH CŨ)
+                        List<string> whereClauses = new List<string>();
+                        foreach (string pkName in pks)
+                        {
+                            object oldPkVal = row[pkName, DataRowVersion.Original];
+                            string formattedOldVal = (oldPkVal == DBNull.Value) ? "NULL" : $"'{oldPkVal.ToString().Replace("'", "''")}'";
+                            whereClauses.Add($"{pkName} = {formattedOldVal}");
+                        }
+
+                        string sqlUpdate = $"UPDATE {_selectedRelation.relName} \nSET {string.Join(", ", setClauses)} \nWHERE {string.Join(" AND ", whereClauses)};";
+
+                        // In ra MessageBox để kiểm tra
+                        MessageBox.Show(sqlUpdate, "Generated SQL Update Statement",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        row.AcceptChanges();
+                    }
+                }
+            }
         }
 
         private void gridControlRelation_Click(object sender, EventArgs e)
