@@ -69,6 +69,7 @@ namespace FPRDB_SQLite.GUI
             barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonGroup2 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonSelectTuples = new DevExpress.XtraBars.BarButtonItem();
+            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -135,7 +136,6 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
-            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -476,6 +476,12 @@ namespace FPRDB_SQLite.GUI
             barButtonSelectTuples.Id = 55;
             barButtonSelectTuples.Name = "barButtonSelectTuples";
             barButtonSelectTuples.ItemClick += barButtonSelectTuples_ItemClick;
+            // 
+            // barButtonItem1
+            // 
+            barButtonItem1.Caption = "barButtonItem1";
+            barButtonItem1.Id = 56;
+            barButtonItem1.Name = "barButtonItem1";
             // 
             // DatabaseRibbonPage
             // 
@@ -832,6 +838,7 @@ namespace FPRDB_SQLite.GUI
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
+            gridControlRelation.Click += gridControlRelation_Click;
             // 
             // gridView3
             // 
@@ -1065,12 +1072,6 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
             CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
-            // 
-            // barButtonItem1
-            // 
-            barButtonItem1.Caption = "barButtonItem1";
-            barButtonItem1.Id = 56;
-            barButtonItem1.Name = "barButtonItem1";
             // 
             // frmMain
             // 

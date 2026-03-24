@@ -269,7 +269,7 @@ namespace FPRDB_SQLite.GUI
             DataRow row = table.NewRow();
             Type domainType;
             string fieldName;
-            foreach(Field f in schemaFields)
+            foreach (Field f in schemaFields)
             {
                 domainType = FieldTypeUtilities.getDomainType(f.getFieldInfo().getType());
                 fieldName = f.getFieldName();
@@ -364,7 +364,7 @@ namespace FPRDB_SQLite.GUI
             Plan relPlan = new RelationPlan(relInfo.relName, this.compRoot.getMetaDataManger(), this.compRoot.getDBMgr(), this.compRoot.getParser(), this.compRoot.getConstraintService());
             Scan relScan = relPlan.open();
             int count = 0;
-            while (relScan.next() && count<AppStates.maxSelectTop)
+            while (relScan.next() && count < AppStates.maxSelectTop)
             {
                 relationContent.Rows.Add(this.getTupleAsDataRow(schemaFields, relScan, relationContent));
                 count++;
@@ -415,7 +415,8 @@ namespace FPRDB_SQLite.GUI
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
                 {
-                    DisplayRelationDetail(relation);
+                    _selectedRelation = relation;
+                    DisplayRelationDetail(_selectedRelation);
                 }
             }
         }
@@ -1148,7 +1149,7 @@ namespace FPRDB_SQLite.GUI
                     ExecuteQuery(sql);
                     break;
             }
-            
+
         }
         private void ExecuteDataDefinition(string sql)
         {
@@ -1639,6 +1640,11 @@ namespace FPRDB_SQLite.GUI
 
             MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void gridControlRelation_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
