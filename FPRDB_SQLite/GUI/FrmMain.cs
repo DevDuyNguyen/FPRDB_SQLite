@@ -1,42 +1,44 @@
 ﻿using BLL;
-using BLL.Common;
-using BLL.Common;
 using BLL;
 using BLL.Common;
+using BLL.Common;
+using BLL.Common;
+using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
+using BLL.Services;
 using BLL.SQLProcessing;
+using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509.Qualified;
+using DevExpress.Xpo.DB.Helpers;
 using DevExpress.Xpo.DB.Helpers;
 using DevExpress.XtraBars;
 using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Base;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
 using DevExpress.XtraTab;
 using GUI.GlobalStates;
+using GUI.GlobalStates;
+using GUI.GUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
-using BLL.Services;
-using BLL.DTO;
-using DevExpress.Xpo.DB.Helpers;
-using BLL.Common;
-using GUI.GlobalStates;
 using static FPRDB_SQLite.GUI.frmNewSchema;
-using System.Net.Sockets;
-using DevExpress.XtraGrid.Views.Grid;
-using DevExpress.XtraEditors.Controls;
-using DevExpress.XtraGrid.Columns;
-using GUI.GUI;
-using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
-using DevExpress.XtraGrid.Views.Base;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -374,7 +376,8 @@ namespace FPRDB_SQLite.GUI
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
                 {
-                    DisplayRelationDetail(relation);
+                    _selectedRelation = relation;
+                    DisplayRelationDetail(_selectedRelation);
                 }
             }
         }
@@ -1107,7 +1110,7 @@ namespace FPRDB_SQLite.GUI
                     ExecuteQuery(sql);
                     break;
             }
-            
+
         }
         private void ExecuteDataDefinition(string sql)
         {
@@ -1598,6 +1601,65 @@ namespace FPRDB_SQLite.GUI
 
             MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void iExportFS_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                SaveFileDialog DialogNew = new SaveFileDialog();
+                DialogNew.Title = "Export Fuzzy Set File";
+                DialogNew.Filter = "Fuzzy Set Files (*.fset)|*.fset";
+                DialogNew.DefaultExt = "fset";
+                DialogNew.AddExtension = true;
+                DialogNew.RestoreDirectory = true;
+                DialogNew.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
+                DialogNew.SupportMultiDottedExtensions = true;
+
+                if (DialogNew.ShowDialog() == DialogResult.OK)
+                {
+                    //this.databaseService.createDB(DialogNew.FileName);
+                    XtraMessageBox.Show($"Export fuzzy set successfully!\n{DialogNew.FileName}", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                XtraMessageBox.Show($"Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (IOException ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+
+        private void iImportFS_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OpenFileDialog DialogOpen = new OpenFileDialog();
+            DialogOpen.Title = "Import Fuzzy Set File";
+            // Chỉ lọc ra các file có đuôi .pdb hoặc .sqlite
+            DialogOpen.Filter = "Fuzzy Set Files (*.fset)|*.fset";
+            DialogOpen.DefaultExt = "fset";
+            DialogOpen.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
+
+            if (DialogOpen.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    //this.databaseService.loadDB(DialogOpen.FileName);
+                    XtraMessageBox.Show($"Import fuzzy set successfully!\n{DialogOpen.FileName}", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (IOException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void barButtonRelationships_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            new frmFKRelationships(compRoot, _selectedRelation).ShowDialog();
         }
     }
 }
