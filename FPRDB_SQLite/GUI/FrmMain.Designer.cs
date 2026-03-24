@@ -69,6 +69,8 @@ namespace FPRDB_SQLite.GUI
             barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonGroup2 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonSelectTuples = new DevExpress.XtraBars.BarButtonItem();
+            iExportFS = new DevExpress.XtraBars.BarButtonItem();
+            iImportFS = new DevExpress.XtraBars.BarButtonItem();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -187,10 +189,10 @@ namespace FPRDB_SQLite.GUI
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            ribbonControl.MaxItemId = 56;
+            ribbonControl.MaxItemId = 58;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
             ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
@@ -476,6 +478,22 @@ namespace FPRDB_SQLite.GUI
             barButtonSelectTuples.Name = "barButtonSelectTuples";
             barButtonSelectTuples.ItemClick += barButtonSelectTuples_ItemClick;
             // 
+            // iExportFS
+            // 
+            iExportFS.Caption = "Export Fuzzy Set";
+            iExportFS.Id = 56;
+            iExportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iExportFS.ImageOptions.SvgImage");
+            iExportFS.Name = "iExportFS";
+            iExportFS.ItemClick += iExportFS_ItemClick;
+            // 
+            // iImportFS
+            // 
+            iImportFS.Caption = "Import Fuzzy Set";
+            iImportFS.Id = 57;
+            iImportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iImportFS.ImageOptions.SvgImage");
+            iImportFS.Name = "iImportFS";
+            iImportFS.ItemClick += iImportFS_ItemClick;
+            // 
             // DatabaseRibbonPage
             // 
             DatabaseRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupFile_pageHome, groupExit_pageHome });
@@ -614,6 +632,8 @@ namespace FPRDB_SQLite.GUI
             // SearchFuzzySetribbonPageGroup
             // 
             SearchFuzzySetribbonPageGroup.ItemLinks.Add(iSearchFuzzySet);
+            SearchFuzzySetribbonPageGroup.ItemLinks.Add(iExportFS);
+            SearchFuzzySetribbonPageGroup.ItemLinks.Add(iImportFS);
             SearchFuzzySetribbonPageGroup.Name = "SearchFuzzySetribbonPageGroup";
             SearchFuzzySetribbonPageGroup.Text = "Fuzzy Set";
             // 
@@ -796,7 +816,7 @@ namespace FPRDB_SQLite.GUI
             RelationxtraTabPage.Controls.Add(splitContainerControl2);
             RelationxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             RelationxtraTabPage.Name = "RelationxtraTabPage";
-            RelationxtraTabPage.Size = new System.Drawing.Size(669, 326);
+            RelationxtraTabPage.Size = new System.Drawing.Size(686, 326);
             RelationxtraTabPage.Text = "Relation";
             // 
             // splitContainerControl2
@@ -816,7 +836,7 @@ namespace FPRDB_SQLite.GUI
             splitContainerControl2.Panel2.Controls.Add(gridControlValueRelation);
             splitContainerControl2.Panel2.Controls.Add(panelControlRelation);
             splitContainerControl2.Panel2.Text = "Panel2";
-            splitContainerControl2.Size = new System.Drawing.Size(669, 326);
+            splitContainerControl2.Size = new System.Drawing.Size(686, 326);
             splitContainerControl2.SplitterPosition = 167;
             splitContainerControl2.TabIndex = 0;
             // 
@@ -827,7 +847,7 @@ namespace FPRDB_SQLite.GUI
             gridControlRelation.MainView = gridView3;
             gridControlRelation.MenuManager = ribbonControl;
             gridControlRelation.Name = "gridControlRelation";
-            gridControlRelation.Size = new System.Drawing.Size(669, 167);
+            gridControlRelation.Size = new System.Drawing.Size(686, 167);
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
@@ -847,7 +867,7 @@ namespace FPRDB_SQLite.GUI
             gridControlValueRelation.MainView = gridView4;
             gridControlValueRelation.MenuManager = ribbonControl;
             gridControlValueRelation.Name = "gridControlValueRelation";
-            gridControlValueRelation.Size = new System.Drawing.Size(669, 102);
+            gridControlValueRelation.Size = new System.Drawing.Size(686, 102);
             gridControlValueRelation.TabIndex = 1;
             gridControlValueRelation.UseEmbeddedNavigator = true;
             gridControlValueRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView4 });
@@ -898,7 +918,7 @@ namespace FPRDB_SQLite.GUI
             panelControlRelation.Dock = System.Windows.Forms.DockStyle.Top;
             panelControlRelation.Location = new System.Drawing.Point(0, 0);
             panelControlRelation.Name = "panelControlRelation";
-            panelControlRelation.Size = new System.Drawing.Size(669, 45);
+            panelControlRelation.Size = new System.Drawing.Size(686, 45);
             panelControlRelation.TabIndex = 0;
             // 
             // QueryxtraTabPage
@@ -906,7 +926,7 @@ namespace FPRDB_SQLite.GUI
             QueryxtraTabPage.Controls.Add(splitContainerControl1);
             QueryxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             QueryxtraTabPage.Name = "QueryxtraTabPage";
-            QueryxtraTabPage.Size = new System.Drawing.Size(669, 326);
+            QueryxtraTabPage.Size = new System.Drawing.Size(686, 326);
             QueryxtraTabPage.Text = "Query";
             // 
             // splitContainerControl1
@@ -925,7 +945,7 @@ namespace FPRDB_SQLite.GUI
             // 
             splitContainerControl1.Panel2.Controls.Add(xtraTabControlResultQuery);
             splitContainerControl1.Panel2.Text = "Panel2";
-            splitContainerControl1.Size = new System.Drawing.Size(669, 326);
+            splitContainerControl1.Size = new System.Drawing.Size(686, 326);
             splitContainerControl1.SplitterPosition = 129;
             splitContainerControl1.TabIndex = 0;
             // 
@@ -935,7 +955,7 @@ namespace FPRDB_SQLite.GUI
             memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
             memoEditTxtQuery.MenuManager = ribbonControl;
             memoEditTxtQuery.Name = "memoEditTxtQuery";
-            memoEditTxtQuery.Size = new System.Drawing.Size(669, 129);
+            memoEditTxtQuery.Size = new System.Drawing.Size(686, 129);
             memoEditTxtQuery.TabIndex = 0;
             memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
@@ -945,7 +965,7 @@ namespace FPRDB_SQLite.GUI
             xtraTabControlResultQuery.Location = new System.Drawing.Point(0, 0);
             xtraTabControlResultQuery.Name = "xtraTabControlResultQuery";
             xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControlResultQuery.Size = new System.Drawing.Size(669, 185);
+            xtraTabControlResultQuery.Size = new System.Drawing.Size(686, 185);
             xtraTabControlResultQuery.TabIndex = 0;
             xtraTabControlResultQuery.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
             // 
@@ -953,7 +973,7 @@ namespace FPRDB_SQLite.GUI
             // 
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(667, 155);
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(684, 155);
             QueryResultxtraTabPage.Text = "Query Result";
             // 
             // gridControlResultQuery
@@ -969,7 +989,7 @@ namespace FPRDB_SQLite.GUI
             gridControlResultQuery.MainView = gridViewResultQuery;
             gridControlResultQuery.MenuManager = ribbonControl;
             gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(667, 155);
+            gridControlResultQuery.Size = new System.Drawing.Size(684, 155);
             gridControlResultQuery.TabIndex = 0;
             gridControlResultQuery.UseEmbeddedNavigator = true;
             gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridViewResultQuery });
@@ -994,7 +1014,7 @@ namespace FPRDB_SQLite.GUI
             // 
             MessagextraTabPage.Controls.Add(memoEditMessage);
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(667, 155);
+            MessagextraTabPage.Size = new System.Drawing.Size(684, 155);
             MessagextraTabPage.Text = "Message";
             // 
             // memoEditMessage
@@ -1004,7 +1024,7 @@ namespace FPRDB_SQLite.GUI
             memoEditMessage.MenuManager = ribbonControl;
             memoEditMessage.Name = "memoEditMessage";
             memoEditMessage.Properties.ReadOnly = true;
-            memoEditMessage.Size = new System.Drawing.Size(667, 155);
+            memoEditMessage.Size = new System.Drawing.Size(684, 155);
             memoEditMessage.TabIndex = 0;
             // 
             // popupMenuTreeView
@@ -1240,6 +1260,8 @@ namespace FPRDB_SQLite.GUI
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
         private DevExpress.XtraEditors.MemoEdit memoEditMessage;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
+        private DevExpress.XtraBars.BarButtonItem iExportFS;
+        private DevExpress.XtraBars.BarButtonItem iImportFS;
     }
 }
 
