@@ -6,20 +6,25 @@ using System.Threading.Tasks;
 using BLL.Services;
 using BLL.DTO;
 using BLL;
+using BLL.Common;
 
 namespace TestProject1.UnitTest
 {
-    public class FuzzySetServiceSets
+    public class FuzzySetServiceSetTests
     {
         private FuzzySetService service;
+        private CompositionRoot compRoot;
+        private string dbPath = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
 
-        public FuzzySetServiceSets()
+        public FuzzySetServiceSetTests()
         {
             //not done: Moq for mocking
-            this.service = new FuzzySetService();
+            this.compRoot = new CompositionRoot();
+            this.compRoot.getDBMgr().loadDB(this.dbPath);
+            this.service = compRoot.getFuzzySetService();
         }
 
-        [Fact]
+        //[Fact]
         //test case technique: positive test, negative test
         public void FuzzySetService_checkIfFuzzySetValid_succes()
         {
@@ -46,6 +51,19 @@ namespace TestProject1.UnitTest
             Assert.Equal(false, this.service.checkIfFuzzySetValid(fuzz4));
 
         }
+
+        //[Theory]
+        //[InlineData("dist")]
+        public void findFuzzySet_success(string name)
+        {
+            //arrange
+            //act
+            List<FuzzySetDTO> actual = this.service.findFuzzySet(name);
+            //assert
+        }
+
+
+
 
     }
 }

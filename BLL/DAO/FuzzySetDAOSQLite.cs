@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,12 +18,14 @@ namespace BLL.DAO
     {
         private DatabaseManager databaseManager;
         private DatabaseManager databseExportImport;
+        private MetadataManager metaDataMgr;
 
-        public FuzzySetDAOSQLite(DatabaseManager databaseManager)
+        public FuzzySetDAOSQLite(DatabaseManager databaseManager, MetadataManager metaDataMgr)
         {
             this.databaseManager = databaseManager;
+            this.metaDataMgr= metaDataMgr;
         }
-        public FuzzySetDAOSQLite() { }
+        //public FuzzySetDAOSQLite() { }
         public List<T> convertStringToListOfT<T>(string str)
         {
             List<T> ans;
@@ -176,5 +179,46 @@ namespace BLL.DAO
             }
 
         }
+        public List<BaseFuzzySet> findFuzzySet(string name)
+        {
+            //get all fuzzyset names that LIKE %name%
+            List<string> matchFuzzySetNames = new List<string>();
+            IDataReader r;
+            using (r = this.databaseManager.executeQuery($"SELECT fuzzset_name FROM fprdb_FuzzySet WHERE fuzzset_name LIKE '%{name}%'"))
+            {
+                while (r.Read())
+                {
+                    matchFuzzySetNames.Add(r["fuzzset_name"] as string);
+                }
+            }
+
+            //for each such fuzzy set name
+            //-get fuzzy type
+            //-get fuzzy 
+            //-add to answer list
+            FieldType fsType;
+            List<BaseFuzzySet> ans = new List<BaseFuzzySet>();
+            foreach (string fsName in matchFuzzySetNames)
+            {
+                fsType = this.metaDataMgr.getFuzzySetType(fsName);
+                if (fsType == FieldType.distFS_INT)
+                {
+                    ans.Add(this.metaDataMgr.getFuzzySet<int>(fsName, fsType));
+                }
+                else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+                {
+                    ans.Add(this.metaDataMgr.getFuzzySet<float>(fsName, fsType));
+                }
+                else //if (fsType == FieldType.distFS_TEXT)
+                {
+                    ans.Add(this.metaDataMgr.getFuzzySet<string>(fsName, fsType));
+                }
+            }
+            return ans;
+
+        }
+
+
+
     }
 }

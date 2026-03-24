@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BLL.Services
 {
@@ -46,5 +47,29 @@ namespace BLL.Services
                 throw ex;
             }
         }
+        public List<FuzzySetDTO> findFuzzySet(string name)
+        {
+            List<FuzzySetDTO> ans = new List<FuzzySetDTO>();
+            List<BaseFuzzySet> fsList = this.fuzzySetDAO.findFuzzySet(name);
+            foreach(BaseFuzzySet fs in fsList)
+            {
+                if(fs is FuzzySet<int>)
+                {
+                    ans.Add((fs as FuzzySet<int>).toDTO());
+                }
+                else if (fs is FuzzySet<float>)
+                {
+                    ans.Add((fs as FuzzySet<float>).toDTO());
+                }
+                else if (fs is FuzzySet<string>)
+                {
+                    ans.Add((fs as FuzzySet<string>).toDTO());
+                }
+            }
+            return ans;
+        }
+
+
+
     }
 }
