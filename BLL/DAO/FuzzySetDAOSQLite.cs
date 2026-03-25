@@ -248,23 +248,23 @@ namespace BLL.DAO
             this.databaseManager.executeNonQuery($"DELETE FROM fprdb_FuzzySet WHERE oid={fuzzySet.oid}");
 
         }
-        public FuzzySetDTO getExactFuzzySet(string name)
+        public FuzzySetDTO getExactFuzzySet(int oid)
         {
-            FieldType fsType = this.metaDataMgr.getFuzzySetType(name);
+            FieldType fsType = this.metaDataMgr.getFuzzySetTypeByID(oid);
             FuzzySetDTO dto=null;
             if (fsType == FieldType.distFS_INT)
             {
-                FuzzySet<int> tmp = this.metaDataMgr.getFuzzySet<int>(name, fsType);
+                FuzzySet<int> tmp = this.metaDataMgr.getFuzzySetByID<int>(oid, fsType);
                 dto = tmp.toDTO();
             }
             else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
             {
-                FuzzySet<float> tmp = this.metaDataMgr.getFuzzySet<float>(name, fsType);
+                FuzzySet<float> tmp = this.metaDataMgr.getFuzzySetByID<float>(oid, fsType);
                 dto = tmp.toDTO();
             }
             else //if (fsType == FieldType.distFS_TEXT)
             {
-                FuzzySet<string> tmp = this.metaDataMgr.getFuzzySet<string>(name, fsType);
+                FuzzySet<string> tmp = this.metaDataMgr.getFuzzySetByID<string>(oid, fsType);
                 dto = tmp.toDTO();
             }
             return dto;

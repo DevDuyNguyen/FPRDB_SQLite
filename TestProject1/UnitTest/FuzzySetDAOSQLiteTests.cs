@@ -111,12 +111,12 @@ namespace TestProject1.UnitTest
             //assert
         }
         //[Theory]
-        //[InlineData("about_60")]
-        public void getExactFuzzySet_success(string name)
+        //[InlineData(8)]
+        public void getExactFuzzySet_success(int oid)
         {
             //arrange
             //act
-            FuzzySetDTO actual = this.dao.getExactFuzzySet(name);
+            FuzzySetDTO actual = this.dao.getExactFuzzySet(oid);
             //assert
         }
         class updateDiscreteFuzzySet_positive_testdata : TheoryData<FuzzySetDTO>

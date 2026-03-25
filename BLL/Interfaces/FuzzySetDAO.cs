@@ -16,7 +16,7 @@ namespace BLL.Interfaces
         public List<BaseFuzzySet> findFuzzySet(string name);
         public List<FPRDBRelation>  getUsingRelations(FuzzySetDTO fuzzySet);
         public void removeFuzzySet(FuzzySetDTO fuzzySet);
-        public FuzzySetDTO getExactFuzzySet(string name);
+        public FuzzySetDTO getExactFuzzySet(int oid);
         public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet);
         public void updateContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet);
 
