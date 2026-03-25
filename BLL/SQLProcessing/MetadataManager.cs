@@ -36,6 +36,21 @@ namespace BLL.SQLProcessing
                 throw ex;
             }
         }
+        public bool isFuzzySetWithNameExist(string name)
+        {
+            try
+            {
+                string sql = $"select 1 from fprdb_FuzzySet where fuzzset_name='{name}'";
+                IDataReader reader = this.databaseMgr.executeQuery(sql);
+                bool ans = reader.Read();
+                reader.Close();
+                return ans;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool isConstraintExist(string name)
         {
             try

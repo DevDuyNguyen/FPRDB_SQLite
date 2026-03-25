@@ -296,6 +296,10 @@ namespace BLL.DAO
             string updateMembershipDegree = $"update fprdb_ContinousFuzzySet set fuzzset_bottom_left={fuzzySet.leftBottom}, fuzzset_top_left={fuzzySet.leftTop}, fuzzset_top_right={fuzzySet.rightTop}, fuzzset_bottom_right={fuzzySet.rightBottom} where oid={fuzzySet.oid}";
             this.databaseManager.executeNonQuery(updateMembershipDegree);
         }
+        public bool isFuzzySetExist(string name)
+        {
+            return this.metaDataMgr.isFuzzySetWithNameExist(name);
+        }
 
     }
 }

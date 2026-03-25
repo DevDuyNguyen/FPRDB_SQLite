@@ -19,6 +19,7 @@ namespace BLL.Interfaces
         public FuzzySetDTO getExactFuzzySet(int oid);
         public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet);
         public void updateContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet);
+        public bool isFuzzySetExist(string name);
 
     }
 }
