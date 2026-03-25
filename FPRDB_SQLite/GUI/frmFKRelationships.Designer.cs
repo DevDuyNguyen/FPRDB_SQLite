@@ -38,9 +38,9 @@
             grdMappingAttr = new DevExpress.XtraGrid.GridControl();
             grdviewMappingAttr = new DevExpress.XtraGrid.Views.Grid.GridView();
             grdcolPKAttr = new DevExpress.XtraGrid.Columns.GridColumn();
-            repositoryItemLookUpEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            repositoryItemLookUpEditPK = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
             grdcolFKAttr = new DevExpress.XtraGrid.Columns.GridColumn();
-            repositoryItemLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            repositoryItemLookUpEditFK = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
             txtFKRelName = new DevExpress.XtraEditors.TextEdit();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
             btnClose = new DevExpress.XtraEditors.SimpleButton();
@@ -62,8 +62,8 @@
             grpFKDetail.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grdMappingAttr).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grdviewMappingAttr).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEditPK).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEditFK).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtFKRelName.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cboPKRelName.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtFKName.Properties).BeginInit();
@@ -151,7 +151,7 @@
             grdMappingAttr.Location = new System.Drawing.Point(5, 127);
             grdMappingAttr.MainView = grdviewMappingAttr;
             grdMappingAttr.Name = "grdMappingAttr";
-            grdMappingAttr.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemLookUpEdit1, repositoryItemLookUpEdit2 });
+            grdMappingAttr.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemLookUpEditFK, repositoryItemLookUpEditPK });
             grdMappingAttr.Size = new System.Drawing.Size(396, 173);
             grdMappingAttr.TabIndex = 14;
             grdMappingAttr.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { grdviewMappingAttr });
@@ -164,10 +164,12 @@
             grdviewMappingAttr.OptionsView.ShowColumnHeaders = false;
             grdviewMappingAttr.OptionsView.ShowGroupPanel = false;
             grdviewMappingAttr.OptionsView.ShowIndicator = false;
+            grdviewMappingAttr.ShownEditor += grdviewMappingAttr_ShownEditor;
+            grdviewMappingAttr.ValidatingEditor += grdviewMappingAttr_ValidatingEditor;
             // 
             // grdcolPKAttr
             // 
-            grdcolPKAttr.ColumnEdit = repositoryItemLookUpEdit2;
+            grdcolPKAttr.ColumnEdit = repositoryItemLookUpEditPK;
             grdcolPKAttr.FieldName = "PKAttr";
             grdcolPKAttr.MinWidth = 25;
             grdcolPKAttr.Name = "grdcolPKAttr";
@@ -175,15 +177,17 @@
             grdcolPKAttr.VisibleIndex = 0;
             grdcolPKAttr.Width = 94;
             // 
-            // repositoryItemLookUpEdit2
+            // repositoryItemLookUpEditPK
             // 
-            repositoryItemLookUpEdit2.AutoHeight = false;
-            repositoryItemLookUpEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            repositoryItemLookUpEdit2.Name = "repositoryItemLookUpEdit2";
+            repositoryItemLookUpEditPK.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
+            repositoryItemLookUpEditPK.AutoHeight = false;
+            repositoryItemLookUpEditPK.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemLookUpEditPK.Name = "repositoryItemLookUpEditPK";
+            repositoryItemLookUpEditPK.NullText = "";
             // 
             // grdcolFKAttr
             // 
-            grdcolFKAttr.ColumnEdit = repositoryItemLookUpEdit1;
+            grdcolFKAttr.ColumnEdit = repositoryItemLookUpEditFK;
             grdcolFKAttr.FieldName = "FKAttr";
             grdcolFKAttr.MinWidth = 25;
             grdcolFKAttr.Name = "grdcolFKAttr";
@@ -191,11 +195,13 @@
             grdcolFKAttr.VisibleIndex = 1;
             grdcolFKAttr.Width = 94;
             // 
-            // repositoryItemLookUpEdit1
+            // repositoryItemLookUpEditFK
             // 
-            repositoryItemLookUpEdit1.AutoHeight = false;
-            repositoryItemLookUpEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            repositoryItemLookUpEdit1.Name = "repositoryItemLookUpEdit1";
+            repositoryItemLookUpEditFK.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
+            repositoryItemLookUpEditFK.AutoHeight = false;
+            repositoryItemLookUpEditFK.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemLookUpEditFK.Name = "repositoryItemLookUpEditFK";
+            repositoryItemLookUpEditFK.NullText = "";
             // 
             // txtFKRelName
             // 
@@ -229,6 +235,7 @@
             cboPKRelName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             cboPKRelName.Size = new System.Drawing.Size(190, 22);
             cboPKRelName.TabIndex = 12;
+            cboPKRelName.SelectedIndexChanged += cboPKRelName_SelectedIndexChanged;
             // 
             // lblPKRelName
             // 
@@ -284,8 +291,8 @@
             grpFKDetail.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)grdMappingAttr).EndInit();
             ((System.ComponentModel.ISupportInitialize)grdviewMappingAttr).EndInit();
-            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEdit1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEditPK).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repositoryItemLookUpEditFK).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtFKRelName.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)cboPKRelName.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtFKName.Properties).EndInit();
@@ -313,7 +320,7 @@
         private DevExpress.XtraGrid.Views.Grid.GridView grdviewMappingAttr;
         private DevExpress.XtraGrid.Columns.GridColumn grdcolPKAttr;
         private DevExpress.XtraGrid.Columns.GridColumn grdcolFKAttr;
-        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEdit2;
-        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEditPK;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEditFK;
     }
 }
