@@ -14,6 +14,8 @@ namespace BLL.Interfaces
         public DiscreteFuzzySet<T> createDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet);
         public ContinuousFuzzySet createContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet);
         public List<BaseFuzzySet> findFuzzySet(string name);
+        public List<FPRDBRelation>  getUsingRelations(FuzzySetDTO fuzzySet);
+        public void removeFuzzySet(FuzzySetDTO fuzzySet);
 
 
     }

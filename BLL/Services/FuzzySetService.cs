@@ -68,7 +68,24 @@ namespace BLL.Services
             }
             return ans;
         }
-
+        public void removeFuzzySet(FuzzySetDTO fuzzySet)
+        {
+            List<FPRDBRelation> usingRelations = this.fuzzySetDAO.getUsingRelations(fuzzySet);
+            if(usingRelations!=null && usingRelations.Count > 0)
+            {
+                string errorMessage = $"Can't delete the fuzzy set {fuzzySet.fuzzySetName}, because relations";
+                foreach(FPRDBRelation rel in usingRelations)
+                {
+                    errorMessage += $" {rel.getRelName()}";
+                }
+                errorMessage += " are using it";
+                throw new InvalidOperationException(errorMessage);
+            }
+            else
+            {
+                this.fuzzySetDAO.removeFuzzySet(fuzzySet);
+            }
+        }
 
 
     }

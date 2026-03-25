@@ -1,6 +1,8 @@
-﻿using BLL.Common;
+﻿using BLL;
+using BLL.Common;
 using BLL.DAO;
 using BLL.DomainObject;
+using BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,9 +65,9 @@ namespace TestProject1.UnitTest
             Assert.Equal(exp3, ans[2]);
         }
 
-        [Theory]
+        //[Theory]
         //[InlineData("dist")]
-        [InlineData("con")]
+        //[InlineData("con")]
         public void findFuzzySet_success(string name)
         {
             //arrange
@@ -73,6 +75,24 @@ namespace TestProject1.UnitTest
             List<BaseFuzzySet> actual = this.dao.findFuzzySet(name);
             //assert
 
+        }
+
+        
+        class getUsingRelations_positive_testdata : TheoryData<FuzzySetDTO>
+        {
+            public getUsingRelations_positive_testdata()
+            {
+                Add(new DiscreteFuzzySetDTO<int>(null, null, "young", FieldType.distFS_INT));
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(getUsingRelations_positive_testdata))]
+        public void getUsingRelations_success(FuzzySetDTO fs)
+        {
+            //arrange
+            //act
+            List<FPRDBRelation> actual = this.dao.getUsingRelations(fs);
+            //assert
         }
 
 

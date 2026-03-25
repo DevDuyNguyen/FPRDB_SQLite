@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -215,6 +216,35 @@ namespace BLL.DAO
                 }
             }
             return ans;
+
+        }
+        public List<FPRDBRelation> getUsingRelations(FuzzySetDTO fuzzySet)
+        {
+            int fsOID = this.metaDataMgr.getFuzzySetOID(fuzzySet.fuzzySetName);
+            List<int> usingRelationOIDs = new List<int>();
+            IDataReader r;
+            using (r = this.databaseManager.executeQuery($"SELECT rel_oid FROM FPRDB_Rel_FuzzSet WHERE fuzzset_oid={fsOID} AND no!=0"))
+            {
+                while (r.Read())
+                {
+                    usingRelationOIDs.Add(Convert.ToInt32(r["rel_oid"]));
+                }
+            }
+            List<FPRDBRelation> ans = new List<FPRDBRelation>();
+            foreach(int oid in usingRelationOIDs)
+            {
+                ans.Add(this.metaDataMgr.getRelationByID(oid));
+            }
+            return ans;
+
+        }
+        public void removeFuzzySet(FuzzySetDTO fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException("Oid of fuzzy set isn't provided");
+            this.databaseManager.executeNonQuery($"DELETE FROM fprdb_DiscreteFuzzySet WHERE oid={fuzzySet.oid}");
+            this.databaseManager.executeNonQuery($"DELETE FROM fprdb_ContinousFuzzySet WHERE oid={fuzzySet.oid}");
+            this.databaseManager.executeNonQuery($"DELETE FROM fprdb_FuzzySet WHERE oid={fuzzySet.oid}");
 
         }
 
