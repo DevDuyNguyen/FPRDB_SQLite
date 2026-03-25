@@ -77,6 +77,22 @@ namespace TestProject1.UnitTest
             this.service.removeFuzzySet(fs);
             //assert
         }
+        class updateFuzzySet_positive_testdata : TheoryData<FuzzySetDTO>
+        {
+            public updateFuzzySet_positive_testdata()
+            {
+                Add(new DiscreteFuzzySetDTO<int>(new List<int> { 20, 21, 22, 23 }, new List<float> { 1, 1, 0.5f, 0.5f }, 4, "distFS1", FieldType.distFS_INT));
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(updateFuzzySet_positive_testdata))]
+        public void updateFuzzySet_success(FuzzySetDTO fs)
+        {
+            //arrange
+            //act
+            this.service.updateFuzzySet(fs);
+            //assert
+        }
 
 
 

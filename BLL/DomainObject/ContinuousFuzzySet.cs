@@ -150,6 +150,7 @@ namespace BLL.DomainObject
                 this.leftTop,
                 this.rightTop,
                 this.rightBottom,
+                this.getOID(),
                 this.getName()
                 );
         }

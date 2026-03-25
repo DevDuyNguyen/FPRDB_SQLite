@@ -32,6 +32,7 @@ namespace BLL.DomainObject
             return new DiscreteFuzzySetDTO<T>(
                 this.valueSet,
                 this.membershipDegreeSet,
+                this.getOID(),
                 this.getName(),
                 this.getFuzzysetType()
                 );
