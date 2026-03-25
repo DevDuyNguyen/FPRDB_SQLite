@@ -55,7 +55,7 @@ namespace BLL.Common
             
 
             //dao
-            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
+            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr, this.metadataMgr);
             this.fprdbSchemaDAO = new FPRDBSchemaDAOSQLProcessor(this.sqlProcessor);
             this.fprdbRelationDAO = new FPRDBRelationDAOSQLProcessor(this.sqlProcessor);
 
