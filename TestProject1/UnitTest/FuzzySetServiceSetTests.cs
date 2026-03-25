@@ -61,7 +61,22 @@ namespace TestProject1.UnitTest
             List<FuzzySetDTO> actual = this.service.findFuzzySet(name);
             //assert
         }
-
+        class removeFuzzySet_positive_testdata : TheoryData<FuzzySetDTO>
+        {
+            public removeFuzzySet_positive_testdata()
+            {
+                Add(new DiscreteFuzzySetDTO<int>(null, null, 6, "young", FieldType.contFS));
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(removeFuzzySet_positive_testdata))]
+        public void removeFuzzySet_success(FuzzySetDTO fs)
+        {
+            //arrange
+            //act
+            this.service.removeFuzzySet(fs);
+            //assert
+        }
 
 
 

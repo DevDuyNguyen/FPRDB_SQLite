@@ -76,8 +76,9 @@ namespace BLL.Services
                 string errorMessage = $"Can't delete the fuzzy set {fuzzySet.fuzzySetName}, because relations";
                 foreach(FPRDBRelation rel in usingRelations)
                 {
-                    errorMessage += $" {rel.getRelName()}";
+                    errorMessage += $" {rel.getRelName()},";
                 }
+                errorMessage = errorMessage.TrimEnd(',');
                 errorMessage += " are using it";
                 throw new InvalidOperationException(errorMessage);
             }

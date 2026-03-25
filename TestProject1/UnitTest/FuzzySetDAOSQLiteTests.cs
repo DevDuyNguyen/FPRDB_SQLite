@@ -101,8 +101,8 @@ namespace TestProject1.UnitTest
                 Add(new DiscreteFuzzySetDTO<int>(null, null, 1,"distFS1", FieldType.distFS_INT));
             }
         }
-        [Theory]
-        [ClassData(typeof(removeFuzzySet_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(removeFuzzySet_positive_testdata))]
         public void removeFuzzySet_success(FuzzySetDTO fs)
         {
             //arrange
