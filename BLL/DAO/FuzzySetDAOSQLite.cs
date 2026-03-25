@@ -244,6 +244,7 @@ namespace BLL.DAO
                 throw new InvalidOperationException("Oid of fuzzy set isn't provided");
             this.databaseManager.executeNonQuery($"DELETE FROM fprdb_DiscreteFuzzySet WHERE oid={fuzzySet.oid}");
             this.databaseManager.executeNonQuery($"DELETE FROM fprdb_ContinousFuzzySet WHERE oid={fuzzySet.oid}");
+            this.databaseManager.executeNonQuery($"DELETE FROM FPRDB_Rel_FuzzSet WHERE fuzzset_oid={fuzzySet.oid}");
             this.databaseManager.executeNonQuery($"DELETE FROM fprdb_FuzzySet WHERE oid={fuzzySet.oid}");
 
         }

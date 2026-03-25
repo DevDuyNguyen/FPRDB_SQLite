@@ -94,6 +94,22 @@ namespace TestProject1.UnitTest
             List<FPRDBRelation> actual = this.dao.getUsingRelations(fs);
             //assert
         }
+        class removeFuzzySet_positive_testdata : TheoryData<FuzzySetDTO>
+        {
+            public removeFuzzySet_positive_testdata()
+            {
+                Add(new DiscreteFuzzySetDTO<int>(null, null, 1,"distFS1", FieldType.distFS_INT));
+            }
+        }
+        [Theory]
+        [ClassData(typeof(removeFuzzySet_positive_testdata))]
+        public void removeFuzzySet_success(FuzzySetDTO fs)
+        {
+            //arrange
+            //act
+            this.dao.removeFuzzySet(fs);
+            //assert
+        }
 
 
     }
