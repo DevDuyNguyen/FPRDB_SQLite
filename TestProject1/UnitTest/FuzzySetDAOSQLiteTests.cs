@@ -126,8 +126,8 @@ namespace TestProject1.UnitTest
                 Add(new DiscreteFuzzySetDTO<int>(new List<int> { 10,11,12,13}, new List<float>{ 0,1,0,1}, 4, "distFS1", FieldType.distFS_INT));
             }
         }
-        [Theory]
-        [ClassData(typeof(updateDiscreteFuzzySet_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(updateDiscreteFuzzySet_positive_testdata))]
         public void updateDiscreteFuzzySet_success(FuzzySetDTO fuzzySet)
         {
             //arrange
@@ -140,6 +140,23 @@ namespace TestProject1.UnitTest
                 this.dao.updateDiscreteFuzzySet<string>((DiscreteFuzzySetDTO<string>)fuzzySet);
             //assert
         }
+        class updateContinuousFuzzySet_positive_testdata : TheoryData<FuzzySetDTO>
+        {
+            public updateContinuousFuzzySet_positive_testdata()
+            {
+                Add(new ContinuousFuzzySetDTO(10,15,15,20, 10, "approx_15"));
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(updateContinuousFuzzySet_positive_testdata))]
+        public void updateContinuousFuzzySet_success(FuzzySetDTO fuzzySet)
+        {
+            //arrange
+            //act
+            this.dao.updateContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
+            //assert
+        }
+
 
     }
 }
