@@ -27,10 +27,12 @@ namespace BLL.DTO
 
         public override bool isValid()
         {
+            if (this.valueSet.Count != this.membershipDegreeSet.Count)
+                throw new InvalidDataException($"Fuzzy set {this.fuzzySetName} has the number of values x ({this.valueSet.Count}) that isn't equal to the number of membership degree ({this.membershipDegreeSet.Count})");
             foreach(float value in this.membershipDegreeSet)
             {
                 if (value < 0 || value > 1)
-                    return false;
+                    throw new InvalidDataException($"Membership degree {value} is out of range [0,1]");
             }
             return true;
         }

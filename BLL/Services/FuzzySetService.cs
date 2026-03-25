@@ -87,7 +87,31 @@ namespace BLL.Services
                 this.fuzzySetDAO.removeFuzzySet(fuzzySet);
             }
         }
-
+        public void updateFuzzySet(FuzzySetDTO fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+            
+            FuzzySetDTO checkFuzzySet = this.fuzzySetDAO.getExactFuzzySet(fuzzySet.fuzzySetName);
+            if (fuzzySet.oid != checkFuzzySet.oid)
+                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName} doesn't have oid {fuzzySet.oid}");
+            if (fuzzySet.isValid())
+            {
+                if (fuzzySet is ContinuousFuzzySetDTO)
+                {
+                    this.fuzzySetDAO.updateContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
+                }
+                else
+                {
+                    if (fuzzySet is DiscreteFuzzySetDTO<int>)
+                        this.fuzzySetDAO.updateDiscreteFuzzySet<int>((DiscreteFuzzySetDTO<int>)fuzzySet);
+                    else if (fuzzySet is DiscreteFuzzySetDTO<float>)
+                        this.fuzzySetDAO.updateDiscreteFuzzySet<float>((DiscreteFuzzySetDTO<float>)fuzzySet);
+                    else //if (fuzzySet is DiscreteFuzzySetDTO<string>)
+                        this.fuzzySetDAO.updateDiscreteFuzzySet<string>((DiscreteFuzzySetDTO<string>)fuzzySet);
+                }
+            }
+        }
 
     }
 }

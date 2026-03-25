@@ -248,8 +248,54 @@ namespace BLL.DAO
             this.databaseManager.executeNonQuery($"DELETE FROM fprdb_FuzzySet WHERE oid={fuzzySet.oid}");
 
         }
+        public FuzzySetDTO getExactFuzzySet(string name)
+        {
+            FieldType fsType = this.metaDataMgr.getFuzzySetType(name);
+            FuzzySetDTO dto=null;
+            if (fsType == FieldType.distFS_INT)
+            {
+                FuzzySet<int> tmp = this.metaDataMgr.getFuzzySet<int>(name, fsType);
+                dto = tmp.toDTO();
+            }
+            else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+            {
+                FuzzySet<float> tmp = this.metaDataMgr.getFuzzySet<float>(name, fsType);
+                dto = tmp.toDTO();
+            }
+            else //if (fsType == FieldType.distFS_TEXT)
+            {
+                FuzzySet<string> tmp = this.metaDataMgr.getFuzzySet<string>(name, fsType);
+                dto = tmp.toDTO();
+            }
+            return dto;
+        }
 
+        public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+            
+            string updateName = $"update fprdb_FuzzySet set fuzzset_name={fuzzySet.fuzzySetName} WHERE oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateName);
 
+            string newValueSet = string.Join(",", fuzzySet.valueSet);
+            string newMembershipDegree = string.Join(",", fuzzySet.membershipDegreeSet);
+            string updateValueSetAndMembershipDegree = $"UPDATE fprdb_DiscreteFuzzySet set fuzzset_x={newValueSet}, fuzzset_membership_degree={newMembershipDegree} WHERE oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateValueSetAndMembershipDegree);
+
+        }
+
+        public void updateContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+
+            string updateName = $"update fprdb_FuzzySet set fuzzset_name={fuzzySet.fuzzySetName} WHERE oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateName);
+
+            string updateMembershipDegree = $"update fprdb_ContinousFuzzySet set fuzzset_bottom_left={fuzzySet.leftBottom}, fuzzset_top_left={fuzzySet.leftTop}, fuzzset_top_right={fuzzySet.rightTop}, fuzzset_bottom_right={fuzzySet.rightBottom} where oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateMembershipDegree);
+        }
 
     }
 }

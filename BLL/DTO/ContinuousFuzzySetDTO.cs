@@ -37,7 +37,7 @@ namespace BLL.DTO
                 && this.rightTop <= this.rightBottom)
                 return true;
             else
-                return false;
+                throw new InvalidDataException($"The membership function of {this.fuzzySetName} doesn't form a point, triangle or trapazoid");
         }
     }
 

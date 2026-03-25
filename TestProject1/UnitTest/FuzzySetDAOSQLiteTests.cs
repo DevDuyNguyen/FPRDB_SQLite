@@ -110,7 +110,15 @@ namespace TestProject1.UnitTest
             this.dao.removeFuzzySet(fs);
             //assert
         }
-
+        //[Theory]
+        //[InlineData("about_60")]
+        public void getExactFuzzySet_success(string name)
+        {
+            //arrange
+            //act
+            FuzzySetDTO actual = this.dao.getExactFuzzySet(name);
+            //assert
+        }
 
     }
 }
