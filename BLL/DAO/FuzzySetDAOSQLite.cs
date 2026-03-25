@@ -275,12 +275,12 @@ namespace BLL.DAO
             if (fuzzySet.oid == null || fuzzySet.oid == default)
                 throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
             
-            string updateName = $"update fprdb_FuzzySet set fuzzset_name={fuzzySet.fuzzySetName} WHERE oid={fuzzySet.oid}";
+            string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
             this.databaseManager.executeNonQuery(updateName);
 
             string newValueSet = string.Join(",", fuzzySet.valueSet);
             string newMembershipDegree = string.Join(",", fuzzySet.membershipDegreeSet);
-            string updateValueSetAndMembershipDegree = $"UPDATE fprdb_DiscreteFuzzySet set fuzzset_x={newValueSet}, fuzzset_membership_degree={newMembershipDegree} WHERE oid={fuzzySet.oid}";
+            string updateValueSetAndMembershipDegree = $"UPDATE fprdb_DiscreteFuzzySet set fuzzset_x='{newValueSet}', fuzzset_membership_degree='{newMembershipDegree}' WHERE oid={fuzzySet.oid}";
             this.databaseManager.executeNonQuery(updateValueSetAndMembershipDegree);
 
         }

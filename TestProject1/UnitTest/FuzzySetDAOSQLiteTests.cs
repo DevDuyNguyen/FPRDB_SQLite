@@ -119,6 +119,27 @@ namespace TestProject1.UnitTest
             FuzzySetDTO actual = this.dao.getExactFuzzySet(name);
             //assert
         }
+        class updateDiscreteFuzzySet_positive_testdata : TheoryData<FuzzySetDTO>
+        {
+            public updateDiscreteFuzzySet_positive_testdata()
+            {
+                Add(new DiscreteFuzzySetDTO<int>(new List<int> { 10,11,12,13}, new List<float>{ 0,1,0,1}, 4, "distFS1", FieldType.distFS_INT));
+            }
+        }
+        [Theory]
+        [ClassData(typeof(updateDiscreteFuzzySet_positive_testdata))]
+        public void updateDiscreteFuzzySet_success(FuzzySetDTO fuzzySet)
+        {
+            //arrange
+            //act
+            if (fuzzySet is DiscreteFuzzySetDTO<int>)
+                this.dao.updateDiscreteFuzzySet<int>((DiscreteFuzzySetDTO<int>)fuzzySet);
+            else if (fuzzySet is DiscreteFuzzySetDTO<float>)
+                this.dao.updateDiscreteFuzzySet<float>((DiscreteFuzzySetDTO<float>)fuzzySet);
+            else //if (fuzzySet is DiscreteFuzzySetDTO<string>)
+                this.dao.updateDiscreteFuzzySet<string>((DiscreteFuzzySetDTO<string>)fuzzySet);
+            //assert
+        }
 
     }
 }
