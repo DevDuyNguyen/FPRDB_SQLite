@@ -154,12 +154,12 @@ namespace FPRDB_SQLite.GUI
 
                 btnEdit.ButtonClick += (sender, e) =>
                 {
-                    var frm = new frmListFuzzySet(compRoot, _currentEditingColumnType);
+                    var frm = new frmListFuzzySet(compRoot, selectedFieldType);
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        FuzzySetDTO selected = frm.SelectedFuzzySet;
-                        if (selected != null)
-                            gridView4.SetRowCellValue(gridView4.FocusedRowHandle, "Value", selected.fuzzySetName);
+                        string selectedFSName = frm.selectedFSName;
+                        if (selectedFSName != null || selectedFSName!=default)
+                            gridView4.SetRowCellValue(gridView4.FocusedRowHandle, "Value", selectedFSName);
                     }
                 };
 

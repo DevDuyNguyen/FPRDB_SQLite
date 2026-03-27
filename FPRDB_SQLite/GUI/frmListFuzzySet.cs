@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DTO;
+using BLL.Services;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,21 @@ namespace GUI.GUI
     public partial class frmListFuzzySet : DevExpress.XtraEditors.XtraForm
     {
         private CompositionRoot compRoot;
+        private DatabaseService dbService;
         private List<FuzzySetDTO> fuzzySets = new List<FuzzySetDTO>();
         public FuzzySetDTO SelectedFuzzySet { get; private set; }
-        public frmListFuzzySet(CompositionRoot compRoot, string typeFS)
+        private List<string> fsNames;
+        public string selectedFSName;
+        public frmListFuzzySet(CompositionRoot compRoot, FieldType typeFS)
         {
             this.compRoot = compRoot;
+            this.dbService = this.compRoot.getDatabaseService();
+            this.fsNames = this.dbService.getFuzzySetNameByType(typeFS);
+
             InitializeComponent();
-            mockingFuzzySets();
-            LoadFuzzySetsByType(typeFS);
+            //mockingFuzzySets();
+            //LoadFuzzySetsByType();
+            LoadFuzzySetNames();
         }
         private void mockingFuzzySets()
         {
@@ -49,51 +57,51 @@ namespace GUI.GUI
             fuzzySets.Add(discreteFloat);
             fuzzySets.Add(discreteText);
         }
-        private void LoadFuzzySetsByType(string typeFS)
-        {
-            List<FuzzySetDTO> filtered = new List<FuzzySetDTO>();
+        //private void LoadFuzzySetsByType(string typeFS)
+        //{
+        //    List<FuzzySetDTO> filtered = new List<FuzzySetDTO>();
 
-            switch (typeFS)
-            {
-                case "distFS_INT":
-                    filtered = fuzzySets
-                        .OfType<DiscreteFuzzySetDTO<int>>()
-                        .Cast<FuzzySetDTO>()
-                        .ToList();
-                    break;
+        //    switch (typeFS)
+        //    {
+        //        case "distFS_INT":
+        //            filtered = fuzzySets
+        //                .OfType<DiscreteFuzzySetDTO<int>>()
+        //                .Cast<FuzzySetDTO>()
+        //                .ToList();
+        //            break;
 
-                case "distFS_FLOAT":
-                    filtered = fuzzySets
-                        .OfType<DiscreteFuzzySetDTO<float>>()
-                        .Cast<FuzzySetDTO>()
-                        .ToList();
-                    break;
+        //        case "distFS_FLOAT":
+        //            filtered = fuzzySets
+        //                .OfType<DiscreteFuzzySetDTO<float>>()
+        //                .Cast<FuzzySetDTO>()
+        //                .ToList();
+        //            break;
 
-                case "distFS_TEXT":
-                    filtered = fuzzySets
-                        .OfType<DiscreteFuzzySetDTO<string>>()
-                        .Cast<FuzzySetDTO>()
-                        .ToList();
-                    break;
+        //        case "distFS_TEXT":
+        //            filtered = fuzzySets
+        //                .OfType<DiscreteFuzzySetDTO<string>>()
+        //                .Cast<FuzzySetDTO>()
+        //                .ToList();
+        //            break;
 
-                default:
-                    filtered = fuzzySets
-                        .OfType<ContinuousFuzzySetDTO>()
-                        .Cast<FuzzySetDTO>()
-                        .ToList();
-                    break;
-            }
-            LoadFuzzySetNames(filtered);
-        }
-        private void LoadFuzzySetNames(List<FuzzySetDTO> filtered)
+        //        default:
+        //            filtered = fuzzySets
+        //                .OfType<ContinuousFuzzySetDTO>()
+        //                .Cast<FuzzySetDTO>()
+        //                .ToList();
+        //            break;
+        //    }
+        //    LoadFuzzySetNames(filtered);
+        //}
+        private void LoadFuzzySetNames()
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("Name", typeof(string));
 
-            foreach (var fs in filtered)
+            foreach (var name in this.fsNames)
             {
                 DataRow row = dt.NewRow();
-                row["Name"] = fs.fuzzySetName;
+                row["Name"] = name;
                 dt.Rows.Add(row);
             }
 
@@ -106,8 +114,9 @@ namespace GUI.GUI
             var cellValue = gridViewListFS.GetFocusedRowCellValue("Name");
             if (cellValue == null) return;
 
-            SelectedFuzzySet = fuzzySets
-                .FirstOrDefault(fs => fs.fuzzySetName == cellValue.ToString());
+            //SelectedFuzzySet = fuzzySets
+            //    .FirstOrDefault(fs => fs.fuzzySetName == cellValue.ToString());
+            this.selectedFSName = (string)cellValue;
 
             this.DialogResult = DialogResult.OK;
             this.Close();
