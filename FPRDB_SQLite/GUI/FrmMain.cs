@@ -337,20 +337,6 @@ namespace FPRDB_SQLite.GUI
                 relationContent.Columns.Add(dataCol);
             }
 
-            gridView3.Columns.Clear();
-
-            foreach (var field in schemaFields)
-            {
-                string fieldName = field.getFieldName();
-
-                GridColumn col = gridView3.Columns[fieldName];
-                if (col == null) continue;
-
-                col.Caption = fieldName;
-                col.OptionsColumn.AllowEdit = true;
-                col.OptionsColumn.ReadOnly = true;
-                col.Tag = field.getFieldInfo().getType();
-            }
             //fake data
             //Dictionary<string, string> row1 = new Dictionary<string, string>
             //{
@@ -397,6 +383,23 @@ namespace FPRDB_SQLite.GUI
 
             relationContent.AcceptChanges();
             gridControlRelation.DataSource = relationContent;
+
+            gridView3.Columns.Clear();
+            gridView3.PopulateColumns();
+
+            foreach (var field in schemaFields)
+            {
+                string fieldName = field.getFieldName();
+
+                GridColumn col = gridView3.Columns[fieldName];
+                if (col == null) continue;
+
+                col.Caption = fieldName;
+                col.OptionsColumn.AllowEdit = true;
+                col.OptionsColumn.ReadOnly = true;
+                col.Tag = field.getFieldInfo().getType();
+            }
+
             gridView3.BestFitColumns();
 
             gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
