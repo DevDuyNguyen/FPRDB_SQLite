@@ -71,6 +71,7 @@ namespace FPRDB_SQLite.GUI
             barButtonSelectTuples = new DevExpress.XtraBars.BarButtonItem();
             iExportFS = new DevExpress.XtraBars.BarButtonItem();
             iImportFS = new DevExpress.XtraBars.BarButtonItem();
+            barButtonRelationships = new DevExpress.XtraBars.BarButtonItem();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -137,7 +138,6 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
             CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
-            barButtonRelationships = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -494,6 +494,13 @@ namespace FPRDB_SQLite.GUI
             iImportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iImportFS.ImageOptions.SvgImage");
             iImportFS.Name = "iImportFS";
             iImportFS.ItemClick += iImportFS_ItemClick;
+            // 
+            // barButtonRelationships
+            // 
+            barButtonRelationships.Caption = "Relationships";
+            barButtonRelationships.Id = 58;
+            barButtonRelationships.Name = "barButtonRelationships";
+            barButtonRelationships.ItemClick += barButtonRelationships_ItemClick;
             // 
             // DatabaseRibbonPage
             // 
@@ -1086,13 +1093,6 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
             CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
-            // 
-            // barButtonRelationships
-            // 
-            barButtonRelationships.Caption = "Relationships";
-            barButtonRelationships.Id = 58;
-            barButtonRelationships.Name = "barButtonRelationships";
-            barButtonRelationships.ItemClick += barButtonRelationships_ItemClick;
             // 
             // frmMain
             // 
