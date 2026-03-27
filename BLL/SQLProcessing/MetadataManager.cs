@@ -310,13 +310,13 @@ namespace BLL.SQLProcessing
             int index = 0;
             int totalLength = primaryKey.Count;
 
-            sql += $" {primaryKey[index]}='{value[index]}'";
+            sql += $" {primaryKey[index]}='{{({value[index]},[1,1])}}'";
             if (totalLength != 1)
             {
                 do
                 {
                     ++index;
-                    sql += $" AND {primaryKey[index]}='{value[index]}'";
+                    sql += $" AND {primaryKey[index]}='{{({value[index]},[1,1])}}'";
                 } while (index < totalLength - 1);
             }
 

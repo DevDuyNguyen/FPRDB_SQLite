@@ -1,17 +1,28 @@
 ﻿using BLL;
 using BLL.Common;
+using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
+using BLL.Services;
 using BLL.SQLProcessing;
+using DevExpress.Xpo.DB.Helpers;
 using DevExpress.Xpo.DB.Helpers;
 using DevExpress.XtraBars;
 using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Base;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
 using DevExpress.XtraTab;
 using GUI.GlobalStates;
+using GUI.GlobalStates;
+using GUI.GUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,21 +30,12 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Windows.Forms;
-using BLL.Services;
-using BLL.DTO;
-using DevExpress.Xpo.DB.Helpers;
-using BLL.Common;
-using GUI.GlobalStates;
 using static FPRDB_SQLite.GUI.frmNewSchema;
-using System.Net.Sockets;
-using DevExpress.XtraGrid.Views.Grid;
-using DevExpress.XtraEditors.Controls;
-using DevExpress.XtraGrid.Columns;
-using GUI.GUI;
-using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
-using DevExpress.XtraGrid.Views.Base;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -51,6 +53,10 @@ namespace FPRDB_SQLite.GUI
         private int _currentEditingRow;
         private string _currentEditingColumnType;
         private bool _isOpeningFuzzySet = false;
+
+        private Field selectedField;
+        private FieldType selectedFieldType;
+        private bool isSelectedFieldText;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -89,6 +95,8 @@ namespace FPRDB_SQLite.GUI
         // Load dữ liệu từ chuỗi của Fuzzy Probalistic Value thành 1 bảng liệt kê giá trị
         private void LoadFuzzyProbalisticValueDetail(string probValue)
         {
+            
+
             DataTable dt = new DataTable();
             dt.Columns.Add("Value", typeof(string));
             dt.Columns.Add("MinProb", typeof(string));
@@ -96,27 +104,38 @@ namespace FPRDB_SQLite.GUI
 
             if (probValue != null)
             {
-                // Liệt kê nội dung cần lấy
-                string content = probValue.Trim('{', '}');
-                // Liệt kê các value (1 value -> 1 tuple)
-                string[] tuples = content.Split(new string[] { "), (" }, StringSplitOptions.None);
+                //// Liệt kê nội dung cần lấy
+                //string content = probValue.Trim('{', '}');
+                //// Liệt kê các value (1 value -> 1 tuple)
+                //string[] tuples = content.Split(new string[] { "), (" }, StringSplitOptions.None);
 
-                // Kiểm tra từng value
-                foreach (string tuple in tuples)
+                //// Kiểm tra từng value
+                //foreach (string tuple in tuples)
+                //{
+                //    string clean = tuple.Trim('(', ')');
+                //    int bracketIndex = clean.IndexOf(",[");
+                //    if (bracketIndex < 0) continue;
+
+                //    string value = clean.Substring(0, bracketIndex);
+
+                //    //remove string literal delimiter " from the possible value
+                //    //if (this.isSelectedFieldText)
+                //    //    value = value.Trim('\"');
+
+                //    string bounds = clean.Substring(bracketIndex + 2).Trim('[', ']');
+                //    // Mảng: lowerBound -> index 0, upperBound -> index 1
+                //    string[] boundParts = bounds.Split(',');
+                //    if (boundParts.Length < 2) continue;
+
+
+                //    dt.Rows.Add(value, boundParts[0].Trim(), boundParts[1].Trim());
+                //}
+                List<(string, string, string)> processedFProbValue = FuzzyProbabilisticValueUtilities.extractValuesIntervalProbabilitiesAsString(probValue);
+                foreach(var (value, lowerProb, upperProb) in processedFProbValue)
                 {
-                    string clean = tuple.Trim('(', ')');
-                    int bracketIndex = clean.IndexOf(",[");
-                    if (bracketIndex < 0) continue;
-
-                    string value = clean.Substring(0, bracketIndex);
-                    string bounds = clean.Substring(bracketIndex + 2).Trim('[', ']');
-                    // Mảng: lowerBound -> index 0, upperBound -> index 1
-                    string[] boundParts = bounds.Split(',');
-                    if (boundParts.Length < 2) continue;
-
-
-                    dt.Rows.Add(value, boundParts[0].Trim(), boundParts[1].Trim());
+                    dt.Rows.Add(value, lowerProb, upperProb);
                 }
+
             }
 
             dt.RowChanged += BottomGrid_RowChanged;
@@ -133,7 +152,7 @@ namespace FPRDB_SQLite.GUI
             {
                 col.OptionsColumn.AllowEdit = true;
                 var btnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
-                btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+                btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
                 btnEdit.Buttons.Clear();
                 btnEdit.Buttons.Add(new DevExpress.XtraEditors.Controls.EditorButton(
                     DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis));
@@ -143,12 +162,12 @@ namespace FPRDB_SQLite.GUI
 
                 btnEdit.ButtonClick += (sender, e) =>
                 {
-                    var frm = new frmListFuzzySet(compRoot, _currentEditingColumnType);
+                    var frm = new frmListFuzzySet(compRoot, selectedFieldType);
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        FuzzySetDTO selected = frm.SelectedFuzzySet;
-                        if (selected != null)
-                            gridView4.SetRowCellValue(gridView4.FocusedRowHandle, "Value", selected.fuzzySetName);
+                        string selectedFSName = frm.selectedFSName;
+                        if (selectedFSName != null || selectedFSName!=default)
+                            gridView4.SetRowCellValue(gridView4.FocusedRowHandle, "Value", selectedFSName);
                     }
                 };
 
@@ -159,7 +178,7 @@ namespace FPRDB_SQLite.GUI
                 col.ColumnEdit = null;
                 col.OptionsColumn.AllowEdit = true;
             }
-        }
+         }
         // Hàm xử lý khi người dùng nhấp ra khỏi hàng ở Grid liệt kê giá trị
         private void BottomGrid_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -167,10 +186,19 @@ namespace FPRDB_SQLite.GUI
                 e.Action != DataRowAction.Change &&
                 e.Action != DataRowAction.Delete) return;
             string newFuzzyString = BuildFuzzyStringFromBottomGrid();
-            DataTable topDt = gridControlRelation.DataSource as DataTable;
-            if (topDt != null && _currentEditingRow >= 0)
+            int rowHandle = gridView3.GetRowHandle(_currentEditingRow);
+
+            if (rowHandle != DevExpress.XtraGrid.GridControl.InvalidRowHandle)
             {
-                topDt.Rows[_currentEditingRow][_currentEditingColumn] = newFuzzyString;
+                gridView3.SetRowCellValue(rowHandle, gridView3.Columns[_currentEditingColumn], newFuzzyString);
+
+                gridView3.FocusedRowHandle = rowHandle;
+                gridView3.ShowEditor();
+
+                if (gridView3.ActiveEditor != null)
+                {
+                    gridView3.ActiveEditor.IsModified = true;
+                }
             }
         }
         // Hàm kiểm tra dữ liệu hàng khi người dùng nhấp ra ngoài
@@ -211,6 +239,11 @@ namespace FPRDB_SQLite.GUI
                 if (row.RowState == DataRowState.Deleted) continue;
 
                 string value = row["Value"].ToString();
+
+                //add string literal delimiter
+                //if (this.isSelectedFieldText)
+                //    value = "\"" + value + "\"";
+
                 string minProb = row["MinProb"].ToString();
                 string maxProb = row["MaxProb"].ToString();
 
@@ -312,20 +345,6 @@ namespace FPRDB_SQLite.GUI
                 relationContent.Columns.Add(dataCol);
             }
 
-            gridView3.Columns.Clear();
-            gridControlRelation.DataSource = relationContent;
-
-            foreach (var field in schemaFields)
-            {
-                string fieldName = field.getFieldName();
-
-                GridColumn col = gridView3.Columns[fieldName];
-                if (col == null) continue;
-
-                col.Caption = fieldName;
-                col.OptionsColumn.AllowEdit = false;
-                col.Tag = field.getFieldInfo().getType();
-            }
             //fake data
             //Dictionary<string, string> row1 = new Dictionary<string, string>
             //{
@@ -370,10 +389,26 @@ namespace FPRDB_SQLite.GUI
                 count++;
             }
 
+            relationContent.AcceptChanges();
+            gridControlRelation.DataSource = relationContent;
+
+            gridView3.Columns.Clear();
+            gridView3.PopulateColumns();
+
+            foreach (var field in schemaFields)
+            {
+                string fieldName = field.getFieldName();
+
+                GridColumn col = gridView3.Columns[fieldName];
+                if (col == null) continue;
+
+                col.Caption = fieldName;
+                col.OptionsColumn.AllowEdit = true;
+                col.OptionsColumn.ReadOnly = true;
+                col.Tag = field.getFieldInfo().getType();
+            }
 
             gridView3.BestFitColumns();
-            // Listen for data changes
-            relationContent.RowChanged += RelInfo_RowChanged;
 
             gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
             gridControlRelation.EmbeddedNavigator.ButtonClick += Navigator_ButtonClick;
@@ -1543,6 +1578,12 @@ namespace FPRDB_SQLite.GUI
             _currentEditingColumn = gridView3.FocusedColumn.FieldName;
             _currentEditingRow = gridView3.FocusedRowHandle;
             _currentEditingColumnType = gridView3.FocusedColumn.Tag?.ToString() ?? string.Empty;
+
+            string fldName = this._currentEditingColumn;
+            this.selectedField = this._selectedRelation.fprdbSchema.fields.FirstOrDefault(n => n.getFieldName() == fldName);
+            this.selectedFieldType = selectedField.getFieldInfo().getType();
+            this.isSelectedFieldText = selectedFieldType == FieldType.CHAR || selectedFieldType == FieldType.VARCHAR || selectedFieldType == FieldType.distFS_TEXT;
+
             LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
         }
         // Hàm ngăn không cho xóa hết dòng (đối với cột khóa chính)
@@ -1566,82 +1607,171 @@ namespace FPRDB_SQLite.GUI
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void RelInfo_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (e.Action != DataRowAction.Add && e.Action != DataRowAction.Change) return;
-
-            DataRow row = e.Row;
-
-            var schema = _selectedRelation.fprdbSchema;
-            List<Field> fields = schema.fields;
-
-            try
-            {
-                StringBuilder sbRow = new StringBuilder();
-                sbRow.AppendLine("--- Row ---");
-
-                foreach (var field in fields)
-                {
-                    string fieldName = field.getFieldName();
-                    var cellValue = row[fieldName];
-
-                    if (cellValue == DBNull.Value || cellValue == null)
-                    {
-                        sbRow.AppendLine($"{fieldName}: (empty)");
-                        continue;
-                    }
-                    sbRow.AppendLine($"{fieldName}: {cellValue}");
-                }
-                if (e.Action == DataRowAction.Add)
-                    MessageBox.Show($"Add\n\n{sbRow}", "Saved",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                else
-                    MessageBox.Show($"Update\n\n{sbRow}", "Saved",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Auto save failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
         private void Navigator_ButtonClick(object sender, NavigatorButtonClickEventArgs e)
         {
-            if (e.Button.ButtonType != NavigatorButtonType.Remove) return;
+            if (e.Button.ButtonType != NavigatorButtonType.Remove
+                && e.Button.ButtonType != NavigatorButtonType.EndEdit) return;
 
-            var schema = _selectedRelation.fprdbSchema;
-            List<string> pks = schema.primarykey;
-
-            StringBuilder sbRow = new StringBuilder();
-            sbRow.AppendLine("--- Row ---");
-
-            foreach (var pk in pks)
+            if (e.Button.ButtonType == NavigatorButtonType.Remove)
             {
-                var val = gridView3.GetFocusedRowCellValue(pk);
-                if (val == null || val == DBNull.Value)
+                DataRowView currentRow = gridView3.GetFocusedRow() as DataRowView;
+                DataRow row = currentRow.Row;
+                var schema = _selectedRelation.fprdbSchema;
+                List<string> pks = schema.primarykey;
+
+                string sbRow = $"DELETE FROM {this._selectedRelation.relName} WHERE";
+                List<(string, string, string)> procssedFProbValue;
+
+                foreach (var pk in pks)
                 {
-                    sbRow.AppendLine($"{pk}: (empty)");
-                    continue;
+                    string val = gridView3.GetFocusedRowCellValue(pk) as string;
+                    procssedFProbValue = FuzzyProbabilisticValueUtilities.extractValuesIntervalProbabilitiesAsString(val);
+                    //[not done] not support null value
+                    //if (val == null || val == DBNull.Value)
+                    //{
+                    //    sbRow.AppendLine($"{pk}: (empty)");
+                    //    continue;
+                    //}
+
+                    sbRow+=$" ({pk}={procssedFProbValue[0].Item1})[1,1] AND";
                 }
-                sbRow.AppendLine($"{pk}: {val}");
+                int trailingAND = sbRow.LastIndexOf("AND");
+                sbRow = sbRow.Substring(0, trailingAND);
+                try
+                {
+                    this.sqlProcessor.executeUpdate(sbRow);
+                    row.AcceptChanges();
+                }
+                catch(SemanticException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                
             }
-
-            var result = MessageBox.Show(
-                $"Delete?\n\n{sbRow}",
-                "Confirm Delete",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
-
-            if (result == DialogResult.No)
+            else
             {
-                e.Handled = true;
-                return;
+                gridView3.CloseEditor();
+                gridView3.UpdateCurrentRow();
+
+                DataRowView currentRow = gridView3.GetFocusedRow() as DataRowView;
+
+                if (currentRow != null)
+                {
+                    DataRow row = currentRow.Row;
+                    var schema = _selectedRelation.fprdbSchema;
+                    List<Field> fields = schema.fields;
+                    string sbRow;
+                    if (row.RowState == DataRowState.Added)
+                    {
+                        sbRow = $"INSERT INTO {this._selectedRelation.relName} ( ";
+                        foreach (Field f in fields)
+                        {
+                            sbRow += $" {f.getFieldName()},";
+                        }
+                        sbRow = sbRow.TrimEnd(',') + ")";
+                        sbRow += " VALUES ( ";
+                        foreach (Field field in fields)
+                        {
+                            sbRow += $"{currentRow[field.getFieldName()]},";
+                        }
+                        sbRow = sbRow.TrimEnd(',') + " )";
+                        try
+                        {
+                            this.sqlProcessor.executeUpdate(sbRow);
+                            row.AcceptChanges();
+                        }
+                        catch (MismatchTokenType ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (SQLSyntaxException ex)
+                        {
+                            XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (SemanticException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else if (row.RowState == DataRowState.Modified)
+                    {
+                        List<string> pks = schema.primarykey;
+                        List<string> setClauses = new List<string>();
+                        foreach (var field in fields)
+                        {
+                            string fName = field.getFieldName();
+                            object newVal = row[fName, DataRowVersion.Current];
+
+                            //[not done] not supported null yet
+                            //string formattedVal = (newVal == DBNull.Value) ? "NULL" : $"'{newVal.ToString().Replace("'", "''")}'";
+                            string formattedVal = newVal as string;
+                            setClauses.Add($"{fName} = {formattedVal}");
+                        }
+
+                        // 2. Xây dựng phần WHERE (Dữ liệu ĐỊNH DANH CŨ)
+                        string whereClause="WHERE";
+                        foreach (string pkName in pks)
+                        {
+                            string oldPkVal = row[pkName, DataRowVersion.Original] as string;
+
+                            //[not done] not supported null yet
+                            //string formattedOldVal = (oldPkVal == DBNull.Value) ? "NULL" : $"'{oldPkVal.ToString().Replace("'", "''")}'";
+                            oldPkVal = this.extractValueFromTrueExactFuzzyProbabilisitcValue(oldPkVal);
+                            whereClause+=$" ({pkName} = {oldPkVal})[1,1] AND";
+                        }
+                        int trailingAND = whereClause.LastIndexOf("AND");
+                        whereClause = whereClause.Substring(0, trailingAND);
+
+                        string fprdbUpdateSQL;
+                        try
+                        {
+                            for (int i = 0; i < setClauses.Count; ++i)
+                            {
+                                fprdbUpdateSQL = $"UPDATE {this._selectedRelation.relName} SET {setClauses[i]} "+whereClause;
+                                this.sqlProcessor.executeUpdate(fprdbUpdateSQL);
+                            }
+                            row.AcceptChanges();
+                        }
+                        catch (MismatchTokenType ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (SQLSyntaxException ex)
+                        {
+                            XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (SemanticException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                    }
+                }
             }
-
-            MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
+        //{("DT201",[1,1])}->DT201
+        private string extractValueFromTrueExactFuzzyProbabilisitcValue(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+            int startOfPossibleValue = input.IndexOf('(');//( in (1,[1,1])
+            if (startOfPossibleValue == -1)
+                throw new InvalidOperationException("invalid fuzzy probabilistic value");
+            int commaDelimitPossibleValueAndIntervalProbbability = input.IndexOf(',');//first , in (1,[1,1])
+            if (commaDelimitPossibleValueAndIntervalProbbability == -1)
+                throw new InvalidOperationException("invalid fuzzy probabilistic value");
+            string possibleValue = input.Substring(startOfPossibleValue + 1, commaDelimitPossibleValueAndIntervalProbbability - 1 - startOfPossibleValue);
+            return possibleValue;
+        }
         private void gridControlRelation_Click(object sender, EventArgs e)
         {
 

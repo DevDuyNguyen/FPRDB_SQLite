@@ -1,4 +1,6 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
+using BLL.DTO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,10 +8,9 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.DTO;
-using BLL.Common;
 
 namespace BLL.Services
 {
@@ -196,7 +197,65 @@ namespace BLL.Services
         {
             return FieldTypeUtilities.getDefineDomainForFuzzySet();
         }
+        public List<string> getFuzzySetNameByType(FieldType fsType)
+        {
+            List<string> names = new List<string>();
+            string sql;
+            if(fsType == FieldType.contFS)
+            {
+                sql = @"
+                    SELECT fs.fuzzset_name
+                    FROM fprdb_FuzzySet AS fs
+                    INNER JOIN fprdb_ContinousFuzzySet AS conFS on fs.oid=conFS.oid
+                ";
+            }
+            else
+            {
+                if (fsType == FieldType.distFS_INT)
+                {
+                    sql = @"
+                        SELECT fs.fuzzset_name
+                        FROM fprdb_FuzzySet AS fs
+                        INNER JOIN fprdb_DiscreteFuzzySet AS distFS on fs.oid=distFS.oid
+                        INNER JOIN fprdb_Type AS type ON fs.fuzzset_type_id=type.oid
+                        WHERE type.type_name='INT'
+                    ";
+                }
+                else if (fsType == FieldType.distFS_FLOAT)
+                {
+                    sql = @"
+                        SELECT fs.fuzzset_name
+                        FROM fprdb_FuzzySet AS fs
+                        INNER JOIN fprdb_DiscreteFuzzySet AS distFS on fs.oid=distFS.oid
+                        INNER JOIN fprdb_Type AS type ON fs.fuzzset_type_id=type.oid
+                        WHERE type.type_name='FLOAT'
+                    ";
+                }
+                else if (fsType == FieldType.distFS_TEXT)
+                {
+                    sql = @"
+                        SELECT fs.fuzzset_name
+                        FROM fprdb_FuzzySet AS fs
+                        INNER JOIN fprdb_DiscreteFuzzySet AS distFS on fs.oid=distFS.oid
+                        INNER JOIN fprdb_Type AS type ON fs.fuzzset_type_id=type.oid
+                        WHERE type.type_name='VARCHAR'
+                    ";
+                }
+                else
+                {
+                    throw new InvalidOperationException($"No fuzzy set has universe of discourse of {fsType}");
+                }
 
+            }
+            using (IDataReader r = this.dbMgr.executeQuery(sql))
+            {
+                while (r.Read())
+                {
+                    names.Add(r["fuzzset_name"] as string);
+                }
+            }
+            return names;
+        }
 
     }
 }
