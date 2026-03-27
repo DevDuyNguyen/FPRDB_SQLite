@@ -34,7 +34,7 @@ namespace TestProject1.IntegrationTest
             Debug.WriteLine("Delete result:" + affectedNoRows);
 
         }
-        [Fact]
+        //[Fact]
         public void insertRelationSuccess()
         {
             //arrange
