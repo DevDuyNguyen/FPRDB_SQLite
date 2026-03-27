@@ -102,32 +102,38 @@ namespace FPRDB_SQLite.GUI
 
             if (probValue != null)
             {
-                // Liệt kê nội dung cần lấy
-                string content = probValue.Trim('{', '}');
-                // Liệt kê các value (1 value -> 1 tuple)
-                string[] tuples = content.Split(new string[] { "), (" }, StringSplitOptions.None);
+                //// Liệt kê nội dung cần lấy
+                //string content = probValue.Trim('{', '}');
+                //// Liệt kê các value (1 value -> 1 tuple)
+                //string[] tuples = content.Split(new string[] { "), (" }, StringSplitOptions.None);
 
-                // Kiểm tra từng value
-                foreach (string tuple in tuples)
+                //// Kiểm tra từng value
+                //foreach (string tuple in tuples)
+                //{
+                //    string clean = tuple.Trim('(', ')');
+                //    int bracketIndex = clean.IndexOf(",[");
+                //    if (bracketIndex < 0) continue;
+
+                //    string value = clean.Substring(0, bracketIndex);
+
+                //    //remove string literal delimiter " from the possible value
+                //    //if (this.isSelectedFieldText)
+                //    //    value = value.Trim('\"');
+
+                //    string bounds = clean.Substring(bracketIndex + 2).Trim('[', ']');
+                //    // Mảng: lowerBound -> index 0, upperBound -> index 1
+                //    string[] boundParts = bounds.Split(',');
+                //    if (boundParts.Length < 2) continue;
+
+
+                //    dt.Rows.Add(value, boundParts[0].Trim(), boundParts[1].Trim());
+                //}
+                List<(string, string, string)> processedFProbValue = FuzzyProbabilisticValueUtilities.extractValuesIntervalProbabilitiesAsString(probValue);
+                foreach(var (value, lowerProb, upperProb) in processedFProbValue)
                 {
-                    string clean = tuple.Trim('(', ')');
-                    int bracketIndex = clean.IndexOf(",[");
-                    if (bracketIndex < 0) continue;
-
-                    string value = clean.Substring(0, bracketIndex);
-
-                    //remove string literal delimiter " from the possible value
-                    //if (this.isSelectedFieldText)
-                    //    value = value.Trim('\"');
-
-                    string bounds = clean.Substring(bracketIndex + 2).Trim('[', ']');
-                    // Mảng: lowerBound -> index 0, upperBound -> index 1
-                    string[] boundParts = bounds.Split(',');
-                    if (boundParts.Length < 2) continue;
-
-
-                    dt.Rows.Add(value, boundParts[0].Trim(), boundParts[1].Trim());
+                    dt.Rows.Add(value, lowerProb, upperProb);
                 }
+
             }
 
             dt.RowChanged += BottomGrid_RowChanged;
