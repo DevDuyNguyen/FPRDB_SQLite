@@ -48,7 +48,10 @@ namespace BLL.Services
                 if (data.fuzzyProbabilisticValues[index].intervalProbLowerBoundList[0] != 1
                     || data.fuzzyProbabilisticValues[index].intervalProbUpperBoundList[0] != 1)
                     throw new SemanticException($"key attribute {keyAttr} must have interval probability of [1,1]");
-                value.Add(data.fuzzyProbabilisticValues[index].valueList[0].getVal().ToString());
+                if(data.fuzzyProbabilisticValues[index].valueList[0] is StringConstant)
+                    value.Add("\""+data.fuzzyProbabilisticValues[index].valueList[0].getVal().ToString()+"\"");
+                else
+                    value.Add(data.fuzzyProbabilisticValues[index].valueList[0].getVal().ToString());
             }
             if (this.metadataMgr.isTupleExist(schema.getPrimarykey(), value, data.relation))
                 throw new SemanticException("IDENTITY constraint violation");

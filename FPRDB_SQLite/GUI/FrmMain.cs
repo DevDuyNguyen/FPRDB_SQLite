@@ -1,17 +1,28 @@
 ﻿using BLL;
 using BLL.Common;
+using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
+using BLL.Services;
 using BLL.SQLProcessing;
+using DevExpress.Xpo.DB.Helpers;
 using DevExpress.Xpo.DB.Helpers;
 using DevExpress.XtraBars;
 using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Base;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
 using DevExpress.XtraTab;
 using GUI.GlobalStates;
+using GUI.GlobalStates;
+using GUI.GUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,21 +30,12 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Windows.Forms;
-using BLL.Services;
-using BLL.DTO;
-using DevExpress.Xpo.DB.Helpers;
-using BLL.Common;
-using GUI.GlobalStates;
 using static FPRDB_SQLite.GUI.frmNewSchema;
-using System.Net.Sockets;
-using DevExpress.XtraGrid.Views.Grid;
-using DevExpress.XtraEditors.Controls;
-using DevExpress.XtraGrid.Columns;
-using GUI.GUI;
-using DevExpress.XtraSpreadsheet.DocumentFormats.Xlsb;
-using DevExpress.XtraGrid.Views.Base;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -1612,37 +1614,40 @@ namespace FPRDB_SQLite.GUI
 
             if (e.Button.ButtonType == NavigatorButtonType.Remove)
             {
+                DataRowView currentRow = gridView3.GetFocusedRow() as DataRowView;
+                DataRow row = currentRow.Row;
                 var schema = _selectedRelation.fprdbSchema;
                 List<string> pks = schema.primarykey;
 
-                StringBuilder sbRow = new StringBuilder();
-                sbRow.AppendLine("--- Row ---");
+                string sbRow = $"DELETE FROM {this._selectedRelation.relName} WHERE";
+                List<(string, string, string)> procssedFProbValue;
 
                 foreach (var pk in pks)
                 {
-                    var val = gridView3.GetFocusedRowCellValue(pk);
-                    if (val == null || val == DBNull.Value)
-                    {
-                        sbRow.AppendLine($"{pk}: (empty)");
-                        continue;
-                    }
-                    sbRow.AppendLine($"{pk}: {val}");
+                    string val = gridView3.GetFocusedRowCellValue(pk) as string;
+                    procssedFProbValue = FuzzyProbabilisticValueUtilities.extractValuesIntervalProbabilitiesAsString(val);
+                    //[not done] not support null value
+                    //if (val == null || val == DBNull.Value)
+                    //{
+                    //    sbRow.AppendLine($"{pk}: (empty)");
+                    //    continue;
+                    //}
+
+                    sbRow+=$" ({pk}={procssedFProbValue[0].Item1})[1,1] AND";
                 }
-
-                var result = MessageBox.Show(
-                    $"Delete?\n\n{sbRow}",
-                    "Confirm Delete",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
-
-                if (result == DialogResult.No)
+                int trailingAND = sbRow.LastIndexOf("AND");
+                sbRow = sbRow.Substring(0, trailingAND);
+                try
                 {
-                    e.Handled = true;
-                    return;
+                    this.sqlProcessor.executeUpdate(sbRow);
+                    row.AcceptChanges();
+                }
+                catch(SemanticException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                MessageBox.Show($"Deleted\n\n{sbRow}", "Deleted",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
             }
             else
             {
@@ -1676,11 +1681,24 @@ namespace FPRDB_SQLite.GUI
                             this.sqlProcessor.executeUpdate(sbRow);
                             row.AcceptChanges();
                         }
-                        catch (NotImplementedException ex)
+                        catch (MismatchTokenType ex)
                         {
-
+                            XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                    }else if (row.RowState == DataRowState.Modified)
+                        catch (SQLSyntaxException ex)
+                        {
+                            XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (SemanticException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else if (row.RowState == DataRowState.Modified)
                     {
                         List<string> pks = schema.primarykey;
                         List<string> setClauses = new List<string>();
@@ -1719,11 +1737,23 @@ namespace FPRDB_SQLite.GUI
                             }
                             row.AcceptChanges();
                         }
-                        catch(NotImplementedException ex)
+                        catch (MismatchTokenType ex)
                         {
-
+                            XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                        
+                        catch (SQLSyntaxException ex)
+                        {
+                            XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (SemanticException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
                     }
                 }
             }
