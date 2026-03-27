@@ -40,7 +40,7 @@ namespace FPRDB_SQLite.GUI
         private void btnSearch_Click(object sender, EventArgs e)
         {
             // Lấy thông tin từ ô tìm kiếm
-            string keyword = txtFuzzySetName.Text.ToLower();
+            string keyword = txtFuzzySetName.Text;
             if (string.IsNullOrWhiteSpace(keyword))
             {
                 XtraMessageBox.Show("Please enter a fuzzy set name to search.");
@@ -49,20 +49,21 @@ namespace FPRDB_SQLite.GUI
             // Xóa danh sách trước đó trong ListBox
             lstFuzzySetResults.Items.Clear();
             // Lọc dữ liệu theo keyword
-            //var results = service.findFuzzySet(keyword);
-            //if (results.Count == 0)
-            //{
-            //    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
-            //    return;
-            //}
-            ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
-            DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
-                new List<int>() { 22, 23, 24 },
-                new List<float>() { 0.5f, 1, 0.5f },
-                "about_23",
-                FieldType.INT);
-            results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
-            foreach (var item in results)
+            this.results = service.findFuzzySet(keyword);
+            if (results.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
+                return;
+            }
+            //ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
+            //DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
+            //    new List<int>() { 22, 23, 24 },
+            //    new List<float>() { 0.5f, 1, 0.5f },
+            //    "about_23",
+            //    FieldType.INT);
+            //results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
+            
+            foreach (var item in this.results)
             {
                 lstFuzzySetResults.Items.Add(item.fuzzySetName);
             }
