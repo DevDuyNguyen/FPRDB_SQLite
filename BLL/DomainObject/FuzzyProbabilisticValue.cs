@@ -72,7 +72,11 @@ namespace BLL.DomainObject
                     return false;
                 for (int i=0; i<this.valueList.Count; ++i)
                 {
-                    if (this.valueList[i] != v1.valueList[i]
+                    //if (this.valueList[i] != v1.valueList[i]
+                    //    || this.intervalProbLowerBoundList[i] != v1.intervalProbLowerBoundList[i]
+                    //    || this.intervalProbUpperBoundList[i] != v1.intervalProbUpperBoundList[i])
+                    //    return false;
+                    if (!this.valueList[i].Equal(v1.valueList[i])
                         || this.intervalProbLowerBoundList[i] != v1.intervalProbLowerBoundList[i]
                         || this.intervalProbUpperBoundList[i] != v1.intervalProbUpperBoundList[i])
                         return false;

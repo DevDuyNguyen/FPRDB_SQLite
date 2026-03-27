@@ -35,5 +35,7 @@ namespace BLL.DomainObject
         public abstract bool isEqualTo(FuzzySet<T> fs);
         public abstract bool isSubsetOf(FuzzySet<T> fs);
 
+        public abstract bool Equal(object fs);
+
     }
 }

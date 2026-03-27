@@ -1683,30 +1683,59 @@ namespace FPRDB_SQLite.GUI
                             string fName = field.getFieldName();
                             object newVal = row[fName, DataRowVersion.Current];
 
-                            string formattedVal = (newVal == DBNull.Value) ? "NULL" : $"'{newVal.ToString().Replace("'", "''")}'";
+                            //[not done] not supported null yet
+                            //string formattedVal = (newVal == DBNull.Value) ? "NULL" : $"'{newVal.ToString().Replace("'", "''")}'";
+                            string formattedVal = newVal as string;
                             setClauses.Add($"{fName} = {formattedVal}");
                         }
 
                         // 2. Xây dựng phần WHERE (Dữ liệu ĐỊNH DANH CŨ)
-                        List<string> whereClauses = new List<string>();
+                        string whereClause="WHERE";
                         foreach (string pkName in pks)
                         {
-                            object oldPkVal = row[pkName, DataRowVersion.Original];
-                            string formattedOldVal = (oldPkVal == DBNull.Value) ? "NULL" : $"'{oldPkVal.ToString().Replace("'", "''")}'";
-                            whereClauses.Add($"{pkName} = {formattedOldVal}");
+                            string oldPkVal = row[pkName, DataRowVersion.Original] as string;
+
+                            //[not done] not supported null yet
+                            //string formattedOldVal = (oldPkVal == DBNull.Value) ? "NULL" : $"'{oldPkVal.ToString().Replace("'", "''")}'";
+                            oldPkVal = this.extractValueFromTrueExactFuzzyProbabilisitcValue(oldPkVal);
+                            whereClause+=$" ({pkName} = {oldPkVal})[1,1] AND";
                         }
+                        int trailingAND = whereClause.LastIndexOf("AND");
+                        whereClause = whereClause.Substring(0, trailingAND);
 
-                        string sqlUpdate = $"UPDATE {_selectedRelation.relName} \nSET {string.Join(", ", setClauses)} \nWHERE {string.Join(" AND ", whereClauses)};";
+                        string fprdbUpdateSQL;
+                        try
+                        {
+                            for (int i = 0; i < setClauses.Count; ++i)
+                            {
+                                fprdbUpdateSQL = $"UPDATE {this._selectedRelation.relName} SET {setClauses[i]} "+whereClause;
+                                this.sqlProcessor.executeUpdate(fprdbUpdateSQL);
+                            }
+                            row.AcceptChanges();
+                        }
+                        catch(NotImplementedException ex)
+                        {
 
-                        // In ra MessageBox để kiểm tra
-                        MessageBox.Show(sqlUpdate, "Generated SQL Update Statement",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        row.AcceptChanges();
+                        }
+                        
                     }
                 }
             }
         }
-
+        //{("DT201",[1,1])}->DT201
+        private string extractValueFromTrueExactFuzzyProbabilisitcValue(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+            int startOfPossibleValue = input.IndexOf('(');//( in (1,[1,1])
+            if (startOfPossibleValue == -1)
+                throw new InvalidOperationException("invalid fuzzy probabilistic value");
+            int commaDelimitPossibleValueAndIntervalProbbability = input.IndexOf(',');//first , in (1,[1,1])
+            if (commaDelimitPossibleValueAndIntervalProbbability == -1)
+                throw new InvalidOperationException("invalid fuzzy probabilistic value");
+            string possibleValue = input.Substring(startOfPossibleValue + 1, commaDelimitPossibleValueAndIntervalProbbability - 1 - startOfPossibleValue);
+            return possibleValue;
+        }
         private void gridControlRelation_Click(object sender, EventArgs e)
         {
 
