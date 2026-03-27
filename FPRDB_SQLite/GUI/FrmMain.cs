@@ -144,7 +144,7 @@ namespace FPRDB_SQLite.GUI
             {
                 col.OptionsColumn.AllowEdit = true;
                 var btnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
-                btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+                btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
                 btnEdit.Buttons.Clear();
                 btnEdit.Buttons.Add(new DevExpress.XtraEditors.Controls.EditorButton(
                     DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis));
