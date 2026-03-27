@@ -34,6 +34,21 @@ namespace TestProject1.IntegrationTest
             Debug.WriteLine("Delete result:" + affectedNoRows);
 
         }
+        [Fact]
+        public void insertRelationSuccess()
+        {
+            //arrange
+            string relName = "rel14";
+            string schemaName = "rel";
+            //act
+            //this.sqlProcessor.executeDataDefinition($"CREATE SCHEMA {schemaName} (id int, age CONT_FUZZYSET, CONSTRAINT pk_rel primary key (id))");
+            this.sqlProcessor.executeDataDefinition($"create relation {relName} on {schemaName}");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(1, [1,1])}}, {{(young,[1,1])}})");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(1, [1,1])}}, {{(40, [1,1])}})");
+            this.sqlProcessor.executeUpdate($"insert into {relName} (id, age) values ({{(3, [1,1])}}, {{(middle_aged, [1,1])}})");
+            //this.sqlProcessor.executeUpdate($"drop relation {relName}");
+
+        }
         //[Fact]
         public void dropRelationSuccess()
         {

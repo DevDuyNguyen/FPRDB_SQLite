@@ -51,6 +51,10 @@ namespace FPRDB_SQLite.GUI
         private int _currentEditingRow;
         private string _currentEditingColumnType;
         private bool _isOpeningFuzzySet = false;
+
+        private Field selectedField;
+        private FieldType selectedFieldType;
+        private bool isSelectedFieldText;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -89,6 +93,8 @@ namespace FPRDB_SQLite.GUI
         // Load dữ liệu từ chuỗi của Fuzzy Probalistic Value thành 1 bảng liệt kê giá trị
         private void LoadFuzzyProbalisticValueDetail(string probValue)
         {
+            
+
             DataTable dt = new DataTable();
             dt.Columns.Add("Value", typeof(string));
             dt.Columns.Add("MinProb", typeof(string));
@@ -109,6 +115,11 @@ namespace FPRDB_SQLite.GUI
                     if (bracketIndex < 0) continue;
 
                     string value = clean.Substring(0, bracketIndex);
+
+                    //remove string literal delimiter " from the possible value
+                    //if (this.isSelectedFieldText)
+                    //    value = value.Trim('\"');
+
                     string bounds = clean.Substring(bracketIndex + 2).Trim('[', ']');
                     // Mảng: lowerBound -> index 0, upperBound -> index 1
                     string[] boundParts = bounds.Split(',');
@@ -159,7 +170,7 @@ namespace FPRDB_SQLite.GUI
                 col.ColumnEdit = null;
                 col.OptionsColumn.AllowEdit = true;
             }
-        }
+         }
         // Hàm xử lý khi người dùng nhấp ra khỏi hàng ở Grid liệt kê giá trị
         private void BottomGrid_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -220,6 +231,11 @@ namespace FPRDB_SQLite.GUI
                 if (row.RowState == DataRowState.Deleted) continue;
 
                 string value = row["Value"].ToString();
+
+                //add string literal delimiter
+                //if (this.isSelectedFieldText)
+                //    value = "\"" + value + "\"";
+
                 string minProb = row["MinProb"].ToString();
                 string maxProb = row["MaxProb"].ToString();
 
@@ -322,7 +338,6 @@ namespace FPRDB_SQLite.GUI
             }
 
             gridView3.Columns.Clear();
-            gridControlRelation.DataSource = relationContent;
 
             foreach (var field in schemaFields)
             {
@@ -381,6 +396,7 @@ namespace FPRDB_SQLite.GUI
             }
 
             relationContent.AcceptChanges();
+            gridControlRelation.DataSource = relationContent;
             gridView3.BestFitColumns();
 
             gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
@@ -1551,6 +1567,12 @@ namespace FPRDB_SQLite.GUI
             _currentEditingColumn = gridView3.FocusedColumn.FieldName;
             _currentEditingRow = gridView3.FocusedRowHandle;
             _currentEditingColumnType = gridView3.FocusedColumn.Tag?.ToString() ?? string.Empty;
+
+            string fldName = this._currentEditingColumn;
+            this.selectedField = this._selectedRelation.fprdbSchema.fields.FirstOrDefault(n => n.getFieldName() == fldName);
+            this.selectedFieldType = selectedField.getFieldInfo().getType();
+            this.isSelectedFieldText = selectedFieldType == FieldType.CHAR || selectedFieldType == FieldType.VARCHAR || selectedFieldType == FieldType.distFS_TEXT;
+
             LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
         }
         // Hàm ngăn không cho xóa hết dòng (đối với cột khóa chính)
@@ -1625,25 +1647,30 @@ namespace FPRDB_SQLite.GUI
                     DataRow row = currentRow.Row;
                     var schema = _selectedRelation.fprdbSchema;
                     List<Field> fields = schema.fields;
-                    StringBuilder sbRow = new StringBuilder();
-                    sbRow.AppendLine("--- Row ---");
+                    string sbRow;
                     if (row.RowState == DataRowState.Added)
                     {
-                        foreach (var field in fields)
+                        sbRow = $"INSERT INTO {this._selectedRelation.relName} ( ";
+                        foreach (Field f in fields)
                         {
-                            string fieldName = field.getFieldName();
-                            var cellValue = currentRow[fieldName];
-
-                            if (cellValue == DBNull.Value || cellValue == null)
-                            {
-                                sbRow.AppendLine($"{fieldName}: (empty)");
-                                continue;
-                            }
-                            sbRow.AppendLine($"{fieldName}: {cellValue}");
+                            sbRow += $" {f.getFieldName()},";
                         }
-                        MessageBox.Show($"Add\n\n{sbRow}", "Saved",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        row.AcceptChanges(); // Added -> Unchanged
+                        sbRow = sbRow.TrimEnd(',') + ")";
+                        sbRow += " VALUES ( ";
+                        foreach (Field field in fields)
+                        {
+                            sbRow += $"{currentRow[field.getFieldName()]},";
+                        }
+                        sbRow = sbRow.TrimEnd(',') + " )";
+                        try
+                        {
+                            this.sqlProcessor.executeUpdate(sbRow);
+                            row.AcceptChanges();
+                        }
+                        catch (NotImplementedException ex)
+                        {
+
+                        }
                     }else if (row.RowState == DataRowState.Modified)
                     {
                         List<string> pks = schema.primarykey;
