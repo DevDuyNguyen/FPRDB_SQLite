@@ -43,6 +43,8 @@ namespace FPRDB_SQLite.GUI
     {
         private CompositionRoot compRoot;
         private DatabaseService databaseService;
+        private FPRDBSchemaService fprdbSchemaSerivce;
+        private FPRDBRelationService fprdbRelationService;
         //private SQLFileService sqlFileService;
         private bool isDatabaseLoaded = false;
         private string currentSQLFilePath = string.Empty;
@@ -62,6 +64,8 @@ namespace FPRDB_SQLite.GUI
             this.compRoot = compRoot;
             this.databaseService = this.compRoot.getDatabaseService();
             this.sqlProcessor = this.compRoot.getSQLProcessor();
+            this.fprdbSchemaSerivce = compRoot.getFPRDBSchemaService();
+            this.fprdbRelationService = compRoot.getFPRDBRelationService();
             //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
@@ -1402,13 +1406,14 @@ namespace FPRDB_SQLite.GUI
         // Hàm xử lý sự kiện click cho nút Xóa lược đồ
         private void iDeleteSchema_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // 1. Lấy node đang được chọn trên TreeView
             TreeNode selectedNode = treeView.SelectedNode;
 
-            // Kiểm tra xem người dùng đã chọn đúng node lược đồ chưa
-            if (selectedNode == null || selectedNode.Tag?.ToString() != "schema")
+            // Kiểm tra tính hợp lệ:
+            // 1. Node không null
+            // 2. Node cha của nó phải có tên là "FPRDB Schemas"
+            if (selectedNode == null || selectedNode.Parent == null || selectedNode.Parent.Text != "FPRDB Schemas")
             {
-                XtraMessageBox.Show("Please select a schema to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XtraMessageBox.Show("Please select a schema from the 'FPRDB Schemas' folder to delete.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1416,71 +1421,44 @@ namespace FPRDB_SQLite.GUI
 
             try
             {
-                // 2. Kiểm tra khi không có relation nào tham chiếu
-                var allRelations = this.databaseService.getFPRDBRelations();
+                // Truy vấn ngược lại DTO từ AppStates dựa vào Tên (Text) của Node
+                FPRDBSchemaDTO schemaToDelete = AppStates.loadFPRDBSchemas.FirstOrDefault(s => s.schemaName == schemaName);
 
-                // Lọc ra các quan hệ đang sử dụng lược đồ này
-                var dependentRelations = allRelations.Where(r => r.fprdbSchema != null && r.fprdbSchema.schemaName == schemaName)
-                    .Select(r => r.relName).ToList();
-
-                // Xử lý ngoại lệ
-                if (dependentRelations.Count > 0)
+                if (schemaToDelete == null)
                 {
-                    string rellList = string.Join(", ", dependentRelations);
-                    XtraMessageBox.Show($"Cannot delete schema '{schemaName}' because it is referenced by the following relations: {rellList}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    XtraMessageBox.Show("Schema data not found in system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // 3. Xác nhận xóa lược đồ
-                DialogResult result = XtraMessageBox.Show($"Are you sure you want to delete the schema '{schemaName}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                //// --- Logic kiểm tra ràng buộc ---
+                //var allRelations = this.databaseService.getFPRDBRelations();
+                //var dependentRelations = allRelations.Where(r => r.fprdbSchema != null && r.fprdbSchema.schemaName == schemaName)
+                //                                     .Select(r => r.relName).ToList();
 
-                if (result == DialogResult.Yes)
+                //if (dependentRelations.Count > 0)
+                //{
+                //    string rellList = string.Join(", ", dependentRelations);
+                //    XtraMessageBox.Show($"Cannot delete schema '{schemaName}' because it is referenced by: {rellList}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    return;
+                //}
+
+                // --- Thực hiện xóa ---
+                if (XtraMessageBox.Show($"Are you sure you want to delete schema '{schemaName}'?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    // GỌI XUỐNG TẦNG SERVICE ĐỂ XÓA (Bạn cần đảm bảo databaseService có hàm này)
-                    // Ví dụ: bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName);
-
-                    // tạm thời giả lập gọi hàm
-                    //bool isDeleted = true; // Giả sử xóa thành công
-
-                    //if (isDeleted)
-                    //{
-                    //    XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //    // 4. Cập nhật lại TreeView sau khi xóa thành công
-                    //    LoadDatabaseTree();
-                    //}
-                    //else
-                    //{
-                    //    XtraMessageBox.Show("Failed to delete schema. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //}
-                    // ---- BẮT ĐẦU THỰC THI XÓA DƯỚI DATABASE ----
-
-                    //bool isDeleted = this.databaseService.removeFPRDBSchema(schemaName); hàm nếu có
-                    bool isDeleted = false;
-                    string sqlDropCommand = $"DROP TABLE {schemaName}"; // lệnh string SQL để xóa lược đồ [not don't]
-                    isDeleted = this.sqlProcessor.executeDataDefinition(sqlDropCommand);
-
-                    if (isDeleted)
+                    try
                     {
-                        XtraMessageBox.Show("Schema deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // 4. Cập nhật lại cache AppStates từ Database trước khi vẽ lại cây
+                        this.fprdbSchemaSerivce.removeFPRDBSchema(schemaToDelete);
+                        XtraMessageBox.Show("Schema deleted successfully!");
                         AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
-                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
-
-                        // 5. Cập nhật lại TreeView sau khi xóa thành công
                         reLoadDatabaseTree();
                     }
-                    else
+                    catch(SemanticException ex)
                     {
-                        XtraMessageBox.Show("Failed to delete schema. Check syntax or database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    // Kết thúc thực thi xóa
                 }
             }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show($"An error occurred while trying to delete the schema: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { /* Handle ex */ }
         }
         #region Tab Page Relation
         private void iNewRelation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1495,13 +1473,12 @@ namespace FPRDB_SQLite.GUI
 
         private void iDeleteRelation_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // 1. Lấy node đang được chọn trên TreeView
             TreeNode selectedNode = treeView.SelectedNode;
 
-            // Kiểm tra xem người dùng đã chọn đúng node quan hệ chưa
-            if (selectedNode == null || selectedNode.Tag?.ToString() != "relation")
+            // Kiểm tra: Node cha phải là "Relation"
+            if (selectedNode == null || selectedNode.Parent == null || selectedNode.Parent.Text != "Relation")
             {
-                XtraMessageBox.Show("Please select a relation to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XtraMessageBox.Show("Please select a relation from the 'Relation' folder to delete.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1509,54 +1486,31 @@ namespace FPRDB_SQLite.GUI
 
             try
             {
-                // 2. Kiểm tra Quy tắc nghiệp vụ B6: Không có base relation nào khác trỏ tới nó (Khóa ngoại)
-                // LƯU Ý: Ở tầng DatabaseService, cần viết hàm (getReferencingRelations) kiểm tra xem có quan hệ nào đang chứa khóa ngoại trỏ tới quan hệ đang xóa không
-                // để query các ConstraintDTO có ConstraintType == REFERENTIAL và referencedRelation trùng với relName.
-                // Dưới đây là cách gọi giả định:
-                //List<string> referencingRelations = this.databaseService.getReferencingRelations(relName);
-                List<string> referencingRelations = null; // giả lập
-                // Xử lý ngoại lệ E1
-                if (referencingRelations != null && referencingRelations.Count > 0)
+                // Tìm DTO tương ứng trong danh sách Relations
+                FPRDBRelationDTO relToDelete = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(r => r.relName == relName);
+
+                if (relToDelete == null) return;
+
+                if (XtraMessageBox.Show($"Are you sure you want to delete relation '{relName}'?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    string relList = string.Join(", ", referencingRelations);
-                    XtraMessageBox.Show($"Cannot delete relation '{relName}' because it is referenced by foreign keys in the following relations: {relList}",
-                                        "Constraint Violation (B6)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    // Giả sử bạn dùng executeUpdate hoặc hàm remove trong service
+                    // bool isDeleted = this.databaseService.removeFPRDBRelation(relToDelete); 
 
-                // 3. Luồng cơ bản: Xác nhận xóa
-                DialogResult result = XtraMessageBox.Show($"Are you sure you want to delete the relation '{relName}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    // Lấy đối tượng relation DTO hiện tại từ cache AppStates để truyền vào Service
-                    var relToDelete = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(r => r.relName == relName);
-
-                    if (relToDelete == null) return;
-
-                    // 4. Gọi Service thực thi xóa dữ liệu dưới Database
-                    //bool isDeleted = this.databaseService.removeFPRDBRelation(relToDelete);
-                    bool isDeleted = false;// giả lập khi chưa có hàm removeFPRDBRelation
-                    if (isDeleted)
+                    try
                     {
-                        XtraMessageBox.Show("Relation deleted successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // 5. Cập nhật lại cache AppStates từ Database
+                        this.fprdbRelationService.removeFPRDBRelation(relToDelete);
+                        // Cập nhật lại UI
+                        XtraMessageBox.Show("Relation deleted successfully!");
                         AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
-
-                        // 6. Cập nhật lại giao diện TreeView
                         reLoadDatabaseTree();
                     }
-                    else
+                    catch (SemanticException ex)
                     {
-                        XtraMessageBox.Show("Failed to delete relation. Please check database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show($"An error occurred while trying to delete the relation: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { /* Handle ex */ }
         }
         #endregion
         // 2 hàm parse dữ liệu xuống dưới Grid liệt kê giá trị

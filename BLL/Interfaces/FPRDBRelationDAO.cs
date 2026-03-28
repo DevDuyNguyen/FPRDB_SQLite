@@ -12,7 +12,7 @@ namespace BLL.Interfaces
     public interface FPRDBRelationDAO
     {
         public bool createFPRDBRelation(FPRDBRelationDTO rel);
-        public bool removeFPRDBRelation(FPRDBRelationDTO rel);
+        public void removeFPRDBRelation(FPRDBRelationDTO rel);
         public List<FPRDBRelation> findRelation(string name);
 
     }
