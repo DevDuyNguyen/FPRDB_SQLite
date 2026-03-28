@@ -184,8 +184,14 @@ namespace BLL.DAO
         {
             //get all fuzzyset names that LIKE %name%
             List<string> matchFuzzySetNames = new List<string>();
+            string findFuzzySetSQL;
+            //user want all fuzzy sets
+            if (name == null || name == default)
+                findFuzzySetSQL = "SELECT fuzzset_name FROM fprdb_FuzzySet";
+            else
+                findFuzzySetSQL = $"SELECT fuzzset_name FROM fprdb_FuzzySet WHERE fuzzset_name LIKE '%{name}%'";
             IDataReader r;
-            using (r = this.databaseManager.executeQuery($"SELECT fuzzset_name FROM fprdb_FuzzySet WHERE fuzzset_name LIKE '%{name}%'"))
+            using (r = this.databaseManager.executeQuery(findFuzzySetSQL))
             {
                 while (r.Read())
                 {

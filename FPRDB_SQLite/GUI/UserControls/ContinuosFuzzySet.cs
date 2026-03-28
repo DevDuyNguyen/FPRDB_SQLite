@@ -18,6 +18,7 @@ namespace FPRDB_SQLite.GUI.UserControls
     public partial class ContinuosFuzzySet : DevExpress.XtraEditors.XtraUserControl
     {
         private readonly BaseEdit[] textFields;
+        private FuzzySetDTO selectedFuzzySet;
         public ContinuosFuzzySet()
         {
             InitializeComponent();
@@ -60,11 +61,15 @@ namespace FPRDB_SQLite.GUI.UserControls
             float leftTop = float.Parse(txtTopLeft.Text);
             float rightTop = float.Parse(txtTopRight.Text);
             float rightBottom = float.Parse(txtBotRight.Text);
-            return new ContinuousFuzzySetDTO(leftBottom, leftTop, rightTop, rightBottom, name);
+            if(this.selectedFuzzySet!=null)
+                return new ContinuousFuzzySetDTO(leftBottom, leftTop, rightTop, rightBottom, this.selectedFuzzySet.oid,name);
+            else
+                return new ContinuousFuzzySetDTO(leftBottom, leftTop, rightTop, rightBottom, name);
         }
         // Hàm này sẽ được gọi khi người dùng chọn một FuzzySet
         public void LoadFuzzySet(FuzzySetDTO fuzzySet)
         {
+            this.selectedFuzzySet = fuzzySet;
             txtNameConsFuzzy.Text = fuzzySet.fuzzySetName;
             // Bind dữ liệu của FuzzySet vào các TextBox tương ứng
             if (fuzzySet is ContinuousFuzzySetDTO continuousFuzzySet)

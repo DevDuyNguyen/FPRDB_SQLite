@@ -24,6 +24,7 @@ namespace FPRDB_SQLite.GUI.UserControls
 {
     public partial class DiscreteFuzzySet : DevExpress.XtraEditors.XtraUserControl
     {
+        private FuzzySetDTO selectedFuzzySet;
         private readonly BaseEdit[] textFields;
         private class FuzzySetRow
         {
@@ -163,11 +164,16 @@ namespace FPRDB_SQLite.GUI.UserControls
             var values = rows.Select(r => ParseTo<T>(r.Value?.ToString())).ToList();
             var degrees = rows.Select(r => (float)r.MembershipDegree).ToList();
 
-            return new DiscreteFuzzySetDTO<T>(values, degrees, fuzzySetName, fuzzySetType);
+            if(this.selectedFuzzySet!=null)
+                return new DiscreteFuzzySetDTO<T>(values, degrees, this.selectedFuzzySet.oid, fuzzySetName, fuzzySetType);
+            else
+                return new DiscreteFuzzySetDTO<T>(values, degrees, fuzzySetName, fuzzySetType);
+
         }
         // Phương thức này sẽ được gọi khi người dùng chọn một FuzzySet
         public void LoadFuzzySet(FuzzySetDTO fuzzySet)
         {
+            this.selectedFuzzySet = fuzzySet;
             txtNameDiscFuzzy.Text = fuzzySet.fuzzySetName;
             cboDataType.Text = fuzzySet.fuzzySetType.ToString();
 
