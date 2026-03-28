@@ -138,7 +138,7 @@ namespace FPRDB_SQLite.GUI.UserControls
         // Hàm lấy thông tin loại DiscreteFuzzySet từ UserControl để truyền ra form UI
         public FieldType getFuzzySetType()
         {
-            return Enum.Parse<FieldType>(cboDataType.SelectedItem as string);
+            return Enum.Parse<FieldType>(cboDataType.Text);
         }
         // Helper method để parse string từ GridControl về đúng kiểu dữ liệu
         private static T ParseTo<T>(string? input)
@@ -157,7 +157,7 @@ namespace FPRDB_SQLite.GUI.UserControls
         public DiscreteFuzzySetDTO<T> getDiscreteFuzzySet<T>()
         {
             var fuzzySetName = txtNameDiscFuzzy.Text;
-            FieldType fuzzySetType = Enum.Parse<FieldType>(cboDataType.SelectedItem as string);
+            FieldType fuzzySetType = Enum.Parse<FieldType>(cboDataType.Text);
             var rows = grdvDiscFuzzy.DataSource as BindingList<FuzzySetRow>;
 
             var values = rows.Select(r => ParseTo<T>(r.Value?.ToString())).ToList();
@@ -189,14 +189,14 @@ namespace FPRDB_SQLite.GUI.UserControls
         private void BindDiscrete<TDomain>(List<TDomain> valueSet, List<float> membershipDegreeSet)
         {
             // Ghép dữ liệu theo index: mỗi phần tử values[i] đi với memberships[i]
-            var rows = Enumerable.Range(0, valueSet.Count)
+            var rowData = Enumerable.Range(0, valueSet.Count)
                 .Select(i => new FuzzySetRow
                 {
                     Value = valueSet[i].ToString(),
                     MembershipDegree = membershipDegreeSet[i]
-                })
-                .ToList();
+                });
 
+            BindingList<FuzzySetRow> rows = new BindingList<FuzzySetRow>(rowData.ToList());
             // Gán danh sách rows vào GridControl
             grdcDiscFuzzy.DataSource = rows;
 
