@@ -1,21 +1,24 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL;
+using BLL.Common;
+using BLL.DTO;
+using BLL.Exceptions;
+using BLL.Services;
+using DevExpress.Map.Kml.Model;
+using DevExpress.XtraCharts;
+using DevExpress.XtraEditors;
+using DevExpress.XtraRichEdit.API.Native;
 using DevExpress.XtraScheduler.Outlook.Native;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BLL.Common;
-using BLL.DTO;
-using BLL;
-using DevExpress.XtraRichEdit.API.Native;
-using BLL.Services;
-using DevExpress.Map.Kml.Model;
-using DevExpress.XtraCharts;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -40,29 +43,30 @@ namespace FPRDB_SQLite.GUI
         private void btnSearch_Click(object sender, EventArgs e)
         {
             // Lấy thông tin từ ô tìm kiếm
-            string keyword = txtFuzzySetName.Text.ToLower();
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                XtraMessageBox.Show("Please enter a fuzzy set name to search.");
-                return;
-            }
+            string keyword = txtFuzzySetName.Text;
+            //if (string.IsNullOrWhiteSpace(keyword))
+            //{
+            //    XtraMessageBox.Show("Please enter a fuzzy set name to search.");
+            //    return;
+            //}
             // Xóa danh sách trước đó trong ListBox
             lstFuzzySetResults.Items.Clear();
             // Lọc dữ liệu theo keyword
-            //var results = service.findFuzzySet(keyword);
-            //if (results.Count == 0)
-            //{
-            //    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
-            //    return;
-            //}
-            ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
-            DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
-                new List<int>() { 22, 23, 24 },
-                new List<float>() { 0.5f, 1, 0.5f },
-                "about_23",
-                FieldType.INT);
-            results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
-            foreach (var item in results)
+            this.results = service.findFuzzySet(keyword);
+            if (results.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
+                return;
+            }
+            //ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
+            //DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
+            //    new List<int>() { 22, 23, 24 },
+            //    new List<float>() { 0.5f, 1, 0.5f },
+            //    "about_23",
+            //    FieldType.INT);
+            //results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
+            
+            foreach (var item in this.results)
             {
                 lstFuzzySetResults.Items.Add(item.fuzzySetName);
             }
@@ -144,10 +148,18 @@ namespace FPRDB_SQLite.GUI
             DialogResult result = MessageBox.Show($"Are you sure you want to delete fuzzy set '{selectedFuzzySet.fuzzySetName}'?", "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
-                //service.removeFuzzySet(selectedFuzzySet.fuzzySetName);
-                XtraMessageBox.Show("Fuzzy set deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // Refresh the list after deletion
-                refreshForm();
+                try
+                {
+                    service.removeFuzzySet(selectedFuzzySet);
+                    XtraMessageBox.Show("Fuzzy set deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Refresh the list after deletion
+                    refreshForm();
+                }
+                catch(InvalidOperationException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
             }
         }
 
@@ -157,27 +169,44 @@ namespace FPRDB_SQLite.GUI
             DialogResult result = XtraMessageBox.Show($"Are you sure you want to update fuzzy set '{selectedFuzzySet.fuzzySetName}'?", "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                if (selectedFuzzySet is ContinuousFuzzySetDTO)
+                try
                 {
-                    var updatedFuzzySet = continuosFuzzySetInfo.getContinuousFuzzySet();
-                }
-                else
-                {
-                    switch (discreteFuzzySetInfo.getFuzzySetType())
+                    FuzzySetDTO updatedFuzzySet = null;
+                    if (selectedFuzzySet is ContinuousFuzzySetDTO)
                     {
-                        case FieldType.INT:
-                            var updatedIntFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<int>();
-                            break;
-                        case FieldType.FLOAT:
-                            var updatedFloatFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<float>();
-                            break;
-                        case FieldType.VARCHAR:
-                            var updatedStringFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<string>();
-                            break;
+                        updatedFuzzySet = continuosFuzzySetInfo.getContinuousFuzzySet();
                     }
+                    else
+                    {
+
+                        switch (discreteFuzzySetInfo.getFuzzySetType())
+                        {
+                            case FieldType.distFS_INT:
+                                updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<int>();
+                                break;
+                            case FieldType.distFS_FLOAT:
+                                updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<float>();
+                                break;
+                            case FieldType.distFS_TEXT:
+                                updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<string>();
+                                break;
+                        }
+                    }
+                    service.updateFuzzySet(updatedFuzzySet);
+                    XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                //service.updateFuzzySet(updatedFuzzySet);
-                XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                catch(InvalidOperationException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch(FormatException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch(InvalidDataException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
