@@ -12,7 +12,7 @@ namespace BLL.DAO
     public interface FPRDBSchemaDAO
     {
         public bool defineFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO);
-        public bool removeFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO);
+        public void removeFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO);
         public List<FPRDBSchema> findSchema(string name);
         public List<FPRDBRelation> findRelationsOfSchema(FPRDBSchemaDTO schema);
 

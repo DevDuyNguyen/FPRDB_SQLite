@@ -44,6 +44,7 @@ namespace FPRDB_SQLite.GUI
         private CompositionRoot compRoot;
         private DatabaseService databaseService;
         private FPRDBSchemaService fprdbSchemaSerivce;
+        private FPRDBRelationService fprdbRelationService;
         //private SQLFileService sqlFileService;
         private bool isDatabaseLoaded = false;
         private string currentSQLFilePath = string.Empty;
@@ -64,6 +65,7 @@ namespace FPRDB_SQLite.GUI
             this.databaseService = this.compRoot.getDatabaseService();
             this.sqlProcessor = this.compRoot.getSQLProcessor();
             this.fprdbSchemaSerivce = compRoot.getFPRDBSchemaService();
+            this.fprdbRelationService = compRoot.getFPRDBRelationService();
             //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
@@ -1485,7 +1487,7 @@ namespace FPRDB_SQLite.GUI
             try
             {
                 // Tìm DTO tương ứng trong danh sách Relations
-                var relToDelete = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(r => r.relName == relName);
+                FPRDBRelationDTO relToDelete = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(r => r.relName == relName);
 
                 if (relToDelete == null) return;
 
@@ -1494,13 +1496,18 @@ namespace FPRDB_SQLite.GUI
                     // Giả sử bạn dùng executeUpdate hoặc hàm remove trong service
                     // bool isDeleted = this.databaseService.removeFPRDBRelation(relToDelete); 
 
-                    // Lệnh SQL
-                    string sqlDeleteRel = $"DROP TABLE {relName}";
-
-                    // Cập nhật lại UI
-                    XtraMessageBox.Show("Relation deleted successfully!");
-                    AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
-                    reLoadDatabaseTree();
+                    try
+                    {
+                        this.fprdbRelationService.removeFPRDBRelation(relToDelete);
+                        // Cập nhật lại UI
+                        XtraMessageBox.Show("Relation deleted successfully!");
+                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+                        reLoadDatabaseTree();
+                    }
+                    catch (SemanticException ex)
+                    {
+                        XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex) { /* Handle ex */ }

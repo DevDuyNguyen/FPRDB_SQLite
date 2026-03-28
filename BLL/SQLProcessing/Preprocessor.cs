@@ -214,7 +214,7 @@ namespace BLL.SQLProcessing
         public bool checkSemanticDropRelation(DropRelationData data)
         {
             if (!this.metadataMgr.isRelationExist(data.relation))
-                throw new QueryDataNotExistException($"Relation {data.relation} doesn't exist");
+                throw new SemanticException($"Relation {data.relation} doesn't exist");
             return true;
         }
         public bool checkSemanticDropSchema(DropSchemaData data)
