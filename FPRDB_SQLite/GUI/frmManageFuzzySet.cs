@@ -1,4 +1,11 @@
-﻿using DevExpress.XtraEditors;
+﻿using BLL;
+using BLL.Common;
+using BLL.DTO;
+using BLL.Services;
+using DevExpress.Map.Kml.Model;
+using DevExpress.XtraCharts;
+using DevExpress.XtraEditors;
+using DevExpress.XtraRichEdit.API.Native;
 using DevExpress.XtraScheduler.Outlook.Native;
 using System;
 using System.Collections.Generic;
@@ -6,16 +13,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BLL.Common;
-using BLL.DTO;
-using BLL;
-using DevExpress.XtraRichEdit.API.Native;
-using BLL.Services;
-using DevExpress.Map.Kml.Model;
-using DevExpress.XtraCharts;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -158,27 +160,35 @@ namespace FPRDB_SQLite.GUI
             DialogResult result = XtraMessageBox.Show($"Are you sure you want to update fuzzy set '{selectedFuzzySet.fuzzySetName}'?", "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
+                FuzzySetDTO updatedFuzzySet=null;
                 if (selectedFuzzySet is ContinuousFuzzySetDTO)
                 {
-                    var updatedFuzzySet = continuosFuzzySetInfo.getContinuousFuzzySet();
+                    updatedFuzzySet = continuosFuzzySetInfo.getContinuousFuzzySet();
                 }
                 else
                 {
                     switch (discreteFuzzySetInfo.getFuzzySetType())
                     {
-                        case FieldType.INT:
-                            var updatedIntFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<int>();
+                        case FieldType.distFS_INT:
+                            updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<int>();
                             break;
-                        case FieldType.FLOAT:
-                            var updatedFloatFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<float>();
+                        case FieldType.distFS_FLOAT:
+                            updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<float>();
                             break;
-                        case FieldType.VARCHAR:
-                            var updatedStringFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<string>();
+                        case FieldType.distFS_TEXT:
+                            updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<string>();
                             break;
                     }
                 }
-                //service.updateFuzzySet(updatedFuzzySet);
-                XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    service.updateFuzzySet(updatedFuzzySet);
+                    XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch(InvalidOperationException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

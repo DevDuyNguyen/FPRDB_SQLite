@@ -138,7 +138,7 @@ namespace FPRDB_SQLite.GUI.UserControls
         // Hàm lấy thông tin loại DiscreteFuzzySet từ UserControl để truyền ra form UI
         public FieldType getFuzzySetType()
         {
-            return (FieldType)cboDataType.SelectedItem;
+            return Enum.Parse<FieldType>(cboDataType.SelectedItem as string);
         }
         // Helper method để parse string từ GridControl về đúng kiểu dữ liệu
         private static T ParseTo<T>(string? input)
@@ -157,7 +157,7 @@ namespace FPRDB_SQLite.GUI.UserControls
         public DiscreteFuzzySetDTO<T> getDiscreteFuzzySet<T>()
         {
             var fuzzySetName = txtNameDiscFuzzy.Text;
-            FieldType fuzzySetType = (FieldType)cboDataType.SelectedItem;
+            FieldType fuzzySetType = Enum.Parse<FieldType>(cboDataType.SelectedItem as string);
             var rows = grdvDiscFuzzy.DataSource as BindingList<FuzzySetRow>;
 
             var values = rows.Select(r => ParseTo<T>(r.Value?.ToString())).ToList();
