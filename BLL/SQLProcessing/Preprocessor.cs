@@ -27,6 +27,48 @@ namespace BLL.SQLProcessing
             this.metadataMgr = metadataMgr;
             this.constraintService = constraintService;
         }
+        private bool checkIfSelectionConditionIsValid(SelectionCondition condition, List<Field> mentionedFields)
+        {
+            //Every attribute that is mentioned in the WHERE-clause must be an attribute of some relation in the current scope
+            List<string> attributesInSelectionCondition = condition.getMentionedAttributes();
+            foreach(string attrName in attributesInSelectionCondition)
+            {
+                if (mentionedFields.FirstOrDefault(el => el.getFieldName() == attrName) == null)
+                {
+                    throw new SemanticException($"Field {attrName} doesn't exist");
+                }
+            }
+
+            //Check operator is applicable on attribute:
+            AtomicSelectionExpressionFieldConstant fieldConstantEx;
+            AtomicSelectionExpressionFieldField fieldfieldEx;
+            Field tmpField1 = null;
+            Field tmpField2 = null;
+            List<SelectionExpression> atomicSelectionExpressions = condition.getAtomicSelectionExpressions();
+
+            foreach (SelectionExpression ex in atomicSelectionExpressions)
+            {
+
+                //check on AtomicSelectionExpressionFieldConstant
+                if (ex is AtomicSelectionExpressionFieldConstant)
+                {
+                    fieldConstantEx = ex as AtomicSelectionExpressionFieldConstant;
+                    tmpField1 = mentionedFields.FirstOrDefault(f => f.getFieldName() == fieldConstantEx.field);
+                    this.checkComparisonOperatorOnFieldConstant(tmpField1, fieldConstantEx.constant, fieldConstantEx.compareOperator, this.metadataMgr);
+                }
+
+                //check on AtomicSelectionExpressionFieldField
+                if (ex is AtomicSelectionExpressionFieldField)
+                {
+                    fieldfieldEx = ex as AtomicSelectionExpressionFieldField;
+                    tmpField1 = mentionedFields.FirstOrDefault(f => f.getFieldName() == fieldfieldEx.lField);
+                    tmpField2 = mentionedFields.FirstOrDefault(f => f.getFieldName() == fieldfieldEx.rField);
+                    this.checkCompatibleFieldEqualField(tmpField1, tmpField2);
+                }
+            }
+            return true;
+            
+        }
 
         public bool checkSemanticCreateSchema(FPRDBSchema data)
         {
@@ -204,11 +246,19 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Relation {data.relation} doesn't exist");
             }
-            //check fields mentioned in selection condition exist
+
             FPRDBRelation relation = this.metadataMgr.getRelation(data.relation);
-            this.checkFieldsMentionedInSelectionConditionExist(relation.getSchema(), data.selectionCondition);
-            
-            
+            /*
+             * Selection condition:
+             * -Mentioned field exist
+             * -Field is compared with data type compatible constant or other field
+             */
+            if (data.selectionCondition != null)
+            {
+
+                this.checkIfSelectionConditionIsValid(data.selectionCondition, relation.getSchema().getFields());
+            }
+
             return true;
         }
         public bool checkSemanticDropRelation(DropRelationData data)
@@ -281,7 +331,15 @@ namespace BLL.SQLProcessing
                     relation.getSchema()
                     );
             }
-            
+            /*
+             * Selection condition:
+             * -Mentioned field exist
+             * -Field is compared with data type compatible constant or other field
+             */
+            if (data.getSelectionCondition() != null)
+            {
+                this.checkIfSelectionConditionIsValid(data.getSelectionCondition(), fieldsInSchema);
+            }
 
             return true;
         }
