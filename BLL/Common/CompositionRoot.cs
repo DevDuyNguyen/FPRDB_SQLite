@@ -50,7 +50,7 @@ namespace BLL.Common
             this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.getParser(), this.constraintService);
             this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.getParser(), this.constraintService);
 
-            this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
+            this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer, this.constraintService);
 
             
 

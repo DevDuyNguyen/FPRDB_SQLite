@@ -99,8 +99,11 @@ namespace BLL.Services
         {
             this.constraintDAO.removeConstraint(oid);
         }
+        public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data)
+        {
+            return this.constraintDAO.checkIfInsertTupleViolateReferentialConstraint(data);
+        }
 
-        
 
         //not done: mocking for private
         //not done: not implemented

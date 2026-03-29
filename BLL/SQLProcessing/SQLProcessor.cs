@@ -1,6 +1,7 @@
 ﻿using BLL.DomainObject;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Services;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,16 @@ namespace BLL.SQLProcessing
         private Preprocessor preProcessor;
         private QueryPlanner queryPlanner;
         private Lexer lexer;
+        private ConstraintService constraintService;
 
-        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor, QueryPlanner queryPlanner, Lexer lexer)
+        public SQLProcessor(RecursiveDescentParser parser, UpdatePlanner updatePlanner, Preprocessor preProcessor, QueryPlanner queryPlanner, Lexer lexer, ConstraintService constraintService)
         {
             this.parser = parser;
             this.updatePlanner = updatePlanner;
             this.preProcessor = preProcessor;
             this.queryPlanner = queryPlanner;
             this.lexer = lexer;
+            this.constraintService = constraintService;
         }
 
         public bool executeDataDefinition(string sql)
@@ -86,8 +89,9 @@ namespace BLL.SQLProcessing
             if(data is InsertData)
             {
                 InsertData idata = (InsertData)data;
-                if (this.preProcessor.checkSemanticInsert(idata))
+                if (this.preProcessor.checkSemanticInsert(idata) && this.constraintService.checkIfInsertTupleViolateReferentialConstraint(idata))
                 {
+                        
                     return this.updatePlanner.executeInsert(idata);
                 }
             }

@@ -1258,6 +1258,11 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
+            catch(InvalidOperationException ex)
+            {
+                memoEditMessage.Text = $"[Invalid Operation]\r\n{ex.Message}";
+                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+            }
             catch (NotSupportedException ex)
             {
                 memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
@@ -1600,7 +1605,10 @@ namespace FPRDB_SQLite.GUI
                 {
                     XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
+                catch(InvalidOperationException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 
             }
             else

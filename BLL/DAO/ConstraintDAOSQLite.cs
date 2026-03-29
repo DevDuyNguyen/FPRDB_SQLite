@@ -155,7 +155,10 @@ namespace BLL.DAO
                 using (IDataReader r = this.databaseMgr.executeQuery(sql))
                 {
                     if (!r.Read())
-                        return false;
+                    {
+                        //return false;
+                        throw new InvalidOperationException($"A tuple in {data.relation} violate referential constraint {constr.conName}");
+                    }
                 }
             }
             return true;
