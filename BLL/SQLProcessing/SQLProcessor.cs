@@ -106,7 +106,7 @@ namespace BLL.SQLProcessing
             else if(data is DropRelationData)
             {
                 DropRelationData DropData = (DropRelationData)data;
-                if (this.preProcessor.checkSemanticDropRelation(DropData))
+                if (this.preProcessor.checkSemanticDropRelation(DropData) && this.constraintService.checkIfDropRelationViolateReferentialConstraint(DropData))
                 {
                     this.updatePlanner.executeDropRelation(DropData.relation);
                     return 0;

@@ -103,7 +103,10 @@ namespace BLL.Services
         {
             return this.constraintDAO.checkIfInsertTupleViolateReferentialConstraint(data);
         }
-
+        public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data)
+        {
+            return this.constraintDAO.checkIfDropRelationViolateReferentialConstraint(data);
+        }
 
         //not done: mocking for private
         //not done: not implemented

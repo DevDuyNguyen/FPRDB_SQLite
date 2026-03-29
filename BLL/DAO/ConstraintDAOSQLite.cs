@@ -203,7 +203,14 @@ namespace BLL.DAO
             FPRDBRelationDTO referencedRelationDTO = this.metaDataMgr.getRelation(data.relation).toDTO();
             List<ConstraintDTO> referentialConstraints = this.getReferenrialConstraintsTo(referencedRelationDTO);
             if (referentialConstraints.Count != 0)
-                return false;
+            {
+                string errorMessage = $"Relation {data.relation} is referenced by ";
+                foreach (ConstraintDTO contr in referentialConstraints)
+                    errorMessage += $"{contr.relation.relName},";
+                errorMessage = errorMessage.TrimEnd(',');
+                throw new InvalidOperationException(errorMessage);
+            }
+            
             return true;
         }
 

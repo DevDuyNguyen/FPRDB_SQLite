@@ -255,17 +255,34 @@ namespace TestProject1.UnitTest
             }
 
         }
-        class checkIfDropRelationViolateReferentialConstraint_testdata : TheoryData<DropRelationData, bool>
+        class checkIfDropRelationViolateReferentialConstraint_positive_testdata : TheoryData<DropRelationData, bool>
         {
-            public checkIfDropRelationViolateReferentialConstraint_testdata()
+            public checkIfDropRelationViolateReferentialConstraint_positive_testdata()
             {
                 Add(new DropRelationData("rel12"), true);
-                Add(new DropRelationData("rel4"), false);
             }
         }
-        [Theory]
-        [ClassData(typeof(checkIfDropRelationViolateReferentialConstraint_testdata))]
-        public void checkIfDropRelationViolateReferentialConstraint_test(DropRelationData data, bool expected)
+        //[Theory]
+        //[ClassData(typeof(checkIfDropRelationViolateReferentialConstraint_positive_testdata))]
+        public void checkIfDropRelationViolateReferentialConstraint_success(DropRelationData data, bool expected)
+        {
+            //arrange
+            //act
+            bool actual = this.dao.checkIfDropRelationViolateReferentialConstraint(data);
+            //assert
+            Assert.Equal(expected, actual);
+
+        }
+        class checkIfDropRelationViolateReferentialConstraint_negative_testdata : TheoryData<DropRelationData, Exception>
+        {
+            public checkIfDropRelationViolateReferentialConstraint_negative_testdata()
+            {
+                Add(new DropRelationData("rel4"), new InvalidOperationException("Relation rel4 is referenced by rel3"));
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(checkIfDropRelationViolateReferentialConstraint_negative_testdata))]
+        public void checkIfDropRelationViolateReferentialConstraint_fail(DropRelationData data, Exception expected)
         {
             ConstraintDTO constr = null;
             try
@@ -285,9 +302,10 @@ namespace TestProject1.UnitTest
                 constr = this.compRoot.getConstraintDAO().createReferentialConstraint("fk_rel3_rel4", rel3, rel4, new List<string> { "id" }, new List<string> { "id" });
 
                 //act
-                bool actual = this.dao.checkIfDropRelationViolateReferentialConstraint(data);
+                Exception actual = Assert.Throws<InvalidOperationException>(() => this.dao.checkIfDropRelationViolateReferentialConstraint(data));
                 //assert
-                Assert.Equal(expected, actual);
+                Assert.Equal(expected.GetType().Name, actual.GetType().Name);
+                Assert.Equal(expected.Message, actual.Message);
             }
             finally
             {
