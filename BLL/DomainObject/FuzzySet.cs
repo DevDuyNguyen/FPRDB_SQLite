@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BLL.DomainObject
 {
-    public abstract class FuzzySet<T>
+    public abstract class FuzzySet<T>:BaseFuzzySet
     {
         private string fuzzySetName;
         private FieldType fuzzySetType;
@@ -34,6 +34,8 @@ namespace BLL.DomainObject
         public abstract bool isNormal();
         public abstract bool isEqualTo(FuzzySet<T> fs);
         public abstract bool isSubsetOf(FuzzySet<T> fs);
+
+        public abstract bool Equal(object fs);
 
     }
 }

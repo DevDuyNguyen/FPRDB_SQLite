@@ -55,16 +55,16 @@ namespace BLL.Common
             
 
             //dao
-            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr);
+            this.fuzzySetDAO = new FuzzySetDAOSQLite(this.dbMgr, this.metadataMgr);
             this.fprdbSchemaDAO = new FPRDBSchemaDAOSQLProcessor(this.sqlProcessor);
             this.fprdbRelationDAO = new FPRDBRelationDAOSQLProcessor(this.sqlProcessor);
 
             //service
             this.fuzzySetService = new FuzzySetService(this.fuzzySetDAO);
             this.databaseService = new DatabaseService(this.dbMgr);
-            
-            
-            this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);
+
+
+            this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);//, this.sqlProcessor);
             this.fprdbRelationService = new FPRDBRelationService(this.fprdbRelationDAO);
         }
         private Lexer getLexer()

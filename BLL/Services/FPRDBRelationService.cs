@@ -25,7 +25,10 @@ namespace BLL.Services
                 throw new InvalidDataException("Schema name is empty");
             return this.fprdbRelationDAO.createFPRDBRelation(rel);
         }
-        public bool removeFPRDBRelation(FPRDBRelationDTO rel)=> throw new NotImplementedException();
+        public void removeFPRDBRelation(FPRDBRelationDTO rel)
+        {
+            this.fprdbRelationDAO.removeFPRDBRelation(rel);
+        }
 
     }
 }

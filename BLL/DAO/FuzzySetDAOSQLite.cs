@@ -2,12 +2,14 @@
 using BLL.DTO;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,12 +19,14 @@ namespace BLL.DAO
     {
         private DatabaseManager databaseManager;
         private DatabaseManager databseExportImport;
+        private MetadataManager metaDataMgr;
 
-        public FuzzySetDAOSQLite(DatabaseManager databaseManager)
+        public FuzzySetDAOSQLite(DatabaseManager databaseManager, MetadataManager metaDataMgr)
         {
             this.databaseManager = databaseManager;
+            this.metaDataMgr= metaDataMgr;
         }
-        public FuzzySetDAOSQLite() { }
+        //public FuzzySetDAOSQLite() { }
         public List<T> convertStringToListOfT<T>(string str)
         {
             List<T> ans;
@@ -176,5 +180,132 @@ namespace BLL.DAO
             }
 
         }
+        public List<BaseFuzzySet> findFuzzySet(string name)
+        {
+            //get all fuzzyset names that LIKE %name%
+            List<string> matchFuzzySetNames = new List<string>();
+            string findFuzzySetSQL;
+            //user want all fuzzy sets
+            if (name == null || name == default)
+                findFuzzySetSQL = "SELECT fuzzset_name FROM fprdb_FuzzySet";
+            else
+                findFuzzySetSQL = $"SELECT fuzzset_name FROM fprdb_FuzzySet WHERE fuzzset_name LIKE '%{name}%'";
+            IDataReader r;
+            using (r = this.databaseManager.executeQuery(findFuzzySetSQL))
+            {
+                while (r.Read())
+                {
+                    matchFuzzySetNames.Add(r["fuzzset_name"] as string);
+                }
+            }
+
+            //for each such fuzzy set name
+            //-get fuzzy type
+            //-get fuzzy 
+            //-add to answer list
+            FieldType fsType;
+            List<BaseFuzzySet> ans = new List<BaseFuzzySet>();
+            foreach (string fsName in matchFuzzySetNames)
+            {
+                fsType = this.metaDataMgr.getFuzzySetType(fsName);
+                if (fsType == FieldType.distFS_INT)
+                {
+                    ans.Add(this.metaDataMgr.getFuzzySet<int>(fsName, fsType));
+                }
+                else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+                {
+                    ans.Add(this.metaDataMgr.getFuzzySet<float>(fsName, fsType));
+                }
+                else //if (fsType == FieldType.distFS_TEXT)
+                {
+                    ans.Add(this.metaDataMgr.getFuzzySet<string>(fsName, fsType));
+                }
+            }
+            return ans;
+
+        }
+        public List<FPRDBRelation> getUsingRelations(FuzzySetDTO fuzzySet)
+        {
+            int fsOID = this.metaDataMgr.getFuzzySetOID(fuzzySet.fuzzySetName);
+            List<int> usingRelationOIDs = new List<int>();
+            IDataReader r;
+            using (r = this.databaseManager.executeQuery($"SELECT rel_oid FROM FPRDB_Rel_FuzzSet WHERE fuzzset_oid={fsOID} AND no!=0"))
+            {
+                while (r.Read())
+                {
+                    usingRelationOIDs.Add(Convert.ToInt32(r["rel_oid"]));
+                }
+            }
+            List<FPRDBRelation> ans = new List<FPRDBRelation>();
+            foreach(int oid in usingRelationOIDs)
+            {
+                ans.Add(this.metaDataMgr.getRelationByID(oid));
+            }
+            return ans;
+
+        }
+        public void removeFuzzySet(FuzzySetDTO fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException("Oid of fuzzy set isn't provided");
+            this.databaseManager.executeNonQuery($"DELETE FROM fprdb_DiscreteFuzzySet WHERE oid={fuzzySet.oid}");
+            this.databaseManager.executeNonQuery($"DELETE FROM fprdb_ContinousFuzzySet WHERE oid={fuzzySet.oid}");
+            this.databaseManager.executeNonQuery($"DELETE FROM FPRDB_Rel_FuzzSet WHERE fuzzset_oid={fuzzySet.oid}");
+            this.databaseManager.executeNonQuery($"DELETE FROM fprdb_FuzzySet WHERE oid={fuzzySet.oid}");
+
+        }
+        public FuzzySetDTO getExactFuzzySet(int oid)
+        {
+            FieldType fsType = this.metaDataMgr.getFuzzySetTypeByID(oid);
+            FuzzySetDTO dto=null;
+            if (fsType == FieldType.distFS_INT)
+            {
+                FuzzySet<int> tmp = this.metaDataMgr.getFuzzySetByID<int>(oid, fsType);
+                dto = tmp.toDTO();
+            }
+            else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+            {
+                FuzzySet<float> tmp = this.metaDataMgr.getFuzzySetByID<float>(oid, fsType);
+                dto = tmp.toDTO();
+            }
+            else //if (fsType == FieldType.distFS_TEXT)
+            {
+                FuzzySet<string> tmp = this.metaDataMgr.getFuzzySetByID<string>(oid, fsType);
+                dto = tmp.toDTO();
+            }
+            return dto;
+        }
+
+        public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+            
+            string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateName);
+
+            string newValueSet = string.Join(",", fuzzySet.valueSet);
+            string newMembershipDegree = string.Join(",", fuzzySet.membershipDegreeSet);
+            string updateValueSetAndMembershipDegree = $"UPDATE fprdb_DiscreteFuzzySet set fuzzset_x='{newValueSet}', fuzzset_membership_degree='{newMembershipDegree}' WHERE oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateValueSetAndMembershipDegree);
+
+        }
+
+        public void updateContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet)
+        {
+            if (fuzzySet.oid == null || fuzzySet.oid == default)
+                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+
+            string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateName);
+
+            string updateMembershipDegree = $"update fprdb_ContinousFuzzySet set fuzzset_bottom_left={fuzzySet.leftBottom}, fuzzset_top_left={fuzzySet.leftTop}, fuzzset_top_right={fuzzySet.rightTop}, fuzzset_bottom_right={fuzzySet.rightBottom} where oid={fuzzySet.oid}";
+            this.databaseManager.executeNonQuery(updateMembershipDegree);
+        }
+        public bool isFuzzySetExist(string name)
+        {
+            return this.metaDataMgr.isFuzzySetWithNameExist(name);
+        }
+
     }
 }

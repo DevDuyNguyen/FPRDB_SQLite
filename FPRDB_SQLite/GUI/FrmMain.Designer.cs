@@ -852,6 +852,7 @@ namespace FPRDB_SQLite.GUI
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
+            gridControlRelation.Click += gridControlRelation_Click;
             // 
             // gridView3
             // 

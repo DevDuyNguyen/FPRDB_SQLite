@@ -32,6 +32,7 @@ namespace BLL.DomainObject
             return new DiscreteFuzzySetDTO<T>(
                 this.valueSet,
                 this.membershipDegreeSet,
+                this.getOID(),
                 this.getName(),
                 this.getFuzzysetType()
                 );
@@ -126,7 +127,17 @@ namespace BLL.DomainObject
             return true;
         }
 
-
+        public override bool Equal(object fs)
+        {
+            if (!(fs is DiscreteFuzzySet<T>))
+                return false;
+            DiscreteFuzzySet<T> dist_fs = (DiscreteFuzzySet<T>)fs;
+            if (this.getName() != dist_fs.getName())
+                return false;
+            else if (!this.isEqualTo(dist_fs))
+                return false;
+            return true;
+        }
 
     }
 }

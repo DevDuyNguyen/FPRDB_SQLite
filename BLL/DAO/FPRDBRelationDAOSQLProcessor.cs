@@ -24,7 +24,10 @@ namespace BLL.DAO
             string fprdbSQL = $"CREATE RELATION {rel.relName} on {rel.schemaName}";
             return this.sqlProcessor.executeDataDefinition(fprdbSQL);
         }
-        public bool removeFPRDBRelation(FPRDBRelationDTO rel) => throw new NotImplementedException();
+        public void removeFPRDBRelation(FPRDBRelationDTO rel)
+        {
+            this.sqlProcessor.executeUpdate($"DROP RELATION {rel.relName}");
+        }
         public List<FPRDBRelation> findRelation(string name)=>throw new NotImplementedException();
 
     }

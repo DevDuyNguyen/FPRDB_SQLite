@@ -150,6 +150,7 @@ namespace BLL.DomainObject
                 this.leftTop,
                 this.rightTop,
                 this.rightBottom,
+                this.getOID(),
                 this.getName()
                 );
         }
@@ -255,7 +256,17 @@ namespace BLL.DomainObject
             }
             return true;
         }
-
+        public override bool Equal(object fs)
+        {
+            if (!(fs is ContinuousFuzzySet))
+                return false;
+            ContinuousFuzzySet con_fs = (ContinuousFuzzySet)fs;
+            if (this.getName() != con_fs.getName())
+                return false;
+            else if (!this.isEqualTo(con_fs))
+                return false;
+            return true;
+        }
 
     }
 }
