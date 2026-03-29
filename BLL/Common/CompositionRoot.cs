@@ -43,7 +43,7 @@ namespace BLL.Common
             this.lexer = new Lexer();
             this.metadataMgr = new MetadataManager(this.dbMgr);
 
-            this.constraintDAO = new ConstraintDAOSQLite(this.dbMgr, this.metadataMgr);
+            this.constraintDAO = new ConstraintDAOSQLite(this.dbMgr, this.metadataMgr, this.getParser());
             this.constraintService = new ConstraintService(this.metadataMgr, this.constraintDAO);
 
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);

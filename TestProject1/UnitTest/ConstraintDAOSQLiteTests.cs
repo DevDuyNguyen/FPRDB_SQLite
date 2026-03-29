@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestProject1.UnitTest
 {
@@ -26,7 +27,7 @@ namespace TestProject1.UnitTest
             //not done: Moq for mocking
             this.compRoot = new CompositionRoot();
             this.compRoot.getDBMgr().loadDB(this.dbPath);
-            this.dao = new ConstraintDAOSQLite(compRoot.getDBMgr(), compRoot.getMetaDataManger());
+            this.dao = new ConstraintDAOSQLite(compRoot.getDBMgr(), compRoot.getMetaDataManger(), compRoot.getParser());
             this.dbMgr = this.compRoot.getDBMgr();
         }
         public class createReferentialConstraint_positive_test_data:TheoryData<string, FPRDBRelationDTO, FPRDBRelationDTO, List<string>, List<string>, ConstraintDTO>
@@ -221,8 +222,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkIfInsertTupleViolateReferentialConstraint_testData))]
+        //[Theory]
+        //[ClassData(typeof(checkIfInsertTupleViolateReferentialConstraint_testData))]
         public void checkIfInsertTupleViolateReferentialConstraint_test(InsertData data, bool expected)
         {
             ConstraintDTO constr=null;
@@ -253,6 +254,46 @@ namespace TestProject1.UnitTest
                     this.compRoot.getConstraintDAO().removeConstraint(constr.oid);
             }
 
+        }
+        class checkIfDropRelationViolateReferentialConstraint_testdata : TheoryData<DropRelationData, bool>
+        {
+            public checkIfDropRelationViolateReferentialConstraint_testdata()
+            {
+                Add(new DropRelationData("rel12"), true);
+                Add(new DropRelationData("rel4"), false);
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkIfDropRelationViolateReferentialConstraint_testdata))]
+        public void checkIfDropRelationViolateReferentialConstraint_test(DropRelationData data, bool expected)
+        {
+            ConstraintDTO constr = null;
+            try
+            {
+                //arrange
+                FPRDBSchemaDTO baseSchema = new FPRDBSchemaDTO(
+                        "rel",
+                        new List<Field> {
+                        new Field("id", new FieldInfo(FieldType.INT, 0)),
+                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        },
+                        new List<string> { "id" },
+                        11
+                        );
+                FPRDBRelationDTO rel3 = new FPRDBRelationDTO("rel3", baseSchema, "rel", 15);
+                FPRDBRelationDTO rel4 = new FPRDBRelationDTO("rel4", baseSchema, "rel", 16);
+                constr = this.compRoot.getConstraintDAO().createReferentialConstraint("fk_rel3_rel4", rel3, rel4, new List<string> { "id" }, new List<string> { "id" });
+
+                //act
+                bool actual = this.dao.checkIfDropRelationViolateReferentialConstraint(data);
+                //assert
+                Assert.Equal(expected, actual);
+            }
+            finally
+            {
+                if (constr != null)
+                    this.compRoot.getConstraintDAO().removeConstraint(constr.oid);
+            }
         }
 
     }

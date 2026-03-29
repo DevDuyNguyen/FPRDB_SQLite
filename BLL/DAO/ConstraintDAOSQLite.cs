@@ -198,52 +198,61 @@ namespace BLL.DAO
                 return ans;
             }
         }
-        public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data, ConstraintService)
+        public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data)
         {
             FPRDBRelationDTO referencedRelationDTO = this.metaDataMgr.getRelation(data.relation).toDTO();
-            FPRDBRelationDTO referencingRelationDTO;
             List<ConstraintDTO> referentialConstraints = this.getReferenrialConstraintsTo(referencedRelationDTO);
-            string sql;
-            AbstractFuzzyProbabilisticValue fprobValue;
-            Field tmpField;
-            FieldType tmpFieldType;
-            List<string> strPrimaryKeyValue = new List<string>(referencedRelationDTO.fprdbSchema.primarykey.Count);
-
-            RelationPlan plan = new RelationPlan(data.relation, this.metaDataMgr, this.databaseMgr, this.parser);
-            Scan s = plan.open();
-            while (s.next())
-            {
-                foreach (ConstraintDTO constr in referentialConstraints)
-                {
-                    referencingRelationDTO = constr.relation;
-                    sql = $"SELECT 1 FROM {referencingRelationDTO.relName} WHERE";
-                    for (int i = 0; i < constr.referencedAttributes.Count; ++i)
-                    {
-                        tmpField = referencedRelationDTO.getSchemaFieldByName(constr.referencedAttributes[i]);
-                        tmpFieldType = tmpField.getFieldInfo().getType();
-                        if (tmpFieldType == FieldType.INT)
-                            fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
-                        else if (tmpFieldType == FieldType.FLOAT)
-                            fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
-                        else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
-                            fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
-                        sql += $" {constr.attributes[i]}='{fprobValue.ToString()}' AND";
-                    }
-                    int trailingAND = sql.LastIndexOf("AND");
-                    sql = sql.Substring(0, trailingAND);
-                    using (IDataReader r = this.databaseMgr.executeQuery(sql))
-                    {
-                        if (!r.Read())
-                        {
-                            //return false;
-                            throw new InvalidOperationException($"Delete a tuple in {data.relation} will violate referential constraint {constr.conName}");
-                        }
-                    }
-                }
-            }
+            if (referentialConstraints.Count != 0)
+                return false;
             return true;
         }
-            
-            
+
+        //public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data, ConstraintService)
+        //{
+        //    FPRDBRelationDTO referencedRelationDTO = this.metaDataMgr.getRelation(data.relation).toDTO();
+        //    FPRDBRelationDTO referencingRelationDTO;
+        //    List<ConstraintDTO> referentialConstraints = this.getReferenrialConstraintsTo(referencedRelationDTO);
+        //    string sql;
+        //    AbstractFuzzyProbabilisticValue fprobValue;
+        //    Field tmpField;
+        //    FieldType tmpFieldType;
+        //    List<string> strPrimaryKeyValue = new List<string>(referencedRelationDTO.fprdbSchema.primarykey.Count);
+
+        //    RelationPlan plan = new RelationPlan(data.relation, this.metaDataMgr, this.databaseMgr, this.parser);
+        //    Scan s = plan.open();
+        //    while (s.next())
+        //    {
+        //        foreach (ConstraintDTO constr in referentialConstraints)
+        //        {
+        //            referencingRelationDTO = constr.relation;
+        //            sql = $"SELECT 1 FROM {referencingRelationDTO.relName} WHERE";
+        //            for (int i = 0; i < constr.referencedAttributes.Count; ++i)
+        //            {
+        //                tmpField = referencedRelationDTO.getSchemaFieldByName(constr.referencedAttributes[i]);
+        //                tmpFieldType = tmpField.getFieldInfo().getType();
+        //                if (tmpFieldType == FieldType.INT)
+        //                    fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+        //                else if (tmpFieldType == FieldType.FLOAT)
+        //                    fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+        //                else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+        //                    fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+        //                sql += $" {constr.attributes[i]}='{fprobValue.ToString()}' AND";
+        //            }
+        //            int trailingAND = sql.LastIndexOf("AND");
+        //            sql = sql.Substring(0, trailingAND);
+        //            using (IDataReader r = this.databaseMgr.executeQuery(sql))
+        //            {
+        //                if (!r.Read())
+        //                {
+        //                    //return false;
+        //                    throw new InvalidOperationException($"Delete a tuple in {data.relation} will violate referential constraint {constr.conName}");
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return true;
+        //}
+
+
     }
 }
