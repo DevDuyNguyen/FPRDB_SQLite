@@ -1,5 +1,8 @@
 ﻿using BLL.DomainObject;
+using BLL.DTO;
+using BLL.Enums;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -105,6 +108,7 @@ namespace BLL.SQLProcessing
             List<Field> fields=new List<Field>();
             List<string> primarykey=new List<string>();
             string primaryConstraintName;
+            int schema_oid, rel_oid;
 
             using (reader)
             {
@@ -116,6 +120,8 @@ namespace BLL.SQLProcessing
                 schemaName = (string)reader["relschema_name"];
                 primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
                 primaryConstraintName = (string)reader["con_name"];
+                schema_oid = Convert.ToInt32(reader["relSch.oid"]);
+                rel_oid = Convert.ToInt32(reader["rel.oid"]);
                 do
                 {
                     fields.Add(
@@ -129,8 +135,9 @@ namespace BLL.SQLProcessing
             }
             return new FPRDBRelation(
                 name,
-                new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName),
-                schemaName
+                new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName, schema_oid),
+                schemaName,
+                rel_oid
             );
 
 
@@ -164,7 +171,7 @@ namespace BLL.SQLProcessing
             List<Field> fields = new List<Field>();
             List<string> primarykey = new List<string>();
             string primaryConstraintName, relName;
-
+            int schema_oid;
             using (reader)
             {
 
@@ -176,6 +183,7 @@ namespace BLL.SQLProcessing
                 primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
                 relName = (string)reader["rel_name"];
                 primaryConstraintName = (string)reader["con_name"];
+                schema_oid = Convert.ToInt32(reader["relSch.oid"]);
                 do
                 {
                     fields.Add(
@@ -189,8 +197,9 @@ namespace BLL.SQLProcessing
             }
             return new FPRDBRelation(
                 relName,
-                new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName),
-                schemaName
+                new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName, schema_oid),
+                schemaName,
+                oid
             );
         }
         public FieldType getFuzzySetType(string name)
@@ -521,6 +530,7 @@ namespace BLL.SQLProcessing
             List<Field> fields = new List<Field>();
             List<string> primarykey = new List<string>();
             string primaryConstraintName;
+            int schema_oid;
 
             using (reader)
             {
@@ -532,6 +542,7 @@ namespace BLL.SQLProcessing
                 schemaName = (string)reader["relschema_name"];
                 primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
                 primaryConstraintName = (string)reader["con_name"];
+                schema_oid = Convert.ToInt32(reader["relSch.oid"]);
                 do
                 {
                     fields.Add(
@@ -543,8 +554,39 @@ namespace BLL.SQLProcessing
 
                 } while (reader.Read());
             }
-            return new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName);
+            return new FPRDBSchema(schemaName, fields, primarykey, primaryConstraintName, schema_oid);
 
         }
+        public bool isConstraintNameExist(string name)
+        {
+            using(IDataReader r=this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_Constraint WHERE con_name='{name}'"))
+            {   
+                return r.Read();
+            }
+        }
+        public ConstraintDTO getConstraintByName(string name)
+        {
+            string sql = $"SELECT * FROM fprdb_Constraint WHERE con_name='{name}'";
+            ConstraintDTO ans = null;
+            using (IDataReader r = this.databaseMgr.executeQuery(sql))
+            {
+                r.Read();
+                FPRDBRelationDTO referencingRelation = this.getRelationByID(Convert.ToInt32(r["con_relation_id"])).toDTO();
+                FPRDBRelationDTO referencedRelation = this.getRelationByID(Convert.ToInt32(r["con_referenced_relation_id"])).toDTO();
+                ans = new ConstraintDTO(
+                            Convert.ToInt32(r["oid"]),
+                            (string)r["con_name"],
+                            Enum.Parse<ConstraintType>(r["con_type"] as string),
+                            referencingRelation,
+                            referencedRelation,
+                            (r["con_attributes"] as string).Split(',').ToList(),
+                            (r["con_referenced_attributes"] as string).Split(',').ToList(),
+                            null
+                            );
+            }
+            return ans;
+        }
+
+
     }
 }

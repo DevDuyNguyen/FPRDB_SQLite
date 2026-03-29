@@ -91,7 +91,7 @@ namespace BLL.Services
                         // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
                         while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
 
-                        schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey));
+                        schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey, Convert.ToInt32(reader["rsch.oid"])));
                     }
                 }
                 this.dbMgr.closeConnection();
@@ -163,8 +163,12 @@ namespace BLL.Services
                         );
                         fields.Add(field);
                     } while ((hasNext = reader.Read()) && (long)reader["rel.oid"] == currentRelId);
-                    rels.Add(new FPRDBRelationDTO(currentRelName, 
-                        new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey), currentSchemaName)
+                    rels.Add(new FPRDBRelationDTO(
+                        currentRelName, 
+                        new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey, Convert.ToInt32(reader["rsch.oid"])), 
+                        currentSchemaName,
+                        Convert.ToInt32(reader["rel.oid"])
+                        )
                     );
 
                 }

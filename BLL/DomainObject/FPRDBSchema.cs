@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,19 +14,30 @@ namespace BLL.DomainObject
         private List<Field> fields;
         public List<string> primarykey;
         public string primaryConstraintName;
+        private int oid;
+
         public FPRDBSchema(string schemaName, List<Field> fields, List<string> primarykey)
         {
             this.schemaName = schemaName;
             this.fields = fields;
             this.primarykey = primarykey;
+            this.oid = -1;
         }
-
         public FPRDBSchema(string schemaName, List<Field> fields, List<string> primarykey, string primaryConstraintName)
         {
             this.schemaName = schemaName;
             this.fields = fields;
             this.primarykey = primarykey;
             this.primaryConstraintName = primaryConstraintName;
+            this.oid = -1;
+        }
+        public FPRDBSchema(string schemaName, List<Field> fields, List<string> primarykey, string primaryConstraintName, int oid)
+        {
+            this.schemaName = schemaName;
+            this.fields = fields;
+            this.primarykey = primarykey;
+            this.primaryConstraintName = primaryConstraintName;
+            this.oid = oid;
         }
         public string getPrimaryConstraintName() => this.primaryConstraintName;
 
@@ -82,6 +94,15 @@ namespace BLL.DomainObject
                     return true;
             }
             return false;
+        }
+        public FPRDBSchemaDTO toDTO()
+        {
+            return new FPRDBSchemaDTO(
+                this.schemaName,
+                this.fields,
+                this.primarykey,
+                this.oid
+                );
         }
     }
 }

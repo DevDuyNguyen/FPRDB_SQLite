@@ -1,6 +1,8 @@
 ﻿using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using BLL.Interfaces;
 
 namespace BLL.Services
 {
@@ -82,6 +83,14 @@ namespace BLL.Services
             }
             
 
+        }
+        public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string>  referencedAttributes)
+        {
+            return this.constraintDAO.createReferentialConstraint(conName, fprdbRelation, referencedFPRDBRelation, attributes, referencedAttributes);
+        }
+        public List<ConstraintDTO> getReferenrialConstraints(FPRDBRelationDTO fprdbRelationDTO)
+        {
+            return this.constraintDAO.getReferenrialConstraints(fprdbRelationDTO);
         }
 
     }
