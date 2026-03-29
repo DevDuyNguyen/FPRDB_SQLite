@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.Enums;
 using BLL.Interfaces;
+using BLL.Services;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,12 @@ namespace BLL.DAO
     {
         private DatabaseManager databaseMgr;
         private MetadataManager metaDataMgr;
-        public ConstraintDAOSQLite(DatabaseManager databaseMgr, MetadataManager metaDataMgr)
+        private RecursiveDescentParser parser;
+        public ConstraintDAOSQLite(DatabaseManager databaseMgr, MetadataManager metaDataMgr, RecursiveDescentParser parser)
         {
             this.databaseMgr = databaseMgr;
             this.metaDataMgr = metaDataMgr;
+            this.parser = parser;
         }
 
         public bool isTupleWithFuzzyProbabilisticValuesExist(string relation, List<string> attributeList, List<AbstractFuzzyProbabilisticValue> contentList)
@@ -58,7 +61,7 @@ namespace BLL.DAO
                     ans.Add(new ConstraintDTO(
                             Convert.ToInt32(r["oid"]),
                             (string)r["con_name"],
-                            Enum.Parse<ConstraintType>(r["con_type"] as string),
+                            ConstraintType.REFERENTIAL,
                             fprdbRelationDTO,
                             referenced_rel,
                             (r["con_attributes"] as string).Split(',').ToList(),
@@ -163,6 +166,84 @@ namespace BLL.DAO
             }
             return true;
         }
+        public List<ConstraintDTO> getReferenrialConstraintsTo(FPRDBRelationDTO fprdbRelationDTO)
+        {
+            if (fprdbRelationDTO.oid == -1)
+                throw new InvalidOperationException("oid is not provided");
 
+            string sql = $"SELECT * FROM fprdb_Constraint WHERE con_type='REFERENTIAL' AND con_referenced_relation_id={fprdbRelationDTO.oid}";
+            int referencing_rel_oid;
+            FPRDBRelationDTO referencing_rel = null;
+
+            using (IDataReader r = this.databaseMgr.executeQuery(sql))
+            {
+                List<ConstraintDTO> ans = new List<ConstraintDTO>();
+                while (r.Read())
+                {
+                    referencing_rel_oid = Convert.ToInt32(r["con_relation_id"]);
+                    referencing_rel = (this.metaDataMgr.getRelationByID(referencing_rel_oid)).toDTO();
+                    ans.Add(new ConstraintDTO(
+                            Convert.ToInt32(r["oid"]),
+                            (string)r["con_name"],
+                            ConstraintType.REFERENTIAL,
+                            referencing_rel,
+                            fprdbRelationDTO,
+                            (r["con_attributes"] as string).Split(',').ToList(),
+                            (r["con_referenced_attributes"] as string).Split(',').ToList(),
+                            null
+                            )
+                        );
+                }
+
+                return ans;
+            }
+        }
+        public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data, ConstraintService)
+        {
+            FPRDBRelationDTO referencedRelationDTO = this.metaDataMgr.getRelation(data.relation).toDTO();
+            FPRDBRelationDTO referencingRelationDTO;
+            List<ConstraintDTO> referentialConstraints = this.getReferenrialConstraintsTo(referencedRelationDTO);
+            string sql;
+            AbstractFuzzyProbabilisticValue fprobValue;
+            Field tmpField;
+            FieldType tmpFieldType;
+            List<string> strPrimaryKeyValue = new List<string>(referencedRelationDTO.fprdbSchema.primarykey.Count);
+
+            RelationPlan plan = new RelationPlan(data.relation, this.metaDataMgr, this.databaseMgr, this.parser);
+            Scan s = plan.open();
+            while (s.next())
+            {
+                foreach (ConstraintDTO constr in referentialConstraints)
+                {
+                    referencingRelationDTO = constr.relation;
+                    sql = $"SELECT 1 FROM {referencingRelationDTO.relName} WHERE";
+                    for (int i = 0; i < constr.referencedAttributes.Count; ++i)
+                    {
+                        tmpField = referencedRelationDTO.getSchemaFieldByName(constr.referencedAttributes[i]);
+                        tmpFieldType = tmpField.getFieldInfo().getType();
+                        if (tmpFieldType == FieldType.INT)
+                            fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+                        else if (tmpFieldType == FieldType.FLOAT)
+                            fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+                        else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                            fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                        sql += $" {constr.attributes[i]}='{fprobValue.ToString()}' AND";
+                    }
+                    int trailingAND = sql.LastIndexOf("AND");
+                    sql = sql.Substring(0, trailingAND);
+                    using (IDataReader r = this.databaseMgr.executeQuery(sql))
+                    {
+                        if (!r.Read())
+                        {
+                            //return false;
+                            throw new InvalidOperationException($"Delete a tuple in {data.relation} will violate referential constraint {constr.conName}");
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+            
+            
     }
 }

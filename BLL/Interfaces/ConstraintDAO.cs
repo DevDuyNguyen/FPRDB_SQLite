@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.Interfaces
 {
@@ -16,5 +17,7 @@ namespace BLL.Interfaces
         public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string> referencedAttributes);
         public void removeConstraint(int oid);
         public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data);
+        public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data);
+        public List<ConstraintDTO> getReferenrialConstraintsTo(FPRDBRelationDTO fprdbRelationDTO);
     }
 }

@@ -26,6 +26,14 @@ namespace BLL.SQLProcessing
             this.parser = parser;
             this.constraintService = constraintService;
         }
+        public RelationPlan(string relName, MetadataManager metaDataMgr, DatabaseManager dbMgr, RecursiveDescentParser parser)
+        {
+            this.relationInfo = relationInfo;
+            this.metaDataMgr = metaDataMgr;
+            this.relationInfo = this.metaDataMgr.getRelation(relName);
+            this.dbMgr = dbMgr;
+            this.parser = parser;
+        }
 
         public Scan open()
         {

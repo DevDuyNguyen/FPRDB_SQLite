@@ -28,5 +28,14 @@ namespace BLL.DTO
             this.schemaName = schemaName;
             this.oid = -1;
         }
+        public Field getSchemaFieldByName(string name)
+        {
+            foreach(Field f in this.fprdbSchema.fields)
+            {
+                if (f.getFieldName() == name)
+                    return f;
+            }
+            return null;
+        }
     }
 }
