@@ -158,6 +158,102 @@ namespace TestProject1.UnitTest
                 Assert.Equal(false, r.Read());
             }
         }
+        class checkIfInsertTupleViolateReferentialConstraint_testData:TheoryData<InsertData, bool>
+        {
+            public checkIfInsertTupleViolateReferentialConstraint_testData()
+            {
+                //success
+                Add(
+                    new InsertData(
+                        "rel3",
+                        new List<string> { "id", "age" },
+                        new List<FuzzyProbabilisticValueParsingData> {
+                            new FuzzyProbabilisticValueParsingData(
+                                new List<Constant>{new IntConstant(1)},
+                                new List<float>{1},
+                                new List<float>{1}
+                                ),
+                            new FuzzyProbabilisticValueParsingData(
+                                new List<Constant>{new IntConstant(22)},
+                                new List<float>{1},
+                                new List<float>{1}
+                                )
+                        }
+                    ),
+                    true
+                );
+                //a key attribute is null
+                Add(
+                    new InsertData(
+                        "rel3",
+                        new List<string> {"age" },
+                        new List<FuzzyProbabilisticValueParsingData> {
+                            new FuzzyProbabilisticValueParsingData(
+                                new List<Constant>{new IntConstant(22)},
+                                new List<float>{1},
+                                new List<float>{1}
+                                )
+                        }
+                    ),
+                    true
+                );
+                //fail
+                Add(
+                    new InsertData(
+                        "rel3",
+                        new List<string> { "id", "age" },
+                        new List<FuzzyProbabilisticValueParsingData> {
+                            new FuzzyProbabilisticValueParsingData(
+                                new List<Constant>{new IntConstant(111)},
+                                new List<float>{1},
+                                new List<float>{1}
+                                ),
+                            new FuzzyProbabilisticValueParsingData(
+                                new List<Constant>{new IntConstant(22)},
+                                new List<float>{1},
+                                new List<float>{1}
+                                )
+                        }
+                    ),
+                    false
+                );
+
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkIfInsertTupleViolateReferentialConstraint_testData))]
+        public void checkIfInsertTupleViolateReferentialConstraint_test(InsertData data, bool expected)
+        {
+            ConstraintDTO constr=null;
+            try
+            {
+                //arrange
+                FPRDBSchemaDTO baseSchema = new FPRDBSchemaDTO(
+                        "rel",
+                        new List<Field> {
+                        new Field("id", new FieldInfo(FieldType.INT, 0)),
+                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        },
+                        new List<string> { "id" },
+                        11
+                        );
+                FPRDBRelationDTO rel3 = new FPRDBRelationDTO("rel3", baseSchema, "rel", 15);
+                FPRDBRelationDTO rel4 = new FPRDBRelationDTO("rel4", baseSchema, "rel", 16);
+                constr = this.compRoot.getConstraintDAO().createReferentialConstraint("fk_rel3_rel4", rel3, rel4, new List<string> { "id" }, new List<string> { "id" });
+
+                //act
+                bool actual = this.dao.checkIfInsertTupleViolateReferentialConstraint(data);
+                //assert
+                Assert.Equal(expected, actual);
+            }
+            finally
+            {
+                if(constr!=null)
+                    this.compRoot.getConstraintDAO().removeConstraint(constr.oid);
+            }
+
+        }
 
     }
 

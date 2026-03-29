@@ -15,5 +15,6 @@ namespace BLL.Interfaces
         public List<ConstraintDTO> getReferenrialConstraints(FPRDBRelationDTO fprdbRelationDTO);
         public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string> referencedAttributes);
         public void removeConstraint(int oid);
+        public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data);
     }
 }

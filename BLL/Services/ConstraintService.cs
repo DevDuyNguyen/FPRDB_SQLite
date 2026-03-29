@@ -4,6 +4,7 @@ using BLL.DTO;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.SQLProcessing;
+using BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.Services
 {
@@ -98,5 +100,18 @@ namespace BLL.Services
             this.constraintDAO.removeConstraint(oid);
         }
 
+        
+
+        //not done: mocking for private
+        //not done: not implemented
+        //public bool checkIfRelationSatisfyReferentialConstraint(ConstraintDTO constr)
+        //{
+        //    FPRDBRelationDTO referencingRel = constr.relation;
+        //    FPRDBRelationDTO referencedRel = constr.referencedRelation;
+        //    List<string> foreignKey = constr.attributes;
+        //    List<string> primaryKey = constr.referencedAttributes;
+        //    using(Idatarea)
+
+        //}
     }
 }

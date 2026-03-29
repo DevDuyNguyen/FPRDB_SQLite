@@ -121,6 +121,45 @@ namespace BLL.DAO
         {
             this.databaseMgr.executeNonQuery($"DELETE FROM fprdb_Constraint WHERE oid={oid}");
         }
+        public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data)
+        {
+            FPRDBRelation referencingRel = this.metaDataMgr.getRelation(data.relation);
+            FPRDBRelationDTO referencedRelDTO;
+            List<ConstraintDTO> referentialConstraints = this.getReferenrialConstraints(referencingRel.toDTO());
+            string sql;
+            FuzzyProbabilisticValueParsingData insertValue;
+            bool skipReferentialConstraint;
+            foreach (ConstraintDTO constr in referentialConstraints)
+            {
+                skipReferentialConstraint = false;
+                referencedRelDTO = constr.referencedRelation;
+                sql = $"SELECT 1 FROM {referencedRelDTO.relName} WHERE";
+                for (int i = 0; i < constr.attributes.Count; ++i)
+                {
+                    insertValue = data.getInsertDataByFieldName(constr.attributes[i]);
+                    //If any column in the foreign key is NULL, the constraint is simply not checked
+                    if (insertValue == null)
+                    {
+                        skipReferentialConstraint = true;
+                        break;
+                    }
+                    else
+                    {
+                        sql += $" {constr.referencedAttributes[i]}='{insertValue.ToTextRepresentation()}' AND";
+                    }
+                }
+                if (skipReferentialConstraint)
+                    continue;
+                int trailingAND = sql.LastIndexOf("AND");
+                sql = sql.Substring(0, trailingAND);
+                using (IDataReader r = this.databaseMgr.executeQuery(sql))
+                {
+                    if (!r.Read())
+                        return false;
+                }
+            }
+            return true;
+        }
 
     }
 }

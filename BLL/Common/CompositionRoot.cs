@@ -67,6 +67,7 @@ namespace BLL.Common
             this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);//, this.sqlProcessor);
             this.fprdbRelationService = new FPRDBRelationService(this.fprdbRelationDAO);
         }
+        public ConstraintDAO getConstraintDAO() => this.constraintDAO;
         private Lexer getLexer()
         {
             return new Lexer();
