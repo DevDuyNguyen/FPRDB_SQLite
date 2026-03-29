@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -91,6 +92,10 @@ namespace BLL.Services
         public List<ConstraintDTO> getReferenrialConstraints(FPRDBRelationDTO fprdbRelationDTO)
         {
             return this.constraintDAO.getReferenrialConstraints(fprdbRelationDTO);
+        }
+        public void removeConstraint(int oid)
+        {
+            this.constraintDAO.removeConstraint(oid);
         }
 
     }

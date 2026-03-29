@@ -7,6 +7,7 @@ using BLL.Enums;
 using BLL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +20,14 @@ namespace TestProject1.UnitTest
         private ConstraintDAO dao;
         private CompositionRoot compRoot;
         private string dbPath = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
+        private DatabaseManager dbMgr;
         public ConstraintDAOSQLiteTests()
         {
             //not done: Moq for mocking
             this.compRoot = new CompositionRoot();
             this.compRoot.getDBMgr().loadDB(this.dbPath);
             this.dao = new ConstraintDAOSQLite(compRoot.getDBMgr(), compRoot.getMetaDataManger());
+            this.dbMgr = this.compRoot.getDBMgr();
         }
         public class createReferentialConstraint_positive_test_data:TheoryData<string, FPRDBRelationDTO, FPRDBRelationDTO, List<string>, List<string>, ConstraintDTO>
         {
@@ -139,6 +142,20 @@ namespace TestProject1.UnitTest
                 Assert.Equivalent(expected[i].referencedRelation, actual[i].referencedRelation);
                 Assert.Equivalent(expected[i].attributes, actual[i].attributes);
                 Assert.Equivalent(expected[i].referencedAttributes, actual[i].referencedAttributes);
+            }
+        }
+        //[Theory]
+        //[InlineData(32)]
+        public void removeConstraint_success(int oid)
+        {
+            //arrange
+            string sqlCheckIfConstraintExist = $"SELECT 1 FROM fprdb_Constraint WHERE oid={oid}";
+            //act
+            this.dao.removeConstraint(oid);
+            //assert
+            using(IDataReader r = this.dbMgr.executeQuery(sqlCheckIfConstraintExist))
+            {
+                Assert.Equal(false, r.Read());
             }
         }
 

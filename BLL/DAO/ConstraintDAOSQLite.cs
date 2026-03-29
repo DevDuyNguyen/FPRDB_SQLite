@@ -117,7 +117,10 @@ namespace BLL.DAO
             this.databaseMgr.executeNonQuery(constraintSQL);
             return this.metaDataMgr.getConstraintByName(conName);
         }
-
+        public void removeConstraint(int oid)
+        {
+            this.databaseMgr.executeNonQuery($"DELETE FROM fprdb_Constraint WHERE oid={oid}");
+        }
 
     }
 }

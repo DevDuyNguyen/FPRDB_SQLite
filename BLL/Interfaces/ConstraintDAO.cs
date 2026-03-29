@@ -14,5 +14,6 @@ namespace BLL.Interfaces
         public bool isTupleWithFuzzyProbabilisticValuesExist(string relation, List<string> attributeList, List<AbstractFuzzyProbabilisticValue> contentList);
         public List<ConstraintDTO> getReferenrialConstraints(FPRDBRelationDTO fprdbRelationDTO);
         public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string> referencedAttributes);
+        public void removeConstraint(int oid);
     }
 }
