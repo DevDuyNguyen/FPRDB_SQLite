@@ -53,7 +53,7 @@ namespace BLL.DAO
                 List<ConstraintDTO> ans = new List<ConstraintDTO>();
                 while(r.Read())
                 {
-                    referenced_rel_oid = Convert.ToInt32(r["rel.oid"]);
+                    referenced_rel_oid = Convert.ToInt32(r["con_referenced_relation_id"]);
                     referenced_rel = (this.metaDataMgr.getRelationByID(referenced_rel_oid)).toDTO();
                     ans.Add(new ConstraintDTO(
                             Convert.ToInt32(r["oid"]),

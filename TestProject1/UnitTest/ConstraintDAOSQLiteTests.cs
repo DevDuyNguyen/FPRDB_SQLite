@@ -80,9 +80,9 @@ namespace TestProject1.UnitTest
                 FPRDBRelationDTO rel4 = new FPRDBRelationDTO("rel4", baseSchema, "rel", 16);
                 FPRDBRelationDTO rel11 = new FPRDBRelationDTO("rel11", baseSchema, "rel", 17);
                 //ConstraintDTO consDTO = new ConstraintDTO(-1, "fk_rel3_rel4", ConstraintType.REFERENTIAL, rel3, rel4, new List<string> { "ID" }, new List<string> { "ID" }, null);
-                //Add("fk_rel3_rel4", rel3, rel4, new List<string> { "ID" }, new List<string> { "ID" }, new InvalidOperationException($"Constraint name fk_rel3_rel4 already exists"));
-                //Add("fk_rel3_rel11", rel3, rel11, new List<string> { "age" }, new List<string> { "age" }, new InvalidOperationException($"Field age isn't a key attribute in relation {rel11.relName}"));
-                //Add("fk_rel3_rel11", rel3, rel11, new List<string> { "age" }, new List<string> { "id","id" }, new InvalidOperationException($"Invalid mapping from foreigh key of {rel3.relName} to primary key of {rel11.relName}"));
+                Add("fk_rel3_rel4", rel3, rel4, new List<string> { "ID" }, new List<string> { "ID" }, new InvalidOperationException($"Constraint name fk_rel3_rel4 already exists"));
+                Add("fk_rel3_rel11", rel3, rel11, new List<string> { "age" }, new List<string> { "age" }, new InvalidOperationException($"Field age isn't a key attribute in relation {rel11.relName}"));
+                Add("fk_rel3_rel11", rel3, rel11, new List<string> { "age" }, new List<string> { "id","id" }, new InvalidOperationException($"Invalid mapping from foreigh key of {rel3.relName} to primary key of {rel11.relName}"));
                 Add("fk_rel3_rel11", rel3, rel11, new List<string> { "age" }, new List<string> { "id" }, new InvalidOperationException($"Field age can't map to field id"));
 
 
@@ -103,7 +103,44 @@ namespace TestProject1.UnitTest
             Assert.Equal(expected.Message, actual.Message);
             //cleaning
         }
-
+        class getReferenrialConstraints_positive_testData:TheoryData<FPRDBRelationDTO, List<ConstraintDTO>>
+        {
+            public getReferenrialConstraints_positive_testData()
+            {
+                FPRDBSchemaDTO baseSchema = new FPRDBSchemaDTO(
+                    "rel",
+                    new List<Field> {
+                        new Field("id", new FieldInfo(FieldType.INT, 0)),
+                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                    },
+                    new List<string> { "id" },
+                    11
+                    );
+                FPRDBRelationDTO rel3 = new FPRDBRelationDTO("rel3", baseSchema, "rel", 15);
+                FPRDBRelationDTO rel4 = new FPRDBRelationDTO("rel4", baseSchema, "rel", 16);
+                ConstraintDTO consDTO = new ConstraintDTO(-1, "fk_rel3_rel4", ConstraintType.REFERENTIAL, rel3, rel4, new List<string> { "id" }, new List<string> { "id" }, null);
+                Add(rel3, new List<ConstraintDTO> { consDTO });
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(getReferenrialConstraints_positive_testData))]
+        public void getReferenrialConstraints_success(FPRDBRelationDTO rel, List<ConstraintDTO> expected)
+        {
+            //arrange
+            //act
+            List<ConstraintDTO> actual = this.dao.getReferenrialConstraints(rel);
+            //assert
+            Assert.Equal(expected.Count, actual.Count);
+            for(int i=0; i<expected.Count; ++i)
+            {
+                Assert.Equal(expected[i].conName, actual[i].conName);
+                Assert.Equal(expected[i].conType, actual[i].conType);
+                Assert.Equivalent(expected[i].relation, actual[i].relation);
+                Assert.Equivalent(expected[i].referencedRelation, actual[i].referencedRelation);
+                Assert.Equivalent(expected[i].attributes, actual[i].attributes);
+                Assert.Equivalent(expected[i].referencedAttributes, actual[i].referencedAttributes);
+            }
+        }
 
     }
 
