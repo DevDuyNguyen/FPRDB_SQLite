@@ -123,6 +123,8 @@ namespace BLL.DAO
         }
         public void removeConstraint(int oid)
         {
+            if (oid == default || oid == -1)
+                throw new InvalidOperationException("oid of referential constraint to be deleted isn't provided");
             this.databaseMgr.executeNonQuery($"DELETE FROM fprdb_Constraint WHERE oid={oid}");
         }
         public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data)

@@ -176,23 +176,33 @@ namespace FPRDB_SQLite.GUI
 
             if (result == DialogResult.Yes)
             {
-                var itemToRemove = relationships.FirstOrDefault(r => r.conName == selectedFK);
-                if (itemToRemove != null) relationships.Remove(itemToRemove);
-
-                lstFKSelected.Items.RemoveAt(currentIndex);
-
-                if (lstFKSelected.Items.Count > 0)
+                try
                 {
-                    int nextIndex = Math.Max(0, currentIndex - 1);
-                    lstFKSelected.SelectedIndex = nextIndex;
-                }
-                else
-                {
-                    lstFKSelected.SelectedIndex = -1;
-                }
 
-                MessageBox.Show("Đã xóa thành công!");
-                isAddNew = false;
+                    ConstraintDTO itemToRemove = relationships.FirstOrDefault(r => r.conName == selectedFK);
+                    this.service.removeConstraint(itemToRemove.oid);
+
+                    if (itemToRemove != null) relationships.Remove(itemToRemove);
+
+                    lstFKSelected.Items.RemoveAt(currentIndex);
+
+                    if (lstFKSelected.Items.Count > 0)
+                    {
+                        int nextIndex = Math.Max(0, currentIndex - 1);
+                        lstFKSelected.SelectedIndex = nextIndex;
+                    }
+                    else
+                    {
+                        lstFKSelected.SelectedIndex = -1;
+                    }
+
+                    MessageBox.Show("Đã xóa thành công!");
+                    isAddNew = false;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
         // Hàm xử lý khi click "Save" button
