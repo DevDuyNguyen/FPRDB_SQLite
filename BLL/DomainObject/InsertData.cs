@@ -18,5 +18,14 @@ namespace BLL.DomainObject
             this.fieldList = fieldList;
             this.fuzzyProbabilisticValues = fuzzyProbabilisticValues;
         }
+        public FuzzyProbabilisticValueParsingData getInsertDataByFieldName(string fldName)
+        {
+            for(int i=0; i<fieldList.Count; ++i)
+            {
+                if (this.fieldList[i] == fldName)
+                    return this.fuzzyProbabilisticValues[i];
+            }
+            return null;
+        }
     }
 }

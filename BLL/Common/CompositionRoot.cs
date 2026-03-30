@@ -43,14 +43,14 @@ namespace BLL.Common
             this.lexer = new Lexer();
             this.metadataMgr = new MetadataManager(this.dbMgr);
 
-            this.constraintDAO = new ConstraintDAOSQLite(this.dbMgr);
+            this.constraintDAO = new ConstraintDAOSQLite(this.dbMgr, this.metadataMgr, this.getParser());
             this.constraintService = new ConstraintService(this.metadataMgr, this.constraintDAO);
 
             this.preprocessor = new Preprocessor(this.metadataMgr, this.constraintService);
             this.updatePlanner = new BasicUpdatePlanner(this.dbMgr, this.metadataMgr, this.getParser(), this.constraintService);
             this.queryPlanner = new BasicQueryPlanner(this.metadataMgr, this.dbMgr, this.getParser(), this.constraintService);
 
-            this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer);
+            this.sqlProcessor = new SQLProcessor(this.getParser(), this.updatePlanner, this.preprocessor, this.queryPlanner, this.lexer, this.constraintService);
 
             
 
@@ -67,6 +67,7 @@ namespace BLL.Common
             this.fprdbSchemaService = new FPRDBSchemaService(this.fprdbSchemaDAO, this.constraintService);//, this.sqlProcessor);
             this.fprdbRelationService = new FPRDBRelationService(this.fprdbRelationDAO);
         }
+        public ConstraintDAO getConstraintDAO() => this.constraintDAO;
         private Lexer getLexer()
         {
             return new Lexer();

@@ -338,6 +338,8 @@ namespace BLL.SQLProcessing
             int relOid = this.metaDataMgr.getRelationOID(name);
             //Delete tupples in FPRDB_Rel_FuzzSet that contain ID of relation
             this.dbMgr.executeNonQuery($"delete from FPRDB_Rel_FuzzSet where rel_oid='{relOid}'");
+            //Delete referential constraint
+            this.dbMgr.executeNonQuery($"delete from fprdb_Constraint where con_type='REFERENTIAL' AND con_relation_id={relOid}");
             //Delete relation from fprdb_Relation 
             this.dbMgr.executeNonQuery($"delete from fprdb_Relation where oid={relOid}");
             //Drop table of relation

@@ -1,15 +1,19 @@
 ﻿using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.SQLProcessing;
+using BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using BLL.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.Services
 {
@@ -83,6 +87,45 @@ namespace BLL.Services
             
 
         }
+        public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string>  referencedAttributes)
+        {
+            return this.constraintDAO.createReferentialConstraint(conName, fprdbRelation, referencedFPRDBRelation, attributes, referencedAttributes);
+        }
+        public List<ConstraintDTO> getReferenrialConstraints(FPRDBRelationDTO fprdbRelationDTO)
+        {
+            return this.constraintDAO.getReferenrialConstraints(fprdbRelationDTO);
+        }
+        public void removeConstraint(int oid)
+        {
+            this.constraintDAO.removeConstraint(oid);
+        }
+        public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data)
+        {
+            return this.constraintDAO.checkIfInsertTupleViolateReferentialConstraint(data);
+        }
+        public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data)
+        {
+            return this.constraintDAO.checkIfDropRelationViolateReferentialConstraint(data);
+        }
+        public bool checkIfDeleteTupleViolateReferentialConstraint(DeleteData data)
+        {
+            return this.constraintDAO.checkIfDeleteTupleViolateReferentialConstraint(data);
+        }
+        public bool checkIfUpdatingTupleViolateReferentialConstraint(ModifyData data)
+        {
+            return this.constraintDAO.checkIfUpdatingTupleViolateReferentialConstraint(data);
+        }
 
+        //not done: mocking for private
+        //not done: not implemented
+        //public bool checkIfRelationSatisfyReferentialConstraint(ConstraintDTO constr)
+        //{
+        //    FPRDBRelationDTO referencingRel = constr.relation;
+        //    FPRDBRelationDTO referencedRel = constr.referencedRelation;
+        //    List<string> foreignKey = constr.attributes;
+        //    List<string> primaryKey = constr.referencedAttributes;
+        //    using(Idatarea)
+
+        //}
     }
 }

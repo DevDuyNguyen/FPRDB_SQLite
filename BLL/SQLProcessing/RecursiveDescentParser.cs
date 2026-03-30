@@ -198,7 +198,7 @@ namespace BLL.SQLProcessing
             if (!lexer.matchKeyword("CREATE"))
                 throw createSQLSyntaxException("Not a create statement");
             Token peekNextToken = lexer.peekNext();
-            if (peekNextToken.Terminal.Name=="identifier"&& peekNextToken.Text== "SCHEMA")
+            if (peekNextToken.Terminal.Name=="identifier"&& peekNextToken.Text.ToUpper()== "SCHEMA")
             {
                 return createSchema();
             }

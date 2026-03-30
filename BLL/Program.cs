@@ -176,11 +176,11 @@ namespace BLL
             Preprocessor preprocessor = compRoot.getPreprocessor();
 
             //postive test
-            FPRDBRelation data = new FPRDBRelation("rel1", "student2");
+            FPRDBRelation data = new FPRDBRelation("rel1",null, "student2");
             Debug.WriteLine($"Expected:True, Actual:{preprocessor.checkSemanticCreateRelation(data)}");
 
             //negative test: relation already exists
-            FPRDBRelation data1 = new FPRDBRelation("student21", "student2");
+            FPRDBRelation data1 = new FPRDBRelation("student21", null, "student2");
             try
             {
                 Debug.Write("Expected:True,");
@@ -193,7 +193,7 @@ namespace BLL
             }
 
             //negative test: Schema doesn't exists
-            FPRDBRelation data2 = new FPRDBRelation("thisrelnoteixst", "student2111");
+            FPRDBRelation data2 = new FPRDBRelation("thisrelnoteixst", null, "student2111");
             try
             {
                 Debug.Write("Expected:True,");
@@ -212,7 +212,7 @@ namespace BLL
             root.getDBMgr().loadDB(dbFile);
             UpdatePlanner updatePlanner = root.getUpdatePlanner();
 
-            FPRDBRelation data = new FPRDBRelation("student22", "student2");
+            FPRDBRelation data = new FPRDBRelation("student22", null, "student2");
             updatePlanner.executeCreateRelation(data);
 
         }

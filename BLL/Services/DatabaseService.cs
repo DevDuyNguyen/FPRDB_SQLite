@@ -62,45 +62,39 @@ namespace BLL.Services
                 WHERE cons.con_type = 'IDENTITY'
                 ORDER BY ""rsch.oid"";";
 
-            try
-            {
-                IDataReader reader = this.dbMgr.executeQuery(sql);
+            IDataReader reader = this.dbMgr.executeQuery(sql);
 
-                if (reader.Read())
+            if (reader.Read())
+            {
+                bool hasNext = true;
+                while (hasNext)
                 {
-                    bool hasNext = true;
-                    while (hasNext)
+                    // SỬA LỖI 1: Ép kiểu an toàn bằng Convert.ToInt64
+                    int currentRelSchemaId = Convert.ToInt32(reader["rsch.oid"]);
+                    string currentSchemaName = reader["rsch.relschema_name"].ToString();
+                    List<string> primaryKey = reader["cons.con_attributes"].ToString().Split(',').ToList();
+
+                    List<Field> fields = new List<Field>();
+                    do
                     {
-                        // SỬA LỖI 1: Ép kiểu an toàn bằng Convert.ToInt64
-                        long currentRelSchemaId = Convert.ToInt64(reader["rsch.oid"]);
-                        string currentSchemaName = reader["rsch.relschema_name"].ToString();
-                        List<string> primaryKey = reader["cons.con_attributes"].ToString().Split(',').ToList();
-
-                        List<Field> fields = new List<Field>();
-                        do
-                        {
-                            Field field = new Field(
-                                reader["attr.att_name"].ToString(),
-                                new FieldInfo(
-                                    (FieldType)Enum.Parse(typeof(FieldType), reader["type.type_name"].ToString(), true),
-                                    0
-                                )
-                            );
-                            fields.Add(field);
-                        }
-                        // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
-                        while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
-
-                        schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey));
+                        Field field = new Field(
+                            reader["attr.att_name"].ToString(),
+                            new FieldInfo(
+                                (FieldType)Enum.Parse(typeof(FieldType), reader["type.type_name"].ToString(), true),
+                                0
+                            )
+                        );
+                        fields.Add(field);
                     }
+                    // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
+                    while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
+
+                    schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey, currentRelSchemaId));
                 }
-                this.dbMgr.closeConnection();
-                return schemas;
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            this.dbMgr.closeConnection();
+            return schemas;
+
         }
 
         public List<FPRDBRelationDTO> getFPRDBRelations()
@@ -136,46 +130,43 @@ namespace BLL.Services
                 ORDER BY ""rsch.oid""
             ";
 
-            try
+            IDataReader reader = this.dbMgr.executeQuery(sql);
+            bool hasNext = reader.Read();
+            while (hasNext)
             {
-                IDataReader reader = this.dbMgr.executeQuery(sql);
-                bool hasNext = reader.Read();
-                while (hasNext)
+                //FPRDBSchema schema = new FPRDBSchema();
+                int currentRelSchemaId = Convert.ToInt32(reader["rsch.oid"]);
+                string currentSchemaName = (string)reader["rsch.relschema_name"];
+                List<string> primaryKey = ((string)reader["cons.con_attributes"]).Split(',').ToList();
+                int currentRelId = Convert.ToInt32(reader["rel.oid"]);
+                string currentRelName = (string)reader["rel.rel_name"];
+                List<Field> fields = new List<Field>();
+                do
                 {
-                    //FPRDBSchema schema = new FPRDBSchema();
-                    long currentRelSchemaId = (long)reader["rsch.oid"];
-                    string currentSchemaName = (string)reader["rsch.relschema_name"];
-                    List<string> primaryKey = ((string)reader["cons.con_attributes"]).Split(',').ToList();
-                    long currentRelId = (long)reader["rel.oid"];
-                    string currentRelName = (string)reader["rel.rel_name"];
-                    List<Field> fields = new List<Field>();
-                    do
-                    {
-                        var a1=(string)reader["rel.rel_name"];
-                        int a3 = reader.IsDBNull(reader.GetOrdinal("attr.att_type_mod"))
-                                   ? 0 : reader.GetInt32(reader.GetOrdinal("attr.att_type_mod"));
-                        Field field = new Field(
-                            (string)reader["attr.att_name"],
-                            new FieldInfo(
-                                (FieldType)Enum.Parse(typeof(FieldType), (string)reader["type.type_name"]),
-                                a3
-                            )
-                        );
-                        fields.Add(field);
-                    } while ((hasNext = reader.Read()) && (long)reader["rel.oid"] == currentRelId);
-                    rels.Add(new FPRDBRelationDTO(currentRelName, 
-                        new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey), currentSchemaName)
+                    var a1 = (string)reader["rel.rel_name"];
+                    int a3 = reader.IsDBNull(reader.GetOrdinal("attr.att_type_mod"))
+                               ? 0 : reader.GetInt32(reader.GetOrdinal("attr.att_type_mod"));
+                    Field field = new Field(
+                        (string)reader["attr.att_name"],
+                        new FieldInfo(
+                            (FieldType)Enum.Parse(typeof(FieldType), (string)reader["type.type_name"]),
+                            a3
+                        )
                     );
+                    fields.Add(field);
+                } while ((hasNext = reader.Read()) && (long)reader["rel.oid"] == currentRelId);
+                rels.Add(new FPRDBRelationDTO(
+                    currentRelName,
+                    new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey, currentRelSchemaId),
+                    currentSchemaName,
+                    currentRelId
+                    )
+                );
 
-                }
-                this.dbMgr.closeConnection();
-                return rels;
             }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(ex.StackTrace);
-                return null;
-            }
+            this.dbMgr.closeConnection();
+            return rels;
+
         }
         public void loadDB(String filePath)
         {
