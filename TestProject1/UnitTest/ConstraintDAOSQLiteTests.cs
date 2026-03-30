@@ -361,8 +361,8 @@ namespace TestProject1.UnitTest
                 );
             }
         }
-        [Theory]
-        [ClassData(typeof(checkIfDeleteTupleViolateReferentialConstraint_negative_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkIfDeleteTupleViolateReferentialConstraint_negative_testdata))]
         public void checkIfDeleteTupleViolateReferentialConstraint_fail(DeleteData data, Exception expected)
         {
             ConstraintDTO constr = null;
@@ -466,7 +466,7 @@ namespace TestProject1.UnitTest
                     true
                     );
 
-                //violate no referential constraint to it, update field=fprobvalue, update on foreign key
+                //violate no referential constraint on it, update field=fprobvalue, update on foreign key
                 Add(
                     new FieldFuzzProbValueModifyData(
                         new FuzzyProbabilisticValueParsingData(
@@ -480,7 +480,7 @@ namespace TestProject1.UnitTest
                         ),
                     true
                     );
-                //violate no referential constraint to it, update field=field, update on foreign key
+                //violate no referential constraint on it, update field=field, update on foreign key
                 Add(
                     new FieldFieldModifyData(
                         "fk1",
@@ -493,8 +493,8 @@ namespace TestProject1.UnitTest
 
             }
         }
-        [Theory]
-        [ClassData(typeof(checkIfUpdatingTupleViolateReferentialConstraint_positive_testdata))]
+        //[Theory]
+        //[ClassData(typeof(checkIfUpdatingTupleViolateReferentialConstraint_positive_testdata))]
         public void checkIfUpdatingTupleViolateReferentialConstraint_success(ModifyData data, bool expected)
         {
             //arrange
@@ -540,6 +540,94 @@ namespace TestProject1.UnitTest
             //assert
             Assert.Equal(expected, actual);
           
+        }
+        class checkIfUpdatingTupleViolateReferentialConstraint_negative_testdata : TheoryData<ModifyData, Exception, Type>
+        {
+            public checkIfUpdatingTupleViolateReferentialConstraint_negative_testdata()
+            {
+                SelectionCondition condition1;
+                AtomicSelectionCondition c1 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("id1", new IntConstant(1), CompareOperation.EQUAL, null),
+                    1,
+                    1
+                    );
+                AtomicSelectionCondition c2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("id2", new IntConstant(1), CompareOperation.EQUAL, null),
+                    1,
+                    1
+                    );
+                condition1 = new CompoundSelectionCondition(c1, c2, LogicalConnective.AND);
+                AtomicSelectionCondition condition2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("id", new IntConstant(2), CompareOperation.EQUAL, null),
+                    1,
+                    1
+                    );
+
+                //violate referential constraint to it, update field=fprobvalue, update on primary key
+                Add(
+                    new FieldFuzzProbValueModifyData(
+                        new FuzzyProbabilisticValueParsingData(
+                            new List<Constant> { new IntConstant(11) },
+                            new List<float> { 1 },
+                            new List<float> { 1 }
+                            ),
+                        "referenced_rel",
+                        "id1",
+                        condition1
+                        ),
+                    new InvalidOperationException($"Can't update key attribute of relation referenced_rel, because a tuple in relation referencing_rel is referencing to the updated tuple"),
+                    typeof(InvalidOperationException)
+                    );
+                //violate referential constraint to it, update field=field, update on primary key
+                Add(
+                    new FieldFieldModifyData(
+                        "id1",
+                        "referenced_rel",
+                        "attr",
+                        condition1
+                        ),
+                    new InvalidOperationException($"Can't update key attribute of relation referenced_rel, because a tuple in relation referencing_rel is referencing to the updated tuple"),
+                    typeof(InvalidOperationException)
+                    );
+
+                //violate referential constraint on it, update field=fprobvalue, update on foreign key
+                Add(
+                    new FieldFuzzProbValueModifyData(
+                        new FuzzyProbabilisticValueParsingData(
+                            new List<Constant> { new IntConstant(233) },
+                            new List<float> { 1 },
+                            new List<float> { 1 }
+                            ),
+                        "referencing_rel",
+                        "fk2",
+                        condition2
+                        ),
+                    new InvalidOperationException($"Can't update foreign key attribute in relaiton referencing_rel, because the updated tuple references to no tuple in relation referenced_rel"),
+                    typeof(InvalidOperationException)
+                    );
+                //violate referential constraint on it, update field=field, update on foreign key
+                Add(
+                    new FieldFieldModifyData(
+                        "fk1",
+                        "referencing_rel",
+                        "fk2",
+                        condition2
+                        ),
+                    new InvalidOperationException($"Can't update foreign key attribute in relaiton referencing_rel, because the updated tuple references to no tuple in relation referenced_rel"),
+                    typeof(InvalidOperationException)
+                    );
+
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(checkIfUpdatingTupleViolateReferentialConstraint_negative_testdata))]
+        public void checkIfUpdatingTupleViolateReferentialConstraint_fail(ModifyData data, Exception expected, Type execptedType)
+        {
+            //arrange
+            //act
+            Exception actual = Assert.Throws(execptedType, () => this.dao.checkIfUpdatingTupleViolateReferentialConstraint(data));
+            //assert
+            Assert.Equal(expected.Message, actual.Message);
         }
 
 

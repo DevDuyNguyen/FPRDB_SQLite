@@ -326,25 +326,25 @@ namespace BLL.DAO
                             referencedFieldToReferencingFieldAndFProbValues.Add(contr.referencedAttributes[i], (contr.attributes[i], fprobValue.ToString()));
                         }
 
-                        if(data is FieldFieldModifyData)
-                        {
-                            tmpField = schema.getFieldByName(data.getAssignValue() as string);
-                            tmpFieldType = tmpField.getFieldInfo().getType();
-                            if (tmpFieldType == FieldType.INT)
-                                fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
-                            else if (tmpFieldType == FieldType.FLOAT)
-                                fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
-                            else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
-                                fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                        //if(data is FieldFieldModifyData)
+                        //{
+                        //    tmpField = schema.getFieldByName(data.getAssignValue() as string);
+                        //    tmpFieldType = tmpField.getFieldInfo().getType();
+                        //    if (tmpFieldType == FieldType.INT)
+                        //        fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+                        //    else if (tmpFieldType == FieldType.FLOAT)
+                        //        fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+                        //    else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                        //        fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
 
-                            string tmpReferencingField = referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()].Item1;
-                            referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()] = (tmpReferencingField, fprobValue.ToString());
-                        }
-                        else
-                        {
-                            string tmpReferencingField = referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()].Item1;
-                            referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()] = (tmpReferencingField, (data.getAssignValue() as FuzzyProbabilisticValueParsingData).ToTextRepresentation());
-                        }
+                        //    string tmpReferencingField = referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()].Item1;
+                        //    referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()] = (tmpReferencingField, fprobValue.ToString());
+                        //}
+                        //else
+                        //{
+                        //    string tmpReferencingField = referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()].Item1;
+                        //    referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()] = (tmpReferencingField, (data.getAssignValue() as FuzzyProbabilisticValueParsingData).ToTextRepresentation());
+                        //}
 
                         sql = $"SELECT 1 FROM {contr.relation.relName} WHERE";
                         foreach(var keyValue in referencedFieldToReferencingFieldAndFProbValues)
