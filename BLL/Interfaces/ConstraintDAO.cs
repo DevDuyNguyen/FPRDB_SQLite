@@ -20,5 +20,6 @@ namespace BLL.Interfaces
         public bool checkIfDropRelationViolateReferentialConstraint(DropRelationData data);
         public List<ConstraintDTO> getReferenrialConstraintsTo(FPRDBRelationDTO fprdbRelationDTO);
         public bool checkIfDeleteTupleViolateReferentialConstraint(DeleteData data);
+        public bool checkIfUpdatingTupleViolateReferentialConstraint(ModifyData data);
     }
 }

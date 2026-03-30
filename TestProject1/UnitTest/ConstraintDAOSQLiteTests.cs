@@ -5,6 +5,7 @@ using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Enums;
 using BLL.Interfaces;
+using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,7 +39,7 @@ namespace TestProject1.UnitTest
                     "rel",
                     new List<Field> { 
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        new Field("age", new FieldInfo(FieldType.contFS, 0))
                     },
                     new List<string> { "id" },
                     11
@@ -392,6 +393,153 @@ namespace TestProject1.UnitTest
                 if (constr != null)
                     this.compRoot.getConstraintDAO().removeConstraint(constr.oid);
             }
+        }
+        class checkIfUpdatingTupleViolateReferentialConstraint_positive_testdata:TheoryData<ModifyData, bool>
+        {
+            public checkIfUpdatingTupleViolateReferentialConstraint_positive_testdata()
+            {
+                SelectionCondition condition1;
+                AtomicSelectionCondition c1= new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("id1", new IntConstant(1), CompareOperation.EQUAL, null),
+                    1,
+                    1
+                    );
+                AtomicSelectionCondition c2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("id2", new IntConstant(3), CompareOperation.EQUAL, null),
+                    1,
+                    1
+                    );
+                condition1 = new CompoundSelectionCondition(c1, c2, LogicalConnective.AND);
+                AtomicSelectionCondition condition2 = new AtomicSelectionCondition(
+                    new AtomicSelectionExpressionFieldConstant("id", new IntConstant(1), CompareOperation.EQUAL, null),
+                    1,
+                    1
+                    );
+
+                //violate no referential constraint to it, update field=fprobvalue, no update on primary key or foreigh key
+                Add(
+                    new FieldFuzzProbValueModifyData(
+                        new FuzzyProbabilisticValueParsingData(
+                            new List<Constant> { new IntConstant(11) },
+                            new List<float> { 1 },
+                            new List<float> { 1 }
+                            ),
+                        "referenced_rel",
+                        "attr",
+                        condition1
+                        ),
+                    true
+                    );
+                //violate no referential constraint to it, update field=field, no update on primary key or foreigh key
+                Add(
+                    new FieldFieldModifyData(
+                        "attr",
+                        "referenced_rel",
+                        "attr",
+                        condition1
+                        ),
+                    true
+                    );
+
+                //violate no referential constraint to it, update field=fprobvalue, update on primary key
+                Add(
+                    new FieldFuzzProbValueModifyData(
+                        new FuzzyProbabilisticValueParsingData(
+                            new List<Constant> { new IntConstant(11) },
+                            new List<float> { 1 },
+                            new List<float> { 1 }
+                            ),
+                        "referenced_rel",
+                        "id1",
+                        condition1
+                        ),
+                    true
+                    );
+                //violate no referential constraint to it, update field=field, update on primary key
+                Add(
+                    new FieldFieldModifyData(
+                        "id1",
+                        "referenced_rel",
+                        "id2",
+                        condition1
+                        ),
+                    true
+                    );
+
+                //violate no referential constraint to it, update field=fprobvalue, update on foreign key
+                Add(
+                    new FieldFuzzProbValueModifyData(
+                        new FuzzyProbabilisticValueParsingData(
+                            new List<Constant> { new IntConstant(2) },
+                            new List<float> { 1 },
+                            new List<float> { 1 }
+                            ),
+                        "referencing_rel",
+                        "fk2",
+                        condition2
+                        ),
+                    true
+                    );
+                //violate no referential constraint to it, update field=field, update on foreign key
+                Add(
+                    new FieldFieldModifyData(
+                        "fk1",
+                        "referencing_rel",
+                        "fk1",
+                        condition2
+                        ),
+                    true
+                    );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkIfUpdatingTupleViolateReferentialConstraint_positive_testdata))]
+        public void checkIfUpdatingTupleViolateReferentialConstraint_success(ModifyData data, bool expected)
+        {
+            //arrange
+
+            //SQLProcessor sqlProcessor = this.compRoot.getSQLProcessor();
+            //sqlProcessor.executeDataDefinition("create schema referencing_sche (id INT, fk1 INT, fk2 INT, attr INT, CONSTRAINT pk_referencing_sche PRIMARY KEY (id))");
+            //sqlProcessor.executeDataDefinition("create schema referenced_sche (id1 int, id2 INT, attr INT, CONSTRAINT pk_referenced_sche PRIMARY KEY (id1, id2))");
+            //sqlProcessor.executeDataDefinition("create relation referencing_rel on referencing_sche");
+            //sqlProcessor.executeDataDefinition("create relation referenced_rel on referenced_sche");
+            //FPRDBSchemaDTO referencing_sche = new FPRDBSchemaDTO(
+            //   "referencing_sche",
+            //   new List<Field> {
+            //        new Field("id", new FieldInfo(FieldType.INT, 0)),
+            //        new Field("fk1", new FieldInfo(FieldType.INT, 0)),
+            //        new Field("fk2", new FieldInfo(FieldType.INT, 0)),
+            //        new Field("attr", new FieldInfo(FieldType.INT, 0))
+            //   },
+            //   new List<string> { "id" },
+            //   14
+            //   );
+            //FPRDBSchemaDTO referenced_sche = new FPRDBSchemaDTO(
+            //   "referenced_sche",
+            //   new List<Field> {
+            //        new Field("id1", new FieldInfo(FieldType.INT, 0)),
+            //        new Field("id2", new FieldInfo(FieldType.INT, 0)),
+            //        new Field("attr", new FieldInfo(FieldType.INT, 0))
+            //   },
+            //   new List<string> { "id1", "id2" },
+            //   15
+            //   );
+            //FPRDBRelationDTO referencing_rel = new FPRDBRelationDTO("referencing_rel", referencing_sche, "rel", 21);
+            //FPRDBRelationDTO referenced_rel = new FPRDBRelationDTO("referenced_rel", referenced_sche, "rel", 22);
+            //this.dao.createReferentialConstraint("fk_referencing_rel_referenced_rel", referencing_rel, referenced_rel, new List<string> { "fk1", "fk2"}, new List<string>{ "id1", "id2"});
+            //sqlProcessor.executeUpdate("insert into referenced_rel (id1, id2, attr) values ({(1,[1,1])},{(1,[1,1])},{(1,[1,1])})");
+            //sqlProcessor.executeUpdate("insert into referenced_rel (id1, id2, attr) values ({(1,[1,1])},{(2,[1,1])},{(2,[1,1])})");
+            //sqlProcessor.executeUpdate("insert into referenced_rel (id1, id2, attr) values ({(1,[1,1])},{(3,[1,1])},{(3,[1,1])})");
+
+            //sqlProcessor.executeUpdate("insert into referencing_rel (id, fk1, fk2, attr) values ({(1,[1,1])},{(1,[1,1])},{(1,[1,1])},{(1,[1,1])})");
+            //sqlProcessor.executeUpdate("insert into referencing_rel (id, fk1, fk2, attr) values ({(2,[1,1])},{(1,[1,1])},{(2,[1,1])},{(2,[1,1])})");
+
+            //act
+            bool actual = this.dao.checkIfUpdatingTupleViolateReferentialConstraint(data);
+            //assert
+            Assert.Equal(expected, actual);
+          
         }
 
 

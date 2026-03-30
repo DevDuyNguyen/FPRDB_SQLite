@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -261,7 +262,166 @@ namespace BLL.DAO
             }
             return true;
         }
+        public bool checkIfUpdatingTupleViolateReferentialConstraint(ModifyData data)
+        {
+            //check if update invole key attribute
+            FPRDBRelation rel = this.metaDataMgr.getRelation(data.getRelation());
+            FPRDBSchema schema = rel.getSchema();
+            List<Field> fieldsInFPRDBSchema = rel.getSchema().getFields();
+            List<string> primaryKey = rel.getSchema().primarykey;
+            Field involvingKeyAttribute=null;
+            bool isInvolvingKeyAttribute = false;
+            string updatedField = data.getAssignedField();
+            foreach(string attrName in primaryKey)
+            {
+                if (attrName == updatedField)
+                {
+                    involvingKeyAttribute= schema.getFieldByName(attrName);
+                    isInvolvingKeyAttribute = true;
+                    break;
+                }
+            }
 
+            /*
+             * Loop through each tuple to be updated:
+             * -If updation involves key attribute: check if there is any tuple referencing to the current tuple
+             * -For each referential constraint of the current relation:
+             * +Check if updation involve the constraint's foreign key
+             * +If yes, check if the updated foreign key value points to existing tuple
+             */
+            Plan plan = new RelationPlan(data.getRelation(), this.metaDataMgr, this.databaseMgr, this.parser);
+            if (data.getSelectionCondition() != null)
+                plan = new SelectPlan(plan, data.getSelectionCondition());
+            Scan s = plan.open();
+            List<ConstraintDTO> referentialConstraintTo = this.getReferenrialConstraintsTo(rel.toDTO());
+            List<ConstraintDTO> referentialConstraintOn = this.getReferenrialConstraints(rel.toDTO());
+            string sql;
+            AbstractFuzzyProbabilisticValue fprobValue;
+            Dictionary<string, (string, string)> referencedFieldToReferencingFieldAndFProbValues;
+            Field tmpField;
+            FieldType tmpFieldType;
+            FPRDBRelationDTO referencingRelationDTO;
+            int tmpIndex;
+
+            while (s.next())
+            {
+                //If updation involves key attribute: check if there is any tuple referencing to the current tuple
+                if (isInvolvingKeyAttribute)
+                {
+                    foreach(ConstraintDTO contr in referentialConstraintTo)
+                    {
+                        referencingRelationDTO = contr.relation;
+                        referencedFieldToReferencingFieldAndFProbValues = new Dictionary<string, (string, string)>();
+
+                        for(int i=0; i<contr.referencedAttributes.Count; ++i)
+                        {
+                            tmpField = schema.getFieldByName(contr.referencedAttributes[i]);
+                            tmpFieldType = tmpField.getFieldInfo().getType();
+                            if (tmpFieldType == FieldType.INT)
+                                fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+                            else if (tmpFieldType == FieldType.FLOAT)
+                                fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+                            else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                                fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                            referencedFieldToReferencingFieldAndFProbValues.Add(contr.referencedAttributes[i], (contr.attributes[i], fprobValue.ToString()));
+                        }
+
+                        if(data is FieldFieldModifyData)
+                        {
+                            tmpField = schema.getFieldByName(data.getAssignValue() as string);
+                            tmpFieldType = tmpField.getFieldInfo().getType();
+                            if (tmpFieldType == FieldType.INT)
+                                fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+                            else if (tmpFieldType == FieldType.FLOAT)
+                                fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+                            else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                                fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+
+                            string tmpReferencingField = referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()].Item1;
+                            referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()] = (tmpReferencingField, fprobValue.ToString());
+                        }
+                        else
+                        {
+                            string tmpReferencingField = referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()].Item1;
+                            referencedFieldToReferencingFieldAndFProbValues[involvingKeyAttribute.getFieldName()] = (tmpReferencingField, (data.getAssignValue() as FuzzyProbabilisticValueParsingData).ToTextRepresentation());
+                        }
+
+                        sql = $"SELECT 1 FROM {contr.relation.relName} WHERE";
+                        foreach(var keyValue in referencedFieldToReferencingFieldAndFProbValues)
+                        {
+                            sql += $" {keyValue.Value.Item1}='{keyValue.Value.Item2}' AND";
+                        }
+                        tmpIndex = sql.LastIndexOf("AND");
+                        sql = sql.Substring(0, tmpIndex);
+                        using(IDataReader r = this.databaseMgr.executeQuery(sql))
+                        {
+                            if (r.Read())
+                                throw new InvalidOperationException($"Can't update key attribute of relation {data.getRelation()}, because a tuple in relation {referencingRelationDTO.relName} is referencing to the updated tuple");
+                        }
+
+                    }
+                }
+
+                /*-For each referential constraint of the current relation:
+                *+Check if updation involve the constraint's foreign key
+                *+If yes, check if the updated foreign key value points to existing tuple
+                */
+                foreach (ConstraintDTO constr in referentialConstraintOn)
+                {
+                    if (constr.attributes.Contains(data.getAssignedField()))
+                    {
+                        sql = $"SELECT 1 FROM {constr.referencedRelation.relName} WHERE";
+                        for(int i=0; i<constr.attributes.Count; ++i)
+                        {
+                            tmpField = constr.relation.getSchemaFieldByName(constr.attributes[i]);
+                            if (tmpField.getFieldName() == data.getAssignedField())
+                            {
+                                if (data is FieldFieldModifyData)
+                                {
+                                    tmpField = schema.getFieldByName(data.getAssignValue() as string);
+                                    tmpFieldType = tmpField.getFieldInfo().getType();
+                                    if (tmpFieldType == FieldType.INT)
+                                        fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+                                    else if (tmpFieldType == FieldType.FLOAT)
+                                        fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+                                    else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                                        fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                                    sql += $" {constr.referencedAttributes[i]}='{fprobValue.ToString()}' AND";
+
+                                }
+                                else
+                                {
+                                    sql += $" {constr.referencedAttributes[i]}='{(data.getAssignValue() as FuzzyProbabilisticValueParsingData).ToTextRepresentation()}' AND";
+                                }
+                            }
+                            else
+                            {
+                                tmpFieldType = tmpField.getFieldInfo().getType();
+                                if (tmpFieldType == FieldType.INT)
+                                    fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
+                                else if (tmpFieldType == FieldType.FLOAT)
+                                    fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
+                                else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                                    fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                                sql += $" {constr.referencedAttributes[i]}='{fprobValue.ToString()}' AND";
+                            }
+                            
+                        }
+                        tmpIndex = sql.LastIndexOf("AND");
+                        sql = sql.Substring(0, tmpIndex);
+                        using(IDataReader r = this.databaseMgr.executeQuery(sql))
+                        {
+                            if (!r.Read())
+                                throw new InvalidOperationException($"Can't update foreign key attribute in relaiton {data.getRelation()}, because the updated tuple references to no tuple in relation {constr.referencedRelation.relName}");
+                        }
+                    }
+                }
+
+
+            }
+            return true;
+
+        }
 
     }
 }
