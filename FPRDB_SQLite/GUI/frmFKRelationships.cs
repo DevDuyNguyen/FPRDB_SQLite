@@ -1,5 +1,6 @@
 ﻿using BLL.Common;
 using BLL.DTO;
+using BLL.Enums;
 using BLL.Services;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
@@ -31,20 +32,20 @@ namespace FPRDB_SQLite.GUI
             public string PKAttr { get; set; }
             public string FKAttr { get; set; }
         }
-        public class ConstraintDTO
-        {
-            public string conName { get; set; }
-            public string refRel { get; set; }
-            public List<string> attrs { get; set; }
-            public List<string> refAttrs { get; set; }
-            public ConstraintDTO(string conName, string refRel, List<string> attrs, List<string> refAttrs)
-            {
-                this.conName = conName;
-                this.refRel = refRel;
-                this.attrs = attrs;
-                this.refAttrs = refAttrs;
-            }
-        }
+        //public class ConstraintDTO
+        //{
+        //    public string conName { get; set; }
+        //    public string refRel { get; set; }
+        //    public List<string> attrs { get; set; }
+        //    public List<string> refAttrs { get; set; }
+        //    public ConstraintDTO(string conName, string refRel, List<string> attrs, List<string> refAttrs)
+        //    {
+        //        this.conName = conName;
+        //        this.refRel = refRel;
+        //        this.attrs = attrs;
+        //        this.refAttrs = refAttrs;
+        //    }
+        //}
         public frmFKRelationships(CompositionRoot compRoot, FPRDBRelationDTO rel)
         {
             InitializeComponent();
@@ -69,11 +70,16 @@ namespace FPRDB_SQLite.GUI
             //{
             //    lstFKSelected.Items.Add(relationship.conName);
             //}
-            ConstraintDTO con1 = new ConstraintDTO("rel1", "student",
-                new List<string> { "id", "name" },
-                new List<string> { "id", "name" });
-            relationships.Add(con1);
-            lstFKSelected.Items.Add(con1.conName);
+            //ConstraintDTO con1 = new ConstraintDTO("rel1", "student",
+            //    new List<string> { "id", "name" },
+            //    new List<string> { "id", "name" });
+            //relationships.Add(con1);
+            //lstFKSelected.Items.Add(con1.conName);
+            this.relationships.AddRange(this.service.getReferenrialConstraints(this.rel));
+            foreach(ConstraintDTO referentialConstr in this.relationships)
+            {
+                lstFKSelected.Items.Add(referentialConstr.conName);
+            }
         }
         // Hàm set trạng thái (form không cho edit nếu không phải hành động thêm mới)
         private void SetUIState(bool isAdding)
@@ -89,13 +95,13 @@ namespace FPRDB_SQLite.GUI
         // Hàm load chi tiết của một relationship đã tồn tại
         public void LoadExistingRelation(ConstraintDTO constraint)
         {
-            repositoryItemLookUpEditPK.DataSource = constraint.refAttrs;
-            repositoryItemLookUpEditFK.DataSource = constraint.attrs;
+            repositoryItemLookUpEditPK.DataSource = constraint.referencedAttributes;
+            repositoryItemLookUpEditFK.DataSource = constraint.attributes;
 
             txtFKName.Text = constraint.conName;
-            cboPKRelName.EditValue = constraint.refRel;
+            cboPKRelName.EditValue = constraint.referencedRelation;
 
-            var mapping = constraint.refAttrs.Zip(constraint.attrs,
+            var mapping = constraint.referencedAttributes.Zip(constraint.attributes,
                           (pk, fk) => new AttrRow { PKAttr = pk, FKAttr = fk }).ToList();
             grdMappingAttr.DataSource = new BindingList<AttrRow>(mapping);
         }
@@ -150,7 +156,11 @@ namespace FPRDB_SQLite.GUI
         // Hàm xử lý khi click "Add" button
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (!ValidateData()) return;
+            if (isAddNew) 
+            {
+                MessageBox.Show("Vui lòng lưu thông tin trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             LoadNewRelation();
         }
         // Hàm xử lý khi click "Delete" button
@@ -166,23 +176,33 @@ namespace FPRDB_SQLite.GUI
 
             if (result == DialogResult.Yes)
             {
-                var itemToRemove = relationships.FirstOrDefault(r => r.conName == selectedFK);
-                if (itemToRemove != null) relationships.Remove(itemToRemove);
-
-                lstFKSelected.Items.RemoveAt(currentIndex);
-
-                if (lstFKSelected.Items.Count > 0)
+                try
                 {
-                    int nextIndex = Math.Max(0, currentIndex - 1);
-                    lstFKSelected.SelectedIndex = nextIndex;
-                }
-                else
-                {
-                    lstFKSelected.SelectedIndex = -1;
-                }
 
-                MessageBox.Show("Đã xóa thành công!");
-                isAddNew = false;
+                    ConstraintDTO itemToRemove = relationships.FirstOrDefault(r => r.conName == selectedFK);
+                    this.service.removeConstraint(itemToRemove.oid);
+
+                    if (itemToRemove != null) relationships.Remove(itemToRemove);
+
+                    lstFKSelected.Items.RemoveAt(currentIndex);
+
+                    if (lstFKSelected.Items.Count > 0)
+                    {
+                        int nextIndex = Math.Max(0, currentIndex - 1);
+                        lstFKSelected.SelectedIndex = nextIndex;
+                    }
+                    else
+                    {
+                        lstFKSelected.SelectedIndex = -1;
+                    }
+
+                    MessageBox.Show("Đã xóa thành công!");
+                    isAddNew = false;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
         // Hàm xử lý khi click "Save" button
@@ -195,6 +215,7 @@ namespace FPRDB_SQLite.GUI
 
             string fkName = txtFKName.Text.Trim();
             string pkRelName = cboPKRelName.Text;
+            FPRDBRelationDTO referencedRelation = AppStates.loadFPRDBSchemaRelations.FirstOrDefault(rel=>rel.relName==pkRelName);
             var rows = grdMappingAttr.DataSource as BindingList<AttrRow>;
             List<string> refAttrs = new List<string>();
             List<string> attrs = new List<string>();
@@ -204,13 +225,27 @@ namespace FPRDB_SQLite.GUI
                 refAttrs.Add(row.PKAttr);
                 attrs.Add(row.FKAttr);
             }
-            ConstraintDTO newCon = new ConstraintDTO(fkName,pkRelName,attrs, refAttrs);
-            relationships.Add(newCon);
 
-            MessageBox.Show("Lưu thành công!");
-            lstFKSelected.Items[lstFKSelected.SelectedIndex] = newCon.conName;
-            isAddNew = false;
-            SetUIState(false);
+            //demo
+            //ConstraintDTO newCon = new ConstraintDTO(fkName,pkRelName,attrs, refAttrs);
+            //relationships.Add(newCon);
+            //MessageBox.Show("Lưu thành công!");
+            //lstFKSelected.Items[lstFKSelected.SelectedIndex] = newCon.conName;
+            //isAddNew = false;
+            //SetUIState(false);
+
+            try
+            {
+                ConstraintDTO newReferentialConstraint= this.service.createReferentialConstraint(fkName, this.rel, referencedRelation, attrs, refAttrs);
+                MessageBox.Show("Lưu thành công!");
+                lstFKSelected.Items[lstFKSelected.SelectedIndex] = newReferentialConstraint.conName;
+                isAddNew = false;
+                SetUIState(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         // Hàm xử lý khi click "Close" button
         private void btnClose_Click(object sender, EventArgs e)
@@ -224,7 +259,7 @@ namespace FPRDB_SQLite.GUI
             string selectedRelName = cboPKRelName.EditValue?.ToString();
             if (string.IsNullOrEmpty(selectedRelName)) return;
 
-            var allRelations = db.getFPRDBRelations();
+            var allRelations = AppStates.loadFPRDBSchemaRelations;
             var selectedPKRel = allRelations.FirstOrDefault(r => r.relName == selectedRelName);
 
             if (selectedPKRel != null)

@@ -483,7 +483,6 @@ namespace FPRDB_SQLite.GUI
             // 
             iExportFS.Caption = "Export Fuzzy Set";
             iExportFS.Id = 56;
-            iExportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iExportFS.ImageOptions.SvgImage");
             iExportFS.Name = "iExportFS";
             iExportFS.ItemClick += iExportFS_ItemClick;
             // 
@@ -491,7 +490,6 @@ namespace FPRDB_SQLite.GUI
             // 
             iImportFS.Caption = "Import Fuzzy Set";
             iImportFS.Id = 57;
-            iImportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iImportFS.ImageOptions.SvgImage");
             iImportFS.Name = "iImportFS";
             iImportFS.ItemClick += iImportFS_ItemClick;
             // 

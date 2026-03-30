@@ -60,7 +60,7 @@ namespace BLL.Services
                 JOIN fprdb_Type AS type           ON attr.att_type_id = type.oid
                 JOIN fprdb_Constraint AS cons     ON cons.con_relschema_id = rsch.oid
                 WHERE cons.con_type = 'IDENTITY'
-                ORDER BY ""rsch.oid"";";
+                ORDER BY rsch.oid;";
 
             IDataReader reader = this.dbMgr.executeQuery(sql);
 
@@ -127,7 +127,7 @@ namespace BLL.Services
                 JOIN fprdb_Constraint AS cons 
                     ON cons.con_relschema_id = rsch.oid
                 WHERE cons.con_type = 'IDENTITY'
-                ORDER BY ""rsch.oid""
+                ORDER BY rel.oid
             ";
 
             IDataReader reader = this.dbMgr.executeQuery(sql);
