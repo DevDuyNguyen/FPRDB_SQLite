@@ -98,7 +98,7 @@ namespace BLL.SQLProcessing
             else if(data is DeleteData)
             {
                 DeleteData dData = (DeleteData)data;
-                if (this.preProcessor.checkSemanticDelete(dData))
+                if (this.preProcessor.checkSemanticDelete(dData) && this.constraintService.checkIfDeleteTupleViolateReferentialConstraint(dData)
                 {
                     return this.updatePlanner.executeDelete(dData);
                 }
