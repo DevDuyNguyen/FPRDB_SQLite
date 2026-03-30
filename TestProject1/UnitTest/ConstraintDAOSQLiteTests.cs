@@ -313,6 +313,87 @@ namespace TestProject1.UnitTest
                     this.compRoot.getConstraintDAO().removeConstraint(constr.oid);
             }
         }
+        class checkIfDeleteTupleViolateReferentialConstraint_positive_testdata : TheoryData<DeleteData, bool>
+        {
+            public checkIfDeleteTupleViolateReferentialConstraint_positive_testdata()
+            {
+                CompositionRoot compRoot = new CompositionRoot();
+                Add(new DeleteData("rel3", null), true);
+                Add(
+                    new DeleteData(
+                        "rel3",
+                        new AtomicSelectionCondition(
+                            new AtomicSelectionExpressionFieldConstant("id", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                            1,
+                            1
+                        )
+                    ),
+                    true
+                );
+            }
+        }
+        //[Theory]
+        //[ClassData(typeof(checkIfDeleteTupleViolateReferentialConstraint_positive_testdata))]
+        public void checkIfDeleteTupleViolateReferentialConstraint_success(DeleteData data, bool expected)
+        {
+            //arrage
+            //act
+            bool actual = this.dao.checkIfDeleteTupleViolateReferentialConstraint(data);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+        class checkIfDeleteTupleViolateReferentialConstraint_negative_testdata : TheoryData<DeleteData, Exception>
+        {
+            public checkIfDeleteTupleViolateReferentialConstraint_negative_testdata()
+            {
+                CompositionRoot compRoot = new CompositionRoot();
+                Add(
+                    new DeleteData(
+                        "rel4",
+                        new AtomicSelectionCondition(
+                            new AtomicSelectionExpressionFieldConstant("id", new IntConstant(1), CompareOperation.EQUAL, compRoot.getMetaDataManger()),
+                            1,
+                            1
+                        )
+                    ),
+                    new InvalidOperationException("Delete a tuple in rel4 will violate referential constraint fk_rel3_rel4")
+                );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(checkIfDeleteTupleViolateReferentialConstraint_negative_testdata))]
+        public void checkIfDeleteTupleViolateReferentialConstraint_fail(DeleteData data, Exception expected)
+        {
+            ConstraintDTO constr = null;
+            try
+            {
+                //arrange
+                FPRDBSchemaDTO baseSchema = new FPRDBSchemaDTO(
+                        "rel",
+                        new List<Field> {
+                        new Field("id", new FieldInfo(FieldType.INT, 0)),
+                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        },
+                        new List<string> { "id" },
+                        11
+                        );
+                FPRDBRelationDTO rel3 = new FPRDBRelationDTO("rel3", baseSchema, "rel", 15);
+                FPRDBRelationDTO rel4 = new FPRDBRelationDTO("rel4", baseSchema, "rel", 16);
+                constr = this.compRoot.getConstraintDAO().createReferentialConstraint("fk_rel3_rel4", rel3, rel4, new List<string> { "id" }, new List<string> { "id" });
+
+                //act
+                Exception actual = Assert.Throws<InvalidOperationException>(() => this.dao.checkIfDeleteTupleViolateReferentialConstraint(data));
+                //assert
+                Assert.Equal(expected.GetType().Name, actual.GetType().Name);
+                Assert.Equal(expected.Message, actual.Message);
+            }
+            finally
+            {
+                if (constr != null)
+                    this.compRoot.getConstraintDAO().removeConstraint(constr.oid);
+            }
+        }
+
 
     }
 
