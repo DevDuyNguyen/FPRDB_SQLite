@@ -156,7 +156,11 @@ namespace FPRDB_SQLite.GUI
         // Hàm xử lý khi click "Add" button
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (!ValidateData()) return;
+            if (isAddNew) 
+            {
+                MessageBox.Show("Vui lòng lưu thông tin trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             LoadNewRelation();
         }
         // Hàm xử lý khi click "Delete" button
