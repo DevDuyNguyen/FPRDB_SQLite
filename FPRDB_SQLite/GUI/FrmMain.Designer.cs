@@ -69,7 +69,9 @@ namespace FPRDB_SQLite.GUI
             barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonGroup2 = new DevExpress.XtraBars.BarButtonGroup();
             barButtonSelectTuples = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            iExportFS = new DevExpress.XtraBars.BarButtonItem();
+            iImportFS = new DevExpress.XtraBars.BarButtonItem();
+            barButtonRelationships = new DevExpress.XtraBars.BarButtonItem();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -188,10 +190,10 @@ namespace FPRDB_SQLite.GUI
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, barButtonItem1 });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS, barButtonRelationships });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            ribbonControl.MaxItemId = 57;
+            ribbonControl.MaxItemId = 59;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
             ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
@@ -477,11 +479,28 @@ namespace FPRDB_SQLite.GUI
             barButtonSelectTuples.Name = "barButtonSelectTuples";
             barButtonSelectTuples.ItemClick += barButtonSelectTuples_ItemClick;
             // 
-            // barButtonItem1
+            // iExportFS
             // 
-            barButtonItem1.Caption = "barButtonItem1";
-            barButtonItem1.Id = 56;
-            barButtonItem1.Name = "barButtonItem1";
+            iExportFS.Caption = "Export Fuzzy Set";
+            iExportFS.Id = 56;
+            iExportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iExportFS.ImageOptions.SvgImage");
+            iExportFS.Name = "iExportFS";
+            iExportFS.ItemClick += iExportFS_ItemClick;
+            // 
+            // iImportFS
+            // 
+            iImportFS.Caption = "Import Fuzzy Set";
+            iImportFS.Id = 57;
+            iImportFS.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iImportFS.ImageOptions.SvgImage");
+            iImportFS.Name = "iImportFS";
+            iImportFS.ItemClick += iImportFS_ItemClick;
+            // 
+            // barButtonRelationships
+            // 
+            barButtonRelationships.Caption = "Relationships";
+            barButtonRelationships.Id = 58;
+            barButtonRelationships.Name = "barButtonRelationships";
+            barButtonRelationships.ItemClick += barButtonRelationships_ItemClick;
             // 
             // DatabaseRibbonPage
             // 
@@ -621,6 +640,8 @@ namespace FPRDB_SQLite.GUI
             // SearchFuzzySetribbonPageGroup
             // 
             SearchFuzzySetribbonPageGroup.ItemLinks.Add(iSearchFuzzySet);
+            SearchFuzzySetribbonPageGroup.ItemLinks.Add(iExportFS);
+            SearchFuzzySetribbonPageGroup.ItemLinks.Add(iImportFS);
             SearchFuzzySetribbonPageGroup.Name = "SearchFuzzySetribbonPageGroup";
             SearchFuzzySetribbonPageGroup.Text = "Fuzzy Set";
             // 
@@ -1018,6 +1039,7 @@ namespace FPRDB_SQLite.GUI
             // popupMenuTreeView
             // 
             popupMenuTreeView.ItemLinks.Add(barButtonSelectTuples);
+            popupMenuTreeView.ItemLinks.Add(barButtonRelationships);
             popupMenuTreeView.Name = "popupMenuTreeView";
             popupMenuTreeView.Ribbon = ribbonControl;
             // 
@@ -1248,7 +1270,9 @@ namespace FPRDB_SQLite.GUI
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
         private DevExpress.XtraEditors.MemoEdit memoEditMessage;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
+        private DevExpress.XtraBars.BarButtonItem iExportFS;
+        private DevExpress.XtraBars.BarButtonItem iImportFS;
+        private DevExpress.XtraBars.BarButtonItem barButtonRelationships;
     }
 }
 
