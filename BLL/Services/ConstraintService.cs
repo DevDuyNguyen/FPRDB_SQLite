@@ -111,6 +111,10 @@ namespace BLL.Services
         {
             return this.constraintDAO.checkIfDeleteTupleViolateReferentialConstraint(data);
         }
+        public bool checkIfUpdatingTupleViolateReferentialConstraint(ModifyData data)
+        {
+            return this.constraintDAO.checkIfUpdatingTupleViolateReferentialConstraint(data);
+        }
 
         //not done: mocking for private
         //not done: not implemented

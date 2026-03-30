@@ -124,7 +124,7 @@ namespace BLL.SQLProcessing
             else //if(data is ModifyData)
             {
                 ModifyData mData = (ModifyData)data;
-                if (this.preProcessor.checkSemanticModify(mData))
+                if (this.preProcessor.checkSemanticModify(mData) && this.constraintService.checkIfUpdatingTupleViolateReferentialConstraint(mData))
                 {
                     return this.updatePlanner.executeModify(mData);
                 }
