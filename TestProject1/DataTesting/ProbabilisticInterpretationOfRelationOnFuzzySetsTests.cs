@@ -466,20 +466,28 @@ namespace TestProject1.DataTesting
         {
             public discreteFuzzySetContinuousFuzzySets_testdata()
             {
-                ////About_30 {29:0.5, 30:1, 31:0.5}==>young (0,0) (0,1) (20,1) (35,0) -> 1/3
-                //Add(
-                //    new DiscreteFuzzySet<int>(new List<int> { 29, 30, 31 }, new List<float> { 0.5f, 1, 0.5f}, FieldType.INT),
-                //    new ContinuousFuzzySet(0, 0, 20, 35),
-                //    CompareOperation.ALSO,
-                //    1.0f/3.0f
-                //    );
                 //About_30 {29:0.5, 30:1, 31:0.5}==>young (0,0) (0,1) (20,1) (35,0) -> 1/3
                 Add(
-                    new DiscreteFuzzySet<int>(new List<int> { 30 }, new List<float> { 1 }, FieldType.INT),
+                    new DiscreteFuzzySet<int>(new List<int> { 29, 30, 31 }, new List<float> { 0.5f, 1, 0.5f }, FieldType.INT),
                     new ContinuousFuzzySet(0, 0, 20, 35),
                     CompareOperation.ALSO,
                     1.0f / 3.0f
                     );
+                //About_30 {29:0.5, 30:1, 31:0.5} >young (0,0) (0,1) (20,1) (35,0) -> 0.97449
+                Add(
+                    new DiscreteFuzzySet<int>(new List<int> { 29, 30, 31 }, new List<float> { 0.5f, 1, 0.5f }, FieldType.INT),
+                    new ContinuousFuzzySet(0, 0, 20, 35),
+                    CompareOperation.GREATER_THAN,
+                    0.97449f
+                    );
+
+
+                //Add(
+                //    new DiscreteFuzzySet<int>(new List<int> { 30 }, new List<float> { 1 }, FieldType.INT),
+                //    new ContinuousFuzzySet(0, 0, 20, 35),
+                //    CompareOperation.GREATER_THAN,
+                //    0.97496f
+                //    );
             }
         }
         [Theory]
