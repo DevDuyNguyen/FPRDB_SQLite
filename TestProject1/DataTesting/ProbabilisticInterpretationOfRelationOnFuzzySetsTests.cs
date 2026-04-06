@@ -113,6 +113,53 @@ namespace TestProject1.DataTesting
                 Assert.Equal(null, actual);
             Assert.Equal(expected.Message, actual.Message);
         }
+        class differentDefiningDomainConstantAndConstant_TestData : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, float>
+        {
+            public differentDefiningDomainConstantAndConstant_TestData()
+            {
+                //1<1.1->1
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f }, new List<float> { 1 }, FieldType.FLOAT),
+                    CompareOperation.LESS_THAN,
+                    1
+                    );
+                //1!=1.1->1
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f }, new List<float> { 1 }, FieldType.FLOAT),
+                    CompareOperation.NOT_EQUAL,
+                    1
+                    );
+                //4>1.1->1
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 4 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f }, new List<float> { 1 }, FieldType.FLOAT),
+                    CompareOperation.GREATER_THAN,
+                    1
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(differentDefiningDomainConstantAndConstant_TestData))]
+        public void differentDefiningDomainConstantAndConstant(Type t1, BaseFuzzySet fs1, Type t2, BaseFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual;
+            if (t1 == typeof(int) && t2==typeof(float))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int, float>(fs1 as FuzzySet<int>, fs2 as FuzzySet<float>, op);
+            else //if (t1 == typeof(float) && t2 == typeof(int))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float, int>(fs1 as FuzzySet<float>, fs2 as FuzzySet<int>, op);
+            //assert
+            Assert.Equal(expected, actual);
+        }
 
 
     }
