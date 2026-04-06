@@ -263,9 +263,9 @@ namespace BLL.SQLProcessing
         }
         //comparison between INT fuzzy set and FLOAT fuzzy set
         public static float compareFuzzySet<T1, T2>(FuzzySet<T1> fs1, FuzzySet<T2> fs2, CompareOperation operation) 
-            where T1: IComparable<T1> 
-            where T2 : IComparable<T2>
         {
+            if (!(typeof(T1) == typeof(int) && typeof(T2) == typeof(float)) && !(typeof(T1) == typeof(float) && typeof(T2) == typeof(int)))
+                throw new InvalidOperationException($"{typeof(T1).Name} and {typeof(T2).Name} aren't compatible for probabilistic interpretation for relation on fuzzy sets");
             Type t1 = typeof(T1);
             Type t2 = typeof(T2);
             if (t1 != t2)

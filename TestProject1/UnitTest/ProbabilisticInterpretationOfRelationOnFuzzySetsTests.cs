@@ -24,16 +24,16 @@ namespace TestProject1.UnitTest
             (rfs1, rfs2) = ProbabilisticInterpretationOfRelationOnFuzzySets.discretize2ContinuousFS(fs1, fs2);
             //assert
         }
-        //not done: how should I test in such situation, create the test data by hands for use code to generate
-        //class discretizeContinuousFSFromDiscreteFS_positive_testdata:TheoryData<ContinuousFuzzySet, DiscreteFuzzySet<float>, DiscreteFuzzySet<float>>
+        //not done: how should I test in such situation, create the test data by hands or use code to generate
+        //class discretizeContinuousFSFromDiscreteFS_positive_testdata : TheoryData<ContinuousFuzzySet, DiscreteFuzzySet<float>, DiscreteFuzzySet<float>>
         //{
         //    public discretizeContinuousFSFromDiscreteFS_positive_testdata()
         //    {
-        //        ContinuousFuzzySet fs1= new ContinuousFuzzySet(0, 30, 60, 100, null);
+        //        ContinuousFuzzySet fs1 = new ContinuousFuzzySet(0, 30, 60, 100);
         //        List<float> values = new List<float>();
         //        List<float> memberships = new List<float>();
         //        float delta = (fs1.getRightBottom() - fs1.getLeftBottom()) / 100;
-        //        for(float i=fs1.getLeftBottom(); i<=fs1.getRightBottom(); ++i)
+        //        for (float i = fs1.getLeftBottom(); i <= fs1.getRightBottom(); ++i)
         //        {
         //            values.Add(i);
         //            memberships.Add(fs1.getMembershipDegree(i));
@@ -41,8 +41,8 @@ namespace TestProject1.UnitTest
 
         //        Add(
         //            fs1,
-        //            new DiscreteFuzzySet<float>(new List<float> { 1,2,3,4}, new List<float> { 0.1f, 0.2f, 0.3f, 0.4f}, null, FieldType.distFS_FLOAT),
-        //            new DiscreteFuzzySet<float>(values, memberships, null, FieldType.distFS_FLOAT)
+        //            new DiscreteFuzzySet<float>(new List<float> { 1, 2, 3, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.4f }, FieldType.distFS_FLOAT),
+        //            new DiscreteFuzzySet<float>(values, memberships, FieldType.distFS_FLOAT)
         //            );
         //    }
 
