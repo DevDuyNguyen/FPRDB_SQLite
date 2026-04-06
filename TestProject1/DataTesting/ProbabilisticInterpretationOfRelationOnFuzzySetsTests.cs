@@ -391,7 +391,77 @@ namespace TestProject1.DataTesting
             //assert
             Assert.Equal(expected, actual, 0.02);
         }
+        class compatibleDifferentDefiningDomainsFuzzySetAndFuzzySet_testdata : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, float>
+        {
+            public compatibleDifferentDefiningDomainsFuzzySetAndFuzzySet_testdata()
+            {
+                //{1:0.5, 2:1, 3:0.5} < {4.1:0.5, 5.1:1, 6.1:0.5} -> 1
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1, 2, 3}, new List<float> { 0.5f, 1, 0.5f }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 4.1f, 5.1f, 6.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    CompareOperation.LESS_THAN,
+                    1
+                    );
+                //{1:0.5, 2:1, 3:0.5} = {4.1:0.5, 5.1:1, 6.1:0.5} -> 0
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1, 2, 3 }, new List<float> { 0.5f, 1, 0.5f }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 4.1f, 5.1f, 6.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    CompareOperation.EQUAL,
+                    0
+                    );
+                //{4.1:0.5, 5.1:1, 6.1:0.5} > {5:0.8, 6:1}  = 13/30
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 4.1f, 5.1f, 6.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 5, 6 }, new List<float> { 0.8f, 1 }, FieldType.INT),
+                    CompareOperation.GREATER_THAN,
+                    13.0f/30.0f
+                    );
 
+            }
+        }
+        [Theory]
+        [ClassData(typeof(compatibleDifferentDefiningDomainsFuzzySetAndFuzzySet_testdata))]
+        public void compatibleDifferentDefiningDomainsFuzzySetAndFuzzySet_testing(Type t1, BaseFuzzySet fs1, Type t2, BaseFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual=0;
+            if (t1 == typeof(int) && t2 == typeof(float))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int, float>(fs1 as FuzzySet<int>, fs2 as FuzzySet<float>, op);
+            else if (t1 == typeof(float) && t2 == typeof(int))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float, int>(fs1 as FuzzySet<float>, fs2 as FuzzySet<int>, op);
+            //assert
+            Assert.Equal(expected, actual, 0.02);
+        }
+        class twoContinuousFuzzySets_testdata : TheoryData<ContinuousFuzzySet, ContinuousFuzzySet, CompareOperation, float>
+        {
+            public twoContinuousFuzzySets_testdata()
+            {
+                //Young (10,0) (10,1) (20,1) (35,0)==> Approx_15 (15, 1), (10, 0) (20, 0) -> 0.2
+                Add(
+                    new ContinuousFuzzySet(0,0,20,35),
+                    new ContinuousFuzzySet(10, 15, 15, 20),
+                    CompareOperation.ALSO,
+                    0.2f
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(twoContinuousFuzzySets_testdata))]
+        public void twoContinuousFuzzySets_testing(ContinuousFuzzySet fs1, ContinuousFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual= ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1 as FuzzySet<float>, fs2 as FuzzySet<float>, op); ;
+            //assert
+            Assert.Equal(expected, actual, 0.05);
+        }
 
     }
 }
