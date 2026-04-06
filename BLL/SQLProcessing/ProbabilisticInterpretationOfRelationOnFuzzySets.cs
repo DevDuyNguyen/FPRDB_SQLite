@@ -174,7 +174,8 @@ namespace BLL.SQLProcessing
         //hot done: mocking for private
         public static float lessThanDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T>  fs2) where T : IComparable<T>
         {
-
+            if (typeof(T) == typeof(bool))
+                throw new InvalidOperationException("Probabilistic interpretation for < can't be applied on boolean special fuzzy set");
             List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
             List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>(fs2);
             float ans = 0.0f;
@@ -194,7 +195,8 @@ namespace BLL.SQLProcessing
         }
         public static float lessThanEqualDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T> fs2) where T : IComparable<T>
         {
-
+            if (typeof(T) == typeof(bool))
+                throw new InvalidOperationException("Probabilistic interpretation for <= can't be applied on boolean special fuzzy set");
             List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
             List<VoteCrispDefinition<T>> massAssignMentsFS2 = MassAssignment.createMassAssignment<T>(fs2);
             float ans = 0.0f;

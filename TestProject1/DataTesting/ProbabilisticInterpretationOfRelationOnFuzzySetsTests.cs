@@ -78,6 +78,41 @@ namespace TestProject1.DataTesting
             Assert.Equal(expected, actual);
         }
 
+        class constantAndConstantInvalidOp_TestData : TheoryData<Type, BaseFuzzySet, BaseFuzzySet, CompareOperation, Exception, Type>
+        {
+            public constantAndConstantInvalidOp_TestData()
+            {
+                //true<true -> error
+                Add(
+                    typeof(bool),
+                    new DiscreteFuzzySet<bool>(new List<bool> { true }, new List<float> { 1 }, FieldType.BOOLEAN),
+                    new DiscreteFuzzySet<bool>(new List<bool> { true }, new List<float> { 1 }, FieldType.BOOLEAN),
+                    CompareOperation.LESS_THAN,
+                    new InvalidOperationException("Probabilistic interpretation for < can't be applied on boolean special fuzzy set"),
+                    typeof(InvalidOperationException)
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(constantAndConstantInvalidOp_TestData))]
+        public void constantAndConstantInvalidOp_Testing(Type t, BaseFuzzySet fs1, BaseFuzzySet fs2, CompareOperation op, Exception expected, Type exceptionType)
+        {
+            //arrange
+            //act
+            Exception actual;
+            if (t == typeof(int))
+                actual = Assert.Throws(exceptionType, () =>ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int>(fs1 as FuzzySet<int>, fs2 as FuzzySet<int>, op));
+            else if (t == typeof(float))
+                actual = Assert.Throws(exceptionType, () =>ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1 as FuzzySet<float>, fs2 as FuzzySet<float>, op));
+            else if (t == typeof(string))
+                actual = Assert.Throws(exceptionType, () =>ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<string>(fs1 as FuzzySet<string>, fs2 as FuzzySet<string>, op));
+            else //if (t == typeof(string))
+                actual = Assert.Throws(exceptionType, () =>ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<bool>(fs1 as FuzzySet<bool>, fs2 as FuzzySet<bool>, op));
+            //assert
+            if (expected == null)
+                Assert.Equal(null, actual);
+            Assert.Equal(expected.Message, actual.Message);
+        }
 
 
     }
