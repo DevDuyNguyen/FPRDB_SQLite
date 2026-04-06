@@ -312,7 +312,35 @@ namespace TestProject1.DataTesting
             //assert
             Assert.Equal(expected, actual, 0.05);
         }
-
+        class incompatibleDifferentDefiningDomainConstantAndFuzzySet_TestData : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, Exception, Type>
+        {
+            public incompatibleDifferentDefiningDomainConstantAndFuzzySet_TestData()
+            {
+                //1>{“a”:1, “b”:0.5}->error
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(string),
+                    new DiscreteFuzzySet<string>(new List<string> { "a", "b" }, new List<float> { 1, 0.5f }, FieldType.VARCHAR),
+                    CompareOperation.GREATER_THAN,
+                    new InvalidOperationException($"{typeof(int).Name} and {typeof(string).Name} aren't compatible for probabilistic interpretation for relation on fuzzy sets"),
+                    typeof(InvalidOperationException)
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(incompatibleDifferentDefiningDomainConstantAndFuzzySet_TestData))]
+        public void incompatibleDifferentDefiningDomainConstantAndFuzzySet_testing(Type t1, BaseFuzzySet fs1, Type t2, BaseFuzzySet fs2, CompareOperation op, Exception expected, Type expectedExceptionType)
+        {
+            //arrange
+            Exception actual = null;
+            //act
+            if (t1 == typeof(int) && t2 == typeof(string))
+                actual = Assert.Throws(expectedExceptionType, () => ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int, string>(fs1 as FuzzySet<int>, fs2 as FuzzySet<string>, op));
+            
+            //assert
+            Assert.Equal(expected.Message, actual.Message);
+        }
 
 
 
