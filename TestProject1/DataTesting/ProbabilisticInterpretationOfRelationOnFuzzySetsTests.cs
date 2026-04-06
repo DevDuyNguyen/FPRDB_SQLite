@@ -160,7 +160,46 @@ namespace TestProject1.DataTesting
             //assert
             Assert.Equal(expected, actual);
         }
-
+        class incompatibleDifferentDefiningDomainConstantAndConstant_TestData : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, Exception, Type>
+        {
+            public incompatibleDifferentDefiningDomainConstantAndConstant_TestData()
+            {
+                //“abc”=1-> error
+                Add(
+                    typeof(string),
+                    new DiscreteFuzzySet<string>(new List<string> { "abc" }, new List<float> { 1 }, FieldType.VARCHAR),
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    CompareOperation.EQUAL,
+                    new InvalidOperationException($"{typeof(string).Name} and {typeof(int).Name} aren't compatible for probabilistic interpretation for relation on fuzzy sets"),
+                    typeof(InvalidOperationException)
+                    );
+                //True>1->error
+                Add(
+                    typeof(bool),
+                    new DiscreteFuzzySet<bool>(new List< bool> { true }, new List<float> { 1 }, FieldType.BOOLEAN),
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    CompareOperation.GREATER_THAN,
+                    new InvalidOperationException($"{typeof(bool).Name} and {typeof(int).Name} aren't compatible for probabilistic interpretation for relation on fuzzy sets"),
+                    typeof(InvalidOperationException)
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(incompatibleDifferentDefiningDomainConstantAndConstant_TestData))]
+        public void incompatibleDifferentDefiningDomainConstantAndConstant_Testing(Type t1, BaseFuzzySet fs1, Type t2, BaseFuzzySet fs2, CompareOperation op, Exception expected, Type expectedExceptionType)
+        {
+            //arrange
+            Exception actual=null;
+            //act
+            if (t1 == typeof(string) && t2 == typeof(int))
+                actual = Assert.Throws(expectedExceptionType, () => ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<string, int>(fs1 as FuzzySet<string>, fs2 as FuzzySet<int>, op));
+            else if (t1 == typeof(bool) && t2 == typeof(int))
+                actual = Assert.Throws(expectedExceptionType, () => ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<bool, int>(fs1 as FuzzySet<bool>, fs2 as FuzzySet<int>, op));
+            //assert
+            Assert.Equal(expected.Message, actual.Message);
+        }
 
     }
 }
