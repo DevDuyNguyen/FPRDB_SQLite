@@ -44,6 +44,19 @@ namespace BLL.DomainObject
             this.has1MemberShipDegreeRange = true;
           
         }
+        //in-memeory fuzzy set
+        public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom) : base(null, FieldType.FLOAT, -1)
+        {
+            this.leftBottom = leftBottom;
+            this.leftTop = leftTop;
+            this.rightTop = rightTop;
+            this.rightBottom = rightBottom;
+
+            this.leftOf1MembershipDegreeRange = this.leftTop;
+            this.rightOf1MembershipDegreeRange = this.rightTop;
+            this.has1MemberShipDegreeRange = true;
+        }
+        //constructor for continuous created by (fuzzy set and fuzzy set)
         public ContinuousFuzzySet(float leftBottom, float leftTop, float rightTop, float rightBottom, ContinuousFuzzySet lParrent, ContinuousFuzzySet rParrent, string fuzzySetName) : base(fuzzySetName, FieldType.FLOAT, -1)
         {
             this.leftBottom = leftBottom;

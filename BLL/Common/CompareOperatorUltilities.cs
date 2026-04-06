@@ -9,7 +9,7 @@ namespace BLL.Common
 {
     public static class CompareOperatorUltilities
     {
-        public static int CompareFloats(float a, float b, float epsilon = 0.00001f)
+        public static int CompareFloats(float a, float b, float epsilon = 0.001f)
         {
             // Check for equality within precision
             if (Math.Abs(a - b) < epsilon)
