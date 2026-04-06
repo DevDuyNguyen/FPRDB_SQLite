@@ -228,7 +228,7 @@ namespace TestProject1.DataTesting
                     CompareOperation.ALSO,
                     1
                     );
-                //15.0 > Approx_15(15, 1), (10, 0)(20, 0)-> 1
+                //15.0 > Approx_15(15, 1), (10, 0)(20, 0)-> 0.48963
                 Add(
                     typeof(float),
                     new DiscreteFuzzySet<float>(new List<float> { 15 }, new List<float> { 1 }, FieldType.FLOAT),
@@ -254,6 +254,61 @@ namespace TestProject1.DataTesting
                 actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<string>(fs1 as FuzzySet<string>, fs2 as FuzzySet<string>, op);
             else //if (t == typeof(string))
                 actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<bool>(fs1 as FuzzySet<bool>, fs2 as FuzzySet<bool>, op);
+            //assert
+            Assert.Equal(expected, actual, 0.05);
+        }
+        class differentDefiningDomainsConstantFuzzySet_testdata : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, float>
+        {
+            public differentDefiningDomainsConstantFuzzySet_testdata()
+            {
+                //1<{1.0:1, 2.1:0.1, 3:0.5}->4/15
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1, 2.1f, 3 }, new List<float> { 1, 0.1f, 0.5f }, FieldType.FLOAT),
+                    CompareOperation.LESS_THAN,
+                    4.0f/15.0f
+                    );
+                //1>={1:1, 2.1:0.1, 3:0.5}->11/15
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 1 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1, 2.1f, 3 }, new List<float> { 1, 0.1f, 0.5f }, FieldType.FLOAT),
+                    CompareOperation.GREATER_EQUAL,
+                    11.0f/15.0f
+                    );
+                //15=> Approx_15 (15, 1), (10, 0) (20, 0) -> 1
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 15 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new ContinuousFuzzySet(10, 15, 15, 20),
+                    CompareOperation.ALSO,
+                    1
+                    );
+                //15 > Approx_15(15, 1), (10, 0)(20, 0)-> 0.48963
+                Add(
+                    typeof(int),
+                    new DiscreteFuzzySet<int>(new List<int> { 15 }, new List<float> { 1 }, FieldType.INT),
+                    typeof(float),
+                    new ContinuousFuzzySet(10, 15, 15, 20),
+                    CompareOperation.GREATER_THAN,
+                    0.48963f
+                    );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(differentDefiningDomainsConstantFuzzySet_testdata))]
+        public void differentDefiningDomainsConstantFuzzySet_testing(Type t1, BaseFuzzySet fs1, Type t2, BaseFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual=0;
+            if (t1 == typeof(int) && t2 == typeof(float))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int, float>(fs1 as FuzzySet<int>, fs2 as FuzzySet<float>, op);
             //assert
             Assert.Equal(expected, actual, 0.05);
         }
