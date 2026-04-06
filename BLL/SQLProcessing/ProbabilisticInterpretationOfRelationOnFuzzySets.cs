@@ -262,7 +262,9 @@ namespace BLL.SQLProcessing
 
         }
         //comparison between INT fuzzy set and FLOAT fuzzy set
-        public static float compareFuzzySet<T1, T2>(FuzzySet<T1> fs1, FuzzySet<T2> fs2, CompareOperation operation) 
+        public static float compareFuzzySet<T1, T2>(FuzzySet<T1> fs1, FuzzySet<T2> fs2, CompareOperation operation)
+            where T1:IComparable<T1>
+            where T2 : IComparable<T2>
         {
             if (!(typeof(T1) == typeof(int) && typeof(T2) == typeof(float)) && !(typeof(T1) == typeof(float) && typeof(T2) == typeof(int)))
                 throw new InvalidOperationException($"{typeof(T1).Name} and {typeof(T2).Name} aren't compatible for probabilistic interpretation for relation on fuzzy sets");
@@ -291,6 +293,32 @@ namespace BLL.SQLProcessing
                 return compareFuzzySet<T1>(fs1, (FuzzySet<T1>)(object)fs2, operation);
             }
         }
+        public static float compareFuzzySet(BaseFuzzySet fs1, BaseFuzzySet fs2, CompareOperation operation)
+        {
+            Type fs1Type = FuzzySetUltilities.getDefiningDomain(fs1);
+            Type fs2Type = FuzzySetUltilities.getDefiningDomain(fs2);
+            if (fs1Type == fs2Type)
+            {
+                if (fs1Type == typeof(int))
+                    return compareFuzzySet<int>((FuzzySet<int>)fs1, (FuzzySet<int>)fs2, operation);
+                else if (fs1Type == typeof(float))
+                    return compareFuzzySet<float>((FuzzySet<float>)fs1, (FuzzySet<float>)fs2, operation);
+                else if (fs1Type == typeof(string))
+                    return compareFuzzySet<string>((FuzzySet<string>)fs1, (FuzzySet<string>)fs2, operation);
+                else //if (fs1Type == typeof(bool))
+                    return compareFuzzySet<bool>((FuzzySet<bool>)fs1, (FuzzySet<bool>)fs2, operation);
+            }
+            else if (fs1Type == typeof(int) && fs2Type == typeof(float))
+            {
+                return compareFuzzySet<int, float>((FuzzySet<int>)fs1, (FuzzySet<float>)fs2, operation);
+            }
+            else if (fs1Type == typeof(float) && fs2Type == typeof(int))
+            {
+                return compareFuzzySet<float, int>((FuzzySet<float>)fs1, (FuzzySet<int>)fs2, operation);
+            }
+            else
+                throw new InvalidOperationException($"Can't perform probabilistic interpretation for relations on fuzzy sets of incompatible types {fs1Type.Name} and {fs2Type.Name}");
+        }
 
         //public static float compare<T>(FuzzySet<T> nfs1, FuzzySet<T> nfs2, CompareOperation compOperator) where T : IComparable<T>
         //{
@@ -298,23 +326,23 @@ namespace BLL.SQLProcessing
         //    DiscreteFuzzySet<T> fs1 = nfs1.ToDiscreteFuzzySet();
         //    DiscreteFuzzySet<T> fs2 = nfs2.ToDiscreteFuzzySet();
 
-            //    List<(List<T>, float)> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
-            //    List<(List<T>, float)> massAssignMentsFS2 = createMassAssignment<T>(fs2);
-            //    float ans = 0.0f;
+        //    List<(List<T>, float)> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);
+        //    List<(List<T>, float)> massAssignMentsFS2 = createMassAssignment<T>(fs2);
+        //    float ans = 0.0f;
 
-            //    for (int i = 0; i < massAssignMentsFS1.Count; ++i)
-            //    {
-            //        for (int j = 0; j < massAssignMentsFS2.Count; ++j)
-            //        {
-            //            ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
-            //            //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator);
-            //            //float tmp2 = massAssignMentsFS1[i].Item2;
-            //            //float tmp3 = massAssignMentsFS2[j].Item2;
-            //            //float tmp = tmp1 * tmp2 * tmp3;
-            //        }
-            //    }
-            //    return ans;
-            //}
+        //    for (int i = 0; i < massAssignMentsFS1.Count; ++i)
+        //    {
+        //        for (int j = 0; j < massAssignMentsFS2.Count; ++j)
+        //        {
+        //            ans += ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator) * massAssignMentsFS1[i].Item2 * massAssignMentsFS2[j].Item2; ;
+        //            //float tmp1 = ProbabilisticInterpretationOfRelationOnSets.compare<T>(massAssignMentsFS1[i].Item1, massAssignMentsFS2[j].Item1, compOperator);
+        //            //float tmp2 = massAssignMentsFS1[i].Item2;
+        //            //float tmp3 = massAssignMentsFS2[j].Item2;
+        //            //float tmp = tmp1 * tmp2 * tmp3;
+        //        }
+        //    }
+        //    return ans;
+        //}
         public static float alsoDistcreteFuzzySets<T>(DiscreteFuzzySet<T> fs1, DiscreteFuzzySet<T> fs2) where T : IComparable<T>
         {
             List<VoteCrispDefinition<T>> massAssignMentsFS1 = MassAssignment.createMassAssignment<T>(fs1);

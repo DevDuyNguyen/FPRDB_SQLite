@@ -56,6 +56,8 @@ namespace BLL.DomainObject
             return resultIntervalProbability;
         }
         private List<float> genericCalculateProbabilisticInterpretation<T1, T2>(FuzzyProbabilisticValue<T1> fprobValue, FuzzySet<T2> constant)
+            where T1:IComparable<T1>
+            where T2 : IComparable<T2>
         {
             //if (!(typeof(T1) == typeof(int) && typeof(T2) == typeof(float)) && !(typeof(T1) == typeof(float) && typeof(T2) == typeof(int)))
             //    throw new InvalidOperationException($"{typeof(T1).Name} and {typeof(T2).Name} aren't compatible for probabilistic interpretation of selection expression");

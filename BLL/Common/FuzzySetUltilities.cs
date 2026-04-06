@@ -80,6 +80,19 @@ namespace BLL.Common
             }
 
         }
+        //public static BaseFuzzySet turnConstantToBaseFuzzySet(Constant c, MetadataManager metaDataMgr)
+        //{
+        //    if (c is IntConstant)
+        //        return turnConstantToFuzzySet<int>(c, metaDataMgr);
+        //    else if (c is FloatConstant)
+        //        return turnConstantToFuzzySet<float>(c, metaDataMgr);
+        //    else if (c is StringConstant)
+        //        return turnConstantToFuzzySet<string>(c, metaDataMgr);
+        //    else if (c is BooleanConstant)
+        //        return turnConstantToFuzzySet<bool>(c, metaDataMgr);
+        //    else if (c is FuzzySetConstant)
+        //        return turnConstantToFuzzySet<bool>(c, metaDataMgr);
+        //}
         public static DiscreteFuzzySet<float> turnINTDistcreteFuzzySetToFLOATDistcreteFuzzySet(DiscreteFuzzySet<int> fs)
         {
             List<float> values = new List<float>();
@@ -88,6 +101,18 @@ namespace BLL.Common
                 values.Add(Convert.ToSingle(v));
             }
             return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT, fs.getOID());
+        }
+        public static Type getDefiningDomain(BaseFuzzySet fs)
+        {
+            if (fs is FuzzySet<int>)
+                return typeof(int);
+            else if (fs is FuzzySet<float>)
+                return typeof(float);
+            else if (fs is FuzzySet<string>)
+                return typeof(string);
+            else //if (fs is FuzzySet<bool>)
+                return typeof(bool);
+
         }
     }
 }
