@@ -115,6 +115,8 @@ namespace BLL.SQLProcessing
             for (; fs1_left_bottom <= fs1_right_bottom; fs1_left_bottom += delta)
             {
                 fs1_Values.Add(fs1_left_bottom);
+                //float tmp_check = fs1.getMembershipDegree(fs1_left_bottom);
+                //fs1_Memberships.Add(tmp_check);
                 fs1_Memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
             }
             //add the discrete set's universe of discourse to the discretized continuous fuzzy set
@@ -122,9 +124,13 @@ namespace BLL.SQLProcessing
             foreach (T v in fs2.valueSet)
             {
                 tmp_v = Convert.ToSingle(v);
-                if (fs1_Values.BinarySearch(tmp_v)<0){
-                    fs1_Values.Add(tmp_v);
-                    fs1_Memberships.Add(fs1.getMembershipDegree(tmp_v));
+                if (tmp_v>=fs1_left_bottom && tmp_v<=fs1_right_bottom)
+                {
+                    if (fs1_Values.BinarySearch(tmp_v) < 0)
+                    {
+                        fs1_Values.Add(tmp_v);
+                        fs1_Memberships.Add(fs1.getMembershipDegree(tmp_v));
+                    }
                 }
             }
             return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.distFS_FLOAT, -1);

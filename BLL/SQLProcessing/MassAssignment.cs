@@ -43,7 +43,7 @@ namespace BLL.SQLProcessing
             for (int i = 0; i < fs.valueSet.Count; ++i)
             {
                 
-                if (fs.membershipDegreeSet[i] == currentDegree)
+                if (CompareOperatorUltilities.CompareFloats(fs.membershipDegreeSet[i], currentDegree)==0)
                 {
                     tmpSubSet.Add(fs.valueSet[i]);
                 }

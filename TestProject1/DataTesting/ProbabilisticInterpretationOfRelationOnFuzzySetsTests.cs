@@ -200,6 +200,66 @@ namespace TestProject1.DataTesting
             //assert
             Assert.Equal(expected.Message, actual.Message);
         }
+        class sameDefiningDomainsConstantFuzzySet_testdata : TheoryData<Type, BaseFuzzySet, BaseFuzzySet, CompareOperation, float>
+        {
+            public sameDefiningDomainsConstantFuzzySet_testdata()
+            {
+                //1.1=>{1.1:1, 2:0.1, 3:0.5}->1
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f }, new List<float> { 1 }, FieldType.FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 2, 3 }, new List<float> { 1, 0.1f, 0.5f }, FieldType.VARCHAR),
+                    CompareOperation.ALSO,
+                    1
+                    );
+                //1.1={1.1:1, 2:0.1, 3:0.5}->11/15
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f }, new List<float> { 1 }, FieldType.FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 2, 3 }, new List<float> { 1, 0.1f, 0.5f }, FieldType.VARCHAR),
+                    CompareOperation.EQUAL,
+                    11.0f / 15.0f
+                    );
+                //15.0=> Approx_15 (15, 1), (10, 0) (20, 0) -> 1
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 15 }, new List<float> { 1 }, FieldType.FLOAT),
+                    new ContinuousFuzzySet(10, 15, 15, 20),
+                    CompareOperation.ALSO,
+                    1
+                    );
+                //15.0 > Approx_15(15, 1), (10, 0)(20, 0)-> 1
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 15 }, new List<float> { 1 }, FieldType.FLOAT),
+                    new ContinuousFuzzySet(10, 15, 15, 20),
+                    CompareOperation.GREATER_THAN,
+                    0.48963f
+                    );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(sameDefiningDomainsConstantFuzzySet_testdata))]
+        public void sameDefiningDomainsConstantFuzzySet_testing(Type t, BaseFuzzySet fs1, BaseFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual;
+            if (t == typeof(int))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int>(fs1 as FuzzySet<int>, fs2 as FuzzySet<int>, op);
+            else if (t == typeof(float))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1 as FuzzySet<float>, fs2 as FuzzySet<float>, op);
+            else if (t == typeof(string))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<string>(fs1 as FuzzySet<string>, fs2 as FuzzySet<string>, op);
+            else //if (t == typeof(string))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<bool>(fs1 as FuzzySet<bool>, fs2 as FuzzySet<bool>, op);
+            //assert
+            Assert.Equal(expected, actual, 0.05);
+        }
+
+
+
 
     }
 }
