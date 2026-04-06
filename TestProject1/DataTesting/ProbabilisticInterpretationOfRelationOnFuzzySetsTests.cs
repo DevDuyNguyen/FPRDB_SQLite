@@ -255,7 +255,7 @@ namespace TestProject1.DataTesting
             else //if (t == typeof(string))
                 actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<bool>(fs1 as FuzzySet<bool>, fs2 as FuzzySet<bool>, op);
             //assert
-            Assert.Equal(expected, actual, 0.05);
+            Assert.Equal(expected, actual, 0.02);
         }
         class differentDefiningDomainsConstantFuzzySet_testdata : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, float>
         {
@@ -310,7 +310,7 @@ namespace TestProject1.DataTesting
             if (t1 == typeof(int) && t2 == typeof(float))
                 actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int, float>(fs1 as FuzzySet<int>, fs2 as FuzzySet<float>, op);
             //assert
-            Assert.Equal(expected, actual, 0.05);
+            Assert.Equal(expected, actual, 0.02);
         }
         class incompatibleDifferentDefiningDomainConstantAndFuzzySet_TestData : TheoryData<Type, BaseFuzzySet, Type, BaseFuzzySet, CompareOperation, Exception, Type>
         {
@@ -342,6 +342,55 @@ namespace TestProject1.DataTesting
             Assert.Equal(expected.Message, actual.Message);
         }
 
+        class sameDefiningDomainsFuzzySetAndFuzzySet_testdata : TheoryData<Type, BaseFuzzySet, BaseFuzzySet, CompareOperation, float>
+        {
+            public sameDefiningDomainsFuzzySetAndFuzzySet_testdata()
+            {
+                //{1.1:0.5, 2.1:1, 3.1:0.5} < {4.1:0.5, 5.1:1, 6.1:0.5} -> 1
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 2.1f, 3.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 4.1f, 5.1f, 6.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    CompareOperation.LESS_THAN,
+                    1
+                    );
+                //{1.1:0.5, 2.1:1, 3.1:0.5} = {4.1:0.5, 5.1:1, 6.1:0.5} = 0
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 1.1f, 2.1f, 3.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 4.1f, 5.1f, 6.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    CompareOperation.EQUAL,
+                    0
+                    );
+                //{4.1:0.5, 5.1:1, 6.1:0.5}=>{5.1:0.8, 6.1:1} = 9/20
+                Add(
+                    typeof(float),
+                    new DiscreteFuzzySet<float>(new List<float> { 4.1f, 5.1f, 6.1f }, new List<float> { 0.5f, 1, 0.5f }, FieldType.FLOAT),
+                    new DiscreteFuzzySet<float>(new List<float> { 5.1f, 6.1f }, new List<float> { 0.8f, 1 }, FieldType.FLOAT),
+                    CompareOperation.GREATER_EQUAL,
+                    13.0f/30.0f
+                    );
+
+            }
+        }
+        [Theory]
+        [ClassData(typeof(sameDefiningDomainsFuzzySetAndFuzzySet_testdata))]
+        public void sameDefiningDomainsFuzzySetAndFuzzySet_testing(Type t, BaseFuzzySet fs1, BaseFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual;
+            if (t == typeof(int))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int>(fs1 as FuzzySet<int>, fs2 as FuzzySet<int>, op);
+            else if (t == typeof(float))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1 as FuzzySet<float>, fs2 as FuzzySet<float>, op);
+            else if (t == typeof(string))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<string>(fs1 as FuzzySet<string>, fs2 as FuzzySet<string>, op);
+            else //if (t == typeof(string))
+                actual = ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<bool>(fs1 as FuzzySet<bool>, fs2 as FuzzySet<bool>, op);
+            //assert
+            Assert.Equal(expected, actual, 0.02);
+        }
 
 
     }
