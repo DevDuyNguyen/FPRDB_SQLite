@@ -268,7 +268,7 @@ namespace TestProject1.DataTesting
                     typeof(float),
                     new DiscreteFuzzySet<float>(new List<float> { 1, 2.1f, 3 }, new List<float> { 1, 0.1f, 0.5f }, FieldType.FLOAT),
                     CompareOperation.LESS_THAN,
-                    4.0f/15.0f
+                    4.0f / 15.0f
                     );
                 //1>={1:1, 2.1:0.1, 3:0.5}->11/15
                 Add(
@@ -277,7 +277,7 @@ namespace TestProject1.DataTesting
                     typeof(float),
                     new DiscreteFuzzySet<float>(new List<float> { 1, 2.1f, 3 }, new List<float> { 1, 0.1f, 0.5f }, FieldType.FLOAT),
                     CompareOperation.GREATER_EQUAL,
-                    11.0f/15.0f
+                    11.0f / 15.0f
                     );
                 //15=> Approx_15 (15, 1), (10, 0) (20, 0) -> 1
                 Add(
@@ -459,6 +459,38 @@ namespace TestProject1.DataTesting
             //arrange
             //act
             float actual= ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<float>(fs1 as FuzzySet<float>, fs2 as FuzzySet<float>, op); ;
+            //assert
+            Assert.Equal(expected, actual, 0.05);
+        }
+        class discreteFuzzySetContinuousFuzzySets_testdata : TheoryData<BaseFuzzySet, ContinuousFuzzySet, CompareOperation, float>
+        {
+            public discreteFuzzySetContinuousFuzzySets_testdata()
+            {
+                ////About_30 {29:0.5, 30:1, 31:0.5}==>young (0,0) (0,1) (20,1) (35,0) -> 1/3
+                //Add(
+                //    new DiscreteFuzzySet<int>(new List<int> { 29, 30, 31 }, new List<float> { 0.5f, 1, 0.5f}, FieldType.INT),
+                //    new ContinuousFuzzySet(0, 0, 20, 35),
+                //    CompareOperation.ALSO,
+                //    1.0f/3.0f
+                //    );
+                //About_30 {29:0.5, 30:1, 31:0.5}==>young (0,0) (0,1) (20,1) (35,0) -> 1/3
+                Add(
+                    new DiscreteFuzzySet<int>(new List<int> { 30 }, new List<float> { 1 }, FieldType.INT),
+                    new ContinuousFuzzySet(0, 0, 20, 35),
+                    CompareOperation.ALSO,
+                    1.0f / 3.0f
+                    );
+            }
+        }
+        [Theory]
+        [ClassData(typeof(discreteFuzzySetContinuousFuzzySets_testdata))]
+        public void discreteFuzzySetContinuousFuzzySets_testing(BaseFuzzySet fs1, ContinuousFuzzySet fs2, CompareOperation op, float expected)
+        {
+            //arrange
+            //act
+            float actual = 0;
+            if(fs1 is FuzzySet<int>)
+                actual=ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet<int,float>(fs1 as FuzzySet<int>, fs2 as FuzzySet<float>, op);
             //assert
             Assert.Equal(expected, actual, 0.05);
         }

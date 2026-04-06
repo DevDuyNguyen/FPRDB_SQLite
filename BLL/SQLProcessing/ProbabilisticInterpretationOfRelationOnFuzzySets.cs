@@ -10,6 +10,23 @@ using System.Threading.Tasks;
 
 namespace BLL.SQLProcessing
 {
+    public class FloatComparer : IComparer<float>
+    {
+        private readonly float _tolerance;
+
+        public FloatComparer(float tolerance = 0.001f)
+        {
+            _tolerance = tolerance;
+        }
+
+        public int Compare(float x, float y)
+        {
+            if (Math.Abs(x - y) <= _tolerance)
+                return 0;               // Consider them equal
+            return x.CompareTo(y);
+        }
+    }
+
     public static class ProbabilisticInterpretationOfRelationOnFuzzySets
     {
         //not done: mocking for private
@@ -112,12 +129,12 @@ namespace BLL.SQLProcessing
             float delta = (fs1_right_bottom - fs1_left_bottom) / maxDiscretePoint;
             List<float> fs1_Values = new List<float>();
             List<float> fs1_Memberships = new List<float>();
-            for (; fs1_left_bottom <= fs1_right_bottom; fs1_left_bottom += delta)
+            for (float i= fs1_left_bottom; i <= fs1_right_bottom; i += delta)
             {
-                fs1_Values.Add(fs1_left_bottom);
+                fs1_Values.Add(i);
                 //float tmp_check = fs1.getMembershipDegree(fs1_left_bottom);
                 //fs1_Memberships.Add(tmp_check);
-                fs1_Memberships.Add(fs1.getMembershipDegree(fs1_left_bottom));
+                fs1_Memberships.Add(fs1.getMembershipDegree(i));
             }
             //add the discrete set's universe of discourse to the discretized continuous fuzzy set
             float tmp_v;
@@ -126,7 +143,7 @@ namespace BLL.SQLProcessing
                 tmp_v = Convert.ToSingle(v);
                 if (tmp_v>=fs1_left_bottom && tmp_v<=fs1_right_bottom)
                 {
-                    if (fs1_Values.BinarySearch(tmp_v) < 0)
+                    if (fs1_Values.BinarySearch(tmp_v, new FloatComparer()) < 0)
                     {
                         fs1_Values.Add(tmp_v);
                         fs1_Memberships.Add(fs1.getMembershipDegree(tmp_v));
