@@ -92,6 +92,41 @@ namespace TestProject1.DataTesting
             Assert.Equal(expected[0], actual[0], 0.05);
         }
 
+        [Fact]
+        public void selectionExpression_Conjunction_SelectionExpression()
+        {
+            //arrange
+            FPRDBSchema schema = new FPRDBSchema(
+                "sche1",
+                new List<Field> {
+                    new Field("id", new FieldInfo(FieldType.INT, 0)),
+                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                },
+                new List<string> { "id" }
+                );
+            Plan p = new RelationPlan("rel1", this.compRoot.getMetaDataManger(), this.compRoot.getDBMgr(), this.compRoot.getParser());
+            Scan s = p.open();
+            AtomicSelectionExpressionFieldConstant lSelectionExpression = new AtomicSelectionExpressionFieldConstant("att3", new FuzzySetConstant("approx_15"), CompareOperation.ALSO, this.compRoot.getMetaDataManger());
+            AtomicSelectionExpressionFieldField rSelectionExpression = new AtomicSelectionExpressionFieldField("att2", "att1", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+            CompoundSelectionExpression selectionExpression = new CompoundSelectionExpression(lSelectionExpression, rSelectionExpression, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+            //act
+            //assert
+
+            //t1
+            s.next();
+            List<float> expected = new List<float> { 0.01f, 0.0342f };
+            List<float> actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
+            Assert.Equal(expected[0], actual[0], 0.05);
+
+            //t2
+            s.next();
+            expected = new List<float> { 0.0106f, 0.036f };
+            actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
+            Assert.Equal(expected[0], actual[0], 0.05);
+        }
+
 
 
 
