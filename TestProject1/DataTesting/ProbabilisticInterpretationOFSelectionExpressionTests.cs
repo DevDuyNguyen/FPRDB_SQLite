@@ -26,20 +26,19 @@ namespace TestProject1.DataTesting
             this.compRoot.getDBMgr().loadDB(this.testDataPath);
         }
 
-
         [Fact]
         public void attributeCompareToConstant()
         {
             //arrange
             FPRDBSchema schema = new FPRDBSchema(
                 "sche1",
-                new List<Field> { 
+                new List<Field> {
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
                     new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
                     new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
                     new Field("att3", new FieldInfo(FieldType.contFS, 0))
                 },
-                new List<string> { "id"}
+                new List<string> { "id" }
                 );
             Plan p = new RelationPlan("rel1", this.compRoot.getMetaDataManger(), this.compRoot.getDBMgr(), this.compRoot.getParser());
             Scan s = p.open();
@@ -59,6 +58,41 @@ namespace TestProject1.DataTesting
             actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
             Assert.Equal(expected[0], actual[0], 0.05);
         }
+
+        [Fact]
+        public void attributeCompareToAttribute()
+        {
+            //arrange
+            FPRDBSchema schema = new FPRDBSchema(
+                "sche1",
+                new List<Field> { 
+                    new Field("id", new FieldInfo(FieldType.INT, 0)),
+                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                },
+                new List<string> { "id"}
+                );
+            Plan p = new RelationPlan("rel1", this.compRoot.getMetaDataManger(), this.compRoot.getDBMgr(), this.compRoot.getParser());
+            Scan s = p.open();
+            AtomicSelectionExpressionFieldField selectionExpression = new AtomicSelectionExpressionFieldField("att2","att1", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+            //act
+            //assert
+
+            //t1
+            s.next();
+            List<float> expected = new List<float> { 0.02667f, 0.06f };
+            List<float> actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
+            Assert.Equal(expected[0], actual[0], 0.05);
+
+            //t2
+            s.next();
+            expected = new List<float> { 0.13334f, 0.3f };
+            actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
+            Assert.Equal(expected[0], actual[0], 0.05);
+        }
+
+
 
 
     }
