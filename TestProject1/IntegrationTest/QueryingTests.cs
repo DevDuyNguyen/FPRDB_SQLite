@@ -24,6 +24,21 @@ namespace TestProject1.IntegrationTest
         }
 
         //[Fact]
+        public void selectTest()
+        {
+            //arrange
+            string sql = "Select * from rel1 where {(att2 = ⨂_in  att1)[0.4, 0.5] or (att3 ⇒ approx_15  ⨂_in   att2= ⨂_in att1)[0,0.04]} and (att3 ⇒ approx_15)[0.3,0.6]";
+            //act
+            Plan plan = this.sqlProcessor.createQueryPlan(sql);
+            Scan scan = plan.open();
+            //assert
+            while (scan.next())
+            {
+
+            }
+        }
+
+        //[Fact]
         public void selectAllTest()
         {
             //arrange
