@@ -195,6 +195,42 @@ namespace TestProject1.DataTesting
             actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
             Assert.Equal(expected[0], actual[0], 0.02);
         }
+        [Fact]
+        public void selectEx1_Disjunction_SelectEx2_Conjunction_SelectEx3()
+        {
+            //arrange
+            FPRDBSchema schema = new FPRDBSchema(
+                "sche1",
+                new List<Field> {
+                    new Field("id", new FieldInfo(FieldType.INT, 0)),
+                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                },
+                new List<string> { "id" }
+                );
+            Plan p = new RelationPlan("rel1", this.compRoot.getMetaDataManger(), this.compRoot.getDBMgr(), this.compRoot.getParser());
+            Scan s = p.open();
+            AtomicSelectionExpressionFieldConstant selExpression1 = new AtomicSelectionExpressionFieldConstant("att3", new FuzzySetConstant("approx_15"), CompareOperation.ALSO, this.compRoot.getMetaDataManger());
+            AtomicSelectionExpressionFieldConstant selExpression2 = new AtomicSelectionExpressionFieldConstant("att2", new IntConstant(1), CompareOperation.GREATER_THAN, this.compRoot.getMetaDataManger());
+            AtomicSelectionExpressionFieldField selExpression3 = new AtomicSelectionExpressionFieldField("att2", "att1", ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+            SelectionExpression selectionExpression = new CompoundSelectionExpression(selExpression1, selExpression2, ProbabilisticCombinationStrategy.DISJUNCTION_INDEPENDANCE);
+            selectionExpression = new CompoundSelectionExpression(selectionExpression, selExpression3, ProbabilisticCombinationStrategy.CONJUNCTION_INDEPENDANCE);
+            //act
+            //assert
+
+            //t1
+            s.next();
+            List<float> expected = new List<float> { 0.0167f, 0.0497f };
+            List<float> actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
+            Assert.Equal(expected[0], actual[0], 0.02);
+
+            //t2
+            s.next();
+            expected = new List<float> { 0.1088f, 0.3f };
+            actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
+            Assert.Equal(expected[0], actual[0], 0.02);
+        }
 
 
 
