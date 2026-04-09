@@ -38,12 +38,16 @@ namespace BLL.DomainObject
         }
         public override List<SelectionExpression> getAtomicSelectionExpressions()
         {
-            return this.lSelectionCondition.getAtomicSelectionExpressions().Concat(this.rSelectionCondition.getAtomicSelectionExpressions()).ToList();
+            List<SelectionExpression> ans= this.lSelectionCondition.getAtomicSelectionExpressions();
+            if (this.rSelectionCondition != null)
+                ans.Concat(this.rSelectionCondition.getAtomicSelectionExpressions()).ToList();
+            return ans;
         }
         public override List<string> getMentionedAttributes()
         {
             List<string> ans = new List<string>(this.lSelectionCondition.getMentionedAttributes());
-            ans.AddRange(this.rSelectionCondition.getMentionedAttributes());
+            if(this.rSelectionCondition!=null)
+                ans.AddRange(this.rSelectionCondition.getMentionedAttributes());
             return ans;
         }
     }

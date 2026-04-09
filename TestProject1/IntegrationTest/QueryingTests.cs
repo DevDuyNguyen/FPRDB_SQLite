@@ -17,10 +17,25 @@ namespace TestProject1.IntegrationTest
         private SQLProcessor sqlProcessor;
         public QueryingTests()
         {
-            this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestSqlite\\db1.db";
+            this.dbFile = "C:\\Users\\Phung\\Desktop\\nam4\\KLTN\\TestData\\TestData03\\TestData03.db";
             this.compRoot = new CompositionRoot();
             compRoot.getDBMgr().loadDB(this.dbFile);
             this.sqlProcessor = this.compRoot.getSQLProcessor();
+        }
+
+        //[Fact]
+        public void selectTest()
+        {
+            //arrange
+            string sql = "Select * from patient1,doctor1";
+            //act
+            Plan plan = this.sqlProcessor.createQueryPlan(sql);
+            Scan scan = plan.open();
+            //assert
+            while (scan.next())
+            {
+
+            }
         }
 
         //[Fact]

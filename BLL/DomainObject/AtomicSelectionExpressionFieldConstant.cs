@@ -55,7 +55,8 @@ namespace BLL.DomainObject
             }
             return resultIntervalProbability;
         }
-        private List<float> genericCalculateProbabilisticInterpretation<T1, T2>(FuzzyProbabilisticValue<T1> fprobValue, FuzzySet<T2> constant)
+        //not done: mocking for private
+        public List<float> genericCalculateProbabilisticInterpretation<T1, T2>(FuzzyProbabilisticValue<T1> fprobValue, FuzzySet<T2> constant)
             where T1:IComparable<T1>
             where T2 : IComparable<T2>
         {

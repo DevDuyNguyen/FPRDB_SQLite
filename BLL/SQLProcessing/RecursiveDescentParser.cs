@@ -53,8 +53,8 @@ namespace BLL.SQLProcessing
         public FieldInfo typeDef()
         {
             FieldType type;
-            int txtLength=0;
-           
+            int txtLength = 0;
+
             if (lexer.matchKeyword("INT"))
             {
                 type = FieldType.INT;
@@ -133,7 +133,7 @@ namespace BLL.SQLProcessing
                     //as it is supposed in Recursive Descent parsing technique
                     fieldDefList.Add(fieldDef());
                 }
-                
+
             }
             return fieldDefList;
         }
@@ -171,20 +171,20 @@ namespace BLL.SQLProcessing
                 string schemaName = schema();
                 lexer.eatDelimiter("(");
                 List<Field> fieldDefList = fieldDefs();
-                ConstraintData constraintData=null;
+                ConstraintData constraintData = null;
 
                 if (lexer.matchKeyword("CONSTRAINT"))
                 {
                     constraintData = constraintDef();
                 }
-                
+
                 return new FPRDBSchema(schemaName
-                    ,fieldDefList
-                    ,(constraintData!=null)?constraintData.getFields():null
-                    ,(constraintData != null) ? constraintData.getName() : null);
+                    , fieldDefList
+                    , (constraintData != null) ? constraintData.getFields() : null
+                    , (constraintData != null) ? constraintData.getName() : null);
 
             }
-            catch(MismatchTokenType ex)
+            catch (MismatchTokenType ex)
             {
                 throw createSQLSyntaxException(ex.Message);
             }
@@ -198,7 +198,7 @@ namespace BLL.SQLProcessing
             if (!lexer.matchKeyword("CREATE"))
                 throw createSQLSyntaxException("Not a create statement");
             Token peekNextToken = lexer.peekNext();
-            if (peekNextToken.Terminal.Name=="identifier"&& peekNextToken.Text.ToUpper()== "SCHEMA")
+            if (peekNextToken.Terminal.Name == "identifier" && peekNextToken.Text.ToUpper() == "SCHEMA")
             {
                 return createSchema();
             }
@@ -293,7 +293,7 @@ namespace BLL.SQLProcessing
         public FuzzyProbabilisticValueParsingData fuzzyProbabilisticValue()
         {
             FuzzyProbabilisticValueParsingData ans = new FuzzyProbabilisticValueParsingData();
-            List<Constant> valueList=new List<Constant>();
+            List<Constant> valueList = new List<Constant>();
             List<float> lowerBoundList = new List<float>();
             List<float> upperBoundList = new List<float>();
 
@@ -462,7 +462,7 @@ namespace BLL.SQLProcessing
         public List<SelectField> selectList()
         {
             List<SelectField> ans = new List<SelectField>();
-            if (lexer.matchDelimiter("*")){
+            if (lexer.matchDelimiter("*")) {
                 lexer.eatDelimiter("*");
                 return new List<SelectField> { new SelectField("", "*") };
             }
@@ -523,7 +523,7 @@ namespace BLL.SQLProcessing
                 }
                 return relNames;
             }
-            
+
         }
         public SelectionExpression PrimarySelectionExpression()
         {
@@ -571,7 +571,7 @@ namespace BLL.SQLProcessing
             else
             {
                 lexer.eatDelimiter("(");
-                SelectionExpression res= selectionExpression();
+                SelectionExpression res = selectionExpression();
                 lexer.eatDelimiter(")");
                 return res;
             }
@@ -581,11 +581,11 @@ namespace BLL.SQLProcessing
         {
             //not done: this code isn't elegant, look at ANDSelectionCondition
             SelectionExpression leftSExpression = PrimarySelectionExpression();
-            SelectionExpression ans= leftSExpression;
-            if (!lexer.hasNext())
+            SelectionExpression ans = leftSExpression;
+            if (!lexer.hasNext() || !(lexer.matchProbabilisticCombinationStrategy()))
                 return ans;
-            else if (!(lexer.matchProbabilisticCombinationStrategy()) && !lexer.matchDelimiter(")"))
-                throw createSQLSyntaxException("Supposed to be a probabilistic combination strategy");
+            //else if (!(lexer.matchProbabilisticCombinationStrategy()) && !lexer.matchDelimiter(")"))
+            //    throw createSQLSyntaxException("Supposed to be a probabilistic combination strategy");
             bool isEatNotConjunctionStrategy = false;
             while (lexer.matchProbabilisticCombinationStrategy())
             {
@@ -612,10 +612,10 @@ namespace BLL.SQLProcessing
             //not done: this code isn't elegant, look at ANDSelectionCondition
             SelectionExpression leftSExpression = CONJUNCTIONSelectionExpression();
             SelectionExpression ans = leftSExpression;
-            if (!lexer.hasNext())
+            if (!lexer.hasNext() || !(lexer.matchProbabilisticCombinationStrategy()))
                 return ans;
-            else if (!(lexer.matchProbabilisticCombinationStrategy()) && !lexer.matchDelimiter(")"))
-                throw createSQLSyntaxException("Supposed to be a probabilistic combination strategy");
+            //else if (!(lexer.matchProbabilisticCombinationStrategy()) && !lexer.matchDelimiter(")"))
+            //    throw createSQLSyntaxException("Supposed to be a probabilistic combination strategy");
             string strStrategy;
             while (lexer.matchProbabilisticCombinationStrategy())
             {
@@ -636,15 +636,17 @@ namespace BLL.SQLProcessing
         }
         public SelectionCondition PrimarySelectionCondition()
         {
-            lexer.eatDelimiter("(");
-            if (lexer.matchDelimiter("("))
+            
+            if (lexer.matchDelimiter("{"))
             {
+                lexer.eatDelimiter("{");
                 SelectionCondition selCond = selectionCondition();
-                lexer.eatDelimiter(")");
+                lexer.eatDelimiter("}");
                 return selCond;
             }
             else
             {
+                lexer.eatDelimiter("(");
                 SelectionExpression selectionEx = selectionExpression();
                 lexer.eatDelimiter(")");
                 lexer.eatDelimiter("[");
@@ -779,15 +781,17 @@ namespace BLL.SQLProcessing
         }
         public QueryData query()
         {
-            try{
-                var data = UNION_EXCEPT_Query();
+            //try{
+            //    var data = UNION_EXCEPT_Query();
 
-                return data;
-            }
-            finally{
+            //    return data;
+            //}
+            //finally{
 
-                this.lexer.clearTokens();
-            }
+            //    this.lexer.clearTokens();
+            //}
+            var data = UNION_EXCEPT_Query();
+            return data;
         }
 
     }

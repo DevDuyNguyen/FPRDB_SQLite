@@ -1052,7 +1052,7 @@ namespace TestProject1.IntegrationTest
                     1
                     );
                 SelectionCondition root = new CompoundSelectionCondition(l2_1, l2_2, LogicalConnective.AND);
-                Add("((field1=1)[1,1] or (field1=1)[1,1]) AND (field1=1)[1,1]", root);
+                Add("{(field1=1)[1,1] or (field1=1)[1,1]} AND (field1=1)[1,1]", root);
 
             }
         }

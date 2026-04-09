@@ -54,7 +54,7 @@ namespace BLL.SQLProcessing
                 throw new QueryDataNotExistException($"Relation {this.relationInfo.getRelName()} doesn't have attribute {fldName}");
             var fprobValue = this.currentTuple[index];
             if (!(fprobValue is FuzzyProbabilisticValue<T>))
-                throw new InvalidCastException($"Fuzzy probabilistic value of {fldName} doesn't contain fuzzy sets defined on domain of {typeof(T).Name}");
+                throw new InvalidCastException($"Fuzzy probabilistic value of field {fldName} doesn't contain fuzzy sets defined on domain of {typeof(T).Name}");
             return (FuzzyProbabilisticValue<T>)fprobValue;
 
         }

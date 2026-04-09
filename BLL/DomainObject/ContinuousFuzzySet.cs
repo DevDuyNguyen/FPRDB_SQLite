@@ -181,7 +181,7 @@ namespace BLL.DomainObject
                     return fs;
                 else if (this.isSubsetOf(fs))
                     return this;
-                else if (fs.isEqualTo(fs))
+                else if (this.isEqualTo(fs))
                     return this;
 
                 ContinuousFuzzySet cfs = (ContinuousFuzzySet)(object)fs;
