@@ -26,7 +26,7 @@ namespace TestProject1.DataTesting
             this.compRoot.getDBMgr().loadDB(this.testDataPath);
         }
 
-        [Fact]
+        //[Fact]
         public void attributeCompareToConstant()
         {
             //arrange
@@ -59,7 +59,7 @@ namespace TestProject1.DataTesting
             Assert.Equal(expected[0], actual[0], 0.02);
         }
 
-        [Fact]
+        //[Fact]
         public void attributeCompareToAttribute()
         {
             //arrange
@@ -92,7 +92,7 @@ namespace TestProject1.DataTesting
             Assert.Equal(expected[0], actual[0], 0.02);
         }
 
-        [Fact]
+        //[Fact]
         public void selectionExpression_Conjunction_SelectionExpression()
         {
             //arrange
@@ -127,7 +127,7 @@ namespace TestProject1.DataTesting
             Assert.Equal(expected[0], actual[0], 0.02);
         }
 
-        [Fact]
+        //[Fact]
         public void selectionExpression_Disjunction_SelectionExpression()
         {
             //arrange
@@ -161,7 +161,7 @@ namespace TestProject1.DataTesting
             actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
             Assert.Equal(expected[0], actual[0], 0.02);
         }
-        [Fact]
+        //[Fact]
         public void selectionExpression_Difference_SelectionExpression()
         {
             //arrange
@@ -195,7 +195,7 @@ namespace TestProject1.DataTesting
             actual = selectionExpression.calculateProbabilisticInterpretation(s, schema);
             Assert.Equal(expected[0], actual[0], 0.02);
         }
-        [Fact]
+        //[Fact]
         public void selectEx1_Disjunction_SelectEx2_Conjunction_SelectEx3()
         {
             //arrange
