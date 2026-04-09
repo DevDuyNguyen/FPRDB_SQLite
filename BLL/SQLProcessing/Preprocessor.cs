@@ -606,6 +606,11 @@ namespace BLL.SQLProcessing
                     
                     data1.schema = new FPRDBSchema(null, tmpField, null);
 
+                    /*Checking: Every attribute that is mentioned in the SELECT- or WHERE-clause 
+                     * must be an attribute of some relation in the current scope. It also checks ambiguity, 
+                     * signaling an error if the attribute is in the scope of two or more relations with that attribute.
+                     */
+                    checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(relations, selectList.Select(f => f.field).ToList(), attributesInSelectionCondition);
                 }
                 else if (data is BaseNaturalJoinQueryData)
                 {
@@ -652,10 +657,7 @@ namespace BLL.SQLProcessing
 
                     data1.schema = new FPRDBSchema(null, tmpField, null);
                 }
-                /*Checking: Every attribute that is mentioned in the SELECT- or WHERE-clause 
-                 * must be an attribute of some relation in the current scope. It also checks ambiguity, 
-                 * signaling an error if the attribute is in the scope of two or more relations with that attribute.*/
-                checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(relations, selectList.Select(f => f.field).ToList(), attributesInSelectionCondition);
+                
 
                 if (atomicSelectionExpressions!=null)
                 {

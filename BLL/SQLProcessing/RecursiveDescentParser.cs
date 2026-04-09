@@ -781,15 +781,17 @@ namespace BLL.SQLProcessing
         }
         public QueryData query()
         {
-            try{
-                var data = UNION_EXCEPT_Query();
+            //try{
+            //    var data = UNION_EXCEPT_Query();
 
-                return data;
-            }
-            finally{
+            //    return data;
+            //}
+            //finally{
 
-                this.lexer.clearTokens();
-            }
+            //    this.lexer.clearTokens();
+            //}
+            var data = UNION_EXCEPT_Query();
+            return data;
         }
 
     }
