@@ -17,6 +17,7 @@ namespace BLL.Services
     public class DatabaseService
     {
         private DatabaseManager dbMgr;
+        public string getFPRDBDotExtenstion() => this.dbMgr.getFPRDBDotExtenstion();
 
         public DatabaseService(DatabaseManager dbMgr)
         {
