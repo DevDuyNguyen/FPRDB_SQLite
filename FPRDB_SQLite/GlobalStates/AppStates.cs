@@ -14,5 +14,11 @@ namespace GUI.GlobalStates
         public static List<FPRDBSchemaDTO> loadFPRDBSchemas;
         public static List<FPRDBRelationDTO> loadFPRDBSchemaRelations;
         public static int maxSelectTop = 100;
+        public static void clear()
+        {
+            createSChemaFieldTypes = null;
+            loadFPRDBSchemas = null;
+            loadFPRDBSchemaRelations = null;
+        }
     }
 }
