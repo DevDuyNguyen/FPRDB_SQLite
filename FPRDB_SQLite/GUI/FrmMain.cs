@@ -737,6 +737,15 @@ namespace FPRDB_SQLite.GUI
                     //load field types
                     AppStates.createSChemaFieldTypes = this.databaseService.getFieldTypes();
                 }
+                catch(InvalidFPRDBDatabaseFile ex)
+                {
+                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AppStates.clear();
+                    //clear treview of FPRDB schemas and relaions
+                    isDatabaseLoaded = false;
+                    changeStatusTab();
+                    treeView.Nodes.Clear();
+                }
                 catch (IOException ex)
                 {
                     XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -69,10 +69,13 @@ namespace BLL.Services
         }
         public bool matchAttributeDefinition(List<SystemCatalogAttribute> attributeDefs)
         {
-            if (this.attributes == null && (attributeDefs == null || attributeDefs.Count == 0))
-                return true;
-            else
-                return false;
+            if (this.attributes == null)
+            {
+                if (attributeDefs == null || attributeDefs.Count == 0)
+                    return true;
+                else
+                    return false;
+            }
             if (attributeDefs.Count != this.attributes.Count)
                 return false;
             int index;
@@ -94,10 +97,13 @@ namespace BLL.Services
         }
         public bool matchForeignKeys(List<SystemCatalogForeignKeyMapping> foreignKeyMappingDefs)
         {
-            if (this.foreignKeyMappings == null && (foreignKeyMappingDefs == null || foreignKeyMappingDefs.Count==0))
-                return true;
-            else
-                return false;
+            if (this.foreignKeyMappings == null)
+            {
+                if (foreignKeyMappingDefs == null || foreignKeyMappingDefs.Count == 0)
+                    return true;
+                else
+                    return false;
+            }
             if (foreignKeyMappingDefs.Count != this.foreignKeyMappings.Count)
                 return false;
             int index;
@@ -136,7 +142,7 @@ namespace BLL.Services
         }
         private bool isMatchSystemCatalogTableAttributeDefinition(SystemCatalogTable table, out List<SystemCatalogAttribute> attributeDefs)
         {
-            using (IDataReader reader = this.dbMgr.executeQuery($"PRAGMA table_info('{table.name}'"))
+            using (IDataReader reader = this.dbMgr.executeQuery($"PRAGMA table_info('{table.name}')"))
             {
                 string name;
                 string type;
@@ -156,7 +162,7 @@ namespace BLL.Services
         }
         private bool isMatchSystemCatalogTableForeignKey(SystemCatalogTable table)
         {
-            using (IDataReader reader = this.dbMgr.executeQuery($"PRAGMA foreign_key_list('{table.name}');"))
+            using (IDataReader reader = this.dbMgr.executeQuery($"PRAGMA foreign_key_list('{table.name}')"))
             {
                 List<SystemCatalogForeignKeyMapping> foreignKeys = new List<SystemCatalogForeignKeyMapping>();
                 string fromColumn;
@@ -190,19 +196,8 @@ namespace BLL.Services
             return true;
         }
 
-        public bool isValidFPRDBDatabaseFile(string filePath)
+        public bool isValidFPRDBDatabaseFileStructure(string filePath)
         {
-
-            //file dot extension is .fprdb
-            int dotExtensionStartIndex = filePath.LastIndexOf(".");
-            if (dotExtensionStartIndex == -1)
-                throw new InvalidOperationException("The database file to be loaded must ends with .fprdb");
-            string dotExtension = filePath.Substring(dotExtensionStartIndex);
-            if(dotExtension!=this.dbMgr.getFPRDBDotExtenstion())
-                throw new InvalidOperationException("The database file to be loaded must ends with .fprdb");
-            //is a database file of sqlite
-            this.loadDB(filePath);
-
             //the structure follows the System catalog
             SystemCatalogTable fprdb_RelationSchema = new SystemCatalogTable(
                 "fprdb_RelationSchema",
@@ -495,7 +490,17 @@ namespace BLL.Services
         }
         public void loadDB(String filePath)
         {
+            //file dot extension is .fprdb
+            int dotExtensionStartIndex = filePath.LastIndexOf(".");
+            if (dotExtensionStartIndex == -1)
+                throw new InvalidOperationException("The database file to be loaded must ends with .fprdb");
+            string dotExtension = filePath.Substring(dotExtensionStartIndex);
+            if (dotExtension != this.dbMgr.getFPRDBDotExtenstion())
+                throw new InvalidOperationException("The database file to be loaded must ends with .fprdb");
+            //is a database file of sqlite
             this.dbMgr.loadDB(filePath);
+            //check if the selected file follow the designed system catalog of FPRDB
+            isValidFPRDBDatabaseFileStructure(filePath);
         }
         public List<string> getFieldTypes()
         {
