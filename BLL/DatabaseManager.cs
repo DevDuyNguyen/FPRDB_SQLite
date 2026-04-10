@@ -19,14 +19,36 @@ namespace BLL
     {
         private string connectionString;
         private IDbConnection connection;
+        private string dotExtension=".fprdb";
+
+        public string getFPRDBDotExtenstion() => this.dotExtension;
 
         //not done: Moq for mocking
         public void setConnectionString(string str)
         {
             this.connectionString = str;
         }
+        private void addFPRDBExtenstion(ref string filePath)
+        {
+            if (filePath == null || filePath == default)
+                throw new InvalidOperationException("filePath isn't provided");
+            int dotExtensionStartIndex = filePath.LastIndexOf('.');
+            if (dotExtensionStartIndex != -1)
+            {
+                string currentDotExtension = filePath.Substring(dotExtensionStartIndex);
+                if (currentDotExtension != this.dotExtension)
+                {
+                    filePath = filePath.Substring(0, dotExtensionStartIndex) + this.dotExtension;
+                }
+            }
+            else
+            {
+                filePath += this.dotExtension;
+            }
+        }
         public void createDB(string filePath)
         {
+            addFPRDBExtenstion(ref filePath);
             string directoryPath = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directoryPath))
                 throw new FileNotFoundException();

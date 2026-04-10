@@ -33,6 +33,7 @@ namespace FPRDB_SQLite.GUI
         private DatabaseService databaseService;
         private FPRDBSchemaService fprdbSchemaSerivce;
         private FPRDBRelationService fprdbRelationService;
+        private string fprdbDotExtension;
         //private SQLFileService sqlFileService;
         private bool isDatabaseLoaded = false;
         private string currentSQLFilePath = string.Empty;
@@ -51,6 +52,7 @@ namespace FPRDB_SQLite.GUI
         {
             this.compRoot = compRoot;
             this.databaseService = this.compRoot.getDatabaseService();
+            this.fprdbDotExtension = this.databaseService.getFPRDBDotExtenstion();
             this.sqlProcessor = this.compRoot.getSQLProcessor();
             this.fprdbSchemaSerivce = compRoot.getFPRDBSchemaService();
             this.fprdbRelationService = compRoot.getFPRDBRelationService();
@@ -720,7 +722,7 @@ namespace FPRDB_SQLite.GUI
             OpenFileDialog DialogOpen = new OpenFileDialog();
             DialogOpen.Title = "Open Fuzzy Probabilistic Relational Database (FPRDB)";
             // Chỉ lọc ra các file có đuôi .pdb hoặc .sqlite
-            DialogOpen.Filter = "Database file (*.db)|*.db";
+            DialogOpen.Filter = $"Database file (*{this.fprdbDotExtension})|*{this.fprdbDotExtension}";
             DialogOpen.DefaultExt = "db";
             DialogOpen.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
 
@@ -749,7 +751,7 @@ namespace FPRDB_SQLite.GUI
             {
                 SaveFileDialog DialogNew = new SaveFileDialog();
                 DialogNew.Title = "Create New Fuzzy Probabilistic Relational Database (FPRDB)";
-                DialogNew.Filter = "Database file (*.db)|*.db";
+                DialogNew.Filter = $"Database file (*{this.fprdbDotExtension})|*{this.fprdbDotExtension}";
                 DialogNew.DefaultExt = "db";
                 DialogNew.AddExtension = true;
                 DialogNew.RestoreDirectory = true;
