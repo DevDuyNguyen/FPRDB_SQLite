@@ -263,12 +263,24 @@ namespace BLL
             //not done: Moq for mocking
             if (!File.Exists(filePath))
                 throw new FileNotFoundException();
-            this.connectionString = $"Data Source={filePath};Version=3;";
+            this.connectionString = $"Data Source={filePath};Version=3;FailIfMissing=True;";
             this.connection = new SQLiteConnection(this.connectionString);
             try
             {
                 this.connection.Open();
-                this.connection.Close();
+                using (var cmd = this.connection.CreateCommand())
+                {
+                    // Quickest way to verify the file is actually a SQLite format
+                    cmd.CommandText = "PRAGMA quick_check(1);";
+                    var result = cmd.ExecuteScalar();
+
+                    if (!(result != null && result.ToString().Equals("ok", StringComparison.OrdinalIgnoreCase)))
+                        throw new InvalidOperationException($"{filePath} isn't a valid FPRDB database file");
+                }
+            }
+            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.NotADb)
+            {
+                throw new InvalidOperationException($"{filePath} isn't a valid FPRDB database file");
             }
             catch (Exception e)
             {
