@@ -50,6 +50,7 @@
             // 
             // continuosFuzzySetInfo
             // 
+            continuosFuzzySetInfo.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             continuosFuzzySetInfo.Location = new System.Drawing.Point(0, 12);
             continuosFuzzySetInfo.Name = "continuosFuzzySetInfo";
             continuosFuzzySetInfo.Size = new System.Drawing.Size(436, 231);
@@ -57,6 +58,7 @@
             // 
             // btnCancel
             // 
+            btnCancel.CausesValidation = false;
             btnCancel.Location = new System.Drawing.Point(340, 249);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(75, 25);
@@ -66,6 +68,7 @@
             // 
             // btnSave
             // 
+            btnSave.CausesValidation = false;
             btnSave.Location = new System.Drawing.Point(259, 249);
             btnSave.Name = "btnSave";
             btnSave.Size = new System.Drawing.Size(75, 25);

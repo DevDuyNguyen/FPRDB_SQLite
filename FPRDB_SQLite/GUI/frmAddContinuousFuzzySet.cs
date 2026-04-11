@@ -39,7 +39,7 @@ namespace FPRDB_SQLite.GUI
         {
             if (!continuosFuzzySetInfo.ValidateControls())
             {
-                XtraMessageBox.Show("Please fill out all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("Please fill out all required fields or fix invalid formats.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             var dto = continuosFuzzySetInfo.getContinuousFuzzySet();

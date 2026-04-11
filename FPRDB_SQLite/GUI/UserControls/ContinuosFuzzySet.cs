@@ -36,22 +36,60 @@ namespace FPRDB_SQLite.GUI.UserControls
         // Hàm set rules cho các control
         private void setValidationRules()
         {
+            // Cho phép chuyển focus sang nút khác dù đang có lỗi
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            dxValidationProvider1.ValidationMode = DevExpress.XtraEditors.DXErrorProvider.ValidationMode.Auto;
+
+            // Rule dùng chung cho ô đầu tiên (Name)
             var notEmptyRule = new ConditionValidationRule
             {
                 ConditionOperator = ConditionOperator.IsNotBlank,
-                ErrorText = "Required Field!!"
+                ErrorText = "Trường này không được để trống!",
+                ErrorType = ErrorType.Critical
             };
+            dxValidationProvider1.SetValidationRule(textFields[0], notEmptyRule);
 
-            foreach (var control in textFields)
+            // Xử lý các ô nhập số
+            foreach (var control in textFields.Skip(1))
             {
-                dxValidationProvider1.SetValidationRule(control, notEmptyRule);
+                control.Validating += (s, e) =>
+                {
+                    if (s is DevExpress.XtraEditors.TextEdit edit)
+                    {
+                        string input = edit.Text.Trim();
+                        ConditionValidationRule customRule = new ConditionValidationRule();
+                        customRule.ErrorType = ErrorType.Critical;
+
+                        if (string.IsNullOrEmpty(input))
+                        {
+                            customRule.ConditionOperator = ConditionOperator.IsNotBlank;
+                            customRule.ErrorText = "Required Field!!";
+                        }
+                        else if (!double.TryParse(input, out _))
+                        {
+                            customRule.ConditionOperator = ConditionOperator.Equals;
+                            customRule.Value1 = "Invalid@";
+                            customRule.ErrorText = "Vui lòng chỉ nhập số.";
+                        }
+                        else
+                        {
+                            dxValidationProvider1.SetValidationRule(edit, null);
+                            dxValidationProvider1.RemoveControlError(edit);
+                            return;
+                        }
+
+                        dxValidationProvider1.SetValidationRule(edit, customRule);
+                        dxValidationProvider1.Validate(edit);
+                    }
+                };
             }
         }
 
         // Ham validate toàn bộ control, được gọi từ form cha
         public bool ValidateControls()
         {
-            return dxValidationProvider1.Validate();
+            bool isValid = this.ValidateChildren();
+            return isValid && dxValidationProvider1.Validate();
         }
         // Hàm lấy dữ liệu từ UserControl để tạo một ContinuousFuzzySetDTO
         public ContinuousFuzzySetDTO getContinuousFuzzySet()
