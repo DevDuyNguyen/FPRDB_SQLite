@@ -205,6 +205,14 @@ namespace FPRDB_SQLite.GUI
                         }
                     }
                     service.updateFuzzySet(updatedFuzzySet);
+                    int currentIndex = lstFuzzySetResults.SelectedIndex;
+                    this.results[currentIndex] = updatedFuzzySet;
+                    lstFuzzySetResults.Items[currentIndex] = updatedFuzzySet.fuzzySetName;
+                    selectedFuzzySet = updatedFuzzySet;
+                    if (updatedFuzzySet is ContinuousFuzzySetDTO)
+                    {
+                        drawChartContinuousFS(updatedFuzzySet);
+                    }
                     XtraMessageBox.Show("Fuzzy set updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch(InvalidOperationException ex)
