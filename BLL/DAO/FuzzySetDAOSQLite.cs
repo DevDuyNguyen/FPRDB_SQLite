@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -43,8 +44,20 @@ namespace BLL.DAO
                 throw new NotSupportedException($"{typeof(T).Name} isn't supported");
             }
         }
+        private bool isElementXGetAssignedMembershipDegreeMoreThan1<T>(DiscreteFuzzySetDTO<T> fuzzySet)
+            where T:IComparable<T>
+        {
+            DiscreteFuzzySetSorter.MergeSort<T>(fuzzySet);
+            for(int i=0; i<fuzzySet.valueSet.Count-1; ++i)
+            {
+                if (fuzzySet.valueSet[i].CompareTo(fuzzySet.valueSet[i + 1])==0)
+                    throw new InvalidOperationException($"{fuzzySet.valueSet[i]} is assigned membership degree more than 1 time");
+            }
+            return true;
+        }
         //not done: Moq for mocking
         public DiscreteFuzzySet<T> createDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet)
+            where T : IComparable<T>
         {
             if (fuzzySet.fuzzySetName == "" || fuzzySet.fuzzySetName == null)
                 throw new InvalidDataException("Fuzzy set name is empty");
@@ -52,6 +65,9 @@ namespace BLL.DAO
                 throw new InvalidDataException("Fuzzy set name's universe of discourse is empty");
             if (fuzzySet.valueSet.Count!=fuzzySet.membershipDegreeSet.Count)
                 throw new InvalidDataException("Fuzzy set number of elements in the universe of discourse doesn't match number of membership degrees");
+
+            isElementXGetAssignedMembershipDegreeMoreThan1<T>(fuzzySet);
+
             foreach(float degree in fuzzySet.membershipDegreeSet)
             {
                 if (degree < 0 || degree > 1)

@@ -11,7 +11,7 @@ namespace BLL.Interfaces
 {
     public interface FuzzySetDAO
     {
-        public DiscreteFuzzySet<T> createDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet);
+        public DiscreteFuzzySet<T> createDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet) where T : IComparable<T>;
         public ContinuousFuzzySet createContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet);
         public List<BaseFuzzySet> findFuzzySet(string name);
         public List<FPRDBRelation>  getUsingRelations(FuzzySetDTO fuzzySet);
