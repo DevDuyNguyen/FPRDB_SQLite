@@ -1370,30 +1370,8 @@ namespace FPRDB_SQLite.GUI
                 splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             }
         }
-        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            string symbol = " ⇒ ";
-            // Kiểm tra nếu ô query đang trống thì gán thẳng
-            if (string.IsNullOrEmpty(memoEditTxtQuery.Text))
-            {
-                memoEditTxtQuery.Text = symbol;
-                memoEditTxtQuery.SelectionStart = symbol.Length;
-            }
-            else
-            {
-                // Lấy vị trí con trỏ hiện tại
-                int index = memoEditTxtQuery.SelectionStart;
+        private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⇒ ");
 
-                // Chèn ký hiệu vào đúng vị trí con trỏ
-                memoEditTxtQuery.Text = memoEditTxtQuery.Text.Insert(index, symbol);
-
-                // Đặt lại vị trí con trỏ sau khi chèn
-                memoEditTxtQuery.SelectionStart = index + symbol.Length;
-            }
-
-            // Tập trung con trỏ lại vào ô nhập liệu sau khi nhấn nút
-            memoEditTxtQuery.Focus();
-        }
         #endregion
         #region Tab Page Schema
         private void iNewSchema_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
