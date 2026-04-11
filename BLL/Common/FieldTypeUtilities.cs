@@ -40,6 +40,8 @@ namespace BLL.Common
         }
         public static FieldType turnSQLFieldTypeToEnumFieldType(string str)
         {
+            if(str==null)
+                throw new InvalidDataException($"Field type isn't provided");
             switch (str.ToUpper())
             {
                 case "INT":
