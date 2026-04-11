@@ -58,6 +58,7 @@ namespace BLL.Services
             return true;
         }
         public FuzzySetDTO createFuzzySet<T>(FuzzySetDTO fuzzySet)
+            where T : IComparable<T>
         {
             try
             {

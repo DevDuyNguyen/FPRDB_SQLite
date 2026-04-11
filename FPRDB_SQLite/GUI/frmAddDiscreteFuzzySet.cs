@@ -42,6 +42,7 @@ namespace FPRDB_SQLite.GUI
         }
         // Helper để xử lý tạo Discrete Fuzzy Set dựa trên kiểu dữ liệu được chọn
         private bool HandleDiscreteFuzzySet<T>()
+            where T:IComparable<T>
         {
             var dto = discreteFuzzySetInfo.getDiscreteFuzzySet<T>();
             try

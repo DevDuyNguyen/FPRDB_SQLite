@@ -1,4 +1,5 @@
 ﻿using BLL.DomainObject;
+using BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,21 @@ namespace BLL.Common
     public static class DiscreteFuzzySetSorter
     {
         public static void MergeSort<T>(DiscreteFuzzySet<T> fuzzySet)
+        {
+            if (fuzzySet.valueSet == null || fuzzySet.membershipDegreeSet == null)
+                throw new InvalidOperationException("Sets cannot be null.");
+
+            if (fuzzySet.valueSet.Count != fuzzySet.membershipDegreeSet.Count)
+                throw new InvalidOperationException("valueSet and membershipDegreeSet must have the same length.");
+
+            var (sortedValues, sortedDegrees) = MergeSortRecursive<T>(
+                fuzzySet.valueSet,
+                fuzzySet.membershipDegreeSet);
+
+            fuzzySet.valueSet = sortedValues;
+            fuzzySet.membershipDegreeSet = sortedDegrees;
+        }
+        public static void MergeSort<T>(DiscreteFuzzySetDTO<T> fuzzySet)
         {
             if (fuzzySet.valueSet == null || fuzzySet.membershipDegreeSet == null)
                 throw new InvalidOperationException("Sets cannot be null.");
@@ -46,6 +62,7 @@ namespace BLL.Common
                 sortedLeftValues, sortedLeftDegrees,
                 sortedRightValues, sortedRightDegrees);
         }
+
 
         private static (List<T> values, List<float> degrees) Merge<T>(
             List<T> leftValues, List<float> leftDegrees,
