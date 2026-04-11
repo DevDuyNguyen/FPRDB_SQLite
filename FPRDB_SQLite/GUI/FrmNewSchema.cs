@@ -83,6 +83,11 @@ namespace FPRDB_SQLite.GUI
                     Close();
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
+            }
             catch (SemanticException ex)
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
