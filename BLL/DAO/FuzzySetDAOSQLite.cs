@@ -47,7 +47,7 @@ namespace BLL.DAO
         private bool isElementXGetAssignedMembershipDegreeMoreThan1<T>(DiscreteFuzzySetDTO<T> fuzzySet)
             where T:IComparable<T>
         {
-            DiscreteFuzzySetSorter.MergeSort<T>(fuzzySet);
+            DiscreteFuzzySetSorter.MergeSortByValue<T>(fuzzySet);
             for(int i=0; i<fuzzySet.valueSet.Count-1; ++i)
             {
                 if (fuzzySet.valueSet[i].CompareTo(fuzzySet.valueSet[i + 1])==0)
@@ -293,12 +293,13 @@ namespace BLL.DAO
         }
 
         public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet)
+            where T:IComparable<T>
         {
             if (fuzzySet.oid == null || fuzzySet.oid == default)
                 throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
-            
-            string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
-            this.databaseManager.executeNonQuery(updateName);
+            isElementXGetAssignedMembershipDegreeMoreThan1<T>(fuzzySet);
+            //string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
+            //this.databaseManager.executeNonQuery(updateName);
 
             string newValueSet = string.Join(",", fuzzySet.valueSet);
             string newMembershipDegree = string.Join(",", fuzzySet.membershipDegreeSet);
@@ -312,8 +313,8 @@ namespace BLL.DAO
             if (fuzzySet.oid == null || fuzzySet.oid == default)
                 throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
 
-            string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
-            this.databaseManager.executeNonQuery(updateName);
+            //string updateName = $"update fprdb_FuzzySet set fuzzset_name='{fuzzySet.fuzzySetName}' WHERE oid={fuzzySet.oid}";
+            //this.databaseManager.executeNonQuery(updateName);
 
             string updateMembershipDegree = $"update fprdb_ContinousFuzzySet set fuzzset_bottom_left={fuzzySet.leftBottom}, fuzzset_top_left={fuzzySet.leftTop}, fuzzset_top_right={fuzzySet.rightTop}, fuzzset_bottom_right={fuzzySet.rightBottom} where oid={fuzzySet.oid}";
             this.databaseManager.executeNonQuery(updateMembershipDegree);

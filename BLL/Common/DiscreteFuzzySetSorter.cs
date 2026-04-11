@@ -10,7 +10,7 @@ namespace BLL.Common
 {
     public static class DiscreteFuzzySetSorter
     {
-        public static void MergeSort<T>(DiscreteFuzzySet<T> fuzzySet)
+        public static void MergeSortByMembershipDegree<T>(DiscreteFuzzySet<T> fuzzySet)
         {
             if (fuzzySet.valueSet == null || fuzzySet.membershipDegreeSet == null)
                 throw new InvalidOperationException("Sets cannot be null.");
@@ -18,30 +18,14 @@ namespace BLL.Common
             if (fuzzySet.valueSet.Count != fuzzySet.membershipDegreeSet.Count)
                 throw new InvalidOperationException("valueSet and membershipDegreeSet must have the same length.");
 
-            var (sortedValues, sortedDegrees) = MergeSortRecursive<T>(
+            var (sortedValues, sortedDegrees) = MergeSortByMembershipDegreeRecursive<T>(
                 fuzzySet.valueSet,
                 fuzzySet.membershipDegreeSet);
 
             fuzzySet.valueSet = sortedValues;
             fuzzySet.membershipDegreeSet = sortedDegrees;
         }
-        public static void MergeSort<T>(DiscreteFuzzySetDTO<T> fuzzySet)
-        {
-            if (fuzzySet.valueSet == null || fuzzySet.membershipDegreeSet == null)
-                throw new InvalidOperationException("Sets cannot be null.");
-
-            if (fuzzySet.valueSet.Count != fuzzySet.membershipDegreeSet.Count)
-                throw new InvalidOperationException("valueSet and membershipDegreeSet must have the same length.");
-
-            var (sortedValues, sortedDegrees) = MergeSortRecursive<T>(
-                fuzzySet.valueSet,
-                fuzzySet.membershipDegreeSet);
-
-            fuzzySet.valueSet = sortedValues;
-            fuzzySet.membershipDegreeSet = sortedDegrees;
-        }
-
-        private static (List<T> values, List<float> degrees) MergeSortRecursive<T>(
+        private static (List<T> values, List<float> degrees) MergeSortByMembershipDegreeRecursive<T>(
             List<T> values,
             List<float> degrees)
         {
@@ -55,16 +39,16 @@ namespace BLL.Common
             var rightValues = values.GetRange(mid, values.Count - mid);
             var rightDegrees = degrees.GetRange(mid, degrees.Count - mid);
 
-            var (sortedLeftValues, sortedLeftDegrees) = MergeSortRecursive<T>(leftValues, leftDegrees);
-            var (sortedRightValues, sortedRightDegrees) = MergeSortRecursive<T>(rightValues, rightDegrees);
+            var (sortedLeftValues, sortedLeftDegrees) = MergeSortByMembershipDegreeRecursive<T>(leftValues, leftDegrees);
+            var (sortedRightValues, sortedRightDegrees) = MergeSortByMembershipDegreeRecursive<T>(rightValues, rightDegrees);
 
-            return Merge(
+            return MergeByMembershipDegree(
                 sortedLeftValues, sortedLeftDegrees,
                 sortedRightValues, sortedRightDegrees);
         }
 
 
-        private static (List<T> values, List<float> degrees) Merge<T>(
+        private static (List<T> values, List<float> degrees) MergeByMembershipDegree<T>(
             List<T> leftValues, List<float> leftDegrees,
             List<T> rightValues, List<float> rightDegrees)
         {
@@ -105,5 +89,89 @@ namespace BLL.Common
 
             return (mergedValues, mergedDegrees);
         }
+
+        public static void MergeSortByValue<T>(DiscreteFuzzySetDTO<T> fuzzySet)
+            where T : IComparable<T>
+        {
+            if (fuzzySet.valueSet == null || fuzzySet.membershipDegreeSet == null)
+                throw new InvalidOperationException("Sets cannot be null.");
+
+            if (fuzzySet.valueSet.Count != fuzzySet.membershipDegreeSet.Count)
+                throw new InvalidOperationException("valueSet and membershipDegreeSet must have the same length.");
+
+            var (sortedValues, sortedDegrees) = MergeSortByValueRecursive<T>(
+                fuzzySet.valueSet,
+                fuzzySet.membershipDegreeSet);
+
+            fuzzySet.valueSet = sortedValues;
+            fuzzySet.membershipDegreeSet = sortedDegrees;
+        }
+        private static (List<T> values, List<float> degrees) MergeSortByValueRecursive<T>(
+            List<T> values,
+            List<float> degrees)
+            where T : IComparable<T>
+        {
+            if (values.Count <= 1)
+                return (values, degrees);
+
+            int mid = values.Count / 2;
+
+            var leftValues = values.GetRange(0, mid);
+            var leftDegrees = degrees.GetRange(0, mid);
+            var rightValues = values.GetRange(mid, values.Count - mid);
+            var rightDegrees = degrees.GetRange(mid, degrees.Count - mid);
+
+            var (sortedLeftValues, sortedLeftDegrees) = MergeSortByValueRecursive<T>(leftValues, leftDegrees);
+            var (sortedRightValues, sortedRightDegrees) = MergeSortByValueRecursive<T>(rightValues, rightDegrees);
+
+            return MergeByValue(
+                sortedLeftValues, sortedLeftDegrees,
+                sortedRightValues, sortedRightDegrees);
+        }
+
+
+        private static (List<T> values, List<float> degrees) MergeByValue<T>(
+            List<T> leftValues, List<float> leftDegrees,
+            List<T> rightValues, List<float> rightDegrees)
+            where T:IComparable<T>
+        {
+            var mergedValues = new List<T>(leftValues.Count + rightValues.Count);
+            var mergedDegrees = new List<float>(leftDegrees.Count + rightDegrees.Count);
+
+            int i = 0, j = 0;
+
+            while (i < leftValues.Count && j < rightValues.Count)
+            {
+                if (leftValues[i].CompareTo(rightValues[j])==1)
+                {
+                    mergedValues.Add(leftValues[i]);
+                    mergedDegrees.Add(leftDegrees[i]);
+                    i++;
+                }
+                else
+                {
+                    mergedValues.Add(rightValues[j]);
+                    mergedDegrees.Add(rightDegrees[j]);
+                    j++;
+                }
+            }
+
+            while (i < leftValues.Count)
+            {
+                mergedValues.Add(leftValues[i]);
+                mergedDegrees.Add(leftDegrees[i]);
+                i++;
+            }
+
+            while (j < rightValues.Count)
+            {
+                mergedValues.Add(rightValues[j]);
+                mergedDegrees.Add(rightDegrees[j]);
+                j++;
+            }
+
+            return (mergedValues, mergedDegrees);
+        }
+
     }
 }
