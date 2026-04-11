@@ -152,8 +152,20 @@ namespace FPRDB_SQLite.GUI
                 {
                     service.removeFuzzySet(selectedFuzzySet);
                     XtraMessageBox.Show("Fuzzy set deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    int index = lstFuzzySetResults.SelectedIndex;
+                    var item = this.results[index];
+                    this.results.RemoveAt(index);
+                    lstFuzzySetResults.Items.RemoveAt(index);
                     // Refresh the list after deletion
-                    refreshForm();
+                    if (lstFuzzySetResults.Items.Count > 0)
+                    {
+                        int nextIndex = (index < lstFuzzySetResults.Items.Count) ? index : lstFuzzySetResults.Items.Count - 1;
+                        lstFuzzySetResults.SelectedIndex = nextIndex;
+                    }
+                    else
+                    {
+                        refreshForm();
+                    }
                 }
                 catch(InvalidOperationException ex)
                 {
