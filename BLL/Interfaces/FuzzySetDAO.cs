@@ -17,7 +17,7 @@ namespace BLL.Interfaces
         public List<FPRDBRelation>  getUsingRelations(FuzzySetDTO fuzzySet);
         public void removeFuzzySet(FuzzySetDTO fuzzySet);
         public FuzzySetDTO getExactFuzzySet(int oid);
-        public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet);
+        public void updateDiscreteFuzzySet<T>(DiscreteFuzzySetDTO<T> fuzzySet) where T : IComparable<T>;
         public void updateContinuousFuzzySet(ContinuousFuzzySetDTO fuzzySet);
         public bool isFuzzySetExist(string name);
 

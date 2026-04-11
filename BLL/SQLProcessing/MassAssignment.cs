@@ -36,7 +36,7 @@ namespace BLL.SQLProcessing
 
         public static List<VoteCrispDefinition<T>> createMassAssignment<T>(DiscreteFuzzySet<T> fs)
         {
-            DiscreteFuzzySetSorter.MergeSort<T>(fs);
+            DiscreteFuzzySetSorter.MergeSortByMembershipDegree<T>(fs);
             List<T> tmpSubSet = new List<T>();
             float currentDegree = fs.membershipDegreeSet[0];
             List<VoteCrispDefinition<T>> ans = new List<VoteCrispDefinition<T>>();
