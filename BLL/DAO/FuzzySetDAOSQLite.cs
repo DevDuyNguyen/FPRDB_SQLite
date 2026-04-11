@@ -49,7 +49,7 @@ namespace BLL.DAO
             if (fuzzySet.fuzzySetName == "" || fuzzySet.fuzzySetName == null)
                 throw new InvalidDataException("Fuzzy set name is empty");
             if ( fuzzySet.valueSet.Count == 0)
-                throw new InvalidDataException("Fuzzy set name's universe of discourse empty");
+                throw new InvalidDataException("Fuzzy set name's universe of discourse is empty");
             if (fuzzySet.valueSet.Count!=fuzzySet.membershipDegreeSet.Count)
                 throw new InvalidDataException("Fuzzy set number of elements in the universe of discourse doesn't match number of membership degrees");
             foreach(float degree in fuzzySet.membershipDegreeSet)

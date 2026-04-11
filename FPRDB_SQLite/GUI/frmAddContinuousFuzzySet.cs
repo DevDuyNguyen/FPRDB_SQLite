@@ -49,6 +49,10 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show("Continuous fuzzy set added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
             }
+            catch (InvalidOperationException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (InvalidDataException ex)
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);

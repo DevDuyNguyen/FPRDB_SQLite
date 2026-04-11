@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,6 +15,11 @@ namespace BLL.Services
     public class FuzzySetService
     {
         private FuzzySetDAO fuzzySetDAO;
+        //list of reserved keywords that can't be used for fuzzy set name for fast lookup
+        private static readonly HashSet<string> ReservedKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "select", "from", "where", "natural", "join", "union", "intersect", "except"
+        };
         public FuzzySetService() { }
         public FuzzySetService(FuzzySetDAO fuzzySetDAO)
         {
@@ -23,10 +29,39 @@ namespace BLL.Services
         {
             return fuzzyset.isValid();
         }
+        
+
+        private bool isValidFuzzySetName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new InvalidOperationException("Name cannot be empty.");
+            }
+
+            // Rule 1, 2, 3: Start with letter/underscore, allow alphanumeric/underscore, no spaces
+            // ^[a-zA-Z_]      -> Starts with a letter or underscore
+            // [a-zA-Z0-9_]* -> Followed by any number of letters, numbers, or underscores
+            // $               -> End of string (ensures no spaces or extra characters at the end)
+            var pattern = @"^[a-zA-Z_][a-zA-Z0-9_]*$";
+
+            if (!Regex.IsMatch(name, pattern))
+            {
+                throw new InvalidOperationException("Name must start with a letter or underscore and contain only alphanumeric characters (no spaces).");
+            }
+
+            // Rule 4: Cannot use reserved keywords
+            if (ReservedKeywords.Contains(name))
+            {
+                throw new InvalidOperationException($"'{name}' is a reserved keyword and cannot be used as a fuzzy set name.");
+            }
+
+            return true;
+        }
         public FuzzySetDTO createFuzzySet<T>(FuzzySetDTO fuzzySet)
         {
             try
             {
+                isValidFuzzySetName(fuzzySet.fuzzySetName);
                 FuzzySetDTO dto;
                 if (fuzzySet is DiscreteFuzzySetDTO<T>)
                 {

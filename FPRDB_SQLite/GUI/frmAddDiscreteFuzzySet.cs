@@ -49,6 +49,11 @@ namespace FPRDB_SQLite.GUI
                 service.createFuzzySet<T>(dto);
                 return true;
             }
+            catch (InvalidOperationException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
             catch (SQLExecutionException ex)
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
