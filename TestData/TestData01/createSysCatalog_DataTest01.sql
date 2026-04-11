@@ -86,7 +86,7 @@ VALUES
 
 INSERT INTO fprdb_FuzzySet (oid, fuzzset_name, fuzzset_type_id) VALUES
 (1, 'distFS1', 1),
-(2, 'distFS2', 3),
+(2, 'distFS2', 4),
 (3, 'conFS1', 2);
 
 INSERT INTO fprdb_DiscreteFuzzySet (oid, fuzzset_x, fuzzset_membership_degree) VALUES
@@ -153,7 +153,7 @@ INSERT INTO FPRDB_Rel_FuzzSet (
     fuzzset_oid, 
     no
 ) VALUES 
-(1, 2, 1),
+(1, 1, 1),
 (2, 3, 3),
 (3, 3, 1);
 
