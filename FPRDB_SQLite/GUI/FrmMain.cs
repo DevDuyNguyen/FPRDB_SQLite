@@ -48,6 +48,7 @@ namespace FPRDB_SQLite.GUI
         private Field selectedField;
         private FieldType selectedFieldType;
         private bool isSelectedFieldText;
+        private bool isQueryLoaded = false;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -78,7 +79,8 @@ namespace FPRDB_SQLite.GUI
                 RelationRibbonPage.Visible = true;    // Tab "Relation"
                 QueryRibbonPage.Visible = true;    // Tab "Query"
                 xtraTabControlDatabase.Visible = true;
-                SetQueryTabState(false);
+                if (!isQueryLoaded)
+                    SetQueryTabState(false);
             }
         }
         private string GetRootPath(string path)
@@ -880,6 +882,7 @@ namespace FPRDB_SQLite.GUI
                     memoEditTxtQuery.Text = string.Empty;
                     // Set trạng thái enable cho tab Query sau khi tạo mới thành công
                     SetQueryTabState(true, Path.GetFileName(DialogNew.FileName));
+                    isQueryLoaded = true;
                     XtraMessageBox.Show("Create new SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -914,6 +917,7 @@ namespace FPRDB_SQLite.GUI
                     memoEditTxtQuery.Text = File.ReadAllText(currentSQLFilePath, Encoding.Unicode);
                     // Set trạng thái enable cho tab Query sau khi mở file thành công
                     SetQueryTabState(true, Path.GetFileName(DialogOpen.FileName));
+                    isQueryLoaded = true;
                     XtraMessageBox.Show("Open SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (IOException ex)
@@ -1647,18 +1651,30 @@ namespace FPRDB_SQLite.GUI
                         }
                         catch (MismatchTokenType ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (SQLSyntaxException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (SemanticException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (InvalidOperationException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
@@ -1703,24 +1719,54 @@ namespace FPRDB_SQLite.GUI
                         }
                         catch (MismatchTokenType ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (SQLSyntaxException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (SemanticException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (InvalidOperationException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
                     }
                 }
             }
+        }
+        private void SyncDetailGridWithMaster()
+        {
+            // 1. Kiểm tra an toàn để tránh lỗi NullReference
+            if (gridView3.FocusedColumn == null || gridView3.IsFilterRow(gridView3.FocusedRowHandle))
+                return;
+
+            // 2. Lấy giá trị hiện tại của ô đang chọn (sau khi đã Reject hoặc thay đổi)
+            var cellValue = gridView3.GetFocusedRowCellValue(gridView3.FocusedColumn);
+            string fuzzyString = cellValue?.ToString() ?? string.Empty;
+
+            // 3. Cập nhật các biến trạng thái nếu cần thiết để đồng bộ logic
+            _currentEditingColumn = gridView3.FocusedColumn.FieldName;
+            _currentEditingRow = gridView3.FocusedRowHandle;
+            _currentEditingColumnType = gridView3.FocusedColumn.Tag?.ToString() ?? string.Empty;
+
+            // 4. Gọi hàm load dữ liệu xuống bảng dưới
+            LoadFuzzyProbalisticValueDetail(fuzzyString);
         }
         //{("DT201",[1,1])}->DT201
         private string extractValueFromTrueExactFuzzyProbabilisitcValue(string input)
