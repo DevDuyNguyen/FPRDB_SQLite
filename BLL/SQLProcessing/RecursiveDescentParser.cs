@@ -225,6 +225,9 @@ namespace BLL.SQLProcessing
                 lexer.eatKeyword("ON");
                 string schemaName = schema();
 
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
                 return new FPRDBRelation(relationName, schemaName);
             }
             finally
@@ -355,6 +358,9 @@ namespace BLL.SQLProcessing
                 List<FuzzyProbabilisticValueParsingData> insertValues = fuzzyProbabilisticValueList();
                 lexer.eatDelimiter(")");
 
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
                 return new InsertData(relName, fields, insertValues);
             }
             finally
@@ -376,6 +382,10 @@ namespace BLL.SQLProcessing
                     lexer.eatKeyword("WHERE");
                     condition = selectionCondition();
                 }
+
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
                 return new DeleteData(rel, condition);
             }
             finally
@@ -386,12 +396,22 @@ namespace BLL.SQLProcessing
         public DropRelationData dropRelation()
         {
             lexer.eatKeyword("RELATION");
-            return new DropRelationData(relation());
+            DropRelationData data = new DropRelationData(relation());
+
+            if (!this.lexer.isEndOfToken())
+                throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
+            return data;
         }
         public DropSchemaData dropSchema()
         {
             lexer.eatKeyword("SCHEMA");
-            return new DropSchemaData(schema());
+            DropSchemaData data = new DropSchemaData(schema());
+
+            if (!this.lexer.isEndOfToken())
+                throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
+            return data;
         }
         public object drop()
         {
@@ -421,6 +441,10 @@ namespace BLL.SQLProcessing
                     lexer.eatKeyword("WHERE");
                     condition = this.selectionCondition();
                 }
+
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
                 return new FieldFieldModifyData(assignedField, relName, assigningField, condition);
             }
             else
@@ -432,6 +456,10 @@ namespace BLL.SQLProcessing
                     lexer.eatKeyword("WHERE");
                     condition = this.selectionCondition();
                 }
+
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
                 return new FieldFuzzProbValueModifyData(assigningFProbValue, relName, assignedField, condition);
             }
 
@@ -795,6 +823,10 @@ namespace BLL.SQLProcessing
             //    this.lexer.clearTokens();
             //}
             var data = UNION_EXCEPT_Query();
+
+            if (!this.lexer.isEndOfToken())
+                throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
             return data;
         }
 
