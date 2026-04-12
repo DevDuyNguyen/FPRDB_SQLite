@@ -119,6 +119,7 @@ namespace BLL.SQLProcessing
         private Scanner _scanner;
         private int currentIndex = -1;
         private List<Token> tokens;
+        private bool isOutofToken = false;
         private int tokenListLength { get => this.tokens.Count;}
         private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
             "union", "intersect", "except", "not", "and", "or",
@@ -146,6 +147,7 @@ namespace BLL.SQLProcessing
             this.currentIndex = -1;
             this.currentToken = null;
             this.tokens = new List<Token>();
+            this.isOutofToken = false;
 
             this.terminals = new FPRDBSQLTerminals();
             this._parser = new Parser(this.terminals);
@@ -180,6 +182,7 @@ namespace BLL.SQLProcessing
             }
             else
             {
+                this.isOutofToken = true;
                 this.currentToken = null;
             }
         }
@@ -448,5 +451,6 @@ namespace BLL.SQLProcessing
         {
             return this.currentIndex< this.tokens.Count-1;
         }
+        public bool isEndOfToken() => this.isOutofToken;
     }
 }

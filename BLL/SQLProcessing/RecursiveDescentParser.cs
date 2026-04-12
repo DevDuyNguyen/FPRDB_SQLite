@@ -177,6 +177,10 @@ namespace BLL.SQLProcessing
                 {
                     constraintData = constraintDef();
                 }
+                lexer.eatDelimiter(")");
+
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
 
                 return new FPRDBSchema(schemaName
                     , fieldDefList

@@ -1180,8 +1180,10 @@ namespace FPRDB_SQLite.GUI
                 case "INSERT":
                 case "DELETE":
                 case "UPDATE":
+                    ExecuteUpdate(sql, false);
+                    break;
                 case "DROP":
-                    ExecuteUpdate(sql);
+                    ExecuteUpdate(sql, true);
                     break;
                 case "CREATE":
                     ExecuteDataDefinition(sql);
@@ -1199,6 +1201,10 @@ namespace FPRDB_SQLite.GUI
                 this.sqlProcessor.executeDataDefinition(sql);
                 memoEditMessage.Text = $"Success";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+
+                AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+                this.reLoadDatabaseTree();
             }
             catch (SQLSyntaxException ex)
             {
@@ -1232,13 +1238,19 @@ namespace FPRDB_SQLite.GUI
             }
 
         }
-        private void ExecuteUpdate(string sql)
+        private void ExecuteUpdate(string sql, bool isReloadGUI)
         {
             try
             {
                 int noRowsAffected = this.sqlProcessor.executeUpdate(sql);
                 memoEditMessage.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                if (isReloadGUI)
+                {
+                    AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                    AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+                    this.reLoadDatabaseTree();
+                }
             }
             catch (SQLSyntaxException ex)
             {
