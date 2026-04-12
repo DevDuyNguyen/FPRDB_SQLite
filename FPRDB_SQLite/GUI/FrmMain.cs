@@ -1607,8 +1607,16 @@ namespace FPRDB_SQLite.GUI
                     if (row.RowState == DataRowState.Added)
                     {
                         sbRow = $"INSERT INTO {this._selectedRelation.relName} ( ";
+                        string cellValue;
                         foreach (Field f in fields)
                         {
+                            cellValue = currentRow[f.getFieldName()] as string;
+                            if (cellValue == null || cellValue == "")
+                            {
+                                XtraMessageBox.Show($"FPRDB doesn't support NULL attribute value yet. Attribute {f.getFieldName()} is null", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
                             sbRow += $" {f.getFieldName()},";
                         }
                         sbRow = sbRow.TrimEnd(',') + ")";
