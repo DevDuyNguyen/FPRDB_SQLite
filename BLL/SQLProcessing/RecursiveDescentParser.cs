@@ -456,7 +456,7 @@ namespace BLL.SQLProcessing
                     lexer.eatKeyword("WHERE");
                     condition = this.selectionCondition();
                 }
-
+                //check for extraneous token after parsing
                 if (!this.lexer.isEndOfToken())
                     throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
 
