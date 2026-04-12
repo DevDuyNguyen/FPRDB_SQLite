@@ -1635,18 +1635,30 @@ namespace FPRDB_SQLite.GUI
                         }
                         catch (MismatchTokenType ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (SQLSyntaxException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show($"Near token {ex.nearToken} at column line {ex.line}, {ex.column}: {ex.Message}", "FPRDB SQL syntax error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (SemanticException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         catch (InvalidOperationException ex)
                         {
+                            row.RejectChanges();
+                            gridView3.RefreshData();
+                            SyncDetailGridWithMaster();
                             XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
