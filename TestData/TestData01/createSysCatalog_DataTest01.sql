@@ -154,8 +154,8 @@ INSERT INTO FPRDB_Rel_FuzzSet (
     no
 ) VALUES 
 (1, 1, 1),
-(2, 3, 3),
-(3, 3, 1);
+(2, 3, 1),
+(3, 3, 3);
 
 CREATE TABLE rel1 (
     id TEXT,
