@@ -445,6 +445,9 @@ namespace FPRDB_SQLite.GUI
                 if (node.Tag is FPRDBRelationDTO relation)
                 {
                     _selectedRelation = relation;
+                    XtraTabPage relationTab = xtraTabControlDatabase.TabPages[1];
+                    relationTab.Text = _selectedRelation.relName;
+                    xtraTabControlDatabase.SelectedTabPageIndex = 1;
                     DisplayRelationDetail(_selectedRelation);
                 }
             }
