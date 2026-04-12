@@ -87,6 +87,18 @@ namespace BLL.DomainObject
                 return false;
         }
 
+        //public override bool isPrecise()
+        //{
+        //    foreach( this.valueList)
+        //}
+        //public override bool isExact()
+        //{
+        //    if (this.valueList.Count > 1 || this.intervalProbLowerBoundList[0] != 1 || this.intervalProbUpperBoundList[0] != 1)
+        //        return false;
+        //    else
+        //        return true;
+        //}
+
         //public FieldType getDomain() => this.domain;
         //public FuzzySet<T> getVal(int index) => this.valueList[index];
         //public float getLowerBoundProb(int index) => this.intervalProbLowerBoundList[index];
