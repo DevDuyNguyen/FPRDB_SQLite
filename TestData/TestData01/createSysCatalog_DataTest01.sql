@@ -121,7 +121,7 @@ INSERT INTO fprdb_Attribute (
 (4, 'id', 1, 0, 0, 4),
 (5, 'age', 9, 0, 0, 4),
 (6, 'id', 1, 0, 0, 3),
-(7, 'pk_id', 1, 0, 0, 3),
+(7, 'fk_id', 1, 0, 0, 3),
 (8, 'age', 9, 0, 0, 3);
 
 INSERT INTO fprdb_Relation (
@@ -169,7 +169,7 @@ CREATE TABLE referencedRel (
 
 CREATE TABLE referencingRel (
     id TEXT,
-    pk_id TEXT,
+    fk_id TEXT,
     age TEXT
 );
 
@@ -187,5 +187,5 @@ INSERT INTO referencedRel (
 ('{(1,[1,1])}', '{(conFS1,[1,1])}'),
 ('{(2,[1,1])}', '{(conFS1,[0.5,0.5]), (conFS1,[0.5,0.5])}');
 
-INSERT INTO referencingRel (id, pk_id, age) 
+INSERT INTO referencingRel (id, fk_id, age) 
 VALUES ('{(1,[1,1])}', '{(1,[1,1])}', '{(conFS1,[1,1])}');
