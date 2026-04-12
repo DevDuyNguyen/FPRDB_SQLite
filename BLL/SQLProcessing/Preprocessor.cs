@@ -1,5 +1,6 @@
 ﻿using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -210,6 +211,9 @@ namespace BLL.SQLProcessing
                 if (!exist)
                     throw new SemanticException($"Attribute {fieldName} doesn't exist in relation {relation.getRelName()} on schema {schema.getSchemaName()}");
             }
+            //The value of key attribute must be exact and precise. Same for foreign key attribute
+            checkInsertPrimaryKeyForeignKeyAttributeHasExactPreciseValue(data);
+
             //Check compatible attribute list and insert data list sizes
             if (data.fieldList.Count != data.fuzzyProbabilisticValues.Count)
             {
@@ -231,10 +235,7 @@ namespace BLL.SQLProcessing
             //
             //The insert fuzzy probabilistic value for a key attribute must be primitive, it is the only possible value in the fuzzy probabilistic value and its interval probability is [1,1]
             //check identity constraint
-            this.constraintService.checkIntegrityConstraint(relation, data);
-
-
-            //not done: referential constraint
+            this.constraintService.checkIntegrityConstraintInsert(relation, data);
 
             return true;
 
@@ -312,9 +313,11 @@ namespace BLL.SQLProcessing
                         throw new SemanticException($"Field {fieldName} doesn't exist in relation {relation.getRelName()}");
                 }
             }
+            //The value of key attribute must be exact and precise. Same for foreign key attribute [not done: only for metadata-level, not data level yet]
+            checkUpdatePrimaryKeyForeignKeyAttributeHasExactPreciseValue(data);
 
             //Compatible update value
-            if(data is FieldFieldModifyData)
+            if (data is FieldFieldModifyData)
             {
                 FieldFieldModifyData data1 = (FieldFieldModifyData)data;
                 Field assignedField = relation.getSchema().getFieldByName(data1.getAssignedField());
@@ -718,8 +721,71 @@ namespace BLL.SQLProcessing
             }
             return true;
         }
+        public bool checkInsertPrimaryKeyForeignKeyAttributeHasExactPreciseValue(InsertData data)
+        {
+            FPRDBRelation rel = this.metadataMgr.getRelation(data.relation);
+            List<ConstraintDTO> referentialConstraint = this.constraintService.getReferenrialConstraints(rel.toDTO());
+            List<string> attributeMustHaveExactAndPreciseValue = new List<string>(rel.getSchema().primarykey);
+            foreach(ConstraintDTO rfc in referentialConstraint)
+            {
+                attributeMustHaveExactAndPreciseValue.AddRange(rfc.attributes);
+            }
+
+            string insertFldName;
+            for(int i=0; i<data.fieldList.Count; ++i)
+            {
+                insertFldName = data.fieldList[i];
+                if (attributeMustHaveExactAndPreciseValue.Contains(insertFldName))
+                {
+                    if (data.fuzzyProbabilisticValues[i].valueList.Count > 1 || data.fuzzyProbabilisticValues[i].intervalProbLowerBoundList[0]!=1 || data.fuzzyProbabilisticValues[i].intervalProbUpperBoundList[0] != 1)
+                        throw new InvalidOperationException($"The fuzzy probabilistic value for attribute {insertFldName} must be exact");
+                    if (data.fuzzyProbabilisticValues[i].valueList[0] is FuzzySetConstant)
+                        throw new InvalidOperationException($"The fuzzy probabilistic value for attribute {insertFldName} must be precise");
+                }
+            }
+            return true;
+
+        }
+        public bool checkUpdatePrimaryKeyForeignKeyAttributeHasExactPreciseValue(ModifyData data)
+        {
+            FPRDBRelation rel = this.metadataMgr.getRelation(data.getRelation());
+            List<ConstraintDTO> referentialConstraint = this.constraintService.getReferenrialConstraints(rel.toDTO());
+            List<string> attributeMustHaveExactAndPreciseValue = new List<string>(rel.getSchema().primarykey);
+            foreach (ConstraintDTO rfc in referentialConstraint)
+            {
+                attributeMustHaveExactAndPreciseValue.AddRange(rfc.attributes);
+            }
+
+            if (data is FieldFuzzProbValueModifyData)
+            {
+                FieldFuzzProbValueModifyData mData = data as FieldFuzzProbValueModifyData;
+                if (attributeMustHaveExactAndPreciseValue.Contains(data.getAssignedField()))
+                {
+                    if (mData.fuzzyProbabilisticValue.valueList.Count > 1 || mData.fuzzyProbabilisticValue.intervalProbLowerBoundList[0] != 1 || mData.fuzzyProbabilisticValue.intervalProbUpperBoundList[0] != 1)
+                        throw new InvalidOperationException($"The fuzzy probabilistic value for attribute {data.getAssignedField()} must be exact");
+                    if (mData.fuzzyProbabilisticValue.valueList[0] is FuzzySetConstant)
+                        throw new InvalidOperationException($"The fuzzy probabilistic value for attribute {data.getAssignedField()} must be precise");
+                }
+
+            }
+            else
+            {
+                FieldFieldModifyData mdata = data as FieldFieldModifyData;
+                if (attributeMustHaveExactAndPreciseValue.Contains(data.getAssignedField()))
+                {
+                    /*currently FPRDB only support update primary key/foreign key attribute a=primary key/foreign key attribute b 
+                     * to ensure The value of key attribute must be exact and precise, same for foreign key attribute
+                     * in short, [not done: only for metadata-level, not data level yet]
+                     */
+                    if (!attributeMustHaveExactAndPreciseValue.Contains(mdata.getAssignValue() as string))
+                        throw new InvalidOperationException($"Violation Attribute {mdata.getAssignedField()}={mdata.getAssignValue() as string}. Currently FPRDB only support update primary key/foreign key attribute a=primary key/foreign key attribute b to ensure the updated value of key attribute must be exact and precise.");
+
+                }
 
 
+            }
+            return true;
+        }
 
     }
 }

@@ -28,7 +28,7 @@ namespace BLL.Services
             this.constraintDAO = constraintDAO;
         }
 
-        public bool checkIntegrityConstraint(FPRDBRelation rel, InsertData data)
+        public bool checkIntegrityConstraintInsert(FPRDBRelation rel, InsertData data)
         {
             FPRDBRelation relation;
             try
@@ -69,6 +69,7 @@ namespace BLL.Services
                 throw new SemanticException("Old key value has different length in comparison to new key value");
             for(int i=0; i<oldKeyValue.Count; ++i)
             {
+
                 if (!oldKeyValue[i].equals(newKeyValue[i]))
                 {
                     sameKeyValue = false;
