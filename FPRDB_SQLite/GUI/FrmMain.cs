@@ -48,6 +48,7 @@ namespace FPRDB_SQLite.GUI
         private Field selectedField;
         private FieldType selectedFieldType;
         private bool isSelectedFieldText;
+        private bool isQueryLoaded = false;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -78,7 +79,8 @@ namespace FPRDB_SQLite.GUI
                 RelationRibbonPage.Visible = true;    // Tab "Relation"
                 QueryRibbonPage.Visible = true;    // Tab "Query"
                 xtraTabControlDatabase.Visible = true;
-                SetQueryTabState(false);
+                if (!isQueryLoaded)
+                    SetQueryTabState(false);
             }
         }
         private string GetRootPath(string path)
@@ -880,6 +882,7 @@ namespace FPRDB_SQLite.GUI
                     memoEditTxtQuery.Text = string.Empty;
                     // Set trạng thái enable cho tab Query sau khi tạo mới thành công
                     SetQueryTabState(true, Path.GetFileName(DialogNew.FileName));
+                    isQueryLoaded = true;
                     XtraMessageBox.Show("Create new SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -914,6 +917,7 @@ namespace FPRDB_SQLite.GUI
                     memoEditTxtQuery.Text = File.ReadAllText(currentSQLFilePath, Encoding.Unicode);
                     // Set trạng thái enable cho tab Query sau khi mở file thành công
                     SetQueryTabState(true, Path.GetFileName(DialogOpen.FileName));
+                    isQueryLoaded = true;
                     XtraMessageBox.Show("Open SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (IOException ex)
