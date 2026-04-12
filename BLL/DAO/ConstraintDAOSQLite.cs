@@ -149,6 +149,11 @@ namespace BLL.DAO
                         skipReferentialConstraint = true;
                         break;
                     }
+                    //foreign key point to primary key, hence foreign key attribute value must be exact and precise
+                    else if (insertValue.valueList.Count>1 || insertValue.valueList[0] is FuzzySetConstant || insertValue.intervalProbLowerBoundList[0]!=1 || insertValue.intervalProbLowerBoundList[0]!=1)
+                    {
+                        throw new InvalidOperationException($"Value for foreign key attribute {constr.attributes[i]} isn't exact or precise");
+                    }
                     else
                     {
                         sql += $" {constr.referencedAttributes[i]}='{insertValue.ToTextRepresentation()}' AND";

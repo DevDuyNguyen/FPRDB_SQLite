@@ -194,7 +194,7 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Relation {data.relation} doesn't exist");
             }
-            //Check insert attribute
+            //Check if insert attribute exist
             FPRDBSchema schema = relation.getSchema();
             foreach(string fieldName in data.fieldList)
             {
