@@ -1553,6 +1553,7 @@ namespace FPRDB_SQLite.GUI
 
             if (e.Button.ButtonType == NavigatorButtonType.Remove)
             {
+                e.Handled = true;
                 DataRowView currentRow = gridView3.GetFocusedRow() as DataRowView;
                 DataRow row = currentRow.Row;
                 var schema = _selectedRelation.fprdbSchema;
@@ -1579,6 +1580,7 @@ namespace FPRDB_SQLite.GUI
                 try
                 {
                     this.sqlProcessor.executeUpdate(sbRow);
+                    row.Delete();
                     row.AcceptChanges();
                 }
                 catch(SemanticException ex)
