@@ -43,3 +43,6 @@ yarn.lock
 
 #FPRDB database file
 *.fprdb
+
+#Exclude build file from setup project
+Setup1/Debug
