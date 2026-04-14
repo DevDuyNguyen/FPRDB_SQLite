@@ -222,6 +222,7 @@ namespace BLL.SQLProcessing
             //Check compatible insert value 
             checkCompatibleInsertTypeAndFillFuzzySetConstant(data.fieldList, data.fuzzyProbabilisticValues, schema);
             //check if [a,b] is within [0,1]
+            //check a<=b where [a,b]
             foreach (FuzzyProbabilisticValueParsingData d in data.fuzzyProbabilisticValues)
             {
                 for(int j=0;  j<d.intervalProbLowerBoundList.Count; ++j)
@@ -229,6 +230,8 @@ namespace BLL.SQLProcessing
                     if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbLowerBoundList[j] > 1
                         || d.intervalProbUpperBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
+                    if (d.intervalProbLowerBoundList[j] <= d.intervalProbUpperBoundList[j])
+                        throw new SemanticException("a must be <= b in [a,b]");
                 }
                 
             }
@@ -328,6 +331,16 @@ namespace BLL.SQLProcessing
             else if(data is FieldFuzzProbValueModifyData)
             {
                 FieldFuzzProbValueModifyData data1 = (FieldFuzzProbValueModifyData)data;
+                //If update is field=probabilistic value, the interval must be within [0,1]
+                for(int i=0; i<data1.fuzzyProbabilisticValue.valueList.Count; ++i)
+                {
+                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i]<0 || data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] >1
+                        || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] < 0 || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] > 1)
+                        throw new SemanticException("[a,b] must be within the range of [0,1]");
+                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] <= data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i])
+                        throw new SemanticException("a must be <= b in [a,b]");
+                }
+
                 checkCompatibleInsertTypeAndFillFuzzySetConstant(
                     new List<string> { data1.getAssignedField()}, 
                     new List<FuzzyProbabilisticValueParsingData>{ data1.getAssignValue() as FuzzyProbabilisticValueParsingData},
