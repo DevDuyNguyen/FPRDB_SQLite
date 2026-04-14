@@ -739,7 +739,7 @@ namespace BLL.SQLProcessing
             if (lexer.matchDelimiter("("))
             {
                 lexer.eatDelimiter("(");
-                ans = query();
+                ans = query(false);
                 lexer.eatDelimiter(")");
                 return ans;
             }
@@ -811,7 +811,7 @@ namespace BLL.SQLProcessing
             return ans;
 
         }
-        public QueryData query()
+        public QueryData query(bool isRootParsing)
         {
             //try{
             //    var data = UNION_EXCEPT_Query();
@@ -824,7 +824,7 @@ namespace BLL.SQLProcessing
             //}
             var data = UNION_EXCEPT_Query();
 
-            if (!this.lexer.isEndOfToken())
+            if (isRootParsing && !this.lexer.isEndOfToken())
                 throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
 
             return data;
