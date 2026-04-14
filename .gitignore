@@ -46,3 +46,6 @@ yarn.lock
 
 #Exclude build file from setup project
 Setup1/Debug
+Setup2/Debug
+*.exe
+*.msi

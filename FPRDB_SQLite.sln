@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36915.13 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11612.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "FPRDB_SQLite\GUI.csproj", "{DCA0385C-34AB-4FE1-B7AB-5E8D4FFF8E40}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{16878393-C26E-412B-8B21-8EBA26897439}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{F5D91FD6-F519-3AC5-2EF1-6ADD62B256F6}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDBSQLiteInstaller", "Setup2\Setup2.vdproj", "{657E2043-FDBC-F1DC-4CD9-351906DA97D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,8 @@ Global
 		{16878393-C26E-412B-8B21-8EBA26897439}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5D91FD6-F519-3AC5-2EF1-6ADD62B256F6}.Debug|Any CPU.ActiveCfg = Debug
 		{F5D91FD6-F519-3AC5-2EF1-6ADD62B256F6}.Release|Any CPU.ActiveCfg = Release
+		{657E2043-FDBC-F1DC-4CD9-351906DA97D6}.Debug|Any CPU.ActiveCfg = Debug
+		{657E2043-FDBC-F1DC-4CD9-351906DA97D6}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

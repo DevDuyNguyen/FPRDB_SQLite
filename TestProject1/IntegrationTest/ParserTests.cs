@@ -1282,7 +1282,7 @@ namespace TestProject1.IntegrationTest
             RecursiveDescentParser parser = compRoot.getParser();
             parser.parse(str);
             //act
-            QueryData actual = parser.query();
+            QueryData actual = parser.query(true);
             //assert
             Assert.Equal(true, expected.GetType() == actual.GetType());
             Assert.Equivalent(expected, actual);

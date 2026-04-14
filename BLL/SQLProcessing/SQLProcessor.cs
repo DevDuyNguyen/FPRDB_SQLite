@@ -134,7 +134,7 @@ namespace BLL.SQLProcessing
         public Plan createQueryPlan(string sql)
         {
             this.parser.parse(sql);
-            QueryData data = this.parser.query();
+            QueryData data = this.parser.query(true);
 
             if(this.preProcessor.checkSemanticQuery(data))
                 return this.queryPlanner.createPlan(data);
