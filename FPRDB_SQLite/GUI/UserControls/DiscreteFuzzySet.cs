@@ -6,14 +6,15 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.DXErrorProvider;
 using DevExpress.XtraEditors.Repository;
-using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Base;
+using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,7 +100,7 @@ namespace FPRDB_SQLite.GUI.UserControls
         // Hàm validate cột MembershipDegree
         private void validateMembershipColumn(BaseContainerValidateEditorEventArgs e, string input)
         {
-            if (!float.TryParse(input, out float degree) || degree < 0 || degree > 1)
+            if (!float.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out float degree) || degree < 0 || degree > 1)
                 SetError(e, "Membership Degree must be a number between 0 and 1!");
         }
         // Hàm helper để set lỗi cho ô đang edit
