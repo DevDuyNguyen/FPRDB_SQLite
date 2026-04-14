@@ -1,12 +1,14 @@
-﻿using DevExpress.Skins;
+﻿using BLL.Common;
+using DevExpress.Skins;
 using DevExpress.UserSkins;
+using FPRDB_SQLite.GUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
-using BLL.Common;
-using FPRDB_SQLite.GUI;
 
 namespace FPRDB_SQLite
 {
@@ -18,6 +20,22 @@ namespace FPRDB_SQLite
         [STAThread]
         static void Main()
         {
+            // Create a custom culture based on English US (which uses the period)
+            CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+
+            // Force the decimal separator to be a period, just in case
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+            customCulture.NumberFormat.NumberGroupSeparator = ",";
+
+            // Apply it to the current thread and all future threads
+            Thread.CurrentThread.CurrentCulture = customCulture;
+            Thread.CurrentThread.CurrentUICulture = customCulture;
+            CultureInfo.DefaultThreadCurrentCulture = customCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = customCulture;
+
+            // Force DevExpress to use the Invariant (Period-based) culture for its editors
+            DevExpress.Utils.FormatInfo.AlwaysUseThreadFormat = true;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             CompositionRoot composeRoot = new CompositionRoot();
