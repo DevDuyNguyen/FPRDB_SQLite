@@ -33,21 +33,16 @@ namespace FPRDB_SQLite.GUI
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             ribbonControl = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            buttonHelp_groupHelp = new DevExpress.XtraBars.BarButtonItem();
             buttonExit_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonNew_pageHome = new DevExpress.XtraBars.BarButtonItem();
             buttonOpen_pageHome = new DevExpress.XtraBars.BarButtonItem();
-            buttonAbout_groupHelp = new DevExpress.XtraBars.BarButtonItem();
             iAddDiscrete = new DevExpress.XtraBars.BarButtonItem();
             iAddContinuous = new DevExpress.XtraBars.BarButtonItem();
             iNewSchema = new DevExpress.XtraBars.BarButtonItem();
-            iOpenSchema = new DevExpress.XtraBars.BarButtonItem();
             iDeleteSchema = new DevExpress.XtraBars.BarButtonItem();
-            iCloseCurrentSchema = new DevExpress.XtraBars.BarButtonItem();
             iSearchFuzzySet = new DevExpress.XtraBars.BarButtonItem();
             iNewRelation = new DevExpress.XtraBars.BarButtonItem();
             iDeleteRelation = new DevExpress.XtraBars.BarButtonItem();
-            iSaveRelation = new DevExpress.XtraBars.BarButtonItem();
             iCloseRelation = new DevExpress.XtraBars.BarButtonItem();
             iNewQuery = new DevExpress.XtraBars.BarButtonItem();
             iOpenQuery = new DevExpress.XtraBars.BarButtonItem();
@@ -77,10 +72,8 @@ namespace FPRDB_SQLite.GUI
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             SchemaRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             fileSchemaRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            closeSchemaribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             RelationRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             fileRelationRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            closeRelationRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             QueryRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             fileQueryRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             conjunctionRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -92,8 +85,6 @@ namespace FPRDB_SQLite.GUI
             discreteFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             continuousFuzzySetRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             SearchFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            groupHelp_pageHelp = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             TreeView_imageList = new System.Windows.Forms.ImageList(components);
             RelationsplitContainerControl = new DevExpress.XtraEditors.SplitContainerControl();
@@ -190,22 +181,15 @@ namespace FPRDB_SQLite.GUI
             // 
             ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonHelp_groupHelp, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, buttonAbout_groupHelp, iAddDiscrete, iAddContinuous, iNewSchema, iOpenSchema, iDeleteSchema, iCloseCurrentSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iSaveRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS, barButtonRelationships });
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, iAddDiscrete, iAddContinuous, iNewSchema, iDeleteSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS, barButtonRelationships });
             ribbonControl.Location = new System.Drawing.Point(0, 0);
             ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             ribbonControl.MaxItemId = 59;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
-            ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet, pageHelp });
+            ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet });
             ribbonControl.Size = new System.Drawing.Size(970, 193);
             ribbonControl.StatusBar = ribbonStatusBar;
-            // 
-            // buttonHelp_groupHelp
-            // 
-            buttonHelp_groupHelp.Caption = "Help";
-            buttonHelp_groupHelp.Id = 1;
-            buttonHelp_groupHelp.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonHelp_groupHelp.ImageOptions.LargeImage");
-            buttonHelp_groupHelp.Name = "buttonHelp_groupHelp";
             // 
             // buttonExit_pageHome
             // 
@@ -232,19 +216,13 @@ namespace FPRDB_SQLite.GUI
             buttonOpen_pageHome.Name = "buttonOpen_pageHome";
             buttonOpen_pageHome.ItemClick += buttonOpen_pageHome_ItemClick;
             // 
-            // buttonAbout_groupHelp
-            // 
-            buttonAbout_groupHelp.Caption = "About";
-            buttonAbout_groupHelp.Id = 14;
-            buttonAbout_groupHelp.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonAbout_groupHelp.ImageOptions.LargeImage");
-            buttonAbout_groupHelp.Name = "buttonAbout_groupHelp";
-            // 
             // iAddDiscrete
             // 
             iAddDiscrete.Caption = "Add";
             iAddDiscrete.Id = 15;
             iAddDiscrete.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iAddDiscrete.ImageOptions.LargeImage");
             iAddDiscrete.Name = "iAddDiscrete";
+            iAddDiscrete.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             iAddDiscrete.ItemClick += buttonAdd_groupDis_ItemClick;
             // 
             // iAddContinuous
@@ -253,6 +231,7 @@ namespace FPRDB_SQLite.GUI
             iAddContinuous.Id = 17;
             iAddContinuous.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iAddContinuous.ImageOptions.LargeImage");
             iAddContinuous.Name = "iAddContinuous";
+            iAddContinuous.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             iAddContinuous.ItemClick += buttonAdd_groupCont_ItemClick;
             // 
             // iNewSchema
@@ -263,13 +242,6 @@ namespace FPRDB_SQLite.GUI
             iNewSchema.Name = "iNewSchema";
             iNewSchema.ItemClick += iNewSchema_ItemClick;
             // 
-            // iOpenSchema
-            // 
-            iOpenSchema.Caption = "Open";
-            iOpenSchema.Id = 21;
-            iOpenSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iOpenSchema.ImageOptions.LargeImage");
-            iOpenSchema.Name = "iOpenSchema";
-            // 
             // iDeleteSchema
             // 
             iDeleteSchema.Caption = "Delete";
@@ -277,12 +249,6 @@ namespace FPRDB_SQLite.GUI
             iDeleteSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
             iDeleteSchema.Name = "iDeleteSchema";
             iDeleteSchema.ItemClick += iDeleteSchema_ItemClick;
-            // 
-            // iCloseCurrentSchema
-            // 
-            iCloseCurrentSchema.Caption = "Close";
-            iCloseCurrentSchema.Id = 23;
-            iCloseCurrentSchema.Name = "iCloseCurrentSchema";
             // 
             // iSearchFuzzySet
             // 
@@ -307,14 +273,6 @@ namespace FPRDB_SQLite.GUI
             iDeleteRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
             iDeleteRelation.Name = "iDeleteRelation";
             iDeleteRelation.ItemClick += iDeleteRelation_ItemClick;
-            // 
-            // iSaveRelation
-            // 
-            iSaveRelation.Caption = "Save";
-            iSaveRelation.Enabled = false;
-            iSaveRelation.Id = 28;
-            iSaveRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveRelation.ImageOptions.LargeImage");
-            iSaveRelation.Name = "iSaveRelation";
             // 
             // iCloseRelation
             // 
@@ -521,27 +479,20 @@ namespace FPRDB_SQLite.GUI
             // 
             // SchemaRibbonPage
             // 
-            SchemaRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileSchemaRibbonPageGroup, closeSchemaribbonPageGroup });
+            SchemaRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileSchemaRibbonPageGroup });
             SchemaRibbonPage.Name = "SchemaRibbonPage";
             SchemaRibbonPage.Text = "Schema";
             // 
             // fileSchemaRibbonPageGroup
             // 
             fileSchemaRibbonPageGroup.ItemLinks.Add(iNewSchema);
-            fileSchemaRibbonPageGroup.ItemLinks.Add(iOpenSchema);
             fileSchemaRibbonPageGroup.ItemLinks.Add(iDeleteSchema);
             fileSchemaRibbonPageGroup.Name = "fileSchemaRibbonPageGroup";
             fileSchemaRibbonPageGroup.Text = "File";
             // 
-            // closeSchemaribbonPageGroup
-            // 
-            closeSchemaribbonPageGroup.ItemLinks.Add(iCloseCurrentSchema);
-            closeSchemaribbonPageGroup.Name = "closeSchemaribbonPageGroup";
-            closeSchemaribbonPageGroup.Text = "Close";
-            // 
             // RelationRibbonPage
             // 
-            RelationRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileRelationRibbonPageGroup, closeRelationRibbonPageGroup });
+            RelationRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileRelationRibbonPageGroup });
             RelationRibbonPage.Name = "RelationRibbonPage";
             RelationRibbonPage.Text = "Relation";
             // 
@@ -549,15 +500,8 @@ namespace FPRDB_SQLite.GUI
             // 
             fileRelationRibbonPageGroup.ItemLinks.Add(iNewRelation);
             fileRelationRibbonPageGroup.ItemLinks.Add(iDeleteRelation);
-            fileRelationRibbonPageGroup.ItemLinks.Add(iSaveRelation);
             fileRelationRibbonPageGroup.Name = "fileRelationRibbonPageGroup";
             fileRelationRibbonPageGroup.Text = "File";
-            // 
-            // closeRelationRibbonPageGroup
-            // 
-            closeRelationRibbonPageGroup.ItemLinks.Add(iCloseRelation);
-            closeRelationRibbonPageGroup.Name = "closeRelationRibbonPageGroup";
-            closeRelationRibbonPageGroup.Text = "Close";
             // 
             // QueryRibbonPage
             // 
@@ -620,20 +564,24 @@ namespace FPRDB_SQLite.GUI
             // 
             pageFuzzySet.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { discreteFuzzySetribbonPageGroup, continuousFuzzySetRibbonPageGroup, SearchFuzzySetribbonPageGroup });
             pageFuzzySet.Name = "pageFuzzySet";
-            pageFuzzySet.Text = "FuzzySet";
+            pageFuzzySet.Text = "Fuzzy Set";
             pageFuzzySet.Visible = false;
             // 
             // discreteFuzzySetribbonPageGroup
             // 
+            discreteFuzzySetribbonPageGroup.AllowTextClipping = false;
             discreteFuzzySetribbonPageGroup.ItemLinks.Add(iAddDiscrete);
             discreteFuzzySetribbonPageGroup.Name = "discreteFuzzySetribbonPageGroup";
-            discreteFuzzySetribbonPageGroup.Text = "Discrete";
+            discreteFuzzySetribbonPageGroup.State = DevExpress.XtraBars.Ribbon.RibbonPageGroupState.Expanded;
+            discreteFuzzySetribbonPageGroup.Text = "Discrete Fuzzy Set";
             // 
             // continuousFuzzySetRibbonPageGroup
             // 
+            continuousFuzzySetRibbonPageGroup.AllowTextClipping = false;
             continuousFuzzySetRibbonPageGroup.ItemLinks.Add(iAddContinuous);
             continuousFuzzySetRibbonPageGroup.Name = "continuousFuzzySetRibbonPageGroup";
-            continuousFuzzySetRibbonPageGroup.Text = "Continuous";
+            continuousFuzzySetRibbonPageGroup.State = DevExpress.XtraBars.Ribbon.RibbonPageGroupState.Expanded;
+            continuousFuzzySetRibbonPageGroup.Text = "Continuous Fuzzy Set";
             // 
             // SearchFuzzySetribbonPageGroup
             // 
@@ -642,19 +590,6 @@ namespace FPRDB_SQLite.GUI
             SearchFuzzySetribbonPageGroup.ItemLinks.Add(iImportFS);
             SearchFuzzySetribbonPageGroup.Name = "SearchFuzzySetribbonPageGroup";
             SearchFuzzySetribbonPageGroup.Text = "Fuzzy Set";
-            // 
-            // pageHelp
-            // 
-            pageHelp.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupHelp_pageHelp });
-            pageHelp.Name = "pageHelp";
-            pageHelp.Text = "Help";
-            // 
-            // groupHelp_pageHelp
-            // 
-            groupHelp_pageHelp.ItemLinks.Add(buttonHelp_groupHelp);
-            groupHelp_pageHelp.ItemLinks.Add(buttonAbout_groupHelp);
-            groupHelp_pageHelp.Name = "groupHelp_pageHelp";
-            groupHelp_pageHelp.Text = "Help";
             // 
             // ribbonStatusBar
             // 
@@ -1170,15 +1105,11 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupFile_pageHome;
         private DevExpress.XtraBars.Ribbon.RibbonPage pageFuzzySet;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup discreteFuzzySetribbonPageGroup;
-        private DevExpress.XtraBars.Ribbon.RibbonPage pageHelp;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupHelp_pageHelp;
-        private DevExpress.XtraBars.BarButtonItem buttonHelp_groupHelp;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup groupExit_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonExit_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonNew_pageHome;
         private DevExpress.XtraBars.BarButtonItem buttonOpen_pageHome;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup continuousFuzzySetRibbonPageGroup;
-        private DevExpress.XtraBars.BarButtonItem buttonAbout_groupHelp;
         private DevExpress.XtraBars.BarButtonItem iAddDiscrete;
         private DevExpress.XtraBars.BarButtonItem iAddContinuous;
         private DevExpress.XtraBars.Ribbon.RibbonPage SchemaRibbonPage;
@@ -1189,16 +1120,11 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup fileQueryRibbonPageGroup;
         private System.Windows.Forms.ImageList TreeView_imageList;
         private DevExpress.XtraBars.BarButtonItem iNewSchema;
-        private DevExpress.XtraBars.BarButtonItem iOpenSchema;
         private DevExpress.XtraBars.BarButtonItem iDeleteSchema;
-        private DevExpress.XtraBars.BarButtonItem iCloseCurrentSchema;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup closeSchemaribbonPageGroup;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup SearchFuzzySetribbonPageGroup;
         private DevExpress.XtraBars.BarButtonItem iSearchFuzzySet;
         private DevExpress.XtraBars.BarButtonItem iNewRelation;
         private DevExpress.XtraBars.BarButtonItem iDeleteRelation;
-        private DevExpress.XtraBars.BarButtonItem iSaveRelation;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup closeRelationRibbonPageGroup;
         private DevExpress.XtraBars.BarButtonItem iCloseRelation;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup conjunctionRibbonPageGroup;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup disjunctionRibbonPageGroup;
