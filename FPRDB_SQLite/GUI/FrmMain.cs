@@ -91,7 +91,7 @@ namespace FPRDB_SQLite.GUI
         // Load dữ liệu từ chuỗi của Fuzzy Probalistic Value thành 1 bảng liệt kê giá trị
         private void LoadFuzzyProbalisticValueDetail(string probValue)
         {
-            
+
 
             DataTable dt = new DataTable();
             dt.Columns.Add("Value", typeof(string));
@@ -127,7 +127,7 @@ namespace FPRDB_SQLite.GUI
                 //    dt.Rows.Add(value, boundParts[0].Trim(), boundParts[1].Trim());
                 //}
                 List<(string, string, string)> processedFProbValue = FuzzyProbabilisticValueUtilities.extractValuesIntervalProbabilitiesAsString(probValue);
-                foreach(var (value, lowerProb, upperProb) in processedFProbValue)
+                foreach (var (value, lowerProb, upperProb) in processedFProbValue)
                 {
                     dt.Rows.Add(value, lowerProb, upperProb);
                 }
@@ -162,7 +162,7 @@ namespace FPRDB_SQLite.GUI
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
                         string selectedFSName = frm.selectedFSName;
-                        if (selectedFSName != null || selectedFSName!=default)
+                        if (selectedFSName != null || selectedFSName != default)
                             gridView4.SetRowCellValue(gridView4.FocusedRowHandle, "Value", selectedFSName);
                     }
                 };
@@ -174,7 +174,7 @@ namespace FPRDB_SQLite.GUI
                 col.ColumnEdit = null;
                 col.OptionsColumn.AllowEdit = true;
             }
-         }
+        }
         // Hàm xử lý khi người dùng nhấp ra khỏi hàng ở Grid liệt kê giá trị
         private void BottomGrid_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -742,7 +742,7 @@ namespace FPRDB_SQLite.GUI
                     //load field types
                     AppStates.createSChemaFieldTypes = this.databaseService.getFieldTypes();
                 }
-                catch(InvalidFPRDBDatabaseFile ex)
+                catch (InvalidFPRDBDatabaseFile ex)
                 {
                     XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     AppStates.clear();
@@ -1276,7 +1276,7 @@ namespace FPRDB_SQLite.GUI
                 memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 memoEditMessage.Text = $"[Invalid Operation]\r\n{ex.Message}";
                 xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
@@ -1453,7 +1453,7 @@ namespace FPRDB_SQLite.GUI
                         AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                         reLoadDatabaseTree();
                     }
-                    catch(SemanticException ex)
+                    catch (SemanticException ex)
                     {
                         XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -1589,7 +1589,7 @@ namespace FPRDB_SQLite.GUI
                     //    continue;
                     //}
 
-                    sbRow+=$" ({pk}={procssedFProbValue[0].Item1})[1,1] AND";
+                    sbRow += $" ({pk}={procssedFProbValue[0].Item1})[1,1] AND";
                 }
                 int trailingAND = sbRow.LastIndexOf("AND");
                 sbRow = sbRow.Substring(0, trailingAND);
@@ -1599,15 +1599,15 @@ namespace FPRDB_SQLite.GUI
                     row.Delete();
                     row.AcceptChanges();
                 }
-                catch(SemanticException ex)
+                catch (SemanticException ex)
                 {
                     XtraMessageBox.Show(ex.Message, "Semantic error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch(InvalidOperationException ex)
+                catch (InvalidOperationException ex)
                 {
                     XtraMessageBox.Show(ex.Message, "Invalid operation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
+
             }
             else
             {
@@ -1694,7 +1694,7 @@ namespace FPRDB_SQLite.GUI
                         }
 
                         // 2. Xây dựng phần WHERE (Dữ liệu ĐỊNH DANH CŨ)
-                        string whereClause="WHERE";
+                        string whereClause = "WHERE";
                         foreach (string pkName in pks)
                         {
                             string oldPkVal = row[pkName, DataRowVersion.Original] as string;
@@ -1702,7 +1702,7 @@ namespace FPRDB_SQLite.GUI
                             //[not done] not supported null yet
                             //string formattedOldVal = (oldPkVal == DBNull.Value) ? "NULL" : $"'{oldPkVal.ToString().Replace("'", "''")}'";
                             oldPkVal = this.extractValueFromTrueExactFuzzyProbabilisitcValue(oldPkVal);
-                            whereClause+=$" ({pkName} = {oldPkVal})[1,1] AND";
+                            whereClause += $" ({pkName} = {oldPkVal})[1,1] AND";
                         }
                         int trailingAND = whereClause.LastIndexOf("AND");
                         whereClause = whereClause.Substring(0, trailingAND);
@@ -1712,7 +1712,7 @@ namespace FPRDB_SQLite.GUI
                         {
                             for (int i = 0; i < setClauses.Count; ++i)
                             {
-                                fprdbUpdateSQL = $"UPDATE {this._selectedRelation.relName} SET {setClauses[i]} "+whereClause;
+                                fprdbUpdateSQL = $"UPDATE {this._selectedRelation.relName} SET {setClauses[i]} " + whereClause;
                                 this.sqlProcessor.executeUpdate(fprdbUpdateSQL);
                             }
                             row.AcceptChanges();
