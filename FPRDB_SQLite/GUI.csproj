@@ -2,9 +2,15 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
   </PropertyGroup>
+
+	<!-- .NET 8 only settings -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<UseWindowsForms>true</UseWindowsForms>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Win.Design" Version="24.1.7" />

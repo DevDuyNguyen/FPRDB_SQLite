@@ -196,7 +196,7 @@ namespace BLL.Services
             return true;
         }
 
-        public bool isValidFPRDBDatabaseFileStructure(string filePath)
+        private bool isValidFPRDBDatabaseFileStructure(string filePath)
         {
             //the structure follows the System catalog
             SystemCatalogTable fprdb_RelationSchema = new SystemCatalogTable(
