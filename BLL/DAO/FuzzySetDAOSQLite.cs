@@ -66,10 +66,12 @@ namespace BLL.DAO
 
             isElementXGetAssignedMembershipDegreeMoreThan1<T>(fuzzySet);
 
-            foreach(float degree in fuzzySet.membershipDegreeSet)
+            for(int i=0; i<=fuzzySet.valueSet.Count; ++i)
             {
-                if (degree < 0 || degree > 1)
+                if (fuzzySet.membershipDegreeSet[i] < 0 || fuzzySet.membershipDegreeSet[i] > 1)
                     throw new InvalidDataException("Membership degree must be within [0,1]");
+                if (fuzzySet.valueSet[i] == null)
+                    throw new InvalidOperationException("value can't be null");
             }
 
             try

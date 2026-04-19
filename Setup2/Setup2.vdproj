@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:FPRDBSQLiteInstaller"
+"ProjectName" = "8:FPRDB-SQLite-.net8-Installer"
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_68D0A7F2D37D41B3B86C2EEE264A99A8"
+        "MsmKey" = "8:_A1CC624059BA4AC98DEBCAE4FA77C94F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -89,20 +89,25 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.Arm64"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.8"
                     {
-                    "Name" = "8:.NET Runtime 6.0.36 (Arm64)"
-                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.Arm64"
+                    "Name" = "8:Microsoft .NET Framework 4.8 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.8"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x64"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.8.0.Arm64"
                     {
-                    "Name" = "8:.NET Runtime 6.0.36 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x64"
+                    "Name" = "8:.NET Runtime 8.0.25 (Arm64)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.8.0.Arm64"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x86"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.8.0.x64"
                     {
-                    "Name" = "8:.NET Runtime 6.0.36 (x86)"
-                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x86"
+                    "Name" = "8:.NET Runtime 8.0.25 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.8.0.x64"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.8.0.x86"
+                    {
+                    "Name" = "8:.NET Runtime 8.0.25 (x86)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.8.0.x86"
                     }
                 }
             }
@@ -334,7 +339,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_20E51D06BF0944E1AE798A438FC477E9"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1B7EE3AA2BB94031BCCCC66D7DECF257"
             {
             "Name" = "8:FPRDBSQLite"
             "Arguments" = "8:"
@@ -342,13 +347,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_68D0A7F2D37D41B3B86C2EEE264A99A8"
+            "Target" = "8:_A1CC624059BA4AC98DEBCAE4FA77C94F"
             "Folder" = "8:_308219B21BE545B792E60276114BDAE0"
             "WorkingFolder" = "8:_2AB1BE98F5DE4D948545CF9738B97EB0"
             "Icon" = "8:_E1872EC04FF744A890B5DA908E154B38"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_594FF15D19184C9F8E6B4D6E55DD0269"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7C564EF270514CE9BA57BD6788766A2C"
             {
             "Name" = "8:FPRDBSQLite"
             "Arguments" = "8:"
@@ -356,7 +361,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_68D0A7F2D37D41B3B86C2EEE264A99A8"
+            "Target" = "8:_A1CC624059BA4AC98DEBCAE4FA77C94F"
             "Folder" = "8:_BEF345E84E6644BE82363AB8DFF22ACD"
             "WorkingFolder" = "8:_2AB1BE98F5DE4D948545CF9738B97EB0"
             "Icon" = "8:_E1872EC04FF744A890B5DA908E154B38"
@@ -761,7 +766,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_68D0A7F2D37D41B3B86C2EEE264A99A8"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A1CC624059BA4AC98DEBCAE4FA77C94F"
             {
             "SourcePath" = "8:..\\FPRDB_SQLite\\obj\\Release\\net8.0-windows\\apphost.exe"
             "TargetName" = "8:"
