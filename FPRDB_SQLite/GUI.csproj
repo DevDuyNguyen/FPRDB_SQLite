@@ -26,8 +26,16 @@
   <!-- These are pulled in automatically on net8.0-windows via DevExpress.Win.Design -->
   <!-- but need to be explicit for net48 -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <PackageReference Include="DevExpress.Win" Version="24.1.7" />
-    <PackageReference Include="DevExpress.Data" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Data" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win.Grid" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win.Navigation" Version="24.1.7" />
+      <!--<PackageReference Include="DevExpress.Win.Bars" Version="24.1.7" />-->
+      <PackageReference Include="DevExpress.Utils" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win.RichEdit" Version="24.1.7" />
+       <PackageReference Include="DevExpress.Charts" Version="24.1.7" />
+	  <PackageReference Include="DevExpress.Win.Charts" Version="24.1.7" />
+  
   </ItemGroup>
 	
 
