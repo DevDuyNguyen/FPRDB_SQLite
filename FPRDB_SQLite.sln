@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{16878393-C26E-412B-8B21-8EBA26897439}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDB-SQLite-.net8-Installer", "Setup2\Setup2.vdproj", "{657E2043-FDBC-F1DC-4CD9-351906DA97D6}"
-EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDB-SQLite-.net_framework_4.8-Installer", "FPRDB-SQLite-.net_framework_4.8-Installer\FPRDB-SQLite-.net_framework_4.8-Installer.vdproj", "{82771888-5B93-7E99-8B39-9F2A15AFEB41}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDB-SQLite-.net8-Installer", "FPRDB-SQLite-.net8-Installer\FPRDB-SQLite-.net8-Installer.vdproj", "{4B004693-5D5C-9D6F-1004-DFFDE32E0136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,10 @@ Global
 		{16878393-C26E-412B-8B21-8EBA26897439}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16878393-C26E-412B-8B21-8EBA26897439}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16878393-C26E-412B-8B21-8EBA26897439}.Release|Any CPU.Build.0 = Release|Any CPU
-		{657E2043-FDBC-F1DC-4CD9-351906DA97D6}.Debug|Any CPU.ActiveCfg = Debug
-		{657E2043-FDBC-F1DC-4CD9-351906DA97D6}.Release|Any CPU.ActiveCfg = Release
 		{82771888-5B93-7E99-8B39-9F2A15AFEB41}.Debug|Any CPU.ActiveCfg = Debug
 		{82771888-5B93-7E99-8B39-9F2A15AFEB41}.Release|Any CPU.ActiveCfg = Release
+		{4B004693-5D5C-9D6F-1004-DFFDE32E0136}.Debug|Any CPU.ActiveCfg = Debug
+		{4B004693-5D5C-9D6F-1004-DFFDE32E0136}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
