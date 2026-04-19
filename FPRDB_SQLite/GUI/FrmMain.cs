@@ -1509,6 +1509,10 @@ namespace FPRDB_SQLite.GUI
                     {
                         XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    catch (InvalidOperationException ex)
+                    {
+                        XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex) { /* Handle ex */ }
