@@ -9,10 +9,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.DAO
 {
@@ -114,8 +112,13 @@ namespace BLL.DAO
                 {
                     List<T> valueList = convertStringToListOfT<T>((string)reader["fuzzset_x"]);
                     List<float> membershipDegreeList = convertStringToListOfT<float>((string)reader["fuzzset_membership_degree"]);
+#if NET8_0_OR_GREATER
                     res = new DiscreteFuzzySet<T>(valueList, membershipDegreeList,
                         (string)reader["fuzzset_name"], Enum.Parse<FieldType>((string)reader["type_name"]),-1);
+#else
+                    res = new DiscreteFuzzySet<T>(valueList, membershipDegreeList,
+                        (string)reader["fuzzset_name"], (FieldType)Enum.Parse(typeof(FieldType), (string)reader["type_name"]),-1);
+#endif
                     return res;
                 }
                 else

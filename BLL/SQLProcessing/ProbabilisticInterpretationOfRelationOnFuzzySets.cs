@@ -7,6 +7,9 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+#if NET8_0_OR_GREATER
+using System.Numerics;
+#endif
 
 namespace BLL.SQLProcessing
 {
@@ -121,7 +124,15 @@ namespace BLL.SQLProcessing
             }
             return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.distFS_FLOAT,-1), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.distFS_FLOAT, -1));
         }
-        public static DiscreteFuzzySet<float> discretizeContinuousFSFromDiscreteFS<T>(ContinuousFuzzySet fs1, DiscreteFuzzySet<T> fs2) where T : INumber<T>{
+
+#if NET8_0_OR_GREATER
+        public static DiscreteFuzzySet<float> discretizeContinuousFSFromDiscreteFS<T>(ContinuousFuzzySet fs1, DiscreteFuzzySet<T> fs2) 
+            where T : INumber<T>
+#else
+        public static DiscreteFuzzySet<float> discretizeContinuousFSFromDiscreteFS<T>(ContinuousFuzzySet fs1, DiscreteFuzzySet<T> fs2)
+        where T : struct, IComparable<T>, IConvertible
+#endif
+        {
             //discretization for continuous fuzzy set
             float fs1_left_bottom = fs1.getLeftBottom();
             float fs1_right_bottom = fs1.getRightBottom();

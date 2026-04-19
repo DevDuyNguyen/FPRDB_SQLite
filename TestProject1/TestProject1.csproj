@@ -8,6 +8,11 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
+	<!-- net48 settings -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+		<LangVersion>10.0</LangVersion>
+	</PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="8.8.0" />

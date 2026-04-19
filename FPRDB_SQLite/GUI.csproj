@@ -3,14 +3,33 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+	
+	<!-- net48 settings -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
 	<!-- .NET 8 only settings -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
-		<UseWindowsForms>true</UseWindowsForms>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
+	
+	<!-- net48 specific packages -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+      <PackageReference Include="DevExpress.Data" Version="24.1.7" />
+    </ItemGroup>
+	
+  <!-- net48 specific DevExpress assemblies -->
+  <!-- These are pulled in automatically on net8.0-windows via DevExpress.Win.Design -->
+  <!-- but need to be explicit for net48 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PackageReference Include="DevExpress.Win" Version="24.1.7" />
+    <PackageReference Include="DevExpress.Data" Version="24.1.7" />
+  </ItemGroup>
+	
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Win.Design" Version="24.1.7" />

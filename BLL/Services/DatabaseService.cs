@@ -3,15 +3,10 @@ using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {

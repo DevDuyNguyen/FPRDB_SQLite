@@ -5,16 +5,12 @@ using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
-using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {

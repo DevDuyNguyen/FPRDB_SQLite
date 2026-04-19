@@ -2,16 +2,11 @@
 using BLL.DTO;
 using BLL.Enums;
 using BLL.Interfaces;
-using BLL.Services;
 using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 
 namespace BLL.DAO
@@ -116,7 +111,7 @@ namespace BLL.DAO
             //create referential constraint
             string constraintSQL = @$"
                 INSERT INTO fprdb_Constraint (con_name, con_type, con_relation_id, con_referenced_relation_id, con_attributes, con_referenced_attributes)
-                VALUES  ('{conName}','REFERENTIAL',{fprdbRelation.oid},{referencedFPRDBRelation.oid},'{string.Join(',', attributes)}','{string.Join(',', referencedAttributes)}')
+                VALUES  ('{conName}','REFERENTIAL',{fprdbRelation.oid},{referencedFPRDBRelation.oid},'{string.Join(",", attributes)}','{string.Join(",", referencedAttributes)}')
             ";
             this.databaseMgr.executeNonQuery(constraintSQL);
             return this.metaDataMgr.getConstraintByName(conName);
