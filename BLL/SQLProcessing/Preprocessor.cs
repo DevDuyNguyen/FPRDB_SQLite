@@ -5,16 +5,12 @@ using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
-using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {
@@ -230,7 +226,7 @@ namespace BLL.SQLProcessing
                     if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbLowerBoundList[j] > 1
                         || d.intervalProbUpperBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
-                    if (d.intervalProbLowerBoundList[j] <= d.intervalProbUpperBoundList[j])
+                    if (d.intervalProbLowerBoundList[j] > d.intervalProbUpperBoundList[j])
                         throw new SemanticException("a must be <= b in [a,b]");
                 }
                 
@@ -337,7 +333,7 @@ namespace BLL.SQLProcessing
                     if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i]<0 || data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] >1
                         || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] < 0 || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
-                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] <= data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i])
+                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] > data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i])
                         throw new SemanticException("a must be <= b in [a,b]");
                 }
 

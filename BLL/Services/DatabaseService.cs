@@ -3,15 +3,10 @@ using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -196,7 +191,7 @@ namespace BLL.Services
             return true;
         }
 
-        public bool isValidFPRDBDatabaseFileStructure(string filePath)
+        private bool isValidFPRDBDatabaseFileStructure(string filePath)
         {
             //the structure follows the System catalog
             SystemCatalogTable fprdb_RelationSchema = new SystemCatalogTable(

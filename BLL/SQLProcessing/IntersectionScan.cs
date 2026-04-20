@@ -3,12 +3,12 @@ using BLL.DomainObject;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
-using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace BLL.SQLProcessing
 {

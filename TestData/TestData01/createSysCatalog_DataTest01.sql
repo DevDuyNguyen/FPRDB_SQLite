@@ -146,7 +146,8 @@ INSERT INTO fprdb_Constraint (
 (1, 'pk_sche1', 'IDENTITY', NULL, NULL, 'id', NULL, 1),
 (2, 'fk_refrencingRel_referencedRel', 'REFERENTIAL', 2, 3, 'fk_id', 'id', NULL),
 (3, 'pk_referencingRel', 'IDENTITY', NULL, NULL, 'id', NULL, 3),
-(4, 'pk_referencedRel', 'IDENTITY', NULL, NULL, 'id', NULL, 4);
+(4, 'pk_referencedRel', 'IDENTITY', NULL, NULL, 'id', NULL, 4),
+(5, 'pk_noRelSche', 'IDENTITY', NULL, NULL, 'id', NULL, 2);
 
 INSERT INTO FPRDB_Rel_FuzzSet (
     rel_oid, 

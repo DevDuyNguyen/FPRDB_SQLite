@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -284,10 +283,20 @@ namespace BLL.SQLProcessing
                             IDataReader reader1 = this.dbMgr.executeQuery($"SELECT oid FROM fprdb_FuzzySet WHERE fuzzset_name='{(string)fsConstant.getVal()}'");
                             if (!reader1.Read())
                                 throw new QueryDataNotExistException($"Fuzzy set {(string)fsConstant.getVal()} doesn't exist");
-                            fuzzySetOIDs.TryAdd((string)fsConstant.getVal(), Convert.ToInt32(reader1["oid"]));
+                            if (!fuzzySetOIDs.ContainsKey((string)fsConstant.getVal()))
+                                fuzzySetOIDs.Add((string)fsConstant.getVal(), Convert.ToInt32(reader1["oid"]));
+                            else
+                                throw new InvalidOperationException($"The same fuzzy set can't appear more than one time in a fuzzy probabilistic value. Violation fuzzy set: {(string)fsConstant.getVal()}");
+
                         }
                         else
-                            fuzzySetOIDs.TryAdd((string)fsConstant.getVal(), fsConstant.getFuzzySetOID());
+                        {
+                            if (!fuzzySetOIDs.ContainsKey((string)fsConstant.getVal()))
+                                fuzzySetOIDs.Add((string)fsConstant.getVal(), fsConstant.getFuzzySetOID());
+                            else
+                                throw new InvalidOperationException($"The same fuzzy set can't appear more than one time in a fuzzy probabilistic value. Violation fuzzy set: {(string)fsConstant.getVal()}");
+                        }
+                            
                     }
                 }
             }

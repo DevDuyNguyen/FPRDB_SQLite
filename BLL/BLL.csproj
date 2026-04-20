@@ -1,18 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Irony" Version="1.5.3" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
-    <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
-    <PackageReference Include="Irony" Version="1.5.3" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
-  </ItemGroup>
+	<!-- .NET 8 only settings -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
+	<!-- net48 settings -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+		<LangVersion>10.0</LangVersion>
+	</PropertyGroup>
+
+  
+	<!-- Packages: both targets -->
+	<ItemGroup>
+	<PackageReference Include="Irony" Version="1.5.3" />
+	</ItemGroup>
+	
+	<!-- .NET 8 only packages -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<PackageReference Include="System.Data.SQLite" Version="2.0.2" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
+		<PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
+	</ItemGroup>
+
+	<!-- net48 specific packages -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+	</ItemGroup>
+	
 </Project>

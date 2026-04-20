@@ -91,7 +91,11 @@ namespace BLL.SQLProcessing
             {
                 int mid = left + (right - left) / 2;
                 float midValue = sorted[mid];
+#if NET8_0_OR_GREATER
                 float diff = MathF.Abs(midValue - target);
+#else
+                float diff = (float)Math.Abs(midValue - target);
+#endif
 
                 if (diff < epsilon)
                     return mid;
