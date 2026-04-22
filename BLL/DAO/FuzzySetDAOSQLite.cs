@@ -66,7 +66,7 @@ namespace BLL.DAO
 
             isElementXGetAssignedMembershipDegreeMoreThan1<T>(fuzzySet);
 
-            for(int i=0; i<=fuzzySet.valueSet.Count; ++i)
+            for(int i=0; i<fuzzySet.valueSet.Count; ++i)
             {
                 if (fuzzySet.membershipDegreeSet[i] < 0 || fuzzySet.membershipDegreeSet[i] > 1)
                     throw new InvalidDataException("Membership degree must be within [0,1]");

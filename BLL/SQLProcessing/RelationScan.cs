@@ -143,10 +143,12 @@ namespace BLL.SQLProcessing
                     {
                         tmp = this.getFieldContent<float>(keyName);
                     }
-                    else //if (FieldTypeUtilities.getDomainType(schema.getFieldByName(keyName).getFieldInfo().getType()) == typeof(string))
+                    else if (FieldTypeUtilities.getDomainType(schema.getFieldByName(keyName).getFieldInfo().getType()) == typeof(string))
                     {
                         tmp = this.getFieldContent<string>(keyName);
                     }
+                    else
+                        tmp = this.getFieldContent<bool>(keyName);
                     oldKeyValue.Add(tmp);
                     if (keyName == fldname)
                         newKeyValue.Add(content);
