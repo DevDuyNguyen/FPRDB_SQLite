@@ -1835,13 +1835,53 @@ namespace FPRDB_SQLite.GUI
             if (e.Page?.Tag?.ToString() == "QueryTab")
             {
                 ribbonControl.SelectedPage = QueryRibbonPage;
-            }else if (e.Page == SchemaxtraTabPage)
+            }
+            else if (e.Page == SchemaxtraTabPage)
             {
                 ribbonControl.SelectedPage = SchemaRibbonPage;
             }
             else
             {
                 ribbonControl.SelectedPage = RelationRibbonPage;
+            }
+        }
+
+        private void xtraTabControlDatabase_CloseButtonClick(object sender, EventArgs e)
+        {
+            var arg = e as DevExpress.XtraTab.ViewInfo.ClosePageButtonEventArgs;
+            XtraTabPage page = arg.Page as XtraTabPage;
+            if (page != null && page.Controls.Count > 0 && page.Controls[0] is ucQueryEditor uc)
+            {
+                if (uc.IsTemporary && string.IsNullOrWhiteSpace(uc.QueryText))
+                {
+                    xtraTabControlDatabase.TabPages.Remove(page);
+                    return;
+                }
+                if (page.Text.EndsWith("*"))
+                {
+                    DialogResult result = MessageBox.Show(
+                        $"Bạn có muốn lưu thay đổi cho {page.Text.TrimEnd('*')} không?",
+                        "Xác nhận đóng",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        // Thực hiện lệnh Lưu của bạn ở đây
+                        iSaveQuery_ItemClick(null, null); 
+                        xtraTabControlDatabase.TabPages.Remove(page);
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        // Đóng luôn mà không lưu
+                        xtraTabControlDatabase.TabPages.Remove(page);
+                    }
+                    // Nếu Cancel thì không làm gì, Tab vẫn giữ nguyên
+                }
+                else
+                {
+                    xtraTabControlDatabase.TabPages.Remove(page);
+                }
             }
         }
     }
