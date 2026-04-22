@@ -6,15 +6,20 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
 using BLL.SQLProcessing;
+using DevExpress.DataAccess.UI.Native.Sql;
 using DevExpress.XtraBars;
+using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraRichEdit.Import.Html;
 using DevExpress.XtraTab;
+using FPRDB_SQLite.GUI.GUI.UserControls;
 using GUI.GlobalStates;
 using GUI.GUI;
+//using GUI.GUI.UserControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,7 +53,8 @@ namespace FPRDB_SQLite.GUI
         private Field selectedField;
         private FieldType selectedFieldType;
         private bool isSelectedFieldText;
-        private bool isQueryLoaded = false;
+
+        private int sqlQueryCount = 1;
         public frmMain(CompositionRoot compRoot)
         {
             this.compRoot = compRoot;
@@ -60,6 +66,13 @@ namespace FPRDB_SQLite.GUI
             //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
+            xtraTabControlDatabase.ClosePageButtonShowMode = DevExpress.XtraTab.ClosePageButtonShowMode.InAllTabPageHeaders;
+
+            // Duyệt qua các Tab hiện có (như Tab Schema, Tab Home) và ẩn nút x đi
+            foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
+            {
+                page.ShowCloseButton = DevExpress.Utils.DefaultBoolean.False;
+            }
         }
         // Hàm để enable/disable tab và các nút khi load database
         private void changeStatusTab()
@@ -79,8 +92,8 @@ namespace FPRDB_SQLite.GUI
                 RelationRibbonPage.Visible = true;    // Tab "Relation"
                 QueryRibbonPage.Visible = true;    // Tab "Query"
                 xtraTabControlDatabase.Visible = true;
-                if (!isQueryLoaded)
-                    SetQueryTabState(false);
+                CreateQueryTab();
+                SetQueryTabState(true);
             }
         }
         private string GetRootPath(string path)
@@ -443,6 +456,7 @@ namespace FPRDB_SQLite.GUI
                     schemaTab.Text = schema.schemaName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 0;
                     DisplaySchemaDetail(schema);
+                    ribbonControl.SelectedPage = SchemaRibbonPage;
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
                 {
@@ -451,6 +465,7 @@ namespace FPRDB_SQLite.GUI
                     relationTab.Text = _selectedRelation.relName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 1;
                     DisplayRelationDetail(_selectedRelation);
+                    ribbonControl.SelectedPage = RelationRibbonPage;
                 }
             }
         }
@@ -592,7 +607,6 @@ namespace FPRDB_SQLite.GUI
         }
         private void reLoadDatabaseTree()
         {
-            changeStatusTab();
             // 1. Xóa cây cũ
             treeView.Nodes.Clear();
             // 2. Lấy tên file Database thông qua databaseService
@@ -801,7 +815,7 @@ namespace FPRDB_SQLite.GUI
                 DialogResult result = XtraMessageBox.Show("Are you sure want to exit?", "Exit FPRDB Visual Management System", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (result == DialogResult.Yes)
                 {
-                    Application.Exit();
+                    Close();
                 }
             }
             catch (Exception Ex)
@@ -813,95 +827,62 @@ namespace FPRDB_SQLite.GUI
         #region Tab Page Query
         #region Page Group File
         // Hàm enable Query Edtor khi đã load Query thành công
-        private void SetQueryTabState(bool isLoaded, string fileName = "")
+        private void CreateQueryTab(string fileName = "", string content = "", string path = "")
         {
-            XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
-            splitContainerControl1.PanelVisibility = SplitPanelVisibility.Panel1;
-            if (isLoaded)
+            if (string.IsNullOrEmpty(fileName))
             {
-                queryTab.PageEnabled = true;
-                queryTab.Text = fileName;
-                conjunctionRibbonPageGroup.Enabled = true;
-                disjunctionRibbonPageGroup.Enabled = true;
-                differenceRibbonPageGroup.Enabled = true;
-                operatorRibbonPageGroup.Enabled = true;
-                excuteQueryribbonPageGroup.Enabled = true;
-                iSaveQuery.Enabled = true;
-                xtraTabControlDatabase.SelectedTabPageIndex = 2; // focus vào tab Query
+                fileName = $"SQLQuery{sqlQueryCount++}.sql";
             }
-            else
-            {
-                queryTab.PageEnabled = false;
-                queryTab.Text = "Query";
-                iSaveQuery.Enabled = false;
-                conjunctionRibbonPageGroup.Enabled = false;
-                disjunctionRibbonPageGroup.Enabled = false;
-                differenceRibbonPageGroup.Enabled = false;
-                operatorRibbonPageGroup.Enabled = false;
-                excuteQueryribbonPageGroup.Enabled = false;
-            }
-        }
-        // Hàm warning file chưa được save
-        private void WarningUnsaved()
-        {
-            if (isSQLFileModified)
-            {
-                DialogResult result = XtraMessageBox.Show(
-                    "You have unsaved changes.",
-                    "Warning",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Warning);
 
-                if (result == DialogResult.Yes)
-                    SaveCurrentFile();
-                else if (result == DialogResult.Cancel)
-                    return;
-            }
+            string tabTitle = string.IsNullOrEmpty(path) ? fileName + "*" : fileName;
+            XtraTabPage newPage = new XtraTabPage { Text = tabTitle, Tag = "QueryTab" };
+            newPage.ShowCloseButton = DevExpress.Utils.DefaultBoolean.True;
+
+            ucQueryEditor editor = new ucQueryEditor();
+            editor.Dock = DockStyle.Fill;
+            editor.Initialize(content, path);
+
+            editor.OnDirtyStateChanged = (isDirty) =>
+            {
+                string baseName = string.IsNullOrEmpty(editor.FilePath) ? fileName : Path.GetFileName(editor.FilePath);
+                if (isDirty)
+                {
+                    newPage.Text = baseName + "*";
+                }
+                else
+                {
+                    newPage.Text = baseName;
+                }
+            };
+
+
+            newPage.Controls.Add(editor);
+
+            xtraTabControlDatabase.TabPages.Add(newPage);
+            xtraTabControlDatabase.SelectedTabPage = newPage;
+        }
+
+        private void SetQueryTabState(bool isEnabled)
+        {
+            ribbonControl.SelectedPage = QueryRibbonPage;
+            conjunctionRibbonPageGroup.Enabled = isEnabled;
+            disjunctionRibbonPageGroup.Enabled = isEnabled;
+            differenceRibbonPageGroup.Enabled = isEnabled;
+            operatorRibbonPageGroup.Enabled = isEnabled;
+            excuteQueryribbonPageGroup.Enabled = isEnabled;
+            iSaveQuery.Enabled = isEnabled;
+
         }
         // Hàm tạo mới SQL File
         private void CreateNewQuery()
         {
-            WarningUnsaved();
-            try
-            {
-                SaveFileDialog DialogNew = new SaveFileDialog();
-                DialogNew.Title = "Create New SQL File";
-                DialogNew.Filter = "SQL File (*.fprdbsql)|*.fprdbsql";
-                DialogNew.DefaultExt = "fprdbsql";
-                DialogNew.AddExtension = true;
-                DialogNew.RestoreDirectory = true;
-                DialogNew.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
-                DialogNew.SupportMultiDottedExtensions = true;
-
-                if (DialogNew.ShowDialog() == DialogResult.OK)
-                {
-                    //sqlFileService.createFile(DialogNew.FileName)
-                    currentSQLFilePath = DialogNew.FileName;
-                    // Tạo file trống
-                    File.WriteAllText(currentSQLFilePath, string.Empty, Encoding.Unicode);
-                    memoEditTxtQuery.Text = string.Empty;
-                    // Set trạng thái enable cho tab Query sau khi tạo mới thành công
-                    SetQueryTabState(true, Path.GetFileName(DialogNew.FileName));
-                    isQueryLoaded = true;
-                    XtraMessageBox.Show("Create new SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (FileNotFoundException ex)
-            {
-                XtraMessageBox.Show($"Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            catch (IOException ex)
-            {
-                XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            CreateQueryTab();
+            SetQueryTabState(true);
         }
 
         // Hàm mở SQL File đã tồn tại
         private void OpenQuery()
         {
-            WarningUnsaved();
             OpenFileDialog DialogOpen = new OpenFileDialog();
             DialogOpen.Title = "Open SQL File";
             DialogOpen.Filter = "SQL File (*.fprdbsql)|*.fprdbsql";
@@ -909,15 +890,39 @@ namespace FPRDB_SQLite.GUI
             DialogOpen.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
             if (DialogOpen.ShowDialog() == DialogResult.OK)
             {
+                string selectedFilePath = DialogOpen.FileName;
+
+                foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
+                {
+                    // Bước 1: Kiểm tra đúng loại Tab Query dựa trên Tag
+                    if (page.Tag != null && page.Tag.ToString() == "QueryTab")
+                    {
+                        // Bước 2: Truy cập vào UserControl bên trong Tab
+                        var uc = page.Controls.OfType<ucQueryEditor>().FirstOrDefault();
+
+                        if (uc != null)
+                        {
+                            // Bước 3: Kiểm tra đường dẫn file lưu trong UC có trùng không
+                            if (uc.FilePath == selectedFilePath)
+                            {
+                                xtraTabControlDatabase.SelectedTabPage = page;
+                                ribbonControl.SelectedPage = QueryRibbonPage;
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 try
                 {
                     //string sqlContent = sqlFileService.loadFile(DialogOpen.FileName);
                     currentSQLFilePath = DialogOpen.FileName;
                     // Đọc file và lấy nội dung file gán váo Query Editor
-                    memoEditTxtQuery.Text = File.ReadAllText(currentSQLFilePath, Encoding.Unicode);
+                    CreateQueryTab(Path.GetFileName(DialogOpen.FileName)
+                        , File.ReadAllText(currentSQLFilePath, Encoding.Unicode)
+                        , currentSQLFilePath);
                     // Set trạng thái enable cho tab Query sau khi mở file thành công
-                    SetQueryTabState(true, Path.GetFileName(DialogOpen.FileName));
-                    isQueryLoaded = true;
+                    SetQueryTabState(true);
                     XtraMessageBox.Show("Open SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (IOException ex)
@@ -936,36 +941,47 @@ namespace FPRDB_SQLite.GUI
         {
             OpenQuery();
         }
-        // Hàm thêm * nếu file chưa được save
-        private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
-        {
-            if (!isSQLFileModified)
-            {
-                isSQLFileModified = true;
-                XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
-                if (!queryTab.Text.StartsWith("*"))
-                    queryTab.Text = "*" + queryTab.Text;
-            }
-        }
         // Hàm lưu file SQL
-        private void SaveCurrentFile()
+        private bool SaveCurrentFile()
         {
-            try
-            {
-                // Viết nội dung hiện tại trên editor vào file
-                File.WriteAllText(currentSQLFilePath, memoEditTxtQuery.Text, Encoding.Unicode);
+            XtraTabPage currentTab = xtraTabControlDatabase.SelectedTabPage;
 
-                // Bỏ dấu * sau khi save
-                isSQLFileModified = false;
-                XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
-                queryTab.Text = queryTab.Text.TrimStart('*');
-                XtraMessageBox.Show("Save SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
+            if (currentTab != null && currentTab.Controls.Count > 0 && currentTab.Controls[0] is ucQueryEditor uc)
             {
-                XtraMessageBox.Show($"Error saving file: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    // 2. Kiểm tra nếu là file tạm (chưa có đường dẫn) thì phải hiện SaveFileDialog
+                    if (uc.IsTemporary)
+                    {
+                        using (SaveFileDialog sfd = new SaveFileDialog { Filter = "SQL File (*.fprdbsql)|*.fprdbsql", Title = "Save SQL File" })
+                        {
+                            if (sfd.ShowDialog() == DialogResult.OK)
+                            {
+                                uc.FilePath = sfd.FileName; // Cập nhật đường dẫn mới vào UC
+                            }
+                            else return false;
+                        }
+                    }
+
+                    // 3. Thực hiện ghi file (Dùng đúng FilePath của riêng Tab đó)
+                    File.WriteAllText(uc.FilePath, uc.QueryText, Encoding.Unicode);
+
+                    // 4. Cập nhật trạng thái trong UC để xóa dấu *
+                    uc.MarkAsSaved(uc.QueryText);
+                    // 5. Cập nhật lại tiêu đề Tab (Bỏ dấu *)
+                    string fileNameOnly = Path.GetFileName(uc.FilePath);
+                    currentTab.Text = fileNameOnly;
+
+                    XtraMessageBox.Show("Save SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    XtraMessageBox.Show($"Error saving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
             }
+            return false;
         }
         // Xử lý sự kiện click cho nút Save
         private void iSaveQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -976,17 +992,10 @@ namespace FPRDB_SQLite.GUI
         //hàm chèn ký tự
         private void InsertSymbol(string symbol)
         {
-            // 1. Đảm bảo ô nhập liệu được focus trước khi thao tác
-            memoEditTxtQuery.Focus();
-
-            // 2. Thay thế đoạn đang chọn (nếu có) bằng symbol, 
-            // hoặc chèn symbol vào đúng vị trí con trỏ nếu không chọn gì.
-            // Cách này không làm thay đổi toàn bộ thuộc tính .Text nên không gây bôi đen lại từ đầu.
-            memoEditTxtQuery.SelectedText = symbol;
-
-            // 3. Đưa con trỏ về sau ký tự vừa chèn (phòng trường hợp DevExpress tự reset)
-            memoEditTxtQuery.SelectionStart = memoEditTxtQuery.SelectionStart;
-            memoEditTxtQuery.SelectionLength = 0;
+            if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
+            {
+                uc.InsertTextAtCursor(symbol);
+            }
         }
         #region Page Group Conjuntion
         private void iConjunctionIgnorance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⨂_ig ");
@@ -1130,81 +1139,83 @@ namespace FPRDB_SQLite.GUI
             // 
 
             // dữ liệu giả để test giao diện
-            try
-            {
-                // Mở rộng giao diện để xem cả query và kết quả
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+            //try
+            //{
+            //    // Mở rộng giao diện để xem cả query và kết quả
+            //    splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
 
-                // 1. Tạo một DataTable giả lập cấu trúc
-                DataTable dtMock = new DataTable();
-                dtMock.Columns.Add("Number", typeof(int));
-                dtMock.Columns.Add("doctor1.ID", typeof(string));
-                dtMock.Columns.Add("doctor1.AGE", typeof(string));
-                dtMock.Columns.Add("doctor2.NAME", typeof(string));
-                dtMock.Columns.Add("doctor2.AGE", typeof(string));
+            //    // 1. Tạo một DataTable giả lập cấu trúc
+            //    DataTable dtMock = new DataTable();
+            //    dtMock.Columns.Add("Number", typeof(int));
+            //    dtMock.Columns.Add("doctor1.ID", typeof(string));
+            //    dtMock.Columns.Add("doctor1.AGE", typeof(string));
+            //    dtMock.Columns.Add("doctor2.NAME", typeof(string));
+            //    dtMock.Columns.Add("doctor2.AGE", typeof(string));
 
-                // 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
-                dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
-                dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
-                dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-                dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
-                dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
-                dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
-                //next()
-                // 3. Gán dữ liệu giả vào GridControl
-                gridControlResultQuery.DataSource = dtMock;
+            //    // 2. Thêm dữ liệu giả lập (giống hệt hình ảnh bạn cung cấp)
+            //    dtMock.Rows.Add(4, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+            //    dtMock.Rows.Add(5, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+            //    dtMock.Rows.Add(6, "{ DT093 }[ 1, 1 ]", "{ approx_30 }[ 1, 1 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+            //    dtMock.Rows.Add(7, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ L.V. Cuong }[ 1, 1 ]", "{ 30 }[ 0.4, 0.6 ]");
+            //    dtMock.Rows.Add(8, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.V. Hung }[ 1, 1 ]", "{ middle_age }[ 0.8, 1 ]");
+            //    dtMock.Rows.Add(9, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+            //    //next()
+            //    // 3. Gán dữ liệu giả vào GridControl
+            //    gridControlResultQuery.DataSource = dtMock;
 
-                // 4. Yêu cầu GridView tự động tạo các cột dựa trên DataTable
-                gridViewResultQuery.PopulateColumns();
+            //    // 4. Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+            //    gridViewResultQuery.PopulateColumns();
 
-                dtMock.Rows.Add(10, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
+            //    dtMock.Rows.Add(10, "{ DT102 }[ 1, 1 ]", "{ 55 }[ 0.5, 0.5 ]", "{ N.T. Dat }[ 1, 1 ]", "{ 54 }[ 0.5, 0.5 ]");
 
-                // 5. Tùy chỉnh hiển thị cột (Frontend)
-                if (gridViewResultQuery.Columns.Count > 0)
-                {
-                    // Chỉnh độ rộng và không cho phép sửa trực tiếp trên lưới
-                    gridViewResultQuery.OptionsBehavior.Editable = false;
-                    gridViewResultQuery.BestFitColumns();
-                }
+            //    // 5. Tùy chỉnh hiển thị cột (Frontend)
+            //    if (gridViewResultQuery.Columns.Count > 0)
+            //    {
+            //        // Chỉnh độ rộng và không cho phép sửa trực tiếp trên lưới
+            //        gridViewResultQuery.OptionsBehavior.Editable = false;
+            //        gridViewResultQuery.BestFitColumns();
+            //    }
 
-                // Chuyển sang Tab hiển thị kết quả (Giả sử index 0 là Query Result)
-                xtraTabControlResultQuery.SelectedTabPageIndex = 0;
-            }
-            catch (Exception ex)
-            {
-                XtraMessageBox.Show("Lỗi hiển thị dữ liệu giả: \n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //    // Chuyển sang Tab hiển thị kết quả (Giả sử index 0 là Query Result)
+            //    xtraTabControlResultQuery.SelectedTabPageIndex = 0;
+            //}
+            //catch (Exception ex)
+            //{
+            //    XtraMessageBox.Show("Lỗi hiển thị dữ liệu giả: \n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            string sql = memoEditTxtQuery.Text;
-            string firstString = sql.Split(' ')[0];
-            switch (firstString.ToUpper())
+            if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
-                case "INSERT":
-                case "DELETE":
-                case "UPDATE":
-                    ExecuteUpdate(sql, false);
-                    break;
-                case "DROP":
-                    ExecuteUpdate(sql, true);
-                    break;
-                case "CREATE":
-                    ExecuteDataDefinition(sql);
-                    break;
-                default:
-                    ExecuteQuery(sql);
-                    break;
+                string sql = uc.GetSelectedQuery();
+                string firstString = sql.Split(' ')[0];
+                switch (firstString.ToUpper())
+                {
+                    case "INSERT":
+                    case "DELETE":
+                    case "UPDATE":
+                        ExecuteUpdate(sql, false, uc);
+                        break;
+                    case "DROP":
+                        ExecuteUpdate(sql, true, uc);
+                        break;
+                    case "CREATE":
+                        ExecuteDataDefinition(sql, uc);
+                        break;
+                    default:
+                        ExecuteQuery(sql, uc);
+                        break;
+                }
             }
-
         }
-        private void ExecuteDataDefinition(string sql)
+        private void ExecuteDataDefinition(string sql, ucQueryEditor uc)
         {
             try
             {
                 this.sqlProcessor.executeDataDefinition(sql);
-                memoEditMessage.Text = $"Success";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"Success";
+                uc.ViewError();
 
                 AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                 AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
@@ -1212,43 +1223,43 @@ namespace FPRDB_SQLite.GUI
             }
             catch (SQLSyntaxException ex)
             {
-                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (SemanticException ex)
             {
-                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (InvalidCastException ex)
             {
-                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (MismatchTokenType ex)
             {
-                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (NotSupportedException ex)
             {
-                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
+                uc.ViewError();
             }
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
             }
 
         }
-        private void ExecuteUpdate(string sql, bool isReloadGUI)
+        private void ExecuteUpdate(string sql, bool isReloadGUI, ucQueryEditor uc)
         {
             try
             {
                 int noRowsAffected = this.sqlProcessor.executeUpdate(sql);
-                memoEditMessage.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
+                uc.ViewError();
                 if (isReloadGUI)
                 {
                     AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
@@ -1258,42 +1269,42 @@ namespace FPRDB_SQLite.GUI
             }
             catch (SQLSyntaxException ex)
             {
-                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (SemanticException ex)
             {
-                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (InvalidCastException ex)
             {
-                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (MismatchTokenType ex)
             {
-                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (InvalidOperationException ex)
             {
-                memoEditMessage.Text = $"[Invalid Operation]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Invalid Operation]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (NotSupportedException ex)
             {
-                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
+                uc.ViewError();
             }
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
             }
 
         }
-        private void ExecuteQuery(string sql)
+        private void ExecuteQuery(string sql, ucQueryEditor uc)
         {
             try
             {
@@ -1345,48 +1356,43 @@ namespace FPRDB_SQLite.GUI
 
                 }
                 //bind the result to the grid control
-                gridControlResultQuery.DataSource = resultForGridView;
-                // Mở rộng giao diện để xem cả query và kết quả
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                uc.GridResult.DataSource = resultForGridView;
                 //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
-                gridViewResultQuery.PopulateColumns();
-
-                // Sau khi thành công, mở rộng Panel và đảm bảo tab Result được hiển thị
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
-                xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
+                uc.GridViewResult.PopulateColumns();
 
                 // Ghi thông báo thành công vào MemoEdit
-                memoEditMessage.Text = $"Query executed successfully";
+                uc.ViewResult();
+                uc.memoEditMessageUC.Text = $"Query executed successfully";
             }
             catch (SQLSyntaxException ex)
             {
-                memoEditMessage.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (SemanticException ex)
             {
-                memoEditMessage.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (InvalidCastException ex)
             {
-                memoEditMessage.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (MismatchTokenType ex)
             {
-                memoEditMessage.Text = $"[Token Mismatch]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                uc.ViewError();
             }
             catch (NotSupportedException ex)
             {
-                memoEditMessage.Text = $"[Not Supported]\r\n{ex.Message}";
-                xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
+                uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
+                uc.ViewError();
             }
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
-                splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
+                uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
             }
         }
         private void iOperator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) => InsertSymbol(" ⇒ ");
@@ -1848,6 +1854,87 @@ namespace FPRDB_SQLite.GUI
         private void barButtonRelationships_ItemClick(object sender, ItemClickEventArgs e)
         {
             new frmFKRelationships(compRoot, _selectedRelation).ShowDialog();
+        }
+
+        private void xtraTabControlDatabase_SelectedPageChanged(object sender, TabPageChangedEventArgs e)
+        {
+            if (e.Page?.Tag?.ToString() == "QueryTab")
+            {
+                ribbonControl.SelectedPage = QueryRibbonPage;
+            }
+            else if (e.Page == SchemaxtraTabPage)
+            {
+                ribbonControl.SelectedPage = SchemaRibbonPage;
+            }
+            else
+            {
+                ribbonControl.SelectedPage = RelationRibbonPage;
+            }
+        }
+        private bool CloseTabPage(XtraTabPage page)
+        {
+            if (page != null && page.Controls.Count > 0 && page.Controls[0] is ucQueryEditor uc)
+            {
+                if (uc.IsTemporary && string.IsNullOrWhiteSpace(uc.QueryText))
+                {
+                    return true;
+                }
+                if (page.Text.EndsWith("*"))
+                {
+                    xtraTabControlDatabase.SelectedTabPage = page;
+                    DialogResult result = XtraMessageBox.Show(
+                        $"Bạn có muốn lưu thay đổi cho {page.Text.TrimEnd('*')} không?",
+                        "Xác nhận đóng",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        return SaveCurrentFile(); // Trả về true nếu lưu thành công, false nếu Cancel diaog
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        return true; // Người dùng chấp nhận mất dữ liệu
+                    }
+                    else
+                    {
+                        return false; // Người dùng nhấn Cancel
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        private void xtraTabControlDatabase_CloseButtonClick(object sender, EventArgs e)
+        {
+            var arg = e as DevExpress.XtraTab.ViewInfo.ClosePageButtonEventArgs;
+            XtraTabPage page = arg.Page as XtraTabPage;
+
+            if (CloseTabPage(page))
+            {
+                xtraTabControlDatabase.TabPages.Remove(page);
+            }
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            for (int i = xtraTabControlDatabase.TabPages.Count - 1; i >= 0; i--)
+            {
+                XtraTabPage page = xtraTabControlDatabase.TabPages[i];
+                if (page?.Tag?.ToString() == "QueryTab")
+                {
+                    if (CloseTabPage(page))
+                    {
+                        xtraTabControlDatabase.TabPages.Remove(page);
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                }
+            }
+
         }
     }
 }
