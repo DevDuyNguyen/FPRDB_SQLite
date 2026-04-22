@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using BLL.Common;
 
 namespace BLL.Services
 {
@@ -16,10 +17,6 @@ namespace BLL.Services
     {
         private FuzzySetDAO fuzzySetDAO;
         //list of reserved keywords that can't be used for fuzzy set name for fast lookup
-        private static readonly HashSet<string> ReservedKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "select", "from", "where", "natural", "join", "union", "intersect", "except"
-        };
         public FuzzySetService() { }
         public FuzzySetService(FuzzySetDAO fuzzySetDAO)
         {
@@ -50,7 +47,7 @@ namespace BLL.Services
             }
 
             // Rule 4: Cannot use reserved keywords
-            if (ReservedKeywords.Contains(name))
+            if (ReserveKeyWords.reservedKeywords.Contains(name))
             {
                 throw new InvalidOperationException($"'{name}' is a reserved keyword and cannot be used as a fuzzy set name.");
             }

@@ -147,8 +147,8 @@ INSERT INTO fprdb_Constraint
     (oid, con_name, con_type, con_relation_id, con_referenced_relation_id, 
      con_attributes, con_referenced_attributes, con_relschema_id)
 VALUES 
-    (1, 'pk_sche1', 'IDENTITY', NULL, NULL, '"id"', NULL, 1),
-    (2, 'pk_sche2', 'IDENTITY', NULL, NULL, '"id"', NULL, 2);
+    (1, 'pk_sche1', 'IDENTITY', NULL, NULL, 'id', NULL, 1),
+    (2, 'pk_sche2', 'IDENTITY', NULL, NULL, 'id', NULL, 2);
 	
 INSERT INTO fprdb_Relation 
     (oid, rel_name, rel_relation_schema)

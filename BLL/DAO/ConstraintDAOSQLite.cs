@@ -246,8 +246,10 @@ namespace BLL.DAO
                             fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
                         else if (tmpFieldType == FieldType.FLOAT)
                             fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
-                        else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                        else if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
                             fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                        else
+                            fprobValue = s.getFieldContent<bool>(tmpField.getFieldName());
                         sql += $" {constr.attributes[i]}='{fprobValue.ToString()}' AND";
                     }
                     int trailingAND = sql.LastIndexOf("AND");
@@ -323,8 +325,10 @@ namespace BLL.DAO
                                 fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
                             else if (tmpFieldType == FieldType.FLOAT)
                                 fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
-                            else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                            else if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
                                 fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                            else
+                                fprobValue = s.getFieldContent<bool>(tmpField.getFieldName());
                             referencedFieldToReferencingFieldAndFProbValues.Add(contr.referencedAttributes[i], (contr.attributes[i], fprobValue.ToString()));
                         }
 
@@ -386,8 +390,10 @@ namespace BLL.DAO
                                         fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
                                     else if (tmpFieldType == FieldType.FLOAT)
                                         fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
-                                    else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                                    else if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
                                         fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                                    else
+                                        fprobValue = s.getFieldContent<bool>(tmpField.getFieldName());
                                     sql += $" {constr.referencedAttributes[i]}='{fprobValue.ToString()}' AND";
 
                                 }
@@ -403,8 +409,10 @@ namespace BLL.DAO
                                     fprobValue = s.getFieldContent<int>(tmpField.getFieldName());
                                 else if (tmpFieldType == FieldType.FLOAT)
                                     fprobValue = s.getFieldContent<float>(tmpField.getFieldName());
-                                else //if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
+                                else if (tmpFieldType == FieldType.CHAR || tmpFieldType == FieldType.VARCHAR)
                                     fprobValue = s.getFieldContent<string>(tmpField.getFieldName());
+                                else
+                                    fprobValue = s.getFieldContent<bool>(tmpField.getFieldName());
                                 sql += $" {constr.referencedAttributes[i]}='{fprobValue.ToString()}' AND";
                             }
                             
