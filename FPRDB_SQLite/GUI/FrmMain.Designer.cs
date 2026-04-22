@@ -357,6 +357,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iOperator.Caption = "⇒";
             iOperator.Id = 46;
+            iOperator.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iOperator.ImageOptions.SvgImage");
             iOperator.Name = "iOperator";
             iOperator.SmallWithTextWidth = 80;
             iOperator.ItemClick += iOperator_ItemClick;

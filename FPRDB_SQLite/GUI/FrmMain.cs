@@ -14,6 +14,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraRichEdit.Import.Html;
 using DevExpress.XtraTab;
 using FPRDB_SQLite.GUI.GUI.UserControls;
 using GUI.GlobalStates;
@@ -52,6 +53,7 @@ namespace FPRDB_SQLite.GUI
         private Field selectedField;
         private FieldType selectedFieldType;
         private bool isSelectedFieldText;
+
         private int sqlQueryCount = 1;
         public frmMain(CompositionRoot compRoot)
         {
@@ -64,6 +66,13 @@ namespace FPRDB_SQLite.GUI
             //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
+            xtraTabControlDatabase.ClosePageButtonShowMode = DevExpress.XtraTab.ClosePageButtonShowMode.InAllTabPageHeaders;
+
+            // Duyệt qua các Tab hiện có (như Tab Schema, Tab Home) và ẩn nút x đi
+            foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
+            {
+                page.ShowCloseButton = DevExpress.Utils.DefaultBoolean.False;
+            }
         }
         // Hàm để enable/disable tab và các nút khi load database
         private void changeStatusTab()
@@ -818,17 +827,35 @@ namespace FPRDB_SQLite.GUI
         #region Tab Page Query
         #region Page Group File
         // Hàm enable Query Edtor khi đã load Query thành công
-        private void CreateQueryTab(string fileName = "")
+        private void CreateQueryTab(string fileName = "", string content = "", string path = "")
         {
             if (string.IsNullOrEmpty(fileName))
             {
                 fileName = $"SQLQuery{sqlQueryCount++}.sql";
             }
 
-            XtraTabPage newPage = new XtraTabPage { Text = fileName, Tag = "QueryTab" };
+            string tabTitle = string.IsNullOrEmpty(path) ? fileName + "*" : fileName;
+            XtraTabPage newPage = new XtraTabPage { Text = tabTitle, Tag = "QueryTab" };
+            newPage.ShowCloseButton = DevExpress.Utils.DefaultBoolean.True;
 
             ucQueryEditor editor = new ucQueryEditor();
             editor.Dock = DockStyle.Fill;
+            editor.Initialize(content, path);
+
+            editor.OnDirtyStateChanged = (isDirty) =>
+            {
+                string baseName = string.IsNullOrEmpty(editor.FilePath) ? fileName : Path.GetFileName(editor.FilePath);
+                if (isDirty)
+                {
+                    newPage.Text = baseName + "*";
+                }
+                else
+                {
+                    newPage.Text = baseName;
+                }
+            };
+
+
             newPage.Controls.Add(editor);
 
             xtraTabControlDatabase.TabPages.Add(newPage);
@@ -846,23 +873,6 @@ namespace FPRDB_SQLite.GUI
             iSaveQuery.Enabled = isEnabled;
 
         }
-        // Hàm warning file chưa được save
-        private void WarningUnsaved()
-        {
-            if (isSQLFileModified)
-            {
-                DialogResult result = XtraMessageBox.Show(
-                    "You have unsaved changes.",
-                    "Warning",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Yes)
-                    SaveCurrentFile();
-                else if (result == DialogResult.Cancel)
-                    return;
-            }
-        }
         // Hàm tạo mới SQL File
         private void CreateNewQuery()
         {
@@ -873,7 +883,6 @@ namespace FPRDB_SQLite.GUI
         // Hàm mở SQL File đã tồn tại
         private void OpenQuery()
         {
-            WarningUnsaved();
             OpenFileDialog DialogOpen = new OpenFileDialog();
             DialogOpen.Title = "Open SQL File";
             DialogOpen.Filter = "SQL File (*.fprdbsql)|*.fprdbsql";
@@ -886,9 +895,10 @@ namespace FPRDB_SQLite.GUI
                     //string sqlContent = sqlFileService.loadFile(DialogOpen.FileName);
                     currentSQLFilePath = DialogOpen.FileName;
                     // Đọc file và lấy nội dung file gán váo Query Editor
-                    //memoEditTxtQuery.Text = File.ReadAllText(currentSQLFilePath, Encoding.Unicode);
+                    CreateQueryTab(Path.GetFileName(DialogOpen.FileName)
+                        , File.ReadAllText(currentSQLFilePath, Encoding.Unicode)
+                        , currentSQLFilePath);
                     // Set trạng thái enable cho tab Query sau khi mở file thành công
-                    CreateQueryTab(Path.GetFileName(DialogOpen.FileName));
                     SetQueryTabState(true);
                     XtraMessageBox.Show("Open SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -908,35 +918,43 @@ namespace FPRDB_SQLite.GUI
         {
             OpenQuery();
         }
-        // Hàm thêm * nếu file chưa được save
-        private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
-        {
-            if (!isSQLFileModified)
-            {
-                isSQLFileModified = true;
-                XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
-                if (!queryTab.Text.StartsWith("*"))
-                    queryTab.Text = "*" + queryTab.Text;
-            }
-        }
         // Hàm lưu file SQL
         private void SaveCurrentFile()
         {
-            try
-            {
-                // Viết nội dung hiện tại trên editor vào file
-                //File.WriteAllText(currentSQLFilePath, memoEditTxtQuery.Text, Encoding.Unicode);
+            XtraTabPage currentTab = xtraTabControlDatabase.SelectedTabPage;
 
-                // Bỏ dấu * sau khi save
-                isSQLFileModified = false;
-                XtraTabPage queryTab = xtraTabControlDatabase.TabPages[2];
-                queryTab.Text = queryTab.Text.TrimStart('*');
-                XtraMessageBox.Show("Save SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
+            if (currentTab != null && currentTab.Controls.Count > 0 && currentTab.Controls[0] is ucQueryEditor uc)
             {
-                XtraMessageBox.Show($"Error saving file: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    // 2. Kiểm tra nếu là file tạm (chưa có đường dẫn) thì phải hiện SaveFileDialog
+                    if (uc.IsTemporary)
+                    {
+                        using (SaveFileDialog sfd = new SaveFileDialog { Filter = "SQL File (*.fprdbsql)|*.fprdbsql", Title = "Save As" })
+                        {
+                            if (sfd.ShowDialog() == DialogResult.OK)
+                            {
+                                uc.FilePath = sfd.FileName; // Cập nhật đường dẫn mới vào UC
+                            }
+                            else return;
+                        }
+                    }
+
+                    // 3. Thực hiện ghi file (Dùng đúng FilePath của riêng Tab đó)
+                    File.WriteAllText(uc.FilePath, uc.QueryText, Encoding.Unicode);
+
+                    // 4. Cập nhật trạng thái trong UC để xóa dấu *
+                    uc.MarkAsSaved(uc.QueryText);
+                    // 5. Cập nhật lại tiêu đề Tab (Bỏ dấu *)
+                    string fileNameOnly = Path.GetFileName(uc.FilePath);
+                    currentTab.Text = fileNameOnly;
+
+                    XtraMessageBox.Show("Save SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    XtraMessageBox.Show($"Error saving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
         // Xử lý sự kiện click cho nút Save

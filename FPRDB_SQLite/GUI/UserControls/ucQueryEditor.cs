@@ -21,12 +21,27 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         public DevExpress.XtraEditors.MemoEdit memoEditMessageUC => memoEditMessage;
         public DevExpress.XtraTab.XtraTabControl xtraTabControlResult => xtraTabControlResultQuery;
         public DevExpress.XtraEditors.SplitContainerControl splitContainer => splitContainerControl1;
+        // Property to check if the current query is temporary (not saved to a file)
+        public bool IsTemporary => string.IsNullOrEmpty(FilePath);
+        // Varable to store original content for "Dirty" state checking
+        private string originalContent = string.Empty;
+        // Event to notify frmMain when "Dirty" state changes
+        public Action<bool> OnDirtyStateChanged { get; set; }
+        // File path of the current query, empty if it's a temporary file
+        public string FilePath { get; set; } = string.Empty;
 
         public ucQueryEditor()
         {
             InitializeComponent();
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Panel1;
         }
+        public void Initialize(string content, string path)
+        {
+            this.FilePath = path;
+            this.originalContent = content;
+            this.memoEditTxtQuery.Text = content;
+        }
+
         public void InsertTextAtCursor(string text)
         {
             memoEditTxtQuery.Focus();
@@ -44,6 +59,18 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             gridControlResultQuery.DataSource = null;
+        }
+        private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
+        {
+            bool isDirty = IsTemporary || (memoEditTxtQuery.Text != originalContent);
+
+            OnDirtyStateChanged?.Invoke(isDirty);
+        }
+        public void MarkAsSaved(string savedContent)
+        {
+            this.originalContent = savedContent;
+
+            OnDirtyStateChanged?.Invoke(false);
         }
     }
 }

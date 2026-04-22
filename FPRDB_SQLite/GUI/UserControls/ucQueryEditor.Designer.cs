@@ -79,6 +79,7 @@
             memoEditTxtQuery.Name = "memoEditTxtQuery";
             memoEditTxtQuery.Size = new System.Drawing.Size(762, 129);
             memoEditTxtQuery.TabIndex = 0;
+            memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
             // xtraTabControlResultQuery
             // 
@@ -134,7 +135,7 @@
             // 
             MessagextraTabPage.Controls.Add(memoEditMessage);
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(684, 155);
+            MessagextraTabPage.Size = new System.Drawing.Size(760, 192);
             MessagextraTabPage.Text = "Message";
             // 
             // memoEditMessage
@@ -143,7 +144,7 @@
             memoEditMessage.Location = new System.Drawing.Point(0, 0);
             memoEditMessage.Name = "memoEditMessage";
             memoEditMessage.Properties.ReadOnly = true;
-            memoEditMessage.Size = new System.Drawing.Size(684, 155);
+            memoEditMessage.Size = new System.Drawing.Size(760, 192);
             memoEditMessage.TabIndex = 0;
             // 
             // ucQueryEditor
