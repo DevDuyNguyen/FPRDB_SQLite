@@ -357,6 +357,15 @@ namespace FPRDB_SQLite.GUI
             // 
             iOperator.Caption = "⇒";
             iOperator.Id = 46;
+            iOperator.ItemAppearance.Hovered.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
+            iOperator.ItemAppearance.Hovered.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            iOperator.ItemAppearance.Hovered.Options.UseFont = true;
+            iOperator.ItemAppearance.Normal.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
+            iOperator.ItemAppearance.Normal.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            iOperator.ItemAppearance.Normal.Options.UseFont = true;
+            iOperator.ItemAppearance.Pressed.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
+            iOperator.ItemAppearance.Pressed.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            iOperator.ItemAppearance.Pressed.Options.UseFont = true;
             iOperator.Name = "iOperator";
             iOperator.SmallWithTextWidth = 80;
             iOperator.ItemClick += iOperator_ItemClick;
@@ -917,6 +926,7 @@ namespace FPRDB_SQLite.GUI
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             StatusBar = ribbonStatusBar;
             Text = "FPRDB Visual Management System";
+            FormClosing += frmMain_FormClosing;
             ((System.ComponentModel.ISupportInitialize)ribbonControl).EndInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).EndInit();
             RelationsplitContainerControl.Panel1.ResumeLayout(false);

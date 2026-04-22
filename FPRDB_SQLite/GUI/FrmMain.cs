@@ -815,7 +815,7 @@ namespace FPRDB_SQLite.GUI
                 DialogResult result = XtraMessageBox.Show("Are you sure want to exit?", "Exit FPRDB Visual Management System", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (result == DialogResult.Yes)
                 {
-                    Application.Exit();
+                    Close();
                 }
             }
             catch (Exception Ex)
@@ -942,7 +942,7 @@ namespace FPRDB_SQLite.GUI
             OpenQuery();
         }
         // Hàm lưu file SQL
-        private void SaveCurrentFile()
+        private bool SaveCurrentFile()
         {
             XtraTabPage currentTab = xtraTabControlDatabase.SelectedTabPage;
 
@@ -959,7 +959,7 @@ namespace FPRDB_SQLite.GUI
                             {
                                 uc.FilePath = sfd.FileName; // Cập nhật đường dẫn mới vào UC
                             }
-                            else return;
+                            else return false;
                         }
                     }
 
@@ -973,12 +973,15 @@ namespace FPRDB_SQLite.GUI
                     currentTab.Text = fileNameOnly;
 
                     XtraMessageBox.Show("Save SQL file successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     XtraMessageBox.Show($"Error saving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
             }
+            return false;
         }
         // Xử lý sự kiện click cho nút Save
         private void iSaveQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1868,21 +1871,18 @@ namespace FPRDB_SQLite.GUI
                 ribbonControl.SelectedPage = RelationRibbonPage;
             }
         }
-
-        private void xtraTabControlDatabase_CloseButtonClick(object sender, EventArgs e)
+        private bool CloseTabPage(XtraTabPage page)
         {
-            var arg = e as DevExpress.XtraTab.ViewInfo.ClosePageButtonEventArgs;
-            XtraTabPage page = arg.Page as XtraTabPage;
             if (page != null && page.Controls.Count > 0 && page.Controls[0] is ucQueryEditor uc)
             {
                 if (uc.IsTemporary && string.IsNullOrWhiteSpace(uc.QueryText))
                 {
-                    xtraTabControlDatabase.TabPages.Remove(page);
-                    return;
+                    return true;
                 }
                 if (page.Text.EndsWith("*"))
                 {
-                    DialogResult result = MessageBox.Show(
+                    xtraTabControlDatabase.SelectedTabPage = page;
+                    DialogResult result = XtraMessageBox.Show(
                         $"Bạn có muốn lưu thay đổi cho {page.Text.TrimEnd('*')} không?",
                         "Xác nhận đóng",
                         MessageBoxButtons.YesNoCancel,
@@ -1890,22 +1890,51 @@ namespace FPRDB_SQLite.GUI
 
                     if (result == DialogResult.Yes)
                     {
-                        // Thực hiện lệnh Lưu của bạn ở đây
-                        iSaveQuery_ItemClick(null, null); 
-                        xtraTabControlDatabase.TabPages.Remove(page);
+                        return SaveCurrentFile(); // Trả về true nếu lưu thành công, false nếu Cancel diaog
                     }
                     else if (result == DialogResult.No)
                     {
-                        // Đóng luôn mà không lưu
+                        return true; // Người dùng chấp nhận mất dữ liệu
+                    }
+                    else
+                    {
+                        return false; // Người dùng nhấn Cancel
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        private void xtraTabControlDatabase_CloseButtonClick(object sender, EventArgs e)
+        {
+            var arg = e as DevExpress.XtraTab.ViewInfo.ClosePageButtonEventArgs;
+            XtraTabPage page = arg.Page as XtraTabPage;
+
+            if (CloseTabPage(page))
+            {
+                xtraTabControlDatabase.TabPages.Remove(page);
+            }
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            for (int i = xtraTabControlDatabase.TabPages.Count - 1; i >= 0; i--)
+            {
+                XtraTabPage page = xtraTabControlDatabase.TabPages[i];
+                if (page?.Tag?.ToString() == "QueryTab")
+                {
+                    if (CloseTabPage(page))
+                    {
                         xtraTabControlDatabase.TabPages.Remove(page);
                     }
-                    // Nếu Cancel thì không làm gì, Tab vẫn giữ nguyên
-                }
-                else
-                {
-                    xtraTabControlDatabase.TabPages.Remove(page);
+                    else
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
             }
+
         }
     }
 }
