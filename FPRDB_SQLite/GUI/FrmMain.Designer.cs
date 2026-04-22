@@ -111,15 +111,6 @@ namespace FPRDB_SQLite.GUI
             gridColumnMinProb = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumnMaxProb = new DevExpress.XtraGrid.Columns.GridColumn();
             panelControlRelation = new DevExpress.XtraEditors.PanelControl();
-            QueryxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
-            splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
-            memoEditTxtQuery = new DevExpress.XtraEditors.MemoEdit();
-            xtraTabControlResultQuery = new DevExpress.XtraTab.XtraTabControl();
-            QueryResultxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
-            gridControlResultQuery = new DevExpress.XtraGrid.GridControl();
-            gridViewResultQuery = new DevExpress.XtraGrid.Views.Grid.GridView();
-            MessagextraTabPage = new DevExpress.XtraTab.XtraTabPage();
-            memoEditMessage = new DevExpress.XtraEditors.MemoEdit();
             popupMenuTreeView = new DevExpress.XtraBars.PopupMenu(components);
             ContextMenu_RelationNode = new System.Windows.Forms.ContextMenuStrip(components);
             CTMenuRelNode_OpenRelation = new System.Windows.Forms.ToolStripMenuItem();
@@ -157,21 +148,6 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)gridControlValueRelation).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridView4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)panelControlRelation).BeginInit();
-            QueryxtraTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerControl1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).BeginInit();
-            splitContainerControl1.Panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).BeginInit();
-            splitContainerControl1.Panel2.SuspendLayout();
-            splitContainerControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)memoEditTxtQuery.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)xtraTabControlResultQuery).BeginInit();
-            xtraTabControlResultQuery.SuspendLayout();
-            QueryResultxtraTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).BeginInit();
-            MessagextraTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).BeginInit();
             ContextMenu_RelationNode.SuspendLayout();
             ContextMenu_SchemaNode.SuspendLayout();
@@ -381,7 +357,6 @@ namespace FPRDB_SQLite.GUI
             // 
             iOperator.Caption = "⇒";
             iOperator.Id = 46;
-            iOperator.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("iOperator.ImageOptions.SvgImage");
             iOperator.Name = "iOperator";
             iOperator.SmallWithTextWidth = 80;
             iOperator.ItemClick += iOperator_ItemClick;
@@ -657,7 +632,8 @@ namespace FPRDB_SQLite.GUI
             xtraTabControlDatabase.SelectedTabPage = SchemaxtraTabPage;
             xtraTabControlDatabase.Size = new System.Drawing.Size(688, 356);
             xtraTabControlDatabase.TabIndex = 1;
-            xtraTabControlDatabase.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { SchemaxtraTabPage, RelationxtraTabPage, QueryxtraTabPage });
+            xtraTabControlDatabase.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { SchemaxtraTabPage, RelationxtraTabPage });
+            xtraTabControlDatabase.SelectedPageChanged += xtraTabControlDatabase_SelectedPageChanged;
             // 
             // SchemaxtraTabPage
             // 
@@ -737,7 +713,7 @@ namespace FPRDB_SQLite.GUI
             // repositoryItemCalcEdit1
             // 
             repositoryItemCalcEdit1.AutoHeight = false;
-            repositoryItemCalcEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemCalcEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton() });
             repositoryItemCalcEdit1.Name = "repositoryItemCalcEdit1";
             // 
             // repositoryItemButtonEdit1
@@ -749,7 +725,7 @@ namespace FPRDB_SQLite.GUI
             // repositoryItemHeightType1
             // 
             repositoryItemHeightType1.AutoHeight = false;
-            repositoryItemHeightType1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repositoryItemHeightType1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton() });
             repositoryItemHeightType1.Name = "repositoryItemHeightType1";
             // 
             // RelationxtraTabPage
@@ -863,112 +839,6 @@ namespace FPRDB_SQLite.GUI
             panelControlRelation.Size = new System.Drawing.Size(686, 45);
             panelControlRelation.TabIndex = 0;
             // 
-            // QueryxtraTabPage
-            // 
-            QueryxtraTabPage.Controls.Add(splitContainerControl1);
-            QueryxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
-            QueryxtraTabPage.Name = "QueryxtraTabPage";
-            QueryxtraTabPage.Size = new System.Drawing.Size(686, 326);
-            QueryxtraTabPage.Text = "Query";
-            // 
-            // splitContainerControl1
-            // 
-            splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainerControl1.Horizontal = false;
-            splitContainerControl1.Location = new System.Drawing.Point(0, 0);
-            splitContainerControl1.Name = "splitContainerControl1";
-            // 
-            // splitContainerControl1.Panel1
-            // 
-            splitContainerControl1.Panel1.Controls.Add(memoEditTxtQuery);
-            splitContainerControl1.Panel1.Text = "Panel1";
-            // 
-            // splitContainerControl1.Panel2
-            // 
-            splitContainerControl1.Panel2.Controls.Add(xtraTabControlResultQuery);
-            splitContainerControl1.Panel2.Text = "Panel2";
-            splitContainerControl1.Size = new System.Drawing.Size(686, 326);
-            splitContainerControl1.SplitterPosition = 129;
-            splitContainerControl1.TabIndex = 0;
-            // 
-            // memoEditTxtQuery
-            // 
-            memoEditTxtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
-            memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
-            memoEditTxtQuery.MenuManager = ribbonControl;
-            memoEditTxtQuery.Name = "memoEditTxtQuery";
-            memoEditTxtQuery.Size = new System.Drawing.Size(686, 129);
-            memoEditTxtQuery.TabIndex = 0;
-            memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
-            // 
-            // xtraTabControlResultQuery
-            // 
-            xtraTabControlResultQuery.Dock = System.Windows.Forms.DockStyle.Fill;
-            xtraTabControlResultQuery.Location = new System.Drawing.Point(0, 0);
-            xtraTabControlResultQuery.Name = "xtraTabControlResultQuery";
-            xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControlResultQuery.Size = new System.Drawing.Size(686, 185);
-            xtraTabControlResultQuery.TabIndex = 0;
-            xtraTabControlResultQuery.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
-            // 
-            // QueryResultxtraTabPage
-            // 
-            QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
-            QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(684, 155);
-            QueryResultxtraTabPage.Text = "Query Result";
-            // 
-            // gridControlResultQuery
-            // 
-            gridControlResultQuery.Dock = System.Windows.Forms.DockStyle.Fill;
-            gridControlResultQuery.EmbeddedNavigator.Buttons.Append.Visible = false;
-            gridControlResultQuery.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
-            gridControlResultQuery.EmbeddedNavigator.Buttons.Edit.Visible = false;
-            gridControlResultQuery.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
-            gridControlResultQuery.EmbeddedNavigator.Buttons.Remove.Visible = false;
-            gridControlResultQuery.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0, true);
-            gridControlResultQuery.Location = new System.Drawing.Point(0, 0);
-            gridControlResultQuery.MainView = gridViewResultQuery;
-            gridControlResultQuery.MenuManager = ribbonControl;
-            gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(684, 155);
-            gridControlResultQuery.TabIndex = 0;
-            gridControlResultQuery.UseEmbeddedNavigator = true;
-            gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridViewResultQuery });
-            // 
-            // gridViewResultQuery
-            // 
-            gridViewResultQuery.Appearance.DetailTip.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            gridViewResultQuery.Appearance.DetailTip.Options.UseFont = true;
-            gridViewResultQuery.Appearance.HeaderPanel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            gridViewResultQuery.Appearance.HeaderPanel.Options.UseFont = true;
-            gridViewResultQuery.Appearance.Row.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            gridViewResultQuery.Appearance.Row.Options.UseFont = true;
-            gridViewResultQuery.Appearance.ViewCaption.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            gridViewResultQuery.Appearance.ViewCaption.Options.UseFont = true;
-            gridViewResultQuery.GridControl = gridControlResultQuery;
-            gridViewResultQuery.Name = "gridViewResultQuery";
-            gridViewResultQuery.OptionsBehavior.Editable = false;
-            gridViewResultQuery.OptionsBehavior.ReadOnly = true;
-            gridViewResultQuery.OptionsView.ShowGroupPanel = false;
-            // 
-            // MessagextraTabPage
-            // 
-            MessagextraTabPage.Controls.Add(memoEditMessage);
-            MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(684, 155);
-            MessagextraTabPage.Text = "Message";
-            // 
-            // memoEditMessage
-            // 
-            memoEditMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            memoEditMessage.Location = new System.Drawing.Point(0, 0);
-            memoEditMessage.MenuManager = ribbonControl;
-            memoEditMessage.Name = "memoEditMessage";
-            memoEditMessage.Properties.ReadOnly = true;
-            memoEditMessage.Size = new System.Drawing.Size(684, 155);
-            memoEditMessage.TabIndex = 0;
-            // 
             // popupMenuTreeView
             // 
             popupMenuTreeView.ItemLinks.Add(barButtonSelectTuples);
@@ -1030,7 +900,6 @@ namespace FPRDB_SQLite.GUI
             // 
             // frmMain
             // 
-            AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
             Appearance.Options.UseFont = true;
             AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1075,21 +944,6 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)gridControlValueRelation).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridView4).EndInit();
             ((System.ComponentModel.ISupportInitialize)panelControlRelation).EndInit();
-            QueryxtraTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).EndInit();
-            splitContainerControl1.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).EndInit();
-            splitContainerControl1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerControl1).EndInit();
-            splitContainerControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)memoEditTxtQuery.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)xtraTabControlResultQuery).EndInit();
-            xtraTabControlResultQuery.ResumeLayout(false);
-            QueryResultxtraTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)gridControlResultQuery).EndInit();
-            ((System.ComponentModel.ISupportInitialize)gridViewResultQuery).EndInit();
-            MessagextraTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)memoEditMessage.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)popupMenuTreeView).EndInit();
             ContextMenu_RelationNode.ResumeLayout(false);
             ContextMenu_SchemaNode.ResumeLayout(false);
@@ -1146,15 +1000,8 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraTab.XtraTabControl xtraTabControlDatabase;
         private DevExpress.XtraTab.XtraTabPage SchemaxtraTabPage;
         private DevExpress.XtraTab.XtraTabPage RelationxtraTabPage;
-        private DevExpress.XtraTab.XtraTabPage QueryxtraTabPage;
         private DevExpress.XtraGrid.GridControl gridControlScheme;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView;
-        private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
-        private DevExpress.XtraTab.XtraTabControl xtraTabControlResultQuery;
-        private DevExpress.XtraTab.XtraTabPage QueryResultxtraTabPage;
-        private DevExpress.XtraTab.XtraTabPage MessagextraTabPage;
-        private DevExpress.XtraGrid.GridControl gridControlResultQuery;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridViewResultQuery;
         private DevExpress.XtraBars.BarButtonItem iDifferenceIgnorance;
         private DevExpress.XtraBars.BarButtonItem iDifferenceIndependence;
         private DevExpress.XtraBars.BarButtonItem iDiferenceMutual;
@@ -1181,7 +1028,6 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnMaxProb;
         private DevExpress.XtraBars.BarButtonGroup barButtonGroup1;
         private DevExpress.XtraBars.BarButtonGroup barButtonGroup2;
-        private DevExpress.XtraEditors.MemoEdit memoEditTxtQuery;
         private DevExpress.XtraBars.BarButtonItem barButtonSelectTuples;
         private DevExpress.XtraBars.PopupMenu popupMenuTreeView;
         private System.Windows.Forms.ContextMenuStrip ContextMenu_RelationNode;
@@ -1192,7 +1038,6 @@ namespace FPRDB_SQLite.GUI
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_EditSchema;
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_OpenSchema;
         private System.Windows.Forms.ToolStripMenuItem CTMenuSchNode_DeleteSchema;
-        private DevExpress.XtraEditors.MemoEdit memoEditMessage;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumnLength;
         private DevExpress.XtraBars.BarButtonItem iExportFS;
         private DevExpress.XtraBars.BarButtonItem iImportFS;
