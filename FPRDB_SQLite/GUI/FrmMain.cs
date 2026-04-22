@@ -443,6 +443,7 @@ namespace FPRDB_SQLite.GUI
                     schemaTab.Text = schema.schemaName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 0;
                     DisplaySchemaDetail(schema);
+                    ribbonControl.SelectedPage = SchemaRibbonPage;
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
                 {
@@ -451,6 +452,7 @@ namespace FPRDB_SQLite.GUI
                     relationTab.Text = _selectedRelation.relName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 1;
                     DisplayRelationDetail(_selectedRelation);
+                    ribbonControl.SelectedPage = RelationRibbonPage;
                 }
             }
         }
