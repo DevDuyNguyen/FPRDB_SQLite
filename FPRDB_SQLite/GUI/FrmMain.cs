@@ -890,6 +890,29 @@ namespace FPRDB_SQLite.GUI
             DialogOpen.InitialDirectory = GetRootPath(AppDomain.CurrentDomain.BaseDirectory.ToString());
             if (DialogOpen.ShowDialog() == DialogResult.OK)
             {
+                string selectedFilePath = DialogOpen.FileName;
+
+                foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
+                {
+                    // Bước 1: Kiểm tra đúng loại Tab Query dựa trên Tag
+                    if (page.Tag != null && page.Tag.ToString() == "QueryTab")
+                    {
+                        // Bước 2: Truy cập vào UserControl bên trong Tab
+                        var uc = page.Controls.OfType<ucQueryEditor>().FirstOrDefault();
+
+                        if (uc != null)
+                        {
+                            // Bước 3: Kiểm tra đường dẫn file lưu trong UC có trùng không
+                            if (uc.FilePath == selectedFilePath)
+                            {
+                                xtraTabControlDatabase.SelectedTabPage = page;
+                                ribbonControl.SelectedPage = QueryRibbonPage;
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 try
                 {
                     //string sqlContent = sqlFileService.loadFile(DialogOpen.FileName);
@@ -930,7 +953,7 @@ namespace FPRDB_SQLite.GUI
                     // 2. Kiểm tra nếu là file tạm (chưa có đường dẫn) thì phải hiện SaveFileDialog
                     if (uc.IsTemporary)
                     {
-                        using (SaveFileDialog sfd = new SaveFileDialog { Filter = "SQL File (*.fprdbsql)|*.fprdbsql", Title = "Save As" })
+                        using (SaveFileDialog sfd = new SaveFileDialog { Filter = "SQL File (*.fprdbsql)|*.fprdbsql", Title = "Save SQL File" })
                         {
                             if (sfd.ShowDialog() == DialogResult.OK)
                             {
@@ -1162,7 +1185,7 @@ namespace FPRDB_SQLite.GUI
         {
             if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
-                string sql = uc.QueryText;
+                string sql = uc.GetSelectedQuery();
                 string firstString = sql.Split(' ')[0];
                 switch (firstString.ToUpper())
                 {

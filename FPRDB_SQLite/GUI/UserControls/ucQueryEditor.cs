@@ -72,5 +72,13 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
 
             OnDirtyStateChanged?.Invoke(false);
         }
+        public string GetSelectedQuery()
+        {
+            if (memoEditTxtQuery.SelectionLength > 0)
+            {
+                return memoEditTxtQuery.SelectedText;
+            }
+            return memoEditTxtQuery.Text;
+        }
     }
 }
