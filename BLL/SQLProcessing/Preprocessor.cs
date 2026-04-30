@@ -13,6 +13,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {
@@ -30,7 +31,7 @@ namespace BLL.SQLProcessing
         {
             //Every attribute that is mentioned in the WHERE-clause must be an attribute of some relation in the current scope
             List<string> attributesInSelectionCondition = condition.getMentionedAttributes();
-            foreach(string attrName in attributesInSelectionCondition)
+            foreach (string attrName in attributesInSelectionCondition)
             {
                 if (mentionedFields.FirstOrDefault(el => el.getFieldName() == attrName) == null)
                 {
@@ -66,7 +67,7 @@ namespace BLL.SQLProcessing
                 }
             }
             return true;
-            
+
         }
 
         public bool checkSemanticCreateSchema(FPRDBSchema data)
@@ -77,7 +78,7 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Schema {schemaName} already exists");
             }
-            if(data.getPrimaryConstraintName()=="" || data.getPrimaryConstraintName()==null 
+            if (data.getPrimaryConstraintName() == "" || data.getPrimaryConstraintName() == null
                 || data.getPrimaryConstraintName() == null || data.getPrimarykey().Count == 0)
             {
                 throw new SemanticException($"Schema creation must have primary key");
@@ -86,7 +87,7 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Constraint with name {constraintName} already exists");
             }
-            foreach(string fldName in data.getPrimarykey())
+            foreach (string fldName in data.getPrimarykey())
             {
                 if (!FieldTypeUtilities.isPrimitive(data.getFieldByName(fldName).getFieldInfo().getType()))
                     throw new SemanticException("Primary key must be of non fuzzy set type");
@@ -122,18 +123,18 @@ namespace BLL.SQLProcessing
                 FieldInfo fieldInfo = field.getFieldInfo();
                 FieldType fieldType = fieldInfo.getType();
                 string generalExceptionMessage = $"Inserted data and field type of {field.getFieldName()} aren't compatible";
-                
+
 
                 foreach (Constant constant in data[i].valueList)
                 {
-                    if(constant is IntConstant)
+                    if (constant is IntConstant)
                     {
-                        if(fieldInfo.getType()!=FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
+                        if (fieldInfo.getType() != FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is FloatConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType()!=FieldType.contFS)
+                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is StringConstant)
@@ -155,19 +156,19 @@ namespace BLL.SQLProcessing
                         //check fuzzy set use in insert data really exist
                         try
                         {
-                            type=this.metadataMgr.getFuzzySetType(fsName);
+                            type = this.metadataMgr.getFuzzySetType(fsName);
                             fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
                         }
                         catch (QueryDataNotExistException ex)
                         {
                             throw new SemanticException(ex.Message);
                         }
-                        
+
                         fsContant.setFuzzySetOID(fuzzySetOID);
                         fsContant.setType(type);
                         if (fieldInfo.getType() == FieldType.distFS_FLOAT)
                         {
-                            if(type!=FieldType.distFS_FLOAT && type != FieldType.distFS_INT)
+                            if (type != FieldType.distFS_FLOAT && type != FieldType.distFS_INT)
                                 throw new SemanticException(generalExceptionMessage);
                         }
                         else
@@ -189,16 +190,16 @@ namespace BLL.SQLProcessing
             {
                 relation = this.metadataMgr.getRelation(data.relation);
             }
-            catch(QueryDataNotExistException ex)
+            catch (QueryDataNotExistException ex)
             {
                 throw new SemanticException($"Relation {data.relation} doesn't exist");
             }
             //Check if insert attribute exist
             FPRDBSchema schema = relation.getSchema();
-            foreach(string fieldName in data.fieldList)
+            foreach (string fieldName in data.fieldList)
             {
                 bool exist = false;
-                foreach(Field field in schema.getFields())
+                foreach (Field field in schema.getFields())
                 {
                     if (fieldName == field.getFieldName())
                     {
@@ -223,7 +224,7 @@ namespace BLL.SQLProcessing
             //check a<=b where [a,b]
             foreach (FuzzyProbabilisticValueParsingData d in data.fuzzyProbabilisticValues)
             {
-                for(int j=0;  j<d.intervalProbLowerBoundList.Count; ++j)
+                for (int j = 0; j < d.intervalProbLowerBoundList.Count; ++j)
                 {
                     if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbLowerBoundList[j] > 1
                         || d.intervalProbUpperBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
@@ -231,7 +232,7 @@ namespace BLL.SQLProcessing
                     if (d.intervalProbLowerBoundList[j] > d.intervalProbUpperBoundList[j])
                         throw new SemanticException("a must be <= b in [a,b]");
                 }
-                
+
             }
             //
             //The insert fuzzy probabilistic value for a key attribute must be primitive, it is the only possible value in the fuzzy probabilistic value and its interval probability is [1,1]
@@ -280,7 +281,7 @@ namespace BLL.SQLProcessing
         public bool checkSemanticModify(ModifyData data)
         {
             //relation exist
-            FPRDBRelation relation=null;
+            FPRDBRelation relation = null;
             FPRDBSchema schema = null;
             List<Field> fieldsInSchema = null;
             try
@@ -294,10 +295,10 @@ namespace BLL.SQLProcessing
                 throw new SemanticException(ex.Message);
             }
             //Mentiond fields exists
-            if (!relation.getSchema().hasField(data.getAssignedField())){
+            if (!relation.getSchema().hasField(data.getAssignedField())) {
                 throw new SemanticException($"Field {data.getAssignedField()} doesn't exist in relation {relation.getRelName()}");
             }
-            if(data is FieldFieldModifyData)
+            if (data is FieldFieldModifyData)
             {
                 FieldFieldModifyData data1 = (FieldFieldModifyData)data;
                 if (!relation.getSchema().hasField(data1.getAssignValue() as string))
@@ -326,13 +327,13 @@ namespace BLL.SQLProcessing
                 if (assignedField.getFieldInfo().getType() != assigningField.getFieldInfo().getType() || assignedField.getFieldInfo().getTXTLength() != assigningField.getFieldInfo().getTXTLength())
                     throw new SemanticException($"Can't assign the content of {assigningField.getFieldInfo().getType().ToString()} field to {assignedField.getFieldInfo().getType()} field");
             }
-            else if(data is FieldFuzzProbValueModifyData)
+            else if (data is FieldFuzzProbValueModifyData)
             {
                 FieldFuzzProbValueModifyData data1 = (FieldFuzzProbValueModifyData)data;
                 //If update is field=probabilistic value, the interval must be within [0,1]
-                for(int i=0; i<data1.fuzzyProbabilisticValue.valueList.Count; ++i)
+                for (int i = 0; i < data1.fuzzyProbabilisticValue.valueList.Count; ++i)
                 {
-                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i]<0 || data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] >1
+                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] < 0 || data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] > 1
                         || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] < 0 || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
                     if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] > data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i])
@@ -340,8 +341,8 @@ namespace BLL.SQLProcessing
                 }
 
                 checkCompatibleInsertTypeAndFillFuzzySetConstant(
-                    new List<string> { data1.getAssignedField()}, 
-                    new List<FuzzyProbabilisticValueParsingData>{ data1.getAssignValue() as FuzzyProbabilisticValueParsingData},
+                    new List<string> { data1.getAssignedField() },
+                    new List<FuzzyProbabilisticValueParsingData> { data1.getAssignValue() as FuzzyProbabilisticValueParsingData },
                     relation.getSchema()
                     );
             }
@@ -416,7 +417,7 @@ namespace BLL.SQLProcessing
                     else if (FieldTypeUtilities.getDomainType(fieldType1) != ConstantUltilities.getDomainType(c, metaDataMgr))
                         throw new SemanticException(errorMess);
                 }
-                catch(QueryDataNotExistException ex)
+                catch (QueryDataNotExistException ex)
                 {
                     throw new SemanticException(ex.Message);
                 }
@@ -436,14 +437,14 @@ namespace BLL.SQLProcessing
             string errorMess = $"{f1.getFieldName()} = {f2.getFieldName()} is invalid";
             if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(int))
             {
-                if(FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
+                if (FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
                     && FieldTypeUtilities.getDomainType(fieldType2) != typeof(float))
                     throw new SemanticException(errorMess);
                 return true;
             }
             else if (FieldTypeUtilities.getDomainType(fieldType1) == typeof(float))
             {
-                if(FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
+                if (FieldTypeUtilities.getDomainType(fieldType2) != typeof(int)
                     && FieldTypeUtilities.getDomainType(fieldType2) != typeof(float))
                     throw new SemanticException(errorMess);
                 return true;
@@ -458,9 +459,9 @@ namespace BLL.SQLProcessing
             List<Field> fields = new List<Field>();
             Dictionary<string, bool> meetFields = new Dictionary<string, bool>();
 
-            foreach(FPRDBSchema sch in cartesianRelationSchemas)
+            foreach (FPRDBSchema sch in cartesianRelationSchemas)
             {
-                foreach(Field f in sch.getFields())
+                foreach (Field f in sch.getFields())
                 {
                     if (meetFields.ContainsKey(f.getFieldName()))
                     {
@@ -490,7 +491,7 @@ namespace BLL.SQLProcessing
                     if (meetFields.ContainsKey(f.getFieldName()))
                     {
                         if (meetFields[f.getFieldName()].getFieldInfo().getType() != f.getFieldInfo().getType()
-                            || meetFields[f.getFieldName()].getFieldInfo().getTXTLength()!= f.getFieldInfo().getTXTLength())
+                            || meetFields[f.getFieldName()].getFieldInfo().getTXTLength() != f.getFieldInfo().getTXTLength())
                             throw new SemanticException($"Common field {f.getFieldName()} doesn't have same value domain");
                     }
                     else
@@ -509,7 +510,7 @@ namespace BLL.SQLProcessing
         {
             List<Field> fields1 = sch1.getFields();
             List<Field> fields2 = sch2.getFields();
-            for (int i=0; i<fields1.Count; ++i)
+            for (int i = 0; i < fields1.Count; ++i)
             {
                 if (fields1[i].getFieldName() != fields2[i].getFieldName()
                     || fields1[i].getFieldInfo().getType() != fields2[i].getFieldInfo().getType())
@@ -523,7 +524,7 @@ namespace BLL.SQLProcessing
         public bool checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression(List<FPRDBRelation> relations, List<string> attributesInSelect, List<string> attributesInAtomicExpression)
         {
             Dictionary<string, bool> attributeList = new Dictionary<string, bool>();
-            foreach(string attrName in attributesInSelect)
+            foreach (string attrName in attributesInSelect)
             {
                 if (!attributeList.ContainsKey(attrName))
                 {
@@ -542,7 +543,7 @@ namespace BLL.SQLProcessing
             }
 
             int matchCount;
-            foreach(string attrName in attributesInSelect)
+            foreach (string attrName in attributesInSelect)
             {
                 matchCount = 0;
                 if (attrName == "*")
@@ -567,12 +568,12 @@ namespace BLL.SQLProcessing
         public bool checkSemanticQuery(QueryData data)
         {
 
-            if(!(data is CompoundQueryData))
+            if (!(data is CompoundQueryData))
             {
                 List<FPRDBRelation> relations = new List<FPRDBRelation>();
-                List<SelectField> selectList=null;
+                List<SelectField> selectList = null;
                 List<string> attributesInSelectionCondition = null;
-                List<SelectionExpression> atomicSelectionExpressions=null;
+                List<SelectionExpression> atomicSelectionExpressions = null;
                 FPRDBSchema atomicQuerySchema;
 
                 if (data is BaseCartesianProductQueryData)
@@ -582,7 +583,7 @@ namespace BLL.SQLProcessing
                     selectList = new List<SelectField>();
                     foreach (SelectField f in data1.selectList)
                         selectList.Add(f);
-                    if(data1.selectionCondition!=null)
+                    if (data1.selectionCondition != null)
                     {
                         atomicSelectionExpressions = data1.selectionCondition.getAtomicSelectionExpressions();
                         attributesInSelectionCondition = data1.selectionCondition.getMentionedAttributes();
@@ -617,7 +618,7 @@ namespace BLL.SQLProcessing
                             }
                         }
                     }
-                    
+
                     data1.schema = new FPRDBSchema(null, tmpField, null);
 
                     /*Checking: Every attribute that is mentioned in the SELECT- or WHERE-clause 
@@ -671,9 +672,9 @@ namespace BLL.SQLProcessing
 
                     data1.schema = new FPRDBSchema(null, tmpField, null);
                 }
-                
 
-                if (atomicSelectionExpressions!=null)
+
+                if (atomicSelectionExpressions != null)
                 {
                     //Check operator is applicable on attribute:
                     AtomicSelectionExpressionFieldConstant fieldConstantEx;
@@ -717,7 +718,7 @@ namespace BLL.SQLProcessing
                 this.checkSemanticQuery(data1.leftQuery);
                 this.checkSemanticQuery(data1.rightQuery);
                 this.checkSetOperationCompatibility(data1.leftQuery.getSchema(), data1.rightQuery.getSchema());
-                
+
                 return true;
             }
         }
@@ -725,7 +726,7 @@ namespace BLL.SQLProcessing
         private bool checkFieldsMentionedInSelectionConditionExist(FPRDBSchema schema, SelectionCondition condition)
         {
             List<string> fieldsInSelectCondition = condition.getMentionedAttributes();
-            foreach(string fieldName in fieldsInSelectCondition)
+            foreach (string fieldName in fieldsInSelectCondition)
             {
                 if (!schema.hasField(fieldName))
                     throw new SemanticException($"Field {fieldName} doesn't exist");
@@ -737,18 +738,18 @@ namespace BLL.SQLProcessing
             FPRDBRelation rel = this.metadataMgr.getRelation(data.relation);
             List<ConstraintDTO> referentialConstraint = this.constraintService.getReferenrialConstraints(rel.toDTO());
             List<string> attributeMustHaveExactAndPreciseValue = new List<string>(rel.getSchema().primarykey);
-            foreach(ConstraintDTO rfc in referentialConstraint)
+            foreach (ConstraintDTO rfc in referentialConstraint)
             {
                 attributeMustHaveExactAndPreciseValue.AddRange(rfc.attributes);
             }
 
             string insertFldName;
-            for(int i=0; i<data.fieldList.Count; ++i)
+            for (int i = 0; i < data.fieldList.Count; ++i)
             {
                 insertFldName = data.fieldList[i];
                 if (attributeMustHaveExactAndPreciseValue.Contains(insertFldName))
                 {
-                    if (data.fuzzyProbabilisticValues[i].valueList.Count > 1 || data.fuzzyProbabilisticValues[i].intervalProbLowerBoundList[0]!=1 || data.fuzzyProbabilisticValues[i].intervalProbUpperBoundList[0] != 1)
+                    if (data.fuzzyProbabilisticValues[i].valueList.Count > 1 || data.fuzzyProbabilisticValues[i].intervalProbLowerBoundList[0] != 1 || data.fuzzyProbabilisticValues[i].intervalProbUpperBoundList[0] != 1)
                         throw new InvalidOperationException($"The fuzzy probabilistic value for attribute {insertFldName} must be exact");
                     if (data.fuzzyProbabilisticValues[i].valueList[0] is FuzzySetConstant)
                         throw new InvalidOperationException($"The fuzzy probabilistic value for attribute {insertFldName} must be precise");
@@ -804,7 +805,7 @@ namespace BLL.SQLProcessing
             Type fs1DefiningDomain = ConstantUltilities.getDomainType(leftConstant, this.metadataMgr);
             Type fs2DefiningDomain = ConstantUltilities.getDomainType(rightConstant, this.metadataMgr);
             //Only fuzzy sets defined on the same domain value can be compare with each other except for fuzzy sets defined on int or float domain value
-            if (fs1DefiningDomain!= fs2DefiningDomain)
+            if (fs1DefiningDomain != fs2DefiningDomain)
             {
                 if (!(fs1DefiningDomain == typeof(int) && fs2DefiningDomain == typeof(float))
                     && !(fs1DefiningDomain == typeof(float) && fs2DefiningDomain == typeof(int))
@@ -813,7 +814,7 @@ namespace BLL.SQLProcessing
                 else
                 {
                     //Compatible compare operator on fuzzy sets defined on int or float domain: =, !=, <, <=, >, >=, ⇒
-                    if (compareOperator!=CompareOperation.EQUAL
+                    if (compareOperator != CompareOperation.EQUAL
                         && compareOperator != CompareOperation.NOT_EQUAL
                         && compareOperator != CompareOperation.LESS_THAN
                         && compareOperator != CompareOperation.LESS_EQUAL
@@ -840,7 +841,7 @@ namespace BLL.SQLProcessing
                         && compareOperator != CompareOperation.GREATER_EQUAL
                         && compareOperator != CompareOperation.ALSO
                 )
-            throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+                throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
 
             return true;
 
@@ -856,13 +857,27 @@ namespace BLL.SQLProcessing
         {
             Constant constantFS1 = data.getLeftFuzzySetConstant();
             Constant constantFS2 = data.getRightFuzzySetConstant();
-            if(constantFS1 is FuzzySetConstant)
+            if (constantFS1 is FuzzySetConstant)
                 checkFuzzyUse(constantFS1.getVal() as string);
             if (constantFS2 is FuzzySetConstant)
                 checkFuzzyUse(constantFS2.getVal() as string);
             checkCompatibleCompareOperatorOnFuzzySet(constantFS1, data.getCompareOp(), constantFS2);
 
             return true;
+        }
+        public bool checkSemanticCalculateProbabilisticInterpretationForSelectionExpreesionOnSpecifiedTuples(SelectionExpressionOnSpecifiedTuplesData data)
+        {
+            if (!this.metadataMgr.isRelationExist(data.relation))
+                throw new SemanticException($"Relation {data.relation} doesn't exist");
+            if (data.isHasSpecifiedTuples && (data.from < 0 || data.take<0))
+                throw new SemanticException($"the numbers after keyword 'from' and 'take' must be non-negative integer");
+            
+            AtomicSelectionCondition condition = new AtomicSelectionCondition(data.selectionExpression, 0, 1);
+            QueryData queryData = new BaseCartesianProductQueryData(new List<SelectField> { new SelectField("", "*") }, new List<string> { data.relation }, condition);
+            checkSemanticQuery(queryData);
+
+            return true;
+
         }
 
     }

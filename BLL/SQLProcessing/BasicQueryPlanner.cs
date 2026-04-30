@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.SQLProcessing
 {
@@ -104,6 +105,13 @@ namespace BLL.SQLProcessing
 
             return ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet(fs1, fs2, data.getCompareOp());
 
+        }
+        public SelectPlan createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(SelectionExpressionOnSpecifiedTuplesData data)
+        {
+            Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser);
+            AtomicSelectionCondition condition = new AtomicSelectionCondition(data.selectionExpression, 0, 1);
+            p = new SelectPlan(p, condition);
+            return (SelectPlan)p;
         }
 
     }

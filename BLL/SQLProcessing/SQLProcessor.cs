@@ -154,6 +154,15 @@ namespace BLL.SQLProcessing
             }
             return -1;
         }
+        public SelectPlan calculateProbabilisticInterpretationForSelectionExpressionOnSpecifiedTuples(string expression)
+        {
+            this.parser.parse(expression);
+            SelectionExpressionOnSpecifiedTuplesData data = this.parser.selectionExpressionOnSpecifiedTuples();
+            if (this.preProcessor.checkSemanticCalculateProbabilisticInterpretationForSelectionExpreesionOnSpecifiedTuples(data)){
+                return this.queryPlanner.createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(data);
+            }
+            return null;
+        }
 
     }
 }
