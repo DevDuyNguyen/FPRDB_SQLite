@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Common;
+using BLL.Exceptions;
 
 namespace BLL.SQLProcessing
 {
@@ -145,6 +146,9 @@ namespace BLL.SQLProcessing
 
         public void analyze(string s)
         {
+            if (s == "" || s == null)
+                throw new SemanticException("The expression is empty");
+
             this.currentIndex = -1;
             this.currentToken = null;
             this.tokens = new List<Token>();
@@ -242,7 +246,9 @@ namespace BLL.SQLProcessing
         //it should be at when you are creating field Tokens
         public bool matchNumberConstant()
         {
-            if (this.currentToken != null && this.currentToken.Terminal.Name == "unary operator")
+            if (this.currentToken == null)
+                return false;
+            if (this.currentToken.Terminal.Name == "unary operator")
             {
                 if(!matchOrphanUnaryOperator())
                 {
@@ -420,6 +426,8 @@ namespace BLL.SQLProcessing
         }
         public Token getCurrentToken()
         {
+            if(this.currentToken==null)
+                throw new IndexOutOfRangeException();
             if (this.currentIndex <= this.tokens.Count-1)
                 return this.tokens[this.currentIndex];
             else
