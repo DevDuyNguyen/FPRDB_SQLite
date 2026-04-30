@@ -80,6 +80,19 @@ namespace BLL.Common
             }
 
         }
+        public static BaseFuzzySet turnConstantToFuzzySet(Constant c, MetadataManager metaDataMgr)
+        {
+            Type constantType = ConstantUltilities.getDomainType(c, metaDataMgr);
+            if (constantType == typeof(int))
+                return turnConstantToFuzzySet<int>(c, metaDataMgr);
+            else if (constantType == typeof(float))
+                return turnConstantToFuzzySet<float>(c, metaDataMgr);
+            else if (constantType == typeof(string))
+                return turnConstantToFuzzySet<string>(c, metaDataMgr);
+            else //if (constantType == typeof(bool))
+                return turnConstantToFuzzySet<bool>(c, metaDataMgr);
+
+        }
         //public static BaseFuzzySet turnConstantToBaseFuzzySet(Constant c, MetadataManager metaDataMgr)
         //{
         //    if (c is IntConstant)

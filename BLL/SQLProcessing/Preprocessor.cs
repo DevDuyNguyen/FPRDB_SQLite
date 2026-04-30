@@ -798,13 +798,11 @@ namespace BLL.SQLProcessing
             return true;
         }
 
-        private bool checkCompatibleCompareOperatorOnFuzzySet(string leftFuzzySetName, CompareOperation compareOperator, string rightFuzzySetName)
+        private bool checkCompatibleCompareOperatorOnFuzzySet(Constant leftConstant, CompareOperation compareOperator, Constant rightConstant)
         {
 
-            FieldType fs1Type = this.metadataMgr.getFuzzySetType(leftFuzzySetName);
-            FieldType fs2Type = this.metadataMgr.getFuzzySetType(rightFuzzySetName);
-            Type fs1DefiningDomain = FieldTypeUtilities.getDomainType(fs1Type);
-            Type fs2DefiningDomain = FieldTypeUtilities.getDomainType(fs2Type);
+            Type fs1DefiningDomain = ConstantUltilities.getDomainType(leftConstant, this.metadataMgr);
+            Type fs2DefiningDomain = ConstantUltilities.getDomainType(rightConstant, this.metadataMgr);
             //Only fuzzy sets defined on the same domain value can be compare with each other except for fuzzy sets defined on int or float domain value
             if (fs1DefiningDomain!= fs2DefiningDomain)
             {
@@ -856,11 +854,13 @@ namespace BLL.SQLProcessing
         }
         public bool checkSemanticRelationOnFuzzySetExpression(RelationOnFuzzySetExpressionData data)
         {
-            string fs1Name = data.getLeftFuzzySet();
-            string fs2Name = data.getRightFuzzySet();
-            checkFuzzyUse(fs1Name);
-            checkFuzzyUse(fs2Name);
-            checkCompatibleCompareOperatorOnFuzzySet(fs1Name, data.getCompareOp(), fs2Name);
+            Constant constantFS1 = data.getLeftFuzzySetConstant();
+            Constant constantFS2 = data.getRightFuzzySetConstant();
+            if(constantFS1 is FuzzySetConstant)
+                checkFuzzyUse(constantFS1.getVal() as string);
+            if (constantFS2 is FuzzySetConstant)
+                checkFuzzyUse(constantFS2.getVal() as string);
+            checkCompatibleCompareOperatorOnFuzzySet(constantFS1, data.getCompareOp(), constantFS2);
 
             return true;
         }

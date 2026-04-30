@@ -11,20 +11,20 @@ namespace BLL.DomainObject
 {
     public class RelationOnFuzzySetExpressionData
     {
-        private Constant leftFuzzySet;
+        private Constant leftFuzzySetConstant;
         private CompareOperation compareOp;
-        private Constant rightFuzzySet;
+        private Constant rightFuzzySetConstant;
 
-        public RelationOnFuzzySetExpressionData(Constant leftFuzzySet, CompareOperation compareOp, Constant rightFuzzySet)
+        public RelationOnFuzzySetExpressionData(Constant leftFuzzySetConstant, CompareOperation compareOp, Constant rightFuzzySetConstant)
         {
-            this.leftFuzzySet = leftFuzzySet;
+            this.leftFuzzySetConstant = leftFuzzySetConstant;
             this.compareOp = compareOp;
-            this.rightFuzzySet = rightFuzzySet;
+            this.rightFuzzySetConstant = rightFuzzySetConstant;
         }
 
-        public Constant getLeftFuzzySet()
+        public Constant getLeftFuzzySetConstant()
         {
-            return leftFuzzySet;
+            return leftFuzzySetConstant;
         }
 
         public CompareOperation getCompareOp()
@@ -32,9 +32,9 @@ namespace BLL.DomainObject
             return compareOp;
         }
 
-        public Constant getRightFuzzySet()
+        public Constant getRightFuzzySetConstant()
         {
-            return rightFuzzySet;
+            return rightFuzzySetConstant;
         }
     }
 }

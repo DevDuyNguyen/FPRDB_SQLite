@@ -95,14 +95,12 @@ namespace BLL.SQLProcessing
         public float calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(RelationOnFuzzySetExpressionData data)
         {
             //float probabilisticInterpretation;
+            Constant leftFuzzySetConstant = data.getLeftFuzzySetConstant();
+            Constant rightFuzzySetConstant = data.getRightFuzzySetConstant();
+
             BaseFuzzySet fs1, fs2;
-            FieldType fs1Type, fs2Type;
-
-            fs1Type = this.metaDataMgr.getFuzzySetType(data.getLeftFuzzySet());
-            fs2Type = this.metaDataMgr.getFuzzySetType(data.getRightFuzzySet());
-
-            fs1 = this.metaDataMgr.getFuzzySet(data.getLeftFuzzySet(), fs1Type);
-            fs2 = this.metaDataMgr.getFuzzySet(data.getRightFuzzySet(), fs2Type);
+            fs1 = FuzzySetUltilities.turnConstantToFuzzySet(leftFuzzySetConstant, this.metaDataMgr);
+            fs2 = FuzzySetUltilities.turnConstantToFuzzySet(rightFuzzySetConstant, this.metaDataMgr);
 
             return ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet(fs1, fs2, data.getCompareOp());
 
