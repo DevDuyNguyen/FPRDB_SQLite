@@ -67,6 +67,9 @@ namespace FPRDB_SQLite.GUI
             iExportFS = new DevExpress.XtraBars.BarButtonItem();
             iImportFS = new DevExpress.XtraBars.BarButtonItem();
             barButtonRelationships = new DevExpress.XtraBars.BarButtonItem();
+            barButtonCreateNew = new DevExpress.XtraBars.BarButtonItem();
+            barButtonSaveInDB = new DevExpress.XtraBars.BarButtonItem();
+            barButtonDeleteInDB = new DevExpress.XtraBars.BarButtonItem();
             DatabaseRibbonPage = new DevExpress.XtraBars.Ribbon.RibbonPage();
             groupFile_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             groupExit_pageHome = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -81,14 +84,15 @@ namespace FPRDB_SQLite.GUI
             differenceRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             operatorRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             excuteQueryribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            crudDatabaseQueryRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             pageFuzzySet = new DevExpress.XtraBars.Ribbon.RibbonPage();
             discreteFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             continuousFuzzySetRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             SearchFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
-            TreeView_imageList = new System.Windows.Forms.ImageList(components);
+            TreeView_imageList = new ImageList(components);
             RelationsplitContainerControl = new DevExpress.XtraEditors.SplitContainerControl();
-            treeView = new System.Windows.Forms.TreeView();
+            treeView = new TreeView();
             xtraTabControlDatabase = new DevExpress.XtraTab.XtraTabControl();
             SchemaxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
             gridControlScheme = new DevExpress.XtraGrid.GridControl();
@@ -112,14 +116,14 @@ namespace FPRDB_SQLite.GUI
             gridColumnMaxProb = new DevExpress.XtraGrid.Columns.GridColumn();
             panelControlRelation = new DevExpress.XtraEditors.PanelControl();
             popupMenuTreeView = new DevExpress.XtraBars.PopupMenu(components);
-            ContextMenu_RelationNode = new System.Windows.Forms.ContextMenuStrip(components);
-            CTMenuRelNode_OpenRelation = new System.Windows.Forms.ToolStripMenuItem();
-            CTMenuRelNode_DeleteRelation = new System.Windows.Forms.ToolStripMenuItem();
-            CTMenuRelNode_RenameRelation = new System.Windows.Forms.ToolStripMenuItem();
-            ContextMenu_SchemaNode = new System.Windows.Forms.ContextMenuStrip(components);
-            CTMenuSchNode_EditSchema = new System.Windows.Forms.ToolStripMenuItem();
-            CTMenuSchNode_OpenSchema = new System.Windows.Forms.ToolStripMenuItem();
-            CTMenuSchNode_DeleteSchema = new System.Windows.Forms.ToolStripMenuItem();
+            ContextMenu_RelationNode = new ContextMenuStrip(components);
+            CTMenuRelNode_OpenRelation = new ToolStripMenuItem();
+            CTMenuRelNode_DeleteRelation = new ToolStripMenuItem();
+            CTMenuRelNode_RenameRelation = new ToolStripMenuItem();
+            ContextMenu_SchemaNode = new ContextMenuStrip(components);
+            CTMenuSchNode_EditSchema = new ToolStripMenuItem();
+            CTMenuSchNode_OpenSchema = new ToolStripMenuItem();
+            CTMenuSchNode_DeleteSchema = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -155,16 +159,16 @@ namespace FPRDB_SQLite.GUI
             // 
             // ribbonControl
             // 
-            ribbonControl.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(65, 55, 65, 55);
+            ribbonControl.EmptyAreaImageOptions.ImagePadding = new Padding(65, 55, 65, 55);
             ribbonControl.ExpandCollapseItem.Id = 0;
-            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, iAddDiscrete, iAddContinuous, iNewSchema, iDeleteSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS, barButtonRelationships });
-            ribbonControl.Location = new System.Drawing.Point(0, 0);
-            ribbonControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            ribbonControl.MaxItemId = 59;
+            ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl.ExpandCollapseItem, buttonExit_pageHome, buttonNew_pageHome, buttonOpen_pageHome, iAddDiscrete, iAddContinuous, iNewSchema, iDeleteSchema, iSearchFuzzySet, iNewRelation, iDeleteRelation, iCloseRelation, iNewQuery, iOpenQuery, iSaveQuery, iConjunctionIgnorance, iConjunctionIndependence, iConjunctionMutual, iDisjunctionIgnorance, iDisjunctionIndependence, iDisjunctionMutual, iDifferenceIgnorance, iDifferenceIndependence, iDiferenceMutual, iOperator, iExcuteQuery, iConjunctionPositive, iDisjunctionPositive, iDifferencePositive, barButtonGroup1, barButtonGroup2, barButtonSelectTuples, iExportFS, iImportFS, barButtonRelationships, barButtonCreateNew, barButtonSaveInDB, barButtonDeleteInDB });
+            ribbonControl.Location = new Point(0, 0);
+            ribbonControl.Margin = new Padding(7, 6, 7, 6);
+            ribbonControl.MaxItemId = 62;
             ribbonControl.Name = "ribbonControl";
             ribbonControl.OptionsMenuMinWidth = 715;
             ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { DatabaseRibbonPage, SchemaRibbonPage, RelationRibbonPage, QueryRibbonPage, pageFuzzySet });
-            ribbonControl.Size = new System.Drawing.Size(970, 193);
+            ribbonControl.Size = new Size(970, 193);
             ribbonControl.StatusBar = ribbonStatusBar;
             // 
             // buttonExit_pageHome
@@ -172,7 +176,7 @@ namespace FPRDB_SQLite.GUI
             buttonExit_pageHome.Caption = "Exit";
             buttonExit_pageHome.Hint = "Exit program";
             buttonExit_pageHome.Id = 8;
-            buttonExit_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonExit_pageHome.ImageOptions.LargeImage");
+            buttonExit_pageHome.ImageOptions.LargeImage = (Image)resources.GetObject("buttonExit_pageHome.ImageOptions.LargeImage");
             buttonExit_pageHome.Name = "buttonExit_pageHome";
             buttonExit_pageHome.ItemClick += buttonExit_pageHome_ItemClick;
             // 
@@ -180,7 +184,7 @@ namespace FPRDB_SQLite.GUI
             // 
             buttonNew_pageHome.Caption = "New";
             buttonNew_pageHome.Id = 9;
-            buttonNew_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonNew_pageHome.ImageOptions.LargeImage");
+            buttonNew_pageHome.ImageOptions.LargeImage = (Image)resources.GetObject("buttonNew_pageHome.ImageOptions.LargeImage");
             buttonNew_pageHome.Name = "buttonNew_pageHome";
             buttonNew_pageHome.ItemClick += buttonNew_pageHome_ItemClick;
             // 
@@ -188,7 +192,7 @@ namespace FPRDB_SQLite.GUI
             // 
             buttonOpen_pageHome.Caption = "Open";
             buttonOpen_pageHome.Id = 10;
-            buttonOpen_pageHome.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("buttonOpen_pageHome.ImageOptions.LargeImage");
+            buttonOpen_pageHome.ImageOptions.LargeImage = (Image)resources.GetObject("buttonOpen_pageHome.ImageOptions.LargeImage");
             buttonOpen_pageHome.Name = "buttonOpen_pageHome";
             buttonOpen_pageHome.ItemClick += buttonOpen_pageHome_ItemClick;
             // 
@@ -196,7 +200,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iAddDiscrete.Caption = "Add";
             iAddDiscrete.Id = 15;
-            iAddDiscrete.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iAddDiscrete.ImageOptions.LargeImage");
+            iAddDiscrete.ImageOptions.LargeImage = (Image)resources.GetObject("iAddDiscrete.ImageOptions.LargeImage");
             iAddDiscrete.Name = "iAddDiscrete";
             iAddDiscrete.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             iAddDiscrete.ItemClick += buttonAdd_groupDis_ItemClick;
@@ -205,7 +209,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iAddContinuous.Caption = "Add";
             iAddContinuous.Id = 17;
-            iAddContinuous.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iAddContinuous.ImageOptions.LargeImage");
+            iAddContinuous.ImageOptions.LargeImage = (Image)resources.GetObject("iAddContinuous.ImageOptions.LargeImage");
             iAddContinuous.Name = "iAddContinuous";
             iAddContinuous.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             iAddContinuous.ItemClick += buttonAdd_groupCont_ItemClick;
@@ -214,7 +218,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iNewSchema.Caption = "Create Schema";
             iNewSchema.Id = 19;
-            iNewSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
+            iNewSchema.ImageOptions.LargeImage = (Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
             iNewSchema.Name = "iNewSchema";
             iNewSchema.ItemClick += iNewSchema_ItemClick;
             // 
@@ -222,7 +226,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iDeleteSchema.Caption = "Delete";
             iDeleteSchema.Id = 22;
-            iDeleteSchema.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
+            iDeleteSchema.ImageOptions.LargeImage = (Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
             iDeleteSchema.Name = "iDeleteSchema";
             iDeleteSchema.ItemClick += iDeleteSchema_ItemClick;
             // 
@@ -230,7 +234,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iSearchFuzzySet.Caption = "Search";
             iSearchFuzzySet.Id = 24;
-            iSearchFuzzySet.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSearchFuzzySet.ImageOptions.LargeImage");
+            iSearchFuzzySet.ImageOptions.LargeImage = (Image)resources.GetObject("iSearchFuzzySet.ImageOptions.LargeImage");
             iSearchFuzzySet.Name = "iSearchFuzzySet";
             iSearchFuzzySet.ItemClick += iSearchFuzzySet_ItemClick;
             // 
@@ -238,7 +242,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iNewRelation.Caption = "Create Relation";
             iNewRelation.Id = 25;
-            iNewRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
+            iNewRelation.ImageOptions.LargeImage = (Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
             iNewRelation.Name = "iNewRelation";
             iNewRelation.ItemClick += iNewRelation_ItemClick;
             // 
@@ -246,7 +250,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iDeleteRelation.Caption = "Delete";
             iDeleteRelation.Id = 27;
-            iDeleteRelation.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
+            iDeleteRelation.ImageOptions.LargeImage = (Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
             iDeleteRelation.Name = "iDeleteRelation";
             iDeleteRelation.ItemClick += iDeleteRelation_ItemClick;
             // 
@@ -261,7 +265,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iNewQuery.Caption = "New";
             iNewQuery.Id = 30;
-            iNewQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iNewQuery.ImageOptions.LargeImage");
+            iNewQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iNewQuery.ImageOptions.LargeImage");
             iNewQuery.Name = "iNewQuery";
             iNewQuery.ItemClick += iNewQuery_ItemClick;
             // 
@@ -269,7 +273,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iOpenQuery.Caption = "Open";
             iOpenQuery.Id = 31;
-            iOpenQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iOpenQuery.ImageOptions.LargeImage");
+            iOpenQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iOpenQuery.ImageOptions.LargeImage");
             iOpenQuery.Name = "iOpenQuery";
             iOpenQuery.ItemClick += iOpenQuery_ItemClick;
             // 
@@ -277,7 +281,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iSaveQuery.Caption = "Save";
             iSaveQuery.Id = 32;
-            iSaveQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iSaveQuery.ImageOptions.LargeImage");
+            iSaveQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iSaveQuery.ImageOptions.LargeImage");
             iSaveQuery.Name = "iSaveQuery";
             iSaveQuery.ItemClick += iSaveQuery_ItemClick;
             // 
@@ -357,14 +361,14 @@ namespace FPRDB_SQLite.GUI
             // 
             iOperator.Caption = "⇒";
             iOperator.Id = 46;
-            iOperator.ItemAppearance.Hovered.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
-            iOperator.ItemAppearance.Hovered.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            iOperator.ItemAppearance.Hovered.Font = new Font("Tahoma", 20F, FontStyle.Bold);
+            iOperator.ItemAppearance.Hovered.FontStyleDelta = FontStyle.Bold;
             iOperator.ItemAppearance.Hovered.Options.UseFont = true;
-            iOperator.ItemAppearance.Normal.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
-            iOperator.ItemAppearance.Normal.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            iOperator.ItemAppearance.Normal.Font = new Font("Tahoma", 20F, FontStyle.Bold);
+            iOperator.ItemAppearance.Normal.FontStyleDelta = FontStyle.Bold;
             iOperator.ItemAppearance.Normal.Options.UseFont = true;
-            iOperator.ItemAppearance.Pressed.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
-            iOperator.ItemAppearance.Pressed.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            iOperator.ItemAppearance.Pressed.Font = new Font("Tahoma", 20F, FontStyle.Bold);
+            iOperator.ItemAppearance.Pressed.FontStyleDelta = FontStyle.Bold;
             iOperator.ItemAppearance.Pressed.Options.UseFont = true;
             iOperator.Name = "iOperator";
             iOperator.SmallWithTextWidth = 80;
@@ -374,7 +378,7 @@ namespace FPRDB_SQLite.GUI
             // 
             iExcuteQuery.Caption = "Excute Query";
             iExcuteQuery.Id = 47;
-            iExcuteQuery.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
+            iExcuteQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
             iExcuteQuery.Name = "iExcuteQuery";
             iExcuteQuery.ItemClick += iExcuteQuery_ItemClick;
             // 
@@ -442,6 +446,30 @@ namespace FPRDB_SQLite.GUI
             barButtonRelationships.Name = "barButtonRelationships";
             barButtonRelationships.ItemClick += barButtonRelationships_ItemClick;
             // 
+            // barButtonCreateNew
+            // 
+            barButtonCreateNew.Caption = "New";
+            barButtonCreateNew.Id = 59;
+            barButtonCreateNew.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonCreateNew.ImageOptions.LargeImage");
+            barButtonCreateNew.Name = "barButtonCreateNew";
+            barButtonCreateNew.ItemClick += barButtonCreateNew_ItemClick;
+            // 
+            // barButtonSaveInDB
+            // 
+            barButtonSaveInDB.Caption = "Save";
+            barButtonSaveInDB.Id = 60;
+            barButtonSaveInDB.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonSaveInDB.ImageOptions.LargeImage");
+            barButtonSaveInDB.Name = "barButtonSaveInDB";
+            barButtonSaveInDB.ItemClick += barButtonSaveInDB_ItemClick;
+            // 
+            // barButtonDeleteInDB
+            // 
+            barButtonDeleteInDB.Caption = "Delete";
+            barButtonDeleteInDB.Id = 61;
+            barButtonDeleteInDB.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonDeleteInDB.ImageOptions.LargeImage");
+            barButtonDeleteInDB.Name = "barButtonDeleteInDB";
+            barButtonDeleteInDB.ItemClick += barButtonDeleteInDB_ItemClick;
+            // 
             // DatabaseRibbonPage
             // 
             DatabaseRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { groupFile_pageHome, groupExit_pageHome });
@@ -489,7 +517,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // QueryRibbonPage
             // 
-            QueryRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileQueryRibbonPageGroup, conjunctionRibbonPageGroup, disjunctionRibbonPageGroup, differenceRibbonPageGroup, operatorRibbonPageGroup, excuteQueryribbonPageGroup });
+            QueryRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileQueryRibbonPageGroup, conjunctionRibbonPageGroup, disjunctionRibbonPageGroup, differenceRibbonPageGroup, operatorRibbonPageGroup, excuteQueryribbonPageGroup, crudDatabaseQueryRibbonPageGroup });
             QueryRibbonPage.Name = "QueryRibbonPage";
             QueryRibbonPage.Text = "Query";
             // 
@@ -544,6 +572,14 @@ namespace FPRDB_SQLite.GUI
             excuteQueryribbonPageGroup.Name = "excuteQueryribbonPageGroup";
             excuteQueryribbonPageGroup.Text = "Excute";
             // 
+            // crudDatabaseQueryRibbonPageGroup
+            // 
+            crudDatabaseQueryRibbonPageGroup.ItemLinks.Add(barButtonCreateNew);
+            crudDatabaseQueryRibbonPageGroup.ItemLinks.Add(barButtonSaveInDB);
+            crudDatabaseQueryRibbonPageGroup.ItemLinks.Add(barButtonDeleteInDB);
+            crudDatabaseQueryRibbonPageGroup.Name = "crudDatabaseQueryRibbonPageGroup";
+            crudDatabaseQueryRibbonPageGroup.Text = "Database Query";
+            // 
             // pageFuzzySet
             // 
             pageFuzzySet.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { discreteFuzzySetribbonPageGroup, continuousFuzzySetRibbonPageGroup, SearchFuzzySetribbonPageGroup });
@@ -577,16 +613,16 @@ namespace FPRDB_SQLite.GUI
             // 
             // ribbonStatusBar
             // 
-            ribbonStatusBar.Location = new System.Drawing.Point(0, 569);
+            ribbonStatusBar.Location = new Point(0, 569);
             ribbonStatusBar.Name = "ribbonStatusBar";
             ribbonStatusBar.Ribbon = ribbonControl;
-            ribbonStatusBar.Size = new System.Drawing.Size(970, 30);
+            ribbonStatusBar.Size = new Size(970, 30);
             // 
             // TreeView_imageList
             // 
-            TreeView_imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            TreeView_imageList.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("TreeView_imageList.ImageStream");
-            TreeView_imageList.TransparentColor = System.Drawing.Color.Transparent;
+            TreeView_imageList.ColorDepth = ColorDepth.Depth32Bit;
+            TreeView_imageList.ImageStream = (ImageListStreamer)resources.GetObject("TreeView_imageList.ImageStream");
+            TreeView_imageList.TransparentColor = Color.Transparent;
             TreeView_imageList.Images.SetKeyName(0, "open.jpg");
             TreeView_imageList.Images.SetKeyName(1, "close.png");
             TreeView_imageList.Images.SetKeyName(2, "attribute.png");
@@ -599,12 +635,12 @@ namespace FPRDB_SQLite.GUI
             // 
             // RelationsplitContainerControl
             // 
-            RelationsplitContainerControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            RelationsplitContainerControl.Dock = DockStyle.Fill;
             RelationsplitContainerControl.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
-            RelationsplitContainerControl.Location = new System.Drawing.Point(0, 193);
-            RelationsplitContainerControl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            RelationsplitContainerControl.Location = new Point(0, 193);
+            RelationsplitContainerControl.Margin = new Padding(4, 3, 4, 3);
             RelationsplitContainerControl.Name = "RelationsplitContainerControl";
-            RelationsplitContainerControl.Padding = new System.Windows.Forms.Padding(10);
+            RelationsplitContainerControl.Padding = new Padding(10);
             // 
             // RelationsplitContainerControl.Panel1
             // 
@@ -615,31 +651,31 @@ namespace FPRDB_SQLite.GUI
             // 
             RelationsplitContainerControl.Panel2.Controls.Add(xtraTabControlDatabase);
             RelationsplitContainerControl.Panel2.Text = "Panel2";
-            RelationsplitContainerControl.Size = new System.Drawing.Size(970, 376);
+            RelationsplitContainerControl.Size = new Size(970, 376);
             RelationsplitContainerControl.SplitterPosition = 250;
             RelationsplitContainerControl.TabIndex = 5;
             // 
             // treeView
             // 
-            treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            treeView.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            treeView.Dock = DockStyle.Fill;
+            treeView.Font = new Font("Tahoma", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             treeView.ImageIndex = 0;
             treeView.ImageList = TreeView_imageList;
             treeView.ItemHeight = 22;
-            treeView.Location = new System.Drawing.Point(0, 0);
+            treeView.Location = new Point(0, 0);
             treeView.Name = "treeView";
             treeView.SelectedImageIndex = 0;
-            treeView.Size = new System.Drawing.Size(250, 356);
+            treeView.Size = new Size(250, 356);
             treeView.TabIndex = 2;
             treeView.MouseDown += treeView_MouseDown;
             // 
             // xtraTabControlDatabase
             // 
-            xtraTabControlDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
-            xtraTabControlDatabase.Location = new System.Drawing.Point(0, 0);
+            xtraTabControlDatabase.Dock = DockStyle.Fill;
+            xtraTabControlDatabase.Location = new Point(0, 0);
             xtraTabControlDatabase.Name = "xtraTabControlDatabase";
             xtraTabControlDatabase.SelectedTabPage = SchemaxtraTabPage;
-            xtraTabControlDatabase.Size = new System.Drawing.Size(688, 356);
+            xtraTabControlDatabase.Size = new Size(688, 356);
             xtraTabControlDatabase.TabIndex = 1;
             xtraTabControlDatabase.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { SchemaxtraTabPage, RelationxtraTabPage });
             xtraTabControlDatabase.SelectedPageChanged += xtraTabControlDatabase_SelectedPageChanged;
@@ -648,20 +684,20 @@ namespace FPRDB_SQLite.GUI
             // SchemaxtraTabPage
             // 
             SchemaxtraTabPage.Controls.Add(gridControlScheme);
-            SchemaxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            SchemaxtraTabPage.Margin = new Padding(6, 4, 6, 4);
             SchemaxtraTabPage.Name = "SchemaxtraTabPage";
-            SchemaxtraTabPage.Size = new System.Drawing.Size(686, 326);
+            SchemaxtraTabPage.Size = new Size(686, 326);
             SchemaxtraTabPage.Text = "Schema";
             // 
             // gridControlScheme
             // 
-            gridControlScheme.Dock = System.Windows.Forms.DockStyle.Fill;
-            gridControlScheme.Location = new System.Drawing.Point(0, 0);
+            gridControlScheme.Dock = DockStyle.Fill;
+            gridControlScheme.Location = new Point(0, 0);
             gridControlScheme.MainView = gridView;
             gridControlScheme.MenuManager = ribbonControl;
             gridControlScheme.Name = "gridControlScheme";
             gridControlScheme.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemCalcEdit1, repositoryItemButtonEdit1, repositoryItemHeightType1, repositoryItemCheckEdit1 });
-            gridControlScheme.Size = new System.Drawing.Size(686, 326);
+            gridControlScheme.Size = new Size(686, 326);
             gridControlScheme.TabIndex = 0;
             gridControlScheme.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
             // 
@@ -741,16 +777,16 @@ namespace FPRDB_SQLite.GUI
             // RelationxtraTabPage
             // 
             RelationxtraTabPage.Controls.Add(splitContainerControl2);
-            RelationxtraTabPage.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            RelationxtraTabPage.Margin = new Padding(6, 4, 6, 4);
             RelationxtraTabPage.Name = "RelationxtraTabPage";
-            RelationxtraTabPage.Size = new System.Drawing.Size(686, 326);
+            RelationxtraTabPage.Size = new Size(686, 326);
             RelationxtraTabPage.Text = "Relation";
             // 
             // splitContainerControl2
             // 
-            splitContainerControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainerControl2.Dock = DockStyle.Fill;
             splitContainerControl2.Horizontal = false;
-            splitContainerControl2.Location = new System.Drawing.Point(0, 0);
+            splitContainerControl2.Location = new Point(0, 0);
             splitContainerControl2.Name = "splitContainerControl2";
             // 
             // splitContainerControl2.Panel1
@@ -763,18 +799,18 @@ namespace FPRDB_SQLite.GUI
             splitContainerControl2.Panel2.Controls.Add(gridControlValueRelation);
             splitContainerControl2.Panel2.Controls.Add(panelControlRelation);
             splitContainerControl2.Panel2.Text = "Panel2";
-            splitContainerControl2.Size = new System.Drawing.Size(686, 326);
+            splitContainerControl2.Size = new Size(686, 326);
             splitContainerControl2.SplitterPosition = 167;
             splitContainerControl2.TabIndex = 0;
             // 
             // gridControlRelation
             // 
-            gridControlRelation.Dock = System.Windows.Forms.DockStyle.Fill;
-            gridControlRelation.Location = new System.Drawing.Point(0, 0);
+            gridControlRelation.Dock = DockStyle.Fill;
+            gridControlRelation.Location = new Point(0, 0);
             gridControlRelation.MainView = gridView3;
             gridControlRelation.MenuManager = ribbonControl;
             gridControlRelation.Name = "gridControlRelation";
-            gridControlRelation.Size = new System.Drawing.Size(686, 167);
+            gridControlRelation.Size = new Size(686, 167);
             gridControlRelation.TabIndex = 0;
             gridControlRelation.UseEmbeddedNavigator = true;
             gridControlRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView3 });
@@ -790,12 +826,12 @@ namespace FPRDB_SQLite.GUI
             // 
             // gridControlValueRelation
             // 
-            gridControlValueRelation.Dock = System.Windows.Forms.DockStyle.Fill;
-            gridControlValueRelation.Location = new System.Drawing.Point(0, 45);
+            gridControlValueRelation.Dock = DockStyle.Fill;
+            gridControlValueRelation.Location = new Point(0, 45);
             gridControlValueRelation.MainView = gridView4;
             gridControlValueRelation.MenuManager = ribbonControl;
             gridControlValueRelation.Name = "gridControlValueRelation";
-            gridControlValueRelation.Size = new System.Drawing.Size(686, 102);
+            gridControlValueRelation.Size = new Size(686, 102);
             gridControlValueRelation.TabIndex = 1;
             gridControlValueRelation.UseEmbeddedNavigator = true;
             gridControlValueRelation.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView4 });
@@ -843,10 +879,10 @@ namespace FPRDB_SQLite.GUI
             // 
             // panelControlRelation
             // 
-            panelControlRelation.Dock = System.Windows.Forms.DockStyle.Top;
-            panelControlRelation.Location = new System.Drawing.Point(0, 0);
+            panelControlRelation.Dock = DockStyle.Top;
+            panelControlRelation.Location = new Point(0, 0);
             panelControlRelation.Name = "panelControlRelation";
-            panelControlRelation.Size = new System.Drawing.Size(686, 45);
+            panelControlRelation.Size = new Size(686, 45);
             panelControlRelation.TabIndex = 0;
             // 
             // popupMenuTreeView
@@ -858,72 +894,72 @@ namespace FPRDB_SQLite.GUI
             // 
             // ContextMenu_RelationNode
             // 
-            ContextMenu_RelationNode.Font = new System.Drawing.Font("Lucida Sans Unicode", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            ContextMenu_RelationNode.ImageScalingSize = new System.Drawing.Size(20, 20);
-            ContextMenu_RelationNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { CTMenuRelNode_OpenRelation, CTMenuRelNode_DeleteRelation, CTMenuRelNode_RenameRelation });
+            ContextMenu_RelationNode.Font = new Font("Lucida Sans Unicode", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ContextMenu_RelationNode.ImageScalingSize = new Size(20, 20);
+            ContextMenu_RelationNode.Items.AddRange(new ToolStripItem[] { CTMenuRelNode_OpenRelation, CTMenuRelNode_DeleteRelation, CTMenuRelNode_RenameRelation });
             ContextMenu_RelationNode.Name = "ContextMenu_RelationNode";
-            ContextMenu_RelationNode.Size = new System.Drawing.Size(148, 82);
+            ContextMenu_RelationNode.Size = new Size(148, 82);
             // 
             // CTMenuRelNode_OpenRelation
             // 
             CTMenuRelNode_OpenRelation.Name = "CTMenuRelNode_OpenRelation";
-            CTMenuRelNode_OpenRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_OpenRelation.Size = new Size(147, 26);
             CTMenuRelNode_OpenRelation.Text = "&Open";
             CTMenuRelNode_OpenRelation.ToolTipText = "Tạo quan hệ mới";
             // 
             // CTMenuRelNode_DeleteRelation
             // 
             CTMenuRelNode_DeleteRelation.Name = "CTMenuRelNode_DeleteRelation";
-            CTMenuRelNode_DeleteRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_DeleteRelation.Size = new Size(147, 26);
             CTMenuRelNode_DeleteRelation.Text = "&Delete";
             // 
             // CTMenuRelNode_RenameRelation
             // 
             CTMenuRelNode_RenameRelation.Name = "CTMenuRelNode_RenameRelation";
-            CTMenuRelNode_RenameRelation.Size = new System.Drawing.Size(147, 26);
+            CTMenuRelNode_RenameRelation.Size = new Size(147, 26);
             CTMenuRelNode_RenameRelation.Text = "&Rename";
             // 
             // ContextMenu_SchemaNode
             // 
-            ContextMenu_SchemaNode.ImageScalingSize = new System.Drawing.Size(20, 20);
-            ContextMenu_SchemaNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { CTMenuSchNode_EditSchema, CTMenuSchNode_OpenSchema, CTMenuSchNode_DeleteSchema });
+            ContextMenu_SchemaNode.ImageScalingSize = new Size(20, 20);
+            ContextMenu_SchemaNode.Items.AddRange(new ToolStripItem[] { CTMenuSchNode_EditSchema, CTMenuSchNode_OpenSchema, CTMenuSchNode_DeleteSchema });
             ContextMenu_SchemaNode.Name = "ContextMenu_SchemaNode";
-            ContextMenu_SchemaNode.Size = new System.Drawing.Size(123, 76);
+            ContextMenu_SchemaNode.Size = new Size(123, 76);
             // 
             // CTMenuSchNode_EditSchema
             // 
             CTMenuSchNode_EditSchema.Name = "CTMenuSchNode_EditSchema";
-            CTMenuSchNode_EditSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_EditSchema.Size = new Size(122, 24);
             CTMenuSchNode_EditSchema.Text = "&Edit";
             // 
             // CTMenuSchNode_OpenSchema
             // 
             CTMenuSchNode_OpenSchema.Name = "CTMenuSchNode_OpenSchema";
-            CTMenuSchNode_OpenSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_OpenSchema.Size = new Size(122, 24);
             CTMenuSchNode_OpenSchema.Text = "&Open";
             // 
             // CTMenuSchNode_DeleteSchema
             // 
             CTMenuSchNode_DeleteSchema.Name = "CTMenuSchNode_DeleteSchema";
-            CTMenuSchNode_DeleteSchema.Size = new System.Drawing.Size(122, 24);
+            CTMenuSchNode_DeleteSchema.Size = new Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
             // 
             // frmMain
             // 
             Appearance.Options.UseFont = true;
-            AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(970, 599);
+            AutoScaleDimensions = new SizeF(13F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(970, 599);
             Controls.Add(RelationsplitContainerControl);
             Controls.Add(ribbonStatusBar);
             Controls.Add(ribbonControl);
-            Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            IconOptions.Image = (System.Drawing.Image)resources.GetObject("frmMain.IconOptions.Image");
+            Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            IconOptions.Image = (Image)resources.GetObject("frmMain.IconOptions.Image");
             IsMdiContainer = true;
-            Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            Margin = new Padding(7, 6, 7, 6);
             Name = "frmMain";
             Ribbon = ribbonControl;
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterScreen;
             StatusBar = ribbonStatusBar;
             Text = "FPRDB Visual Management System";
             FormClosing += frmMain_FormClosing;
@@ -1053,6 +1089,10 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraBars.BarButtonItem iExportFS;
         private DevExpress.XtraBars.BarButtonItem iImportFS;
         private DevExpress.XtraBars.BarButtonItem barButtonRelationships;
+        private DevExpress.XtraBars.BarButtonItem barButtonCreateNew;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup crudDatabaseQueryRibbonPageGroup;
+        private DevExpress.XtraBars.BarButtonItem barButtonSaveInDB;
+        private DevExpress.XtraBars.BarButtonItem barButtonDeleteInDB;
     }
 }
 
