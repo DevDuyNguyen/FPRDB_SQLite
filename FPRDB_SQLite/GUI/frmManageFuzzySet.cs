@@ -1,23 +1,13 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DTO;
-using BLL.Exceptions;
 using BLL.Services;
-using DevExpress.Map.Kml.Model;
 using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
-using DevExpress.XtraRichEdit.API.Native;
-using DevExpress.XtraScheduler.Outlook.Native;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FPRDB_SQLite.GUI

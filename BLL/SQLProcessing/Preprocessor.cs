@@ -5,16 +5,14 @@ using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Services;
-using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.X86;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Xml.Linq;
 
 namespace BLL.SQLProcessing
 {
@@ -230,7 +228,7 @@ namespace BLL.SQLProcessing
                     if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbLowerBoundList[j] > 1
                         || d.intervalProbUpperBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
-                    if (d.intervalProbLowerBoundList[j] <= d.intervalProbUpperBoundList[j])
+                    if (d.intervalProbLowerBoundList[j] > d.intervalProbUpperBoundList[j])
                         throw new SemanticException("a must be <= b in [a,b]");
                 }
                 
@@ -337,7 +335,7 @@ namespace BLL.SQLProcessing
                     if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i]<0 || data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] >1
                         || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] < 0 || data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
-                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] <= data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i])
+                    if (data1.fuzzyProbabilisticValue.intervalProbLowerBoundList[i] > data1.fuzzyProbabilisticValue.intervalProbUpperBoundList[i])
                         throw new SemanticException("a must be <= b in [a,b]");
                 }
 
@@ -797,6 +795,73 @@ namespace BLL.SQLProcessing
 
 
             }
+            return true;
+        }
+
+        private bool checkCompatibleCompareOperatorOnFuzzySet(string leftFuzzySetName, CompareOperation compareOperator, string rightFuzzySetName)
+        {
+
+            FieldType fs1Type = this.metadataMgr.getFuzzySetType(leftFuzzySetName);
+            FieldType fs2Type = this.metadataMgr.getFuzzySetType(rightFuzzySetName);
+            Type fs1DefiningDomain = FieldTypeUtilities.getDomainType(fs1Type);
+            Type fs2DefiningDomain = FieldTypeUtilities.getDomainType(fs2Type);
+            //Only fuzzy sets defined on the same domain value can be compare with each other except for fuzzy sets defined on int or float domain value
+            if (fs1DefiningDomain!= fs2DefiningDomain)
+            {
+                if (!(fs1DefiningDomain == typeof(int) && fs2DefiningDomain == typeof(float))
+                    && !(fs1DefiningDomain == typeof(float) && fs2DefiningDomain == typeof(int))
+                )
+                    throw new InvalidOperationException($"Can't compare between fuzzy set defined on {fs1DefiningDomain.Name} domain and {fs2DefiningDomain.Name} domain");
+                else
+                {
+                    //Compatible compare operator on fuzzy sets defined on int or float domain: =, !=, <, <=, >, >=, ⇒
+                    if (compareOperator!=CompareOperation.EQUAL
+                        && compareOperator != CompareOperation.NOT_EQUAL
+                        && compareOperator != CompareOperation.LESS_THAN
+                        && compareOperator != CompareOperation.LESS_EQUAL
+                        && compareOperator != CompareOperation.GREATER_THAN
+                        && compareOperator != CompareOperation.GREATER_EQUAL
+                        && compareOperator != CompareOperation.ALSO
+                    )
+                        throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+
+                }
+            }
+            //Compatible compare operator on string defining-domain fuzzy sets:  =, !=, ⇒
+            else if (fs1DefiningDomain == typeof(string))
+            {
+                if (compareOperator != CompareOperation.EQUAL && compareOperator != CompareOperation.NOT_EQUAL && compareOperator != CompareOperation.ALSO)
+                    throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+            }
+            //Compatible compare operator on fuzzy sets defined on int or float domain: =, !=, <, <=, >, >=, ⇒
+            if (compareOperator != CompareOperation.EQUAL
+                        && compareOperator != CompareOperation.NOT_EQUAL
+                        && compareOperator != CompareOperation.LESS_THAN
+                        && compareOperator != CompareOperation.LESS_EQUAL
+                        && compareOperator != CompareOperation.GREATER_THAN
+                        && compareOperator != CompareOperation.GREATER_EQUAL
+                        && compareOperator != CompareOperation.ALSO
+                )
+            throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+
+            return true;
+
+        }
+
+        private bool checkFuzzyUse(string name)
+        {
+            if (!this.metadataMgr.isFuzzySetWithNameExist(name))
+                throw new InvalidOperationException($"Fuzzy set {name} doesn't exist");
+            return true;
+        }
+        public bool checkSemanticRelationOnFuzzySetExpression(RelationOnFuzzySetExpressionData data)
+        {
+            string fs1Name = data.getLeftFuzzySet();
+            string fs2Name = data.getRightFuzzySet();
+            checkFuzzyUse(fs1Name);
+            checkFuzzyUse(fs2Name);
+            checkCompatibleCompareOperatorOnFuzzySet(fs1Name, data.getCompareOp(), fs2Name);
+
             return true;
         }
 

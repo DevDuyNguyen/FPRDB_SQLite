@@ -36,7 +36,7 @@ namespace BLL.SQLProcessing
                     else if (fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR || fieldType == FieldType.distFS_TEXT)
                         tmp1.Add(this.s.getFieldContent<string>(field.getFieldName()));
                     else if (fieldType == FieldType.BOOLEAN)
-                        tmp1.Add(this.s.getFieldContent<string>(field.getFieldName()));
+                        tmp1.Add(this.s.getFieldContent<bool>(field.getFieldName()));
                 }
                 this.currentTuple = tmp1;
                 return true;

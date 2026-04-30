@@ -57,8 +57,11 @@ namespace BLL.Common
                 return a == b;
             if (a == b)
                 return true;
-
+#if NET8_0_OR_GREATER
             float diff = MathF.Abs(a - b);
+#else
+            float diff = (float)Math.Abs(a - b);
+#endif
             if (diff < epsilon)
                 return true;
 

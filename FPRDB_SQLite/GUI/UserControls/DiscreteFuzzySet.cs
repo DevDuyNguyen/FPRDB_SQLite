@@ -1,25 +1,15 @@
 ﻿using BLL;
-using BLL.DomainObject;
 using BLL.DTO;
-using DevExpress.CodeParser;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.DXErrorProvider;
-using DevExpress.XtraEditors.Repository;
-using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.DirectoryServices.ActiveDirectory;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static FPRDB_SQLite.GUI.frmManageFuzzySet;
 
 namespace FPRDB_SQLite.GUI.UserControls
 {
@@ -140,7 +130,11 @@ namespace FPRDB_SQLite.GUI.UserControls
         // Hàm lấy thông tin loại DiscreteFuzzySet từ UserControl để truyền ra form UI
         public FieldType getFuzzySetType()
         {
+#if NET8_0_OR_GREATER
             return Enum.Parse<FieldType>(cboDataType.Text);
+#else
+            return (FieldType)Enum.Parse(typeof(FieldType),cboDataType.Text);
+#endif
         }
         // Helper method để parse string từ GridControl về đúng kiểu dữ liệu
         private static T ParseTo<T>(string? input)
@@ -159,7 +153,11 @@ namespace FPRDB_SQLite.GUI.UserControls
         public DiscreteFuzzySetDTO<T> getDiscreteFuzzySet<T>()
         {
             var fuzzySetName = txtNameDiscFuzzy.Text;
+#if NET8_0_OR_GREATER
             FieldType fuzzySetType = Enum.Parse<FieldType>(cboDataType.Text);
+#else
+            FieldType fuzzySetType = (FieldType)Enum.Parse(typeof(FieldType), cboDataType.Text);
+#endif
             var rows = grdvDiscFuzzy.DataSource as BindingList<FuzzySetRow>;
 
             var values = rows.Select(r => ParseTo<T>(r.Value?.ToString())).ToList();

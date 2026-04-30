@@ -5,9 +5,7 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace BLL.SQLProcessing
 {
@@ -151,7 +149,7 @@ namespace BLL.SQLProcessing
                         else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType==FieldType.distFS_TEXT)
                             ans.Add(this.s1.getFieldContent<string>(field.getFieldName()));
                         else //if (fieldType == FieldType.BOOLEAN)
-                            ans.Add(this.s1.getFieldContent<int>(field.getFieldName()));
+                            ans.Add(this.s1.getFieldContent<bool>(field.getFieldName()));
                     }
                     else
                     {
@@ -162,7 +160,7 @@ namespace BLL.SQLProcessing
                         else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
                             ans.Add(this.s2.getFieldContent<string>(field.getFieldName()));
                         else //if (fieldType == FieldType.BOOLEAN)
-                            ans.Add(this.s2.getFieldContent<int>(field.getFieldName()));
+                            ans.Add(this.s2.getFieldContent<bool>(field.getFieldName()));
                     }
                 }
 

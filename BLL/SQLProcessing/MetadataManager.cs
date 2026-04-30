@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
@@ -118,18 +119,27 @@ namespace BLL.SQLProcessing
                     throw new QueryDataNotExistException($"Relation {name} doesn't exist");
                 }
                 schemaName = (string)reader["relschema_name"];
-                primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
+                primarykey = ((string)reader["con_attributes"]).Split(',').ToList();
                 primaryConstraintName = (string)reader["con_name"];
                 schema_oid = Convert.ToInt32(reader["relSch.oid"]);
                 rel_oid = Convert.ToInt32(reader["rel.oid"]);
                 do
                 {
+#if NET8_0_OR_GREATER
                     fields.Add(
                         new Field(
                             (string)reader["att_name"],
                             new FieldInfo(Enum.Parse<FieldType>((string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
                         )
                     );
+#else
+                    fields.Add(
+                        new Field(
+                            (string)reader["att_name"],
+                            new FieldInfo((FieldType)Enum.Parse(typeof(FieldType), (string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
+                        )
+                    );
+#endif
 
                 } while (reader.Read());
             }
@@ -180,18 +190,27 @@ namespace BLL.SQLProcessing
                     throw new QueryDataNotExistException($"Relation with {oid} doesn't exist");
                 }
                 schemaName = (string)reader["relschema_name"];
-                primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
+                primarykey = ((string)reader["con_attributes"]).Split(',').ToList();
                 relName = (string)reader["rel_name"];
                 primaryConstraintName = (string)reader["con_name"];
                 schema_oid = Convert.ToInt32(reader["relSch.oid"]);
                 do
                 {
+#if NET8_0_OR_GREATER
                     fields.Add(
                         new Field(
                             (string)reader["att_name"],
                             new FieldInfo(Enum.Parse<FieldType>((string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
                         )
                     );
+#else
+                    fields.Add(
+                        new Field(
+                            (string)reader["att_name"],
+                            new FieldInfo((FieldType)Enum.Parse(typeof(FieldType), (string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
+                        )
+                    );
+#endif
 
                 } while (reader.Read());
             }
@@ -369,7 +388,7 @@ namespace BLL.SQLProcessing
                                                 CultureInfo.InvariantCulture))
                                             .ToList();
                     string str = (string)reader["fuzzset_membership_degree"];
-                    List<float> memberships = (str).Split(",").Select(float.Parse).ToList();
+                    List<float> memberships = (str).Split(',').Select(float.Parse).ToList();
                     int oid = Convert.ToInt32(reader["fs_oid"]);
 
                     return new DiscreteFuzzySet<T>(values, memberships, name, fuzzSetType, oid);
@@ -397,6 +416,16 @@ namespace BLL.SQLProcessing
                     return (FuzzySet<T>)(object)new ContinuousFuzzySet(p1, p2, p3, p4, name, oid);
                 }
             }
+        }
+        public BaseFuzzySet getFuzzySet(string name, FieldType fuzzSetType)
+        {
+            if (fuzzSetType == FieldType.distFS_INT)
+                return this.getFuzzySet<int>(name, fuzzSetType);
+            else if (fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.contFS)
+                return this.getFuzzySet<float>(name, fuzzSetType);
+            else //if(fuzzSetType==FieldType.distFS_TEXT)
+                return this.getFuzzySet<string>(name, fuzzSetType);
+
         }
         public FuzzySet<T> getFuzzySetByID<T>(int fs_oid, FieldType fuzzSetType)
         {
@@ -437,7 +466,7 @@ namespace BLL.SQLProcessing
                                                 CultureInfo.InvariantCulture))
                                             .ToList();
                     string str = (string)reader["fuzzset_membership_degree"];
-                    List<float> memberships = (str).Split(",").Select(float.Parse).ToList();
+                    List<float> memberships = (str).Split(',').Select(float.Parse).ToList();
                     int oid = Convert.ToInt32(reader["fs_oid"]);
 
                     return new DiscreteFuzzySet<T>(values, memberships, fsName, fuzzSetType, oid);
@@ -540,17 +569,26 @@ namespace BLL.SQLProcessing
                     throw new QueryDataNotExistException($"Relation {name} doesn't exist");
                 }
                 schemaName = (string)reader["relschema_name"];
-                primarykey = ((string)reader["con_attributes"]).Split(",").ToList();
+                primarykey = ((string)reader["con_attributes"]).Split(',').ToList();
                 primaryConstraintName = (string)reader["con_name"];
                 schema_oid = Convert.ToInt32(reader["relSch.oid"]);
                 do
                 {
+#if NET8_0_OR_GREATER
                     fields.Add(
                         new Field(
                             (string)reader["att_name"],
                             new FieldInfo(Enum.Parse<FieldType>((string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
                         )
                     );
+#else
+                    fields.Add(
+                        new Field(
+                            (string)reader["att_name"],
+                            new FieldInfo((FieldType)Enum.Parse(typeof(FieldType), (string)reader["type_name"]), Convert.ToInt32(reader["att_type_mod"]))
+                        )
+                    );
+#endif
 
                 } while (reader.Read());
             }
@@ -573,6 +611,7 @@ namespace BLL.SQLProcessing
                 r.Read();
                 FPRDBRelationDTO referencingRelation = this.getRelationByID(Convert.ToInt32(r["con_relation_id"])).toDTO();
                 FPRDBRelationDTO referencedRelation = this.getRelationByID(Convert.ToInt32(r["con_referenced_relation_id"])).toDTO();
+#if NET8_0_OR_GREATER
                 ans = new ConstraintDTO(
                             Convert.ToInt32(r["oid"]),
                             (string)r["con_name"],
@@ -583,6 +622,18 @@ namespace BLL.SQLProcessing
                             (r["con_referenced_attributes"] as string).Split(',').ToList(),
                             null
                             );
+#else
+                ans = new ConstraintDTO(
+                            Convert.ToInt32(r["oid"]),
+                            (string)r["con_name"],
+                            (ConstraintType)Enum.Parse(typeof(ConstraintType), r["con_type"] as string),
+                            referencingRelation,
+                            referencedRelation,
+                            (r["con_attributes"] as string).Split(',').ToList(),
+                            (r["con_referenced_attributes"] as string).Split(',').ToList(),
+                            null
+                            );
+#endif
             }
             return ans;
         }

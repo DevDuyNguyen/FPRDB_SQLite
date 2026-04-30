@@ -2,9 +2,43 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
+	 <RootNamespace>FPRDB_SQLite.GUI</RootNamespace>
   </PropertyGroup>
+	
+	<!-- net48 settings -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+	<!-- .NET 8 only settings -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	
+	<!-- net48 specific packages -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+      <PackageReference Include="DevExpress.Data" Version="24.1.7" />
+    </ItemGroup>
+	
+  <!-- net48 specific DevExpress assemblies -->
+  <!-- These are pulled in automatically on net8.0-windows via DevExpress.Win.Design -->
+  <!-- but need to be explicit for net48 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+      <PackageReference Include="DevExpress.Win" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Data" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win.Grid" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win.Navigation" Version="24.1.7" />
+      <!--<PackageReference Include="DevExpress.Win.Bars" Version="24.1.7" />-->
+      <PackageReference Include="DevExpress.Utils" Version="24.1.7" />
+      <PackageReference Include="DevExpress.Win.RichEdit" Version="24.1.7" />
+       <PackageReference Include="DevExpress.Charts" Version="24.1.7" />
+	  <PackageReference Include="DevExpress.Win.Charts" Version="24.1.7" />
+  
+  </ItemGroup>
+	
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Win.Design" Version="24.1.7" />
@@ -28,5 +62,64 @@
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj" />
   </ItemGroup>
+
+    <ItemGroup>
+
+      <EmbeddedResource Update="GUI\FrmMain.resx">
+        <DependentUpon>FrmMain.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmMain.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\FrmNewSchema.resx">
+        <DependentUpon>FrmNewSchema.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmNewSchema.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\frmAddContinuousFuzzySet.resx">
+        <DependentUpon>frmAddContinuousFuzzySet.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmAddContinuousFuzzySet.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\frmAddDiscreteFuzzySet.resx">
+        <DependentUpon>frmAddDiscreteFuzzySet.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmAddDiscreteFuzzySet.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\frmFKRelationships.resx">
+        <DependentUpon>frmFKRelationships.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmFKRelationships.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\frmListFuzzySet.resx">
+        <DependentUpon>frmListFuzzySet.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmListFuzzySet.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\frmManageFuzzySet.resx">
+        <DependentUpon>frmManageFuzzySet.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmManageFuzzySet.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\frmNewRelation.resx">
+        <DependentUpon>frmNewRelation.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.frmNewRelation.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\UserControls\ContinuosFuzzySet.resx">
+        <DependentUpon>ContinuosFuzzySet.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.UserControls.ContinuosFuzzySet.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="GUI\UserControls\DiscreteFuzzySet.resx">
+        <DependentUpon>DiscreteFuzzySet.cs</DependentUpon>
+        <LogicalName Condition="'$(TargetFramework)' == 'net48'">FPRDB_SQLite.GUI.UserControls.DiscreteFuzzySet.resources</LogicalName>
+      </EmbeddedResource>
+
+      <EmbeddedResource Update="Properties\Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+
+    </ItemGroup>
 
 </Project>
