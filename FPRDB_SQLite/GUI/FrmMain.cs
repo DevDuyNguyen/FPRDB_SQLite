@@ -1936,5 +1936,48 @@ namespace FPRDB_SQLite.GUI
             }
 
         }
+
+        private void barButtonItem1_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
+            {
+                string expression = uc.GetSelectedQuery();
+                try
+                {
+                    float probabilisticInterpretation=this.sqlProcessor.calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(expression);
+                    uc.memoEditMessageUC.Text = probabilisticInterpretation.ToString();
+                }
+                catch(InvalidOperationException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Invalid operation]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (SemanticException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (InvalidCastException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (MismatchTokenType ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (NotSupportedException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                finally
+                {
+                    // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                    uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
+                }
+            }
+        }
     }
 }

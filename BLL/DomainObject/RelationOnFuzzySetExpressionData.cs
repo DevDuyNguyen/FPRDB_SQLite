@@ -4,23 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.DomainObject;
+using BLL.Interfaces;
 
 namespace BLL.DomainObject
 {
     public class RelationOnFuzzySetExpressionData
     {
-        private string leftFuzzySet;
+        private Constant leftFuzzySet;
         private CompareOperation compareOp;
-        private string rightFuzzySet;
+        private Constant rightFuzzySet;
 
-        public RelationOnFuzzySetExpressionData(string leftFuzzySet, CompareOperation compareOp, string rightFuzzySet)
+        public RelationOnFuzzySetExpressionData(Constant leftFuzzySet, CompareOperation compareOp, Constant rightFuzzySet)
         {
             this.leftFuzzySet = leftFuzzySet;
             this.compareOp = compareOp;
             this.rightFuzzySet = rightFuzzySet;
         }
 
-        public string getLeftFuzzySet()
+        public Constant getLeftFuzzySet()
         {
             return leftFuzzySet;
         }
@@ -30,7 +32,7 @@ namespace BLL.DomainObject
             return compareOp;
         }
 
-        public string getRightFuzzySet()
+        public Constant getRightFuzzySet()
         {
             return rightFuzzySet;
         }
