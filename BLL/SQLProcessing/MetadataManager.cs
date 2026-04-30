@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
@@ -415,6 +416,16 @@ namespace BLL.SQLProcessing
                     return (FuzzySet<T>)(object)new ContinuousFuzzySet(p1, p2, p3, p4, name, oid);
                 }
             }
+        }
+        public BaseFuzzySet getFuzzySet(string name, FieldType fuzzSetType)
+        {
+            if (fuzzSetType == FieldType.distFS_INT)
+                return this.getFuzzySet<int>(name, fuzzSetType);
+            else if (fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.contFS)
+                return this.getFuzzySet<float>(name, fuzzSetType);
+            else //if(fuzzSetType==FieldType.distFS_TEXT)
+                return this.getFuzzySet<string>(name, fuzzSetType);
+
         }
         public FuzzySet<T> getFuzzySetByID<T>(int fs_oid, FieldType fuzzSetType)
         {

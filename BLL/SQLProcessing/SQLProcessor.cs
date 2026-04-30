@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -141,6 +142,17 @@ namespace BLL.SQLProcessing
 
             return null;
 
+        }
+        public float calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(string expression)
+        {
+            this.parser.parse(expression);
+            RelationOnFuzzySetExpressionData data = this.parser.relationOnFuzzySetsExpression();
+
+            if (this.preProcessor.checkSemanticRelationOnFuzzySetExpression(data))
+            {
+                return this.queryPlanner.calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(data);
+            }
+            return -1;
         }
 
     }

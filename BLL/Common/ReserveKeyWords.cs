@@ -10,7 +10,13 @@ namespace BLL.Common
     {
         public static readonly HashSet<string> reservedKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-             "select", "from", "where", "natural", "join", "intersection","union", "except", "true", "false"
+            "select", "from", "where", "and", "or", "not", "natural", "join",
+            "union", "intersect", "except", "not", "and", "or",
+            "create", "schema", "int", "float", "char", "varchar", "boolean",
+            "dist_fuzzyset_int", "dist_fuzzyset_float", "dist_fuzzyset_text",
+            "cont_fuzzyset", "constraint", "primary", "key",
+            "relation", "on", "insert", "into", "values", "update", "set", "delete", "drop",
+             "true", "false"
         };
     }
 }

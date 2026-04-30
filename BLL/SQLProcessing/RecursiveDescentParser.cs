@@ -829,6 +829,34 @@ namespace BLL.SQLProcessing
 
             return data;
         }
+        private Constant getConstantFromLexer()
+        {
+            if (lexer.matchNumberConstant())
+            {
+                object tmpValue = lexer.eatNumberConstant();
+                if (tmpValue is int)
+                    return new IntConstant((int)tmpValue);
+                else
+                    return new FloatConstant((float)tmpValue);
+            }
+            else if (lexer.matchStringConstant())
+                return new StringConstant((string)lexer.eatStringConstant());
+            else if (lexer.matchBooleanConstant())
+                return new BooleanConstant((bool)lexer.eatBooleanConstant());
+            else //if (lexer.matchFuzzySetConstant())
+                return new FuzzySetConstant((string)lexer.eatFuzzySetConstant());
+        }
+        public RelationOnFuzzySetExpressionData relationOnFuzzySetsExpression()
+        {
+            Constant fs1Name=getConstantFromLexer();
+      
+            string strCompareOp = this.lexer.eatOperator();
+            CompareOperation compareOp = CompareOperatorUltilities.convertStringToEnum(strCompareOp);
+
+            Constant fs2Name =getConstantFromLexer();
+
+            return new RelationOnFuzzySetExpressionData(fs1Name, compareOp, fs2Name);
+        }
 
     }
 }

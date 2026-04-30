@@ -9,8 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BLL.SQLProcessing
 {
@@ -793,6 +795,73 @@ namespace BLL.SQLProcessing
 
 
             }
+            return true;
+        }
+
+        private bool checkCompatibleCompareOperatorOnFuzzySet(Constant leftConstant, CompareOperation compareOperator, Constant rightConstant)
+        {
+
+            Type fs1DefiningDomain = ConstantUltilities.getDomainType(leftConstant, this.metadataMgr);
+            Type fs2DefiningDomain = ConstantUltilities.getDomainType(rightConstant, this.metadataMgr);
+            //Only fuzzy sets defined on the same domain value can be compare with each other except for fuzzy sets defined on int or float domain value
+            if (fs1DefiningDomain!= fs2DefiningDomain)
+            {
+                if (!(fs1DefiningDomain == typeof(int) && fs2DefiningDomain == typeof(float))
+                    && !(fs1DefiningDomain == typeof(float) && fs2DefiningDomain == typeof(int))
+                )
+                    throw new InvalidOperationException($"Can't compare between fuzzy set defined on {fs1DefiningDomain.Name} domain and {fs2DefiningDomain.Name} domain");
+                else
+                {
+                    //Compatible compare operator on fuzzy sets defined on int or float domain: =, !=, <, <=, >, >=, ⇒
+                    if (compareOperator!=CompareOperation.EQUAL
+                        && compareOperator != CompareOperation.NOT_EQUAL
+                        && compareOperator != CompareOperation.LESS_THAN
+                        && compareOperator != CompareOperation.LESS_EQUAL
+                        && compareOperator != CompareOperation.GREATER_THAN
+                        && compareOperator != CompareOperation.GREATER_EQUAL
+                        && compareOperator != CompareOperation.ALSO
+                    )
+                        throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+
+                }
+            }
+            //Compatible compare operator on string defining-domain fuzzy sets:  =, !=, ⇒
+            else if (fs1DefiningDomain == typeof(string))
+            {
+                if (compareOperator != CompareOperation.EQUAL && compareOperator != CompareOperation.NOT_EQUAL && compareOperator != CompareOperation.ALSO)
+                    throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+            }
+            //Compatible compare operator on fuzzy sets defined on int or float domain: =, !=, <, <=, >, >=, ⇒
+            if (compareOperator != CompareOperation.EQUAL
+                        && compareOperator != CompareOperation.NOT_EQUAL
+                        && compareOperator != CompareOperation.LESS_THAN
+                        && compareOperator != CompareOperation.LESS_EQUAL
+                        && compareOperator != CompareOperation.GREATER_THAN
+                        && compareOperator != CompareOperation.GREATER_EQUAL
+                        && compareOperator != CompareOperation.ALSO
+                )
+            throw new InvalidOperationException($"Can't apply compare operator {compareOperator.ToString()} on two fuzzy sets defined on string domain");
+
+            return true;
+
+        }
+
+        private bool checkFuzzyUse(string name)
+        {
+            if (!this.metadataMgr.isFuzzySetWithNameExist(name))
+                throw new InvalidOperationException($"Fuzzy set {name} doesn't exist");
+            return true;
+        }
+        public bool checkSemanticRelationOnFuzzySetExpression(RelationOnFuzzySetExpressionData data)
+        {
+            Constant constantFS1 = data.getLeftFuzzySetConstant();
+            Constant constantFS2 = data.getRightFuzzySetConstant();
+            if(constantFS1 is FuzzySetConstant)
+                checkFuzzyUse(constantFS1.getVal() as string);
+            if (constantFS2 is FuzzySetConstant)
+                checkFuzzyUse(constantFS2.getVal() as string);
+            checkCompatibleCompareOperatorOnFuzzySet(constantFS1, data.getCompareOp(), constantFS2);
+
             return true;
         }
 

@@ -1,0 +1,558 @@
+[33m6d62187[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/calculate-probabilistic-interpretation-for-relation-on-fuzzysets-expression[m[33m)[m HEAD@{0}: reset: moving to 6d62187
+[33m6d62187[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/calculate-probabilistic-interpretation-for-relation-on-fuzzysets-expression[m[33m)[m HEAD@{1}: reset: moving to 6d62187
+[33mbd88360[m[33m ([m[1;31morigin/feature/calculate-probabilistic-interpretation-for-relation-on-fuzzysets-expression[m[33m)[m HEAD@{2}: reset: moving to bd88360524011bfe787e8eb346d457f29483a20f
+[33mbd88360[m[33m ([m[1;31morigin/feature/calculate-probabilistic-interpretation-for-relation-on-fuzzysets-expression[m[33m)[m HEAD@{3}: reset: moving to bd88360524011bfe787e8eb346d457f29483a20f
+[33mbd88360[m[33m ([m[1;31morigin/feature/calculate-probabilistic-interpretation-for-relation-on-fuzzysets-expression[m[33m)[m HEAD@{4}: commit (merge): add calculate probabilistic interpretation for relation on fuzzy sets expression
+[33m7d97a90[m HEAD@{5}: commit: need to shutdown
+[33mefc030f[m HEAD@{6}: reset: moving to efc030f
+[33m4d503e7[m HEAD@{7}: commit: need to shutdown
+[33m7f06ea4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{8}: checkout: moving from main to feature/calculate-probabilistic-interpretation-for-relation-on-fuzzysets-expression
+[33m7f06ea4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{9}: pull origin main: Fast-forward
+[33m5114f85[m HEAD@{10}: checkout: moving from hotfix/random-fix to main
+[33mdc2a7e3[m[33m ([m[1;31morigin/hotfix/random-fix[m[33m, [m[1;32mhotfix/random-fix[m[33m)[m HEAD@{11}: commit: fix silly mistake in createSysCatalog_DataTest02.sql
+[33mec090d3[m HEAD@{12}: commit: fix silly mistakes
+[33m5114f85[m HEAD@{13}: checkout: moving from main to hotfix/random-fix
+[33m5114f85[m HEAD@{14}: pull origin main: Fast-forward
+[33mcf8e8b9[m HEAD@{15}: reset: moving to head
+[33mcf8e8b9[m HEAD@{16}: reset: moving to head
+[33mcf8e8b9[m HEAD@{17}: checkout: moving from hotfix/multi-targeting-to-support-.net-framework-4.8 to main
+[33m9725c9c[m[33m ([m[1;31morigin/hotfix/multi-targeting-to-support-.net-framework-4.8[m[33m, [m[1;32mhotfix/multi-targeting-to-support-.net-framework-4.8[m[33m)[m HEAD@{18}: commit: final setup installer
+[33maa7411f[m HEAD@{19}: commit: fix createSysCatalog_DataTest01.sql no primary key for noRelSche schema, fix no error shows when deleting an referenced relation
+[33m8d60bc8[m HEAD@{20}: commit: fixing error create fuzzy set with null element is allowed
+[33m7590ed4[m HEAD@{21}: commit: fix false postive exception semantic exception 'a must be <= b in [a,b]'
+[33m3651f9e[m HEAD@{22}: commit: its alive
+[33m280c3f1[m HEAD@{23}: reset: moving to 280c3f100fe75a26492a7ec45a4258ab86f7b0de
+[33m280c3f1[m HEAD@{24}: reset: moving to 280c3f100fe75a26492a7ec45a4258ab86f7b0de
+[33m280c3f1[m HEAD@{25}: reset: moving to 280c3f100fe75a26492a7ec45a4258ab86f7b0de
+[33m280c3f1[m HEAD@{26}: commit: finish change codebase to support .net 8 and .net framework 4.8, but no installer yet
+[33m393ad8d[m HEAD@{27}: commit: need to shutdown
+[33m4e873b3[m HEAD@{28}: commit: need to shutdown
+[33mcf8e8b9[m HEAD@{29}: checkout: moving from main to hotfix/multi-targeting-to-support-.net-framework-4.8
+[33mcf8e8b9[m HEAD@{30}: pull origin main: Fast-forward
+[33mefc030f[m HEAD@{31}: pull origin main: Fast-forward
+[33me60bc7a[m HEAD@{32}: checkout: moving from hotfix/probability-relation-interval-must-be-within-0-and-1 to main
+[33m7ee38e2[m[33m ([m[1;31morigin/hotfix/probability-relation-interval-must-be-within-0-and-1[m[33m, [m[1;32mhotfix/probability-relation-interval-must-be-within-0-and-1[m[33m)[m HEAD@{33}: commit: finish fixing update tuple with interval probability out of range [0,1], insert and update with a>b in [a,b]
+[33me60bc7a[m HEAD@{34}: checkout: moving from main to hotfix/probability-relation-interval-must-be-within-0-and-1
+[33me60bc7a[m HEAD@{35}: checkout: moving from main to main
+[33me60bc7a[m HEAD@{36}: pull origin main: Fast-forward
+[33m857bd68[m HEAD@{37}: checkout: moving from setup/FPRDBSQLiteInstaller to main
+[33mb382879[m[33m ([m[1;31morigin/setup/FPRDBSQLiteInstaller[m[33m, [m[1;32msetup/FPRDBSQLiteInstaller[m[33m)[m HEAD@{38}: commit: minor fix
+[33m9305f09[m HEAD@{39}: commit: fix false positive extraneous token error
+[33m23eea6c[m HEAD@{40}: commit: create installer for FPRDBSQLite
+[33m857bd68[m HEAD@{41}: checkout: moving from main to setup/FPRDBSQLiteInstaller
+[33m857bd68[m HEAD@{42}: pull origin main: Fast-forward
+[33m929f504[m HEAD@{43}: checkout: moving from main to main
+[33m929f504[m HEAD@{44}: pull origin main: Fast-forward
+[33m0e5ea2e[m HEAD@{45}: checkout: moving from hotfix/extraneous-input-sql-error-syntax to main
+[33m506aec6[m[33m ([m[1;31morigin/hotfix/extraneous-input-sql-error-syntax[m[33m, [m[1;32mhotfix/extraneous-input-sql-error-syntax[m[33m)[m HEAD@{46}: commit: finish adding checking for extraneous token in parsing
+[33m03b227a[m HEAD@{47}: commit (merge): merge main into hotfix/extraneous-input-sql-error-syntax
+[33m87f0d47[m HEAD@{48}: commit: nothing
+[33mf8c47c3[m HEAD@{49}: commit: gitignore FPRDB database file .fprdb
+[33m8895a3f[m HEAD@{50}: reset: moving to HEAD
+[33m8895a3f[m HEAD@{51}: checkout: moving from main to hotfix/extraneous-input-sql-error-syntax
+[33m0e5ea2e[m HEAD@{52}: pull origin: Fast-forward
+[33m0d4d07f[m HEAD@{53}: checkout: moving from hot-fix/fix-UI-insert-update-tuple to main
+[33mdf46f99[m[33m ([m[1;31morigin/hot-fix/fix-UI-insert-update-tuple[m[33m, [m[1;32mhot-fix/fix-UI-insert-update-tuple[m[33m)[m HEAD@{54}: checkout: moving from main to hot-fix/fix-UI-insert-update-tuple
+[33m0d4d07f[m HEAD@{55}: checkout: moving from hotfix/extraneous-input-sql-error-syntax to main
+[33m8895a3f[m HEAD@{56}: commit: need to shut down
+[33m8ec4708[m HEAD@{57}: commit: add extraneous token check at create schema parsing
+[33m0d4d07f[m HEAD@{58}: checkout: moving from main to hotfix/extraneous-input-sql-error-syntax
+[33m0d4d07f[m HEAD@{59}: pull origin: Fast-forward
+[33m89cdcf2[m HEAD@{60}: checkout: moving from main to main
+[33m89cdcf2[m HEAD@{61}: pull origin: Fast-forward
+[33m5a889b4[m[33m ([m[1;32mhotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple[m[33m)[m HEAD@{62}: checkout: moving from hotfix/the-value-of-primary-key-and-foreignkey-attribute-must-be-exact-and-precise to main
+[33m259dbda[m[33m ([m[1;31morigin/hotfix/the-value-of-primary-key-and-foreignkey-attribute-must-be-exact-and-precise[m[33m, [m[1;32mhotfix/the-value-of-primary-key-and-foreignkey-attribute-must-be-exact-and-precise[m[33m)[m HEAD@{63}: commit: finish but not fully tested fixing checking if primary key, forign key attribute value is exact and precise in insertion and update
+[33m5a889b4[m[33m ([m[1;32mhotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple[m[33m)[m HEAD@{64}: checkout: moving from main to hotfix/the-value-of-primary-key-and-foreignkey-attribute-must-be-exact-and-precise
+[33m5a889b4[m[33m ([m[1;32mhotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple[m[33m)[m HEAD@{65}: checkout: moving from hotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple to main
+[33m5a889b4[m[33m ([m[1;32mhotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple[m[33m)[m HEAD@{66}: checkout: moving from main to hotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple
+[33m5a889b4[m[33m ([m[1;32mhotfix/database-refuze-tod-delete-a-table-but-GUI-remove-the-tuple[m[33m)[m HEAD@{67}: pull origin: Fast-forward
+[33mfe82c41[m HEAD@{68}: checkout: moving from hotfix/foreign-key-attribute-violation to main
+[33mc6eacc2[m[33m ([m[1;31morigin/hotfix/foreign-key-attribute-violation[m[33m, [m[1;32mhotfix/foreign-key-attribute-violation[m[33m)[m HEAD@{69}: commit: finish fix
+[33m85ec6a5[m HEAD@{70}: commit: need to shut down
+[33mfe82c41[m HEAD@{71}: checkout: moving from main to hotfix/foreign-key-attribute-violation
+[33mfe82c41[m HEAD@{72}: pull origin main: Fast-forward
+[33mf656d72[m HEAD@{73}: checkout: moving from hotfix/null-attribute-in-tuple-insert-doesnot-throw-correct-error to main
+[33m3f22a47[m[33m ([m[1;31morigin/hotfix/null-attribute-in-tuple-insert-doesnot-throw-correct-error[m[33m, [m[1;32mhotfix/null-attribute-in-tuple-insert-doesnot-throw-correct-error[m[33m)[m HEAD@{74}: commit: fix null attribute in tuple insertion doesn't throw correct error
+[33m430471a[m[33m ([m[1;31morigin/hot-fix/fix-UI-display-rel[m[33m, [m[1;32mhot-fix/fix-UI-display-rel[m[33m)[m HEAD@{75}: checkout: moving from hot-fix/fix-UI-display-rel to hotfix/null-attribute-in-tuple-insert-doesnot-throw-correct-error
+[33m430471a[m[33m ([m[1;31morigin/hot-fix/fix-UI-display-rel[m[33m, [m[1;32mhot-fix/fix-UI-display-rel[m[33m)[m HEAD@{76}: checkout: moving from main to hot-fix/fix-UI-display-rel
+[33mf656d72[m HEAD@{77}: pull origin: Fast-forward
+[33md66087e[m HEAD@{78}: checkout: moving from hotfix/an-attribute-without-field-type-in-FPRDBSchema-leads-to-crash to main
+[33m9e6e058[m[33m ([m[1;31morigin/hotfix/an-attribute-without-field-type-in-FPRDBSchema-leads-to-crash[m[33m, [m[1;32mhotfix/an-attribute-without-field-type-in-FPRDBSchema-leads-to-crash[m[33m)[m HEAD@{79}: commit: fix not providing field type to an attribute in FPRDB schema creation leads to crash
+[33md66087e[m HEAD@{80}: checkout: moving from main to hotfix/an-attribute-without-field-type-in-FPRDBSchema-leads-to-crash
+[33md66087e[m HEAD@{81}: pull origin main: Fast-forward
+[33m01520f4[m HEAD@{82}: checkout: moving from hotfix/empty-attribute-name-in-FPRDBSChema-creation-leads-to-crash to main
+[33m4a9da29[m[33m ([m[1;31morigin/hotfix/empty-attribute-name-in-FPRDBSChema-creation-leads-to-crash[m[33m, [m[1;32mhotfix/empty-attribute-name-in-FPRDBSChema-creation-leads-to-crash[m[33m)[m HEAD@{83}: commit: finish fixing empty attribute name in fprdb schema creation lead to crash
+[33m01520f4[m HEAD@{84}: Branch: renamed refs/heads/hotfix/empty-attribute-definition-for-FPRDBSChema-lead-tocrash to refs/heads/hotfix/empty-attribute-name-in-FPRDBSChema-creation-leads-to-crash
+[33m01520f4[m HEAD@{86}: checkout: moving from main to hotfix/empty-attribute-definition-for-FPRDBSChema-lead-tocrash
+[33m01520f4[m HEAD@{87}: pull origin main: Fast-forward
+[33m5a7622e[m HEAD@{88}: checkout: moving from hot-fix/fix-update-UI/UX-FS to main
+[33m69a67c2[m[33m ([m[1;31morigin/hot-fix/fix-update-UI/UX-FS[m[33m, [m[1;32mhot-fix/fix-update-UI/UX-FS[m[33m)[m HEAD@{89}: checkout: moving from main to hot-fix/fix-update-UI/UX-FS
+[33m5a7622e[m HEAD@{90}: pull origin main: Fast-forward
+[33mc408084[m HEAD@{91}: checkout: moving from hot-fix/fix-defect-6 to main
+[33mdb0e5c9[m[33m ([m[1;31morigin/hot-fix/fix-defect-6[m[33m, [m[1;32mhot-fix/fix-defect-6[m[33m)[m HEAD@{92}: checkout: moving from main to hot-fix/fix-defect-6
+[33mc408084[m HEAD@{93}: pull origin: Fast-forward
+[33ma3249b5[m HEAD@{94}: checkout: moving from hot-fix/fix_defect_5 to main
+[33md182c73[m[33m ([m[1;31morigin/hot-fix/fix_defect_5[m[33m, [m[1;32mhot-fix/fix_defect_5[m[33m)[m HEAD@{95}: checkout: moving from main to hot-fix/fix_defect_5
+[33ma3249b5[m HEAD@{96}: pull origin main: Fast-forward
+[33m99a401e[m HEAD@{97}: checkout: moving from hotfix/update-fuzzyset-elementx-cannot-be-assigned-membership-degree-more-than-1-time to main
+[33m899feec[m[33m ([m[1;31morigin/hotfix/update-fuzzyset-elementx-cannot-be-assigned-membership-degree-more-than-1-time[m[33m, [m[1;32mhotfix/update-fuzzyset-elementx-cannot-be-assigned-membership-degree-more-than-1-time[m[33m)[m HEAD@{98}: commit: finish fix
+[33m99a401e[m HEAD@{99}: checkout: moving from main to hotfix/update-fuzzyset-elementx-cannot-be-assigned-membership-degree-more-than-1-time
+[33m99a401e[m HEAD@{100}: pull origin main: Fast-forward
+[33ma590cd3[m HEAD@{101}: checkout: moving from hotfix/the-same-element-x-cannot-be-assigned-membershipdegree-more-than-1-time to main
+[33mcfde58c[m[33m ([m[1;31morigin/hotfix/the-same-element-x-cannot-be-assigned-membershipdegree-more-than-1-time[m[33m, [m[1;32mhotfix/the-same-element-x-cannot-be-assigned-membershipdegree-more-than-1-time[m[33m)[m HEAD@{102}: commit: fix the TestData01
+[33mab2e2cb[m HEAD@{103}: commit: finish fix
+[33ma590cd3[m HEAD@{104}: checkout: moving from main to hotfix/the-same-element-x-cannot-be-assigned-membershipdegree-more-than-1-time
+[33ma590cd3[m HEAD@{105}: pull origin main: Fast-forward
+[33mb8a775b[m HEAD@{106}: checkout: moving from feature/checking-fuzzyset-name-violation to main
+[33mfe5c2f2[m[33m ([m[1;31morigin/feature/checking-fuzzyset-name-violation[m[33m, [m[1;32mfeature/checking-fuzzyset-name-violation[m[33m)[m HEAD@{107}: checkout: moving from feature/is-valid-FPRDB-database-file to feature/checking-fuzzyset-name-violation
+[33m383feb2[m[33m ([m[1;31morigin/feature/is-valid-FPRDB-database-file[m[33m, [m[1;32mfeature/is-valid-FPRDB-database-file[m[33m)[m HEAD@{108}: checkout: moving from main to feature/is-valid-FPRDB-database-file
+[33mb8a775b[m HEAD@{109}: checkout: moving from feature/checking-fuzzyset-name-violation to main
+[33mfe5c2f2[m[33m ([m[1;31morigin/feature/checking-fuzzyset-name-violation[m[33m, [m[1;32mfeature/checking-fuzzyset-name-violation[m[33m)[m HEAD@{110}: commit: finish feature
+[33mb8a775b[m HEAD@{111}: checkout: moving from main to feature/checking-fuzzyset-name-violation
+[33mb8a775b[m HEAD@{112}: checkout: moving from feature/checking-fuzzyset-name-violation to main
+[33mb8a775b[m HEAD@{113}: checkout: moving from main to feature/checking-fuzzyset-name-violation
+[33mb8a775b[m HEAD@{114}: pull origin main: Fast-forward
+[33m3d783ff[m HEAD@{115}: checkout: moving from hotfix/also-compare-operator-fix to main
+[33m38d8ce7[m[33m ([m[1;31morigin/hotfix/also-compare-operator-fix[m[33m, [m[1;32mhotfix/also-compare-operator-fix[m[33m)[m HEAD@{116}: commit: finish fix
+[33m3d783ff[m HEAD@{117}: checkout: moving from main to hotfix/also-compare-operator-fix
+[33m3d783ff[m HEAD@{118}: pull origin main: Fast-forward
+[33m1e441dd[m HEAD@{119}: checkout: moving from feature/is-valid-FPRDB-database-file to main
+[33m383feb2[m[33m ([m[1;31morigin/feature/is-valid-FPRDB-database-file[m[33m, [m[1;32mfeature/is-valid-FPRDB-database-file[m[33m)[m HEAD@{120}: commit: finish feature
+[33m0e5db4b[m[33m ([m[1;32morigin[m[33m)[m HEAD@{121}: commit: add but untested DatabaseService::isValidFPRDBDatabaseFile()
+[33m1e441dd[m HEAD@{122}: checkout: moving from main to feature/is-valid-FPRDB-database-file
+[33m1e441dd[m HEAD@{123}: pull origin main: Fast-forward
+[33m392e2d9[m HEAD@{124}: checkout: moving from hotfix/database-not-end-with-fprdb-extension to main
+[33m4d65c65[m[33m ([m[1;31morigin/hotfix/database-not-end-with-fprdb-extension[m[33m, [m[1;32mhotfix/database-not-end-with-fprdb-extension[m[33m)[m HEAD@{125}: commit: fixed
+[33m392e2d9[m HEAD@{126}: checkout: moving from main to hotfix/database-not-end-with-fprdb-extension
+[33m392e2d9[m HEAD@{127}: pull origin main: Fast-forward
+[33m1fd5a2f[m[33m ([m[1;32mfeature/wiring-import-export-fuzzyset-GUI-to-backend[m[33m)[m HEAD@{128}: checkout: moving from test/probabilistic-interpretation-for-selection-expression to main
+[33m017b55c[m[33m ([m[1;31morigin/test/probabilistic-interpretation-for-selection-expression[m[33m, [m[1;32mtest/probabilistic-interpretation-for-selection-expression[m[33m)[m HEAD@{129}: commit: minor fix for failed test case
+[33m8b4eb89[m HEAD@{130}: commit: disable database-related tests
+[33m063b6e5[m HEAD@{131}: commit: add minimal test cases for test-to-pass (no negative test yet) in querying
+[33mf20373f[m HEAD@{132}: commit: fixing common attribute isn't allowed in natural join
+[33m9e07115[m HEAD@{133}: commit: need to shutdown
+[33mf2e4323[m HEAD@{134}: commit: need to shutdown
+[33md4230d1[m HEAD@{135}: commit: add tests for probabilistic interpretation on selection expression selection_expression1 disjunction selection_expression2 conjunction selection_express3
+[33m8515b92[m HEAD@{136}: commit: add tests for probabilistic interpretation on selection expression left_selection_expression difference right_selection_expression
+[33m1565776[m HEAD@{137}: commit: add tests for probabilistic interpretation on selection expression left_selection_expression disjunction right_selection_expression
+[33m2f20b8d[m HEAD@{138}: commit: add tests for probabilistic interpretation for selection expression on left_selection_expression conjunction right_selection_expression
+[33mcfab51f[m HEAD@{139}: commit: fix AtomicSelectionExpressionFieldField::calculateProbabilisticInterpretation to allow probabilistic intepretation of selection expression between int defining domain attribute and float defining domain attribute. Add tests for probabilistic interpretation of selection expression x.A1=x.A2
+[33m21af142[m[33m ([m[1;32mtesting/add-probabilistic-interpretation-for-relations-on-fuzzyset-tests[m[33m)[m HEAD@{140}: checkout: moving from testing/add-probabilistic-interpretation-for-relations-on-fuzzyset-tests to test/probabilistic-interpretation-for-selection-expression
+[33m21af142[m[33m ([m[1;32mtesting/add-probabilistic-interpretation-for-relations-on-fuzzyset-tests[m[33m)[m HEAD@{141}: commit: add test for atomic selection expression x.A \theta c
+[33mc4a5d62[m[33m ([m[1;31morigin/testing/add-probabilistic-interpretation-for-relations-on-fuzzyset-tests[m[33m)[m HEAD@{142}: commit: add tests for probabilistic interpretation for relation on int discrete fuzzy set and continuous fuzzy set
+[33m881b5f2[m HEAD@{143}: commit: fix ProbabilisticInterpretationOfRelationOnFuzzySets::discretizeContinuousFSFromDiscreteFS() to only add values from discrete fuzzy set to discretized continuous fuzzy set if the values are within the non-zero membership degree value range of the original continuous fuzzy set and the values aren't the discretized version
+[33m326fe27[m HEAD@{144}: commit: Add tests for probabilistic interpretation for relation on two discrete fuzzy sets with different but compatible defining domain, on two continuous fuzzy sets
+[33m68c1ba7[m HEAD@{145}: commit: add tests for probabilistic interpretation for relation on two real discrete fuzzy sets with the same defining domain
+[33m59135bf[m HEAD@{146}: commit: add test for probabilistic interpretation for relation on special fuzzy set and real fuzzy set with different and incompatible defining domain
+[33mb1d98cf[m HEAD@{147}: commit: add tests for probabilistic intepretation for relation on special fuzzy set and real fuzzy set with different but compatible defining domain
+[33mf123d57[m HEAD@{148}: commit: add tests for probabilistic interpretation for relations on special fuzzy set and real fuzzy set with the same defining domain
+[33md3dc36a[m HEAD@{149}: commit: add test for probabilistic interpretation for relation on special fuzzy sets with incompatible different defining domains
+[33m30fad72[m HEAD@{150}: commit: add testing for probabilistic interpretation different defining domain special fuzzy set with valid compare operation
+[33m6b8c797[m HEAD@{151}: commit: add tests for fuzzy probabilistic interpretation for same defmining domain special fuzzy set but invalid compare operation
+[33mac867f8[m HEAD@{152}: commit: Add test for probabilisitic interpretation for two special fuzzy sets
+[33m624b974[m HEAD@{153}: commit: fix AtomicSelectionExpressionFieldConstant::genericCalculateProbabilisticInterpretation to calculate probabilistic interpretation of selection expression between int fuzzy probabilistic value and float constant
+[33m1fd5a2f[m[33m ([m[1;32mfeature/wiring-import-export-fuzzyset-GUI-to-backend[m[33m)[m HEAD@{154}: checkout: moving from feature/wiring-import-export-fuzzyset-GUI-to-backend to testing/add-probabilistic-interpretation-for-relations-on-fuzzyset-tests
+[33m1fd5a2f[m[33m ([m[1;32mfeature/wiring-import-export-fuzzyset-GUI-to-backend[m[33m)[m HEAD@{155}: checkout: moving from main to feature/wiring-import-export-fuzzyset-GUI-to-backend
+[33m1fd5a2f[m[33m ([m[1;32mfeature/wiring-import-export-fuzzyset-GUI-to-backend[m[33m)[m HEAD@{156}: pull origin main: Fast-forward
+[33m963fd80[m HEAD@{157}: checkout: moving from feature/wiring-create-delete-foreign-key-GUI-to-backend to main
+[33ma3d4f65[m[33m ([m[1;31morigin/feature/wiring-create-delete-foreign-key-GUI-to-backend[m[33m, [m[1;32mfeature/wiring-create-delete-foreign-key-GUI-to-backend[m[33m)[m HEAD@{158}: commit: finish wiring create, delete referential cosntraint GUI to backend
+[33m4a6007e[m HEAD@{159}: commit: hard fixing a very hidden bug in sql statements for DatabaseService::getFPRDBRelations(),getFPRDBSchemas(). Bug: ordering in sql statement doesn't work
+[33mcb43ded[m HEAD@{160}: pull origin feature/wiring-create-delete-foreign-key-GUI-to-backend: Fast-forward
+[33m8c215ca[m HEAD@{161}: commit: need to shutdown
+[33m963fd80[m HEAD@{162}: checkout: moving from main to feature/wiring-create-delete-foreign-key-GUI-to-backend
+[33m963fd80[m HEAD@{163}: pull origin main: Fast-forward
+[33m1e2539c[m HEAD@{164}: checkout: moving from feature/export-import-FS to main
+[33mb9ee32c[m[33m ([m[1;31morigin/feature/export-import-FS[m[33m, [m[1;32mfeature/export-import-FS[m[33m)[m HEAD@{165}: commit: remove unused lib in FrmMain.cs
+[33md623cbf[m HEAD@{166}: commit (merge): fixing forget to git pull
+[33m91520d1[m HEAD@{167}: checkout: moving from feature/wiring-create-delete-foreign-key-GUI-to-backend to feature/export-import-FS
+[33m1e2539c[m HEAD@{168}: checkout: moving from main to feature/wiring-create-delete-foreign-key-GUI-to-backend
+[33m1e2539c[m HEAD@{169}: pull origin main: Fast-forward
+[33m78ae261[m HEAD@{170}: checkout: moving from feature/create-delete-foreign-key to main
+[33m83bf5c7[m[33m ([m[1;31morigin/feature/create-delete-foreign-key[m[33m, [m[1;32mfeature/create-delete-foreign-key[m[33m)[m HEAD@{171}: commit: add testing for negative test for ConstraintDAOSQLite::checkIfUpdatingTupleViolateReferentialConstraint()
+[33mdecb583[m HEAD@{172}: commit: add referential constraint violation checking to updating tuple
+[33meba8e95[m HEAD@{173}: commit: ConstraintDAOSQLite::checkIfUpdatingTupleViolateReferentialConstraint()
+[33m0a4b1ae[m HEAD@{174}: commit: add checking for referential constraint violation in deleting tuple
+[33m980966d[m HEAD@{175}: commit: ConstraintDAOSQLite::checkIfDeleteTupleViolateReferentialConstraint()
+[33mca6c3f7[m HEAD@{176}: commit: Add check selection condition (fields in selection condition exist, comparision operations on the fields are valid) to semantic checking of udpate tuples, delete tuples
+[33m0fa98ba[m HEAD@{177}: commit: fix BasicUpdatePlanner:executeDropRelation() to also remove referential cosntraint of dropped relation
+[33m8259ef0[m HEAD@{178}: commit: add throw exception in ConstraintDAOSQLite::checkIfDropRelationViolateReferentialConstraint()
+[33m3a05db3[m HEAD@{179}: commit: ConstraintDAOSQLite::checkIfDropRelationViolateReferentialConstraint()
+[33m5d748bd[m HEAD@{180}: commit: need to shutdown
+[33m788172e[m HEAD@{181}: commit: add referential constraint violation check to insert tuple
+[33m431897d[m HEAD@{182}: commit: ConstraintDAOSQLite::checkIfInsertTupleViolateReferentialConstraint()
+[33m0ea2ca7[m HEAD@{183}: commit: add ConstraintDAOSQLite::removeConstraint()
+[33m5808f92[m HEAD@{184}: checkout: moving from feature/export-import-FS to feature/create-delete-foreign-key
+[33m91520d1[m HEAD@{185}: commit (merge): merge main into feature/export-import-FS
+[33m8200864[m HEAD@{186}: checkout: moving from main to feature/export-import-FS
+[33m78ae261[m HEAD@{187}: checkout: moving from feature/create-delete-foreign-key to main
+[33m5808f92[m HEAD@{188}: commit: add oid to FPRDBSchema, FPRDBRelation, FPRDBSchemaDTO, FPRDBRelationDTO
+[33maaab33d[m HEAD@{189}: checkout: moving from 78ae2617e35fdc34c01f4d6d61df86c739767935 to feature/create-delete-foreign-key
+[33m78ae261[m HEAD@{190}: checkout: moving from feature/create-delete-foreign-key to 78ae2617e35fdc34c01f4d6d61df86c739767935
+[33maaab33d[m HEAD@{191}: checkout: moving from 70e2fce5dafb0ca2b52f6d7afea8b94fab287afe to feature/create-delete-foreign-key
+[33m70e2fce[m HEAD@{192}: checkout: moving from feature/create-delete-foreign-key to 70e2fce5dafb0ca2b52f6d7afea8b94fab287afe
+[33maaab33d[m HEAD@{193}: checkout: moving from main to feature/create-delete-foreign-key
+[33m78ae261[m HEAD@{194}: checkout: moving from feature/create-delete-foreign-key to main
+[33maaab33d[m HEAD@{195}: commit: ConstraintDAOSQLite::getReferenrialConstraints()
+[33m70e2fce[m HEAD@{196}: commit: finish ConstraintDAOSQLite::createReferentialConstraint() with minor testing
+[33m78ae261[m HEAD@{197}: checkout: moving from main to feature/create-delete-foreign-key
+[33m78ae261[m HEAD@{198}: pull origin main: Fast-forward
+[33m458fdd7[m[33m ([m[1;31morigin/hotfix/delete-event[m[33m)[m HEAD@{199}: checkout: moving from main to main
+[33m458fdd7[m[33m ([m[1;31morigin/hotfix/delete-event[m[33m)[m HEAD@{200}: checkout: moving from hotfix/relation-schema-cannot-be-selected to main
+[33me41ce9b[m[33m ([m[1;31morigin/hotfix/relation-schema-cannot-be-selected[m[33m, [m[1;32mhotfix/relation-schema-cannot-be-selected[m[33m)[m HEAD@{201}: commit: wiring delete relation gui to backend
+[33m5b5056e[m HEAD@{202}: commit: wiring delete FPRDB schema gui to backend
+[33m458fdd7[m[33m ([m[1;31morigin/hotfix/delete-event[m[33m)[m HEAD@{203}: checkout: moving from main to hotfix/relation-schema-cannot-be-selected
+[33m458fdd7[m[33m ([m[1;31morigin/hotfix/delete-event[m[33m)[m HEAD@{204}: pull origin main: Fast-forward
+[33m4ec2034[m HEAD@{205}: checkout: moving from feature/wiring-fuzzyset-CRUD-gui-to-backend to main
+[33m59b4590[m[33m ([m[1;31morigin/feature/wiring-fuzzyset-CRUD-gui-to-backend[m[33m, [m[1;32mfeature/wiring-fuzzyset-CRUD-gui-to-backend[m[33m)[m HEAD@{206}: commit: finish wiring fuzzy set CRUD to backend with MINOR TESTING
+[33m84e1873[m HEAD@{207}: pull origin feature/wiring-fuzzyset-CRUD-gui-to-backend: Fast-forward
+[33m5c31aca[m HEAD@{208}: commit: nothing
+[33m5536e5a[m HEAD@{209}: commit: wiring find fuzzy set GUI to backend
+[33m4ec2034[m HEAD@{210}: checkout: moving from main to feature/wiring-fuzzyset-CRUD-gui-to-backend
+[33m4ec2034[m HEAD@{211}: pull origin main: Fast-forward
+[33m3aaf4ad[m HEAD@{212}: checkout: moving from feature/wiring-CRUD-GUI-to-backend to main
+[33m2d44664[m[33m ([m[1;31morigin/feature/wiring-CRUD-GUI-to-backend[m[33m, [m[1;32mfeature/wiring-CRUD-GUI-to-backend[m[33m)[m HEAD@{213}: commit: nothing
+[33ma7eac7f[m HEAD@{214}: commit: finish wiring tuple CRUD gui to backend, minor testing
+[33mc343f63[m HEAD@{215}: commit: wiring update gui to backend
+[33md77c53a[m HEAD@{216}: checkout: moving from fc4b62a04e4653e9a82e81b6cc2d210c8bcc91b2 to feature/wiring-CRUD-GUI-to-backend
+[33mfc4b62a[m HEAD@{217}: checkout: moving from feature/wiring-CRUD-GUI-to-backend to fc4b62a04e4653e9a82e81b6cc2d210c8bcc91b2
+[33md77c53a[m HEAD@{218}: commit: need to recheck older commits
+[33m757b44a[m HEAD@{219}: commit: finish wiring insert GUI with backend
+[33m9c2e12c[m HEAD@{220}: pull --force origin feature/wiring-CRUD-GUI-to-backend: Fast-forward
+[33m908a1b6[m HEAD@{221}: reset: moving to HEAD
+[33m908a1b6[m HEAD@{222}: checkout: moving from fc4b62a04e4653e9a82e81b6cc2d210c8bcc91b2 to feature/wiring-CRUD-GUI-to-backend
+[33mfc4b62a[m HEAD@{223}: checkout: moving from feature/wiring-CRUD-GUI-to-backend to fc4b62a04e4653e9a82e81b6cc2d210c8bcc91b2
+[33m908a1b6[m HEAD@{224}: checkout: moving from b1fa33f8e607aa582f96b0e9858eb56ef9b9b54f to feature/wiring-CRUD-GUI-to-backend
+[33mb1fa33f[m HEAD@{225}: checkout: moving from 3f179228b259b8639378284a811bc84345c5e402 to b1fa33f8e607aa582f96b0e9858eb56ef9b9b54f
+[33m3f17922[m HEAD@{226}: checkout: moving from feature/wiring-CRUD-GUI-to-backend to 3f179228b259b8639378284a811bc84345c5e402
+[33m908a1b6[m HEAD@{227}: commit: nothing
+[33mfc4b62a[m HEAD@{228}: commit: fix insert runtime checking for integrity constraint violation
+[33m3f17922[m HEAD@{229}: pull origin feature/wiring-CRUD-GUI-to-backend: Fast-forward
+[33mb1fa33f[m HEAD@{230}: checkout: moving from feature/fuzzy-backend to feature/wiring-CRUD-GUI-to-backend
+[33m3b1a122[m[33m ([m[1;31morigin/feature/fuzzy-backend[m[33m, [m[1;32mfeature/fuzzy-backend[m[33m)[m HEAD@{231}: commit: finish FuzzySetService:UpdateFuzzySet()
+[33m074b32a[m HEAD@{232}: commit: modify FuzzySetDAOSQLite::getExtractFuzzySet() to receive oid instead of name
+[33m5ae3b3d[m HEAD@{233}: commit: FuzzySetDAOSQLite::updateDiscreteFuzzySet(), fix FuzzySet.toDTO() doesn't receive OID
+[33m9cae6b4[m HEAD@{234}: commit: FuzzySetDAOSQLite::updateContinuousFuzzySet()
+[33m2f57c26[m HEAD@{235}: commit: FuzzySetDAOSQLite::updateDiscreteFuzzySet()
+[33mff4c51f[m HEAD@{236}: commit: FuzzySetDAOSQLite::getExactFuzzySet()
+[33m34ed94c[m HEAD@{237}: commit: FuzzySetService::removeFuzzySet()
+[33m66a3cdd[m HEAD@{238}: commit: FuzzySetDAOSQLite::removeFuzzySet()
+[33m2b44c3f[m HEAD@{239}: commit: FuzzySetDAOSQLite::getUsingRelations
+[33m1e24e5b[m HEAD@{240}: commit: finish find fuzzy set via name
+[33mb1fa33f[m HEAD@{241}: checkout: moving from feature/wiring-CRUD-GUI-to-backend to feature/fuzzy-backend
+[33mb1fa33f[m HEAD@{242}: commit: nothing
+[33md853e3d[m HEAD@{243}: commit: wired 'select top 100 tuples' GUI into backend
+[33m3aaf4ad[m HEAD@{244}: checkout: moving from main to feature/wiring-CRUD-GUI-to-backend
+[33m3aaf4ad[m HEAD@{245}: pull: Fast-forward
+[33m9530492[m HEAD@{246}: checkout: moving from feature/create-SQL-file-UI to main
+[33m4f9f3c4[m[33m ([m[1;31morigin/feature/create-SQL-file-UI[m[33m, [m[1;32mfeature/create-SQL-file-UI[m[33m)[m HEAD@{247}: commit: nothing
+[33m27f65a1[m HEAD@{248}: commit (merge): merge main into feature/create-SQL-file-UI
+[33m8f7b1cb[m HEAD@{249}: reset: moving to HEAD
+[33m8f7b1cb[m HEAD@{250}: checkout: moving from main to feature/create-SQL-file-UI
+[33m9530492[m HEAD@{251}: pull: Fast-forward
+[33m2e588da[m HEAD@{252}: checkout: moving from feature/create-SQL-file-UI to main
+[33m8f7b1cb[m HEAD@{253}: checkout: moving from hotfix/frmMain_GUI to feature/create-SQL-file-UI
+[33m769c5f3[m[33m ([m[1;31morigin/hotfix/frmMain_GUI[m[33m, [m[1;32mhotfix/frmMain_GUI[m[33m)[m HEAD@{254}: commit (merge): merge main into hotfix/frmMain_GUI
+[33m9cc1dae[m HEAD@{255}: checkout: moving from main to hotfix/frmMain_GUI
+[33m2e588da[m HEAD@{256}: pull origin main: Fast-forward
+[33m9464f24[m HEAD@{257}: checkout: moving from hotfix/frmMain_GUI to main
+[33m9cc1dae[m HEAD@{258}: checkout: moving from feature/update-via-sql to hotfix/frmMain_GUI
+[33me977d78[m[33m ([m[1;31morigin/feature/update-via-sql[m[33m, [m[1;32mfeature/update-via-sql[m[33m)[m HEAD@{259}: commit: disable database-related test
+[33m3a002b7[m HEAD@{260}: commit: wiring backend sql to GUI
+[33m8e605d5[m HEAD@{261}: commit: minor test update via sql
+[33m6e8a113[m HEAD@{262}: commit: add 'check fuzzy set used in where clause truly exist' to Preprocessor::checkSemanticQuery()
+[33m95e0f83[m HEAD@{263}: commit: add 'check fuzzy set use in insert data really exist' to Preporcessor:checkSemanticInsert()
+[33m534f62c[m HEAD@{264}: commit: finish insert data with muanual testing but with no automatic unit test
+[33me4d8570[m HEAD@{265}: commit: add Preprocessor:checkSemanticQuery() to SqlProcessor::createQueryPlan()
+[33ma7ffe19[m HEAD@{266}: commit: minor test Preprocessor::checkSemanticQuery()
+[33m612211d[m HEAD@{267}: commit: test Preprocessor::checkSetOperationCompatibility()
+[33m7cca8e0[m HEAD@{268}: commit: Preprocessor::checkNaturalJoinCompatibility()
+[33m47167fa[m HEAD@{269}: commit: test Preprocessor::this.preprocessor.checkCartesianProductCompatibility(schemas, out actualResSchema)()
+[33m649acfc[m HEAD@{270}: commit: Preprocessor:checkCompatibleFieldEqualField()
+[33me725b34[m HEAD@{271}: commit: test Preprocessor::checkComparisonOperatorOnFieldConstant()
+[33m87e9f1b[m HEAD@{272}: commit: test Preprocessor::checkAttributeExistAndAmbiguityInSelectClauseAndAtomicExpression()
+[33m59d6606[m HEAD@{273}: commit: add but untested Preprocessor::checkAttributeUseInSelectClauseAndAtomicExpression()
+[33md434f47[m HEAD@{274}: commit: finish check query semantic but untested
+[33mcab6fbb[m HEAD@{275}: commit: finish and minor test update via sql
+[33mf50e7b3[m HEAD@{276}: commit: minor fix at BasicUpdatePlanner::executeDelete(): only create SelectionPlan if SelectionCondition in DeleteData isn't null
+[33m0a548c6[m HEAD@{277}: commit: finish and mintor test on delete schema via sql
+[33mea5039a[m HEAD@{278}: commit: finish and minor test drop relation via sql
+[33m7ddd5d0[m HEAD@{279}: commit: finish and minor test delete via sql
+[33mb2a615f[m HEAD@{280}: checkout: moving from main to feature/update-via-sql
+[33m9464f24[m HEAD@{281}: reset: moving to head
+[33m9464f24[m HEAD@{282}: reset: moving to head
+[33m9464f24[m HEAD@{283}: checkout: moving from feature/update-via-sql to main
+[33mb2a615f[m HEAD@{284}: commit: nothing
+[33ma3cba49[m HEAD@{285}: commit: need to switch
+[33m57d8bc1[m HEAD@{286}: commit: update sql statement execution is wired with backend
+[33m9464f24[m HEAD@{287}: checkout: moving from main to feature/update-via-sql
+[33m9464f24[m HEAD@{288}: pull origin main: Fast-forward
+[33m4bf89f3[m HEAD@{289}: checkout: moving from hotfix/Query_message to main
+[33m0655a99[m[33m ([m[1;31morigin/hotfix/Query_message[m[33m)[m HEAD@{290}: commit: minor fix
+[33m0fd44ca[m HEAD@{291}: checkout: moving from main to hotfix/Query_message
+[33m4bf89f3[m HEAD@{292}: checkout: moving from hotfix/update-continuousfuzzyset-for-intersection to main
+[33m6fc556f[m[33m ([m[1;31morigin/hotfix/update-continuousfuzzyset-for-intersection[m[33m)[m HEAD@{293}: commit: modify ContinuousFuzzySet::StandardInterction
+[33m4d56a37[m HEAD@{294}: commit: DiscreteFuzzySet:isSubsetOf() ContinuousFuzzySet:isSubsetOf()
+[33mf6c992e[m HEAD@{295}: commit: DiscreteFuzzySet::isSubsetOf()
+[33m4bf89f3[m HEAD@{296}: checkout: moving from main to hotfix/update-continuousfuzzyset-for-intersection
+[33m4bf89f3[m HEAD@{297}: checkout: moving from hotfix/QueryUI2 to main
+[33m4b36e4b[m HEAD@{298}: commit (merge): the query executing is wired to the backend
+[33md22cc47[m HEAD@{299}: checkout: moving from main to hotfix/QueryUI2
+[33m4bf89f3[m HEAD@{300}: checkout: moving from hotfix/QueryUI2 to main
+[33md22cc47[m HEAD@{301}: reset: moving to HEAD
+[33md22cc47[m HEAD@{302}: checkout: moving from main to hotfix/QueryUI2
+[33m4bf89f3[m HEAD@{303}: checkout: moving from hotfix/QueryUI2 to main
+[33m4bf89f3[m HEAD@{304}: reset: moving to 4bf89f3f1105939c3f6a9e305c99575e5cfbff1a
+[33m6d38172[m HEAD@{305}: commit (merge): merge main into hotfix/QueryUI2
+[33md22cc47[m HEAD@{306}: checkout: moving from main to hotfix/QueryUI2
+[33m4bf89f3[m HEAD@{307}: pull: Fast-forward
+[33me5d4509[m HEAD@{308}: checkout: moving from hotfix/QueryUI2 to main
+[33md22cc47[m HEAD@{309}: checkout: moving from hotfix/wire-createrelation,createfuzzyset-to-backend to hotfix/QueryUI2
+[33m1b34a17[m[33m ([m[1;31morigin/hotfix/wire-createrelation,createfuzzyset-to-backend[m[33m)[m HEAD@{310}: commit: disable integration test related to database connection
+[33mf94664e[m HEAD@{311}: commit: create continuous fuzzy set is wired with backend
+[33m03e4ebb[m HEAD@{312}: commit: create discrete fuzzy set is wired with backend
+[33md2701fe[m HEAD@{313}: commit: create reation is wired
+[33me5d4509[m HEAD@{314}: checkout: moving from main to hotfix/wire-createrelation,createfuzzyset-to-backend
+[33me5d4509[m HEAD@{315}: pull: Fast-forward
+[33m786a2c0[m HEAD@{316}: checkout: moving from feature/querying to main
+[33m967f1e1[m[33m ([m[1;31morigin/feature/querying[m[33m)[m HEAD@{317}: commit: rerun all test
+[33m1e2c9e5[m HEAD@{318}: commit (merge): merge main into feature/querying
+[33mc9bbca9[m HEAD@{319}: checkout: moving from main to feature/querying
+[33m786a2c0[m HEAD@{320}: checkout: moving from feature/querying to main
+[33mc9bbca9[m HEAD@{321}: commit: minor test total querying: fix difference strategy on fuzzy probabilistic values
+[33m013b2e1[m HEAD@{322}: commit: Add but untested BasicQueryPlanner::createPlanForBaseNaturalJoinQueryData()
+[33mf347cea[m HEAD@{323}: commit: modify the ProjectPlan, ProductPlan, NaturalJoinPlan to propagate the primary key from RelationPlan
+[33m8d9ef9c[m HEAD@{324}: checkout: moving from main to feature/querying
+[33m786a2c0[m HEAD@{325}: pull origin main: Fast-forward
+[33mc92eb42[m HEAD@{326}: checkout: moving from hotfix/create-schema-wiring to main
+[33ma89f3f6[m[33m ([m[1;31morigin/hotfix/create-schema-wiring[m[33m)[m HEAD@{327}: commit: add semantic check Primary key must be of non fuzzy set type to Preprocessor::checkSemanticCreateSchema()
+[33m2c36209[m HEAD@{328}: commit: add getFiledTypes invocation to create database, load data
+[33m328e1e9[m HEAD@{329}: commit: DatabaseService::getFieldTypes()
+[33m17f1f6f[m HEAD@{330}: commit: add FPRDBSchemaService::defineFPRDBSchema
+[33md0fef3c[m HEAD@{331}: commit: Add but untested FPRDBSchemaDAOSQLProcessor::defineFPRDBSchema
+[33m9ae4dc1[m HEAD@{332}: commit: add FieldTypeUtilities::fromFieldTypeEnumToSQLFieldType
+[33mc75a2e8[m HEAD@{333}: commit: Add interface FPRDBSchemaDAO
+[33m806433c[m HEAD@{334}: commit: Add FPRDBSchemaDTO
+[33mc92eb42[m HEAD@{335}: checkout: moving from main to hotfix/create-schema-wiring
+[33mc92eb42[m HEAD@{336}: pull origin main: Fast-forward
+[33medb203b[m HEAD@{337}: checkout: moving from feature/querying to main
+[33m8d9ef9c[m HEAD@{338}: commit: minor tests on Intersect, Union, Difference
+[33mcb26482[m HEAD@{339}: commit: minor test on Difference
+[33m2972ee0[m HEAD@{340}: commit: minor test for UnionPlan, UnionScan
+[33m8ba75f3[m HEAD@{341}: commit: need to switch
+[33md6b7b30[m HEAD@{342}: commit: be interrupted
+[33md01a4c7[m HEAD@{343}: commit: out of thinking
+[33mc3abf45[m HEAD@{344}: commit: minor test on Intersection
+[33m27019e2[m HEAD@{345}: commit: integrity check miss the final '
+[33m51fa51c[m HEAD@{346}: commit: add but untested FuzzyProbabilisticValue::hasSameKeyValue()
+[33ma2f6ce9[m HEAD@{347}: commit: Modify this.currentTuple of natural join to null when run out of next()
+[33m482c74a[m HEAD@{348}: commit: Add but untested IntersectionScan::intersectionOnFuzzySet()
+[33mcf74fe2[m HEAD@{349}: commit: modify DiscreteFuzzySet::StandardIntersection() ContinuousFuzzySet::StandardIntersection() to add fuzzy set name correctly
+[33me28b8de[m HEAD@{350}: commit: minor testing NaturalJoinPlan, NaturalJoinScan
+[33m317f067[m HEAD@{351}: commit: FuzzyProbabilisticValue::isValueSetEmpty()
+[33m3b0182c[m HEAD@{352}: commit: FuzzyProbabilisticValue::isValueSetEmpty()
+[33m74fc41d[m HEAD@{353}: commit (amend): Add but untested ProbValueCombinationStategy::conjunction(),disjunction(),difference()
+[33m3d1ed98[m HEAD@{354}: commit: FProbValueCombinationStategy::conjunction(),disjunction(),difference()
+[33m898dd47[m HEAD@{355}: commit: need to shutdown
+[33m46efa27[m HEAD@{356}: commit: add but untested ContinuousFuzzySet::StandardIntersection,isNormal,isEqualTo
+[33ma6c2f0c[m HEAD@{357}: commit: allow ContinuousFuzzySet to be created from other continuous fuzzy set for flexible memberhsip degree graph, non-trapazoid membership degree
+[33m0206056[m HEAD@{358}: commit: fix DiscreteFuzzySet::StandardIntersection from Math.Max() to Math.Min()
+[33ma1649e9[m HEAD@{359}: commit: fix DiscreteFuzzySet::StandardIntersection from Math.Max() to Math.Min()
+[33ma7c9783[m HEAD@{360}: commit: DiscreteFuzzySet::isEqualTo()
+[33m517b94a[m HEAD@{361}: commit: DiscreteSet::getHeight()
+[33m5b2f03e[m HEAD@{362}: commit: DiscreteFuzzySet::StandardIntersection()
+[33mf0f2e11[m HEAD@{363}: commit: ProbabilisticCombinationStrategyUtilities::
+[33m70cee84[m HEAD@{364}: commit: minital test on ProjectPlan and ProjectScan
+[33m8ef5883[m HEAD@{365}: commit: selection work for Example 8 in A FUZZY PROBABILISTIC RELATIONAL DATABASE MODEL AND ALGEBRA
+[33mcd69ef0[m HEAD@{366}: commit (merge): fix git pull conflict
+[33m6629dae[m HEAD@{367}: commit: nothing
+[33me3faf73[m HEAD@{368}: commit: need to shut down
+[33m1e7320e[m HEAD@{369}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::compareFuzzySet<T>() success for discrete float fuzzy
+[33maa92a7c[m HEAD@{370}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::alsoDistcreteFuzzySets()
+[33m7864b05[m HEAD@{371}: commit: ProbabilisticInterpretationOfRelationOnSets::also()
+[33m850e0d1[m HEAD@{372}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::lessThanEqualDistcreteFuzzySets()
+[33mcaf6651[m HEAD@{373}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::lessThanDistcreteFuzzySets()
+[33m71f2863[m HEAD@{374}: commit: add ProbabilisticInterpretationOfRelationOnFuzzySets::noEqualDistcreteFuzzySets(), fix ProbabilisticInterpretationOfRelationOnSets::compare() to take account for != compare operator
+[33m31615c7[m HEAD@{375}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::equalDistcreteFuzzySets()
+[33m1ad453f[m HEAD@{376}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::discretizeContinuousFSFromDiscreteFS()
+[33md26f20c[m HEAD@{377}: commit: ProbabilisticInterpretationOfRelationOnFuzzySets::discretize2ContinuousFS()
+[33m04ccf8f[m HEAD@{378}: commit: modify MassAssignment::createMassAssignment() to stop immediately when meet zero degree membership
+[33mbd3442c[m HEAD@{379}: commit: MassAssignment::createMassAssignment()
+[33m4983bb3[m HEAD@{380}: commit: add class VoteCrispDefinition<T>
+[33mb6a73ce[m HEAD@{381}: commit: minor refactoring RelationScan.cs
+[33m1ff5226[m HEAD@{382}: commit: need to shutdown
+[33m33c6541[m HEAD@{383}: commit: fix unknown error generated by visual studio 2026: ProbabilisticStrategy->ProbabilisticStrategyUltilities
+[33m197bd17[m HEAD@{384}: commit: need to shutdonw
+[33m0eb650d[m HEAD@{385}: commit: FuzzySet:ToDiscreteFuzzySet()
+[33m422f1b1[m HEAD@{386}: commit: ProbabilisticCombinationStrategyUltilities:combime
+[33mcedc58f[m HEAD@{387}: commit: ProbabilisticInterpretationOfRelationOnFuzzySet::, ProbabilisticInterpretationOfRelationOnSets::
+[33m89be220[m HEAD@{388}: commit: ProductScan::
+[33m0f987dd[m HEAD@{389}: commit: RelationPlan::
+[33m25ac39a[m HEAD@{390}: commit: RelationScan +getSchema():FPRDBSchema, +getCurrentTuple():AbstractFuzzyProbabilisticValue[]
+[33maf65e76[m HEAD@{391}: commit: RelationScan::getFieldContent()
+[33me930ed4[m HEAD@{392}: commit: RelationScan::next()
+[33mb86b37e[m HEAD@{393}: commit: nothing
+[33m31fa4aa[m HEAD@{394}: commit: Preprocessor::checkCompatibleInsertTypeAndFillFuzzySetConstant(). fix:primitive field can only receive the corresponding primitive constants, discrete field can only receive the corresponding discrete fuzzy set constants and primitive constants,continuous field can only continuous fuzzy constant and float constant
+[33m527bb70[m HEAD@{395}: commit: RelationScan::turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue()
+[33m804bace[m HEAD@{396}: commit: RelationScan::turnConstantToFuzzySet()
+[33m2000e6e[m HEAD@{397}: commit: RelationScan::turnConstantToFuzzySet()
+[33m2ff3816[m HEAD@{398}: commit: MetaDataManager::getFuzzySet()
+[33medadace[m HEAD@{399}: commit: nothing
+[33m511d7a3[m HEAD@{400}: commit: RecursiveDescentParser::query()
+[33m5313317[m HEAD@{401}: commit: RecursiveDescentParser::UNION_EXCEPT_Query()
+[33m8f33e81[m HEAD@{402}: commit: RecursiveDescentParser::INTERSECTIONQuery()
+[33m8a55ed2[m HEAD@{403}: commit: RecursiveDescentParser::INTERSECTIONQuery()
+[33m6bdb3eb[m HEAD@{404}: commit: RecursiveDescentParser::PrimaryQuery()
+[33mc302416[m HEAD@{405}: commit: RecursiveDescentParser::selectionCondition()
+[33mfa8e127[m HEAD@{406}: commit: RecursiveDescentParser::ORSelectionCondition()
+[33m8b53fa9[m HEAD@{407}: commit: RecursiveDescentParser::ANDSelectionCondition()
+[33m8a33905[m HEAD@{408}: commit: RecursiveDescentParser::NOTSelectionCondition()
+[33ma951b80[m HEAD@{409}: commit: RecursiveDescentParser::PrimarySelectionCondition()
+[33mba60d9d[m HEAD@{410}: checkout: moving from feature/close_save_saveas_DB to feature/querying
+[33mb77c87e[m[33m ([m[1;31morigin/feature/close_save_saveas_DB[m[33m)[m HEAD@{411}: checkout: moving from feature/create-UI-version-2 to feature/close_save_saveas_DB
+[33m7193b73[m HEAD@{412}: pull: Fast-forward
+[33m737584c[m HEAD@{413}: checkout: moving from feature/querying to feature/create-UI-version-2
+[33mba60d9d[m HEAD@{414}: pull origin feature/querying: Fast-forward
+[33md2d8d6c[m HEAD@{415}: commit: RecursiveDescentParser::CONJUNCTIONSelectionExpression()
+[33ma734384[m HEAD@{416}: commit: RecursiveDescentParser::CONJUNCTIONSelectionExpression()
+[33m7861452[m HEAD@{417}: commit: RecursiveDescentParser::PrimarySelectionExpression()
+[33m9e64739[m HEAD@{418}: commit: RecursiveDescentParser::fromList()
+[33m64856f3[m HEAD@{419}: commit: RecursiveDescentParser:selectList()
+[33medb203b[m HEAD@{420}: checkout: moving from main to feature/querying
+[33medb203b[m HEAD@{421}: pull origin main: Fast-forward
+[33m7fbe762[m HEAD@{422}: checkout: moving from feature/insert-data to main
+[33m019b88b[m[33m ([m[1;31morigin/feature/insert-data[m[33m)[m HEAD@{423}: commit: finish insert data for backend
+[33m9429b01[m HEAD@{424}: commit: BasicUpdatePlanner::executeInsert()
+[33m9a1ed33[m HEAD@{425}: commit: ConstraintService::checkIntegrityConstraint()
+[33m9ec169f[m HEAD@{426}: commit: Preprocessor::checkSemanticInsert()
+[33m9eb7dba[m HEAD@{427}: checkout: moving from main to feature/insert-data
+[33m7fbe762[m HEAD@{428}: reset: moving to 7fbe7621746a6bf38ac092a662a0d5e351102c97
+[33m7fbe762[m HEAD@{429}: checkout: moving from feature/insert-data to main
+[33m9eb7dba[m HEAD@{430}: commit (amend): finish RecursiveDescentParser::insertData()
+[33mc417da9[m HEAD@{431}: commit: finish insert data at backend v1
+[33m7fbe762[m HEAD@{432}: checkout: moving from main to feature/insert-data
+[33m7fbe762[m HEAD@{433}: pull origin main: Fast-forward
+[33m9019bff[m HEAD@{434}: checkout: moving from hotfix/fix-treeview-icon to main
+[33mbd0c3c0[m[33m ([m[1;31morigin/hotfix/fix-treeview-icon[m[33m)[m HEAD@{435}: commit: fixed bug by modifying attr.att_number to attr.oid in getFPRDBRelations() and getFPRDBSchemas()
+[33m7cccbed[m HEAD@{436}: commit: fixed bug by modifying attr.att_number to attr.oid in getFPRDBRelations() and getFPRDBSchemas()
+[33m677a928[m HEAD@{437}: merge main: Merge made by the 'ort' strategy.
+[33mbd99382[m HEAD@{438}: checkout: moving from main to hotfix/fix-treeview-icon
+[33m9019bff[m HEAD@{439}: pull origin main: Fast-forward
+[33mf3dd7cf[m HEAD@{440}: checkout: moving from hotfix/fix-treeview-icon to main
+[33mbd99382[m HEAD@{441}: commit: nothing
+[33m234a437[m HEAD@{442}: pull origin hotfix/fix-treeview-icon: Fast-forward
+[33m0bb9792[m HEAD@{443}: checkout: moving from feature/create-relation to hotfix/fix-treeview-icon
+[33m2b77408[m[33m ([m[1;31morigin/feature/create-relation[m[33m)[m HEAD@{444}: commit: finish create relation v1
+[33meef6a24[m HEAD@{445}: commit: BasicUpdatePlanner::executeCreateRelation()
+[33m2324822[m HEAD@{446}: commit: RecursiveDescentParser::createRelation()
+[33mf3dd7cf[m HEAD@{447}: checkout: moving from main to feature/create-relation
+[33mf3dd7cf[m HEAD@{448}: pull origin main: Fast-forward
+[33m689d95a[m HEAD@{449}: checkout: moving from hotfix/create-schema-should-no-create-sqlite-table to main
+[33m5566136[m[33m ([m[1;31morigin/hotfix/create-schema-should-no-create-sqlite-table[m[33m)[m HEAD@{450}: commit: fix BasicUpdatePlanner::executeCreateSchema()
+[33m689d95a[m HEAD@{451}: Branch: renamed refs/heads/feature/create-relation to refs/heads/hotfix/create-schema-should-no-create-sqlite-table
+[33m689d95a[m HEAD@{453}: checkout: moving from main to feature/create-relation
+[33m689d95a[m HEAD@{454}: pull origin main: Fast-forward
+[33mf575203[m HEAD@{455}: checkout: moving from hotfix/fix-treeview-icon to main
+[33m0bb9792[m HEAD@{456}: pull origin hotfix/fix-treeview-icon: Fast-forward
+[33m6413227[m HEAD@{457}: checkout: moving from feature/create-schema to hotfix/fix-treeview-icon
+[33mf399837[m[33m ([m[1;31morigin/feature/create-schema[m[33m)[m HEAD@{458}: commit: finish backend create schema v1
+[33mdedcc06[m HEAD@{459}: commit: SQLProcessor::executeDataDefinition()
+[33m09847bc[m HEAD@{460}: pull origin feature/create-schema: Fast-forward
+[33mcfce17b[m HEAD@{461}: commit: nothing
+[33m0aa9df7[m HEAD@{462}: commit: Parser::constraintDef()
+[33m10d9f09[m HEAD@{463}: commit: Parser::primaryAttributes()
+[33m49456ca[m HEAD@{464}: commit: Parser::fieldDefs()
+[33m3cdc3ed[m HEAD@{465}: commit: Parser::fieldDef()
+[33m74ec561[m HEAD@{466}: commit: Parser::typeDef()
+[33mb9000b2[m HEAD@{467}: checkout: moving from hotfix/fix-treeview-icon to feature/create-schema
+[33m6413227[m HEAD@{468}: reset: moving to HEAD~1
+[33md84b674[m HEAD@{469}: checkout: moving from feature/create-schema to hotfix/fix-treeview-icon
+[33mb9000b2[m HEAD@{470}: pull origin feature/create-schema: Merge made by the 'ort' strategy.
+[33m8d04af7[m HEAD@{471}: commit: need to switch branch
+[33m099e3c9[m HEAD@{472}: Branch: renamed refs/heads/Duy-Lexer to refs/heads/feature/create-schema
+[33m099e3c9[m HEAD@{474}: commit (merge): merge main into Duy-Lexer
+[33m1f8d340[m HEAD@{475}: checkout: moving from Duy-lexer to Duy-Lexer
+[33m1f8d340[m HEAD@{476}: checkout: moving from hotfix/add-more-terminal to Duy-lexer
+[33mf575203[m HEAD@{477}: Branch: renamed refs/heads/feature/create-schema to refs/heads/hotfix/add-more-terminal
+[33mf575203[m HEAD@{479}: checkout: moving from main to feature/create-schema
+[33mf575203[m HEAD@{480}: pull origin main: Fast-forward
+[33m334c09d[m HEAD@{481}: checkout: moving from hotfix/add-feature-from-Form1-to-Main to main
+[33m65aedbc[m HEAD@{482}: checkout: moving from hotfix/fix-create-system-catalog to hotfix/add-feature-from-Form1-to-Main
+[33m07e8f80[m[33m ([m[1;31morigin/hotfix/fix-create-system-catalog[m[33m)[m HEAD@{483}: commit: initialize fprdb_Type
+[33m8c2ae4a[m HEAD@{484}: Branch: renamed refs/heads/hotfix/fix-load-schema-content to refs/heads/hotfix/fix-create-system-catalog
+[33m8c2ae4a[m HEAD@{486}: checkout: moving from main to hotfix/fix-load-schema-content
+[33m334c09d[m HEAD@{487}: pull origin main: Fast-forward
+[33me30d9b6[m HEAD@{488}: checkout: moving from feature/create-UI-version-2 to main
+[33m737584c[m HEAD@{489}: checkout: moving from main to feature/create-UI-version-2
+[33me30d9b6[m HEAD@{490}: checkout: moving from feature/CreateFuzzySet to main
+[33m98aa9f4[m[33m ([m[1;31morigin/feature/CreateFuzzySet[m[33m)[m HEAD@{491}: commit: FuzzySetService::createFuzzySet()
+[33m5013510[m HEAD@{492}: commit: FuzzySetDAOSQLite::createContinuousFuzzySet()
+[33m72f0f24[m HEAD@{493}: commit: FuzzySetService::checkIfFuzzySetValid()
+[33m3b50715[m HEAD@{494}: commit: add FuzzySetDAOSQLite::createDiscreteFuzzySet())
+[33m98f7fb6[m HEAD@{495}: checkout: moving from main to feature/CreateFuzzySet
+[33me30d9b6[m HEAD@{496}: checkout: moving from feature/CreateFuzzySet to main
+[33m98f7fb6[m HEAD@{497}: commit: need to switch different branch quick
+[33maa0d958[m HEAD@{498}: commit: add FuzzySet, DiscreteFuzzySet, ContinousFuzzySet
+[33m414a6ab[m HEAD@{499}: commit: half done createDiscreteFuzzySet(fuzzySet:DiscreteFuzzySetDTO):DiscreteFuzzySet of FuzzySetDAO
+[33me30d9b6[m HEAD@{500}: checkout: moving from main to feature/CreateFuzzySet
+[33me30d9b6[m HEAD@{501}: pull origin main: Fast-forward
+[33ma688661[m HEAD@{502}: checkout: moving from feature/createDB to main
+[33mbfb006c[m[33m ([m[1;31morigin/feature/createDB[m[33m)[m HEAD@{503}: commit: fix silly bug in unit test
+[33mdca59a5[m HEAD@{504}: commit (merge): merge main into feature/createDB
+[33m042542f[m HEAD@{505}: commit: creat GUI folder and move form1 into that folder
+[33m98b826a[m HEAD@{506}: merge main: updating HEAD
+[33m98b826a[m HEAD@{507}: merge origin: updating HEAD
+[33m98b826a[m HEAD@{508}: merge main: updating HEAD
+[33m98b826a[m HEAD@{509}: reset: moving to 98b826a04f14c530c7a8f58894818834825df800
+[33m98b826a[m HEAD@{510}: reset: moving to 98b826a04f14c530c7a8f58894818834825df800
+[33m02882a5[m HEAD@{511}: reset: moving to HEAD
+[33m02882a5[m HEAD@{512}: commit: create folder GUI and move form1 into that folder
+[33m4f8ae12[m HEAD@{513}: commit: safely rename project GUI back to FPRDB_SQLite
+[33m98b826a[m HEAD@{514}: reset: moving to 98b826a04f14c530c7a8f58894818834825df800
+[33m02abea2[m HEAD@{515}: reset: moving to HEAD
+[33m02abea2[m HEAD@{516}: commit: safely rename GUI back to FPRDB_SQLite
+[33m98b826a[m HEAD@{517}: checkout: moving from main to feature/createDB
+[33ma688661[m HEAD@{518}: checkout: moving from feature/createDB to main
+[33m98b826a[m HEAD@{519}: checkout: moving from main to feature/createDB
+[33ma688661[m HEAD@{520}: checkout: moving from feature/createDB to main
+[33m98b826a[m HEAD@{521}: reset: moving to HEAD
+[33m98b826a[m HEAD@{522}: reset: moving to HEAD
+[33m98b826a[m HEAD@{523}: checkout: moving from feature/createDB to feature/createDB
+[33m98b826a[m HEAD@{524}: checkout: moving from main to feature/createDB
+[33ma688661[m HEAD@{525}: checkout: moving from feature/createDB to main
+[33m98b826a[m HEAD@{526}: reset: moving to HEAD
+[33m98b826a[m HEAD@{527}: checkout: moving from feature/createDB to feature/createDB
+[33m98b826a[m HEAD@{528}: reset: moving to HEAD
+[33m98b826a[m HEAD@{529}: checkout: moving from main to feature/createDB
+[33ma688661[m HEAD@{530}: checkout: moving from feature/createDB to main
+[33m98b826a[m HEAD@{531}: commit: delete insertData()
+[33mf2a25df[m HEAD@{532}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: Fast-forward
+[33md8c8b2b[m HEAD@{533}: reset: moving to d8c8b2b8d423cb621b383d5e241170fc0ab7f5c5
+[33md8c8b2b[m HEAD@{534}: reset: moving to d8c8b2b8d423cb621b383d5e241170fc0ab7f5c5
+[33md8c8b2b[m HEAD@{535}: reset: moving to d8c8b2b8d423cb621b383d5e241170fc0ab7f5c5
+[33md8c8b2b[m HEAD@{536}: reset: moving to d8c8b2b8d423cb621b383d5e241170fc0ab7f5c5
+[33md8c8b2b[m HEAD@{537}: reset: moving to d8c8b2b
+[33mf2a25df[m HEAD@{538}: pull origin feature/createDB: Fast-forward
+[33md8c8b2b[m HEAD@{539}: checkout: moving from feature/createDB to feature/createDB
+[33md8c8b2b[m HEAD@{540}: checkout: moving from feature/create-UI to feature/createDB
+[33m5fb7266[m[33m ([m[1;31morigin/feature/create-UI[m[33m)[m HEAD@{541}: checkout: moving from feature/createDB to feature/create-UI
+[33md8c8b2b[m HEAD@{542}: checkout: moving from feature/create-UI to feature/createDB
+[33m5fb7266[m[33m ([m[1;31morigin/feature/create-UI[m[33m)[m HEAD@{543}: checkout: moving from main to feature/create-UI
+[33ma688661[m HEAD@{544}: reset: moving to HEAD
+[33ma688661[m HEAD@{545}: checkout: moving from feature/createDB to main
+[33md8c8b2b[m HEAD@{546}: commit: wiring create database, load database GUI with backend
+[33m5d502ed[m HEAD@{547}: commit: DatabaseManager::createSystemCatalog()
+[33m2b9a4f2[m HEAD@{548}: commit: DatabaseManager::createDB
+[33m33707af[m HEAD@{549}: commit: remove MSTest nuget package
+[33mf1d0f2b[m[33m ([m[1;31morigin/Khang[m[33m)[m HEAD@{550}: checkout: moving from Khang to feature/createDB
+[33mf1d0f2b[m[33m ([m[1;31morigin/Khang[m[33m)[m HEAD@{551}: checkout: moving from main to Khang
+[33ma688661[m HEAD@{552}: pull origin main: Fast-forward
+[33m2c282b8[m HEAD@{553}: checkout: moving from Duy-Lexer to main
+[33m1f8d340[m HEAD@{554}: checkout: moving from feature/create-UI to Duy-Lexer
+[33m5fb7266[m[33m ([m[1;31morigin/feature/create-UI[m[33m)[m HEAD@{555}: checkout: moving from feature/create-UI to feature/create-UI
+[33m5fb7266[m[33m ([m[1;31morigin/feature/create-UI[m[33m)[m HEAD@{556}: checkout: moving from Duy-Lexer to feature/create-UI
+[33m1f8d340[m HEAD@{557}: commit: nothing
+[33mbbccf3f[m HEAD@{558}: commit: lexer v1
+[33m2c282b8[m HEAD@{559}: checkout: moving from main to Duy-Lexer
+[33m2c282b8[m HEAD@{560}: pull: Fast-forward
+[33m0f65f20[m HEAD@{561}: Branch: renamed refs/heads/master to refs/heads/main
+[33m0f65f20[m HEAD@{563}: commit (initial): first commit

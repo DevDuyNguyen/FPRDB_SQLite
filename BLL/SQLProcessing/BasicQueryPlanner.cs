@@ -92,6 +92,19 @@ namespace BLL.SQLProcessing
             plan = new ProjectPlan(plan, data.selectList.Select(x => x.field).ToList());
             return plan;
         }
-        
+        public float calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(RelationOnFuzzySetExpressionData data)
+        {
+            //float probabilisticInterpretation;
+            Constant leftFuzzySetConstant = data.getLeftFuzzySetConstant();
+            Constant rightFuzzySetConstant = data.getRightFuzzySetConstant();
+
+            BaseFuzzySet fs1, fs2;
+            fs1 = FuzzySetUltilities.turnConstantToFuzzySet(leftFuzzySetConstant, this.metaDataMgr);
+            fs2 = FuzzySetUltilities.turnConstantToFuzzySet(rightFuzzySetConstant, this.metaDataMgr);
+
+            return ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet(fs1, fs2, data.getCompareOp());
+
+        }
+
     }
 }
