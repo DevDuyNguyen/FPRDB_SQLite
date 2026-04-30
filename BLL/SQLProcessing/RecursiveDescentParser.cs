@@ -829,6 +829,15 @@ namespace BLL.SQLProcessing
 
             return data;
         }
+        public RelationOnFuzzySetExpressionData relationOnFuzzySetsExpression()
+        {
+            string fs1Name = this.lexer.eatIdentifier();
+            string strCompareOp = this.lexer.eatOperator();
+            CompareOperation compareOp = CompareOperatorUltilities.convertStringToEnum(strCompareOp);
+            string fs2Name = this.lexer.eatIdentifier();
+
+            return new RelationOnFuzzySetExpressionData(fs1Name, compareOp, fs2Name);
+        }
 
     }
 }
