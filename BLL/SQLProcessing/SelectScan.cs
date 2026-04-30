@@ -15,6 +15,7 @@ namespace BLL.SQLProcessing
         private SelectionCondition selectionCondition;
         private List<AbstractFuzzyProbabilisticValue> currentTuple;
         private FPRDBSchema schema;
+        private float currentTupleLowerProb, currentTupleUpperProb;
 
         public SelectScan(Scan s, SelectionCondition selectionCondition, FPRDBSchema schema)
         {
@@ -26,11 +27,13 @@ namespace BLL.SQLProcessing
         public void beforeFirst() => this.s.beforeFirst();
         public bool next()
         {
+            //float tmpLowerProb, tmpUpperProb;
             while (this.s.next())
             {
-                if (this.selectionCondition.isSatisfied(s, schema))
+                if (this.selectionCondition.isSatisfied(s, schema, out this.currentTupleLowerProb, out this.currentTupleUpperProb))
                 {
                     this.currentTuple = s.getCurrentTuple();
+
                     return true;
                 }
             }
@@ -79,6 +82,7 @@ namespace BLL.SQLProcessing
             UpdateScan us = (UpdateScan)s;
             us.delete();
         }
+        public (float, float) getCurrentTupleProbabilisticInterpretationForSelectionExpression() => (this.currentTupleLowerProb, this.currentTupleUpperProb);
 
     }
 }

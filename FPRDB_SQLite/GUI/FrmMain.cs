@@ -1941,15 +1941,122 @@ namespace FPRDB_SQLite.GUI
         {
             if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
-                string expression = uc.GetSelectedQuery();
                 try
                 {
-                    float probabilisticInterpretation=this.sqlProcessor.calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(expression);
+                    string expression = uc.GetSelectedQuery();
+                    float probabilisticInterpretation = this.sqlProcessor.calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(expression);
                     uc.memoEditMessageUC.Text = probabilisticInterpretation.ToString();
                 }
-                catch(InvalidOperationException ex)
+                catch (InvalidOperationException ex)
                 {
                     uc.memoEditMessageUC.Text = $"[Invalid operation]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (SemanticException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (InvalidCastException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (MismatchTokenType ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (NotSupportedException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (SQLSyntaxException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                finally
+                {
+                    // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                    uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
+                }
+            }
+        }
+
+        private void barButtonItem2_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
+            {
+                try
+                {
+                    string expression = uc.GetSelectedQuery();
+                    SelectPlan p = this.sqlProcessor.calculateProbabilisticInterpretationForSelectionExpressionOnSpecifiedTuples(expression);
+                    SelectScan s = (SelectScan)p.open();
+
+                    DataTable resultForGridView = new DataTable();
+                    FPRDBSchema schema = p.getSchema();
+
+                    //create columns for grid view of query result
+                    foreach (Field f in schema.getFields())
+                    {
+                        resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
+                    }
+                    resultForGridView.Columns.Add("Probabilistic Interpretation", typeof(string));
+
+                    //Extract the result for grid view
+                    string[] tupleForGridView = new string[schema.getFields().Count+1];
+                    Field field;
+                    List<Field> fields = schema.getFields();
+                    while (s.next())
+                    {
+                        for (int i = 0; i < schema.getFields().Count; ++i)
+                        {
+                            field = fields[i];
+                            switch (field.getFieldInfo().getType())
+                            {
+                                case FieldType.INT:
+                                case FieldType.distFS_INT:
+                                    tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
+                                    break;
+                                case FieldType.FLOAT:
+                                case FieldType.distFS_FLOAT:
+                                case FieldType.contFS:
+                                    //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
+                                    tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
+                                    break;
+                                case FieldType.CHAR:
+                                case FieldType.VARCHAR:
+                                case FieldType.distFS_TEXT:
+                                    //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
+                                    tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
+                                    break;
+                                case FieldType.BOOLEAN:
+                                    //tupleForGridView.Add((s.getFieldContent<bool>(field.getFieldName())).ToString());
+                                    tupleForGridView[i] = s.getFieldContent<bool>(field.getFieldName()).ToString();
+                                    break;
+                            }
+
+                        }
+                        (float lowerProb, float upperProb) = s.getCurrentTupleProbabilisticInterpretationForSelectionExpression();
+                        tupleForGridView[schema.getFields().Count] = $"[{lowerProb},{upperProb}]";
+                        resultForGridView.Rows.Add(tupleForGridView);
+
+
+                    }
+                    //bind the result to the grid control
+                    uc.GridResult.DataSource = resultForGridView;
+                    //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+                    uc.GridViewResult.PopulateColumns();
+
+                    // Ghi thông báo thành công vào MemoEdit
+                    uc.ViewResult();
+                    uc.memoEditMessageUC.Text = $"Query executed successfully";
+                }
+                catch (SQLSyntaxException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
                     uc.ViewError();
                 }
                 catch (SemanticException ex)
@@ -1977,6 +2084,7 @@ namespace FPRDB_SQLite.GUI
                     // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
                     uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
                 }
+
             }
         }
     }

@@ -855,7 +855,39 @@ namespace BLL.SQLProcessing
 
             Constant fs2Name =getConstantFromLexer();
 
+            if (!this.lexer.isEndOfToken())
+                throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
             return new RelationOnFuzzySetExpressionData(fs1Name, compareOp, fs2Name);
+        }
+        public SelectionExpressionOnSpecifiedTuplesData selectionExpressionOnSpecifiedTuples()
+        {
+            SelectionExpression selectionExpression = this.selectionExpression();
+            lexer.eatKeyword("on");
+            string relation = lexer.eatIdentifier();
+            if (lexer.matchKeyword("from"))
+            {
+                lexer.eatKeyword("from");
+                object startIndex = lexer.eatNumberConstant();
+                if (!(startIndex is int))
+                    throw new SemanticException("Number after keyword 'from' must be int");
+
+                lexer.eatKeyword("take");
+                object noNextTuples = lexer.eatNumberConstant();
+                if (!(noNextTuples is int))
+                    throw new SemanticException("Number after keyword 'take' must be int");
+
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+
+                return new SelectionExpressionOnSpecifiedTuplesData(relation, selectionExpression, (int)startIndex, (int)noNextTuples);
+            }
+            else
+            {
+                if (!this.lexer.isEndOfToken())
+                    throw this.createSQLSyntaxException($"Extraneous input {this.lexer.getCurrentToken().Text}, expecting EOF");
+                return new SelectionExpressionOnSpecifiedTuplesData(relation, selectionExpression);
+            }
         }
 
     }
