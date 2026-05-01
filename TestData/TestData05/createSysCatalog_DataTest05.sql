@@ -1,5 +1,10 @@
+CREATE TABLE fprdb_inDatabaseSQLFile (
+    oid INTEGER PRIMARY KEY AUTOINCREMENT,
+    fileName TEXT,
+    fileContent TEXT
+);
 CREATE TABLE fprdb_RelationSchema (
-    oid INTEGER, --PRIMARY KEY AUTOINCREMENT,
+    oid INTEGER --PRIMARY KEY AUTOINCREMENT,
     relschema_name TEXT NOT NULL UNIQUE
 );
 
