@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Enums;
 using BLL.Exceptions;
@@ -416,6 +417,16 @@ namespace BLL.SQLProcessing
                 }
             }
         }
+        public BaseFuzzySet getFuzzySet(string name, FieldType fuzzSetType)
+        {
+            if (fuzzSetType == FieldType.distFS_INT)
+                return this.getFuzzySet<int>(name, fuzzSetType);
+            else if (fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.contFS)
+                return this.getFuzzySet<float>(name, fuzzSetType);
+            else //if(fuzzSetType==FieldType.distFS_TEXT)
+                return this.getFuzzySet<string>(name, fuzzSetType);
+
+        }
         public FuzzySet<T> getFuzzySetByID<T>(int fs_oid, FieldType fuzzSetType)
         {
             string sql;
@@ -625,6 +636,14 @@ namespace BLL.SQLProcessing
 #endif
             }
             return ans;
+        }
+
+        public bool isInDatabaseSQLFileExist(string fileName)
+        {
+            using(IDataReader r=this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_inDatabaseSQLFile WHERE fileName='{fileName}'"))
+            {
+                return r.Read();
+            }
         }
 
 

@@ -140,6 +140,11 @@ namespace BLL
                 "FOREIGN KEY (con_referenced_relation_id) REFERENCES fprdb_Relation (oid)," +
                 "FOREIGN KEY (con_relschema_id) REFERENCES fprdb_RelationSchema (oid)" +
                 ");";
+            string create_fprdb_inDatabaseSQLFile = "CREATE TABLE fprdb_inDatabaseSQLFile (" +
+                "oid INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "fileName TEXT NOT NULL UNIQUE," +
+                "fileContent TEXT" +
+                ");";
 
             //fill initial database content
             string insert_fprdb_Type = @"INSERT INTO fprdb_Type (type_name, type_type)
@@ -157,7 +162,7 @@ namespace BLL
             string statemt = create_fprdb_RelationSchema + create_fprdb_Relation + create_fprdb_Type +
                 create_fprdb_Attribute + create_fprdb_FuzzySet + create_fprdb_DiscreteFuzzySet
                 + create_fprdb_ContinousFuzzySet + create_fprdb_Relation_Fuzzyset + create_fprdb_Constraint
-                +insert_fprdb_Type;
+                +insert_fprdb_Type+ create_fprdb_inDatabaseSQLFile;
 
             try
             {
@@ -184,16 +189,28 @@ namespace BLL
             if (this.connection != null)
                 this.connection.Close();
         }
+        public void disposeConnection()
+        {
+            if (this.connection != null)
+            {
+                this.connection.Close();
+                this.connection.Dispose();
+                SQLiteConnection.ClearAllPools();
+            }
+        }
         public IDataReader executeQuery(string sql)
         {
             //not done: Moq for mocking
-            IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection);
+            
             try
             {
-                if(this.connection.State!=ConnectionState.Open)
-                    this.connection.Open();
-                IDataReader dbReader = command.ExecuteReader();
-                return dbReader;
+                using(IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection))
+                {
+                    if (this.connection.State != ConnectionState.Open)
+                        this.connection.Open();
+                    IDataReader dbReader = command.ExecuteReader();
+                    return dbReader;
+                }
             }
             catch (Exception ex)
             {
@@ -221,13 +238,15 @@ namespace BLL
         public int executeNonQuery(string sql)
         {
             //not done: Moq for mocking
-            IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection);
             try
             {
-                if (this.connection.State != ConnectionState.Open)
-                    this.connection.Open();
-                int noRowsAffected = command.ExecuteNonQuery();
-                return noRowsAffected;
+                using(IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection))
+                {
+                    if (this.connection.State != ConnectionState.Open)
+                        this.connection.Open();
+                    int noRowsAffected = command.ExecuteNonQuery();
+                    return noRowsAffected;
+                }
             }
             catch (Exception ex)
             {
@@ -235,7 +254,7 @@ namespace BLL
             }
             finally
             {
-                this.connection.Close();
+                this.connection.Close();   
             }
         }
         public int executeNonQuery(IDbCommand sql)
@@ -297,8 +316,10 @@ namespace BLL
             {
                 if (this.connection.State != ConnectionState.Open)
                     this.connection.Open();
-                IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection);
-                return (T)command.ExecuteScalar();
+                using(IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection))
+                {
+                    return (T)command.ExecuteScalar();
+                }
             }
             catch(Exception ex)
             {

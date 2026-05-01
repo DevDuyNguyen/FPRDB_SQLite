@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Common;
+using BLL.Exceptions;
 
 namespace BLL.SQLProcessing
 {
@@ -121,12 +123,12 @@ namespace BLL.SQLProcessing
         private List<Token> tokens;
         private bool isOutofToken = false;
         private int tokenListLength { get => this.tokens.Count;}
-        private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
-            "union", "intersect", "except", "not", "and", "or",
-            "create", "schema", "int", "float", "char", "varchar", "boolean",
-            "dist_fuzzyset_int", "dist_fuzzyset_float", "dist_fuzzyset_text",
-            "cont_fuzzyset", "constraint", "primary", "key",
-            "relation", "on", "insert", "into", "values", "update", "set", "delete", "drop"};
+        //private List<string> keywords = new List<String>() {"select", "from", "where", "and", "or", "not", "natural", "join",
+        //    "union", "intersect", "except", "not", "and", "or",
+        //    "create", "schema", "int", "float", "char", "varchar", "boolean",
+        //    "dist_fuzzyset_int", "dist_fuzzyset_float", "dist_fuzzyset_text",
+        //    "cont_fuzzyset", "constraint", "primary", "key",
+        //    "relation", "on", "insert", "into", "values", "update", "set", "delete", "drop"};
 
         public void printAllToken()
         {
@@ -144,6 +146,9 @@ namespace BLL.SQLProcessing
 
         public void analyze(string s)
         {
+            if (s == "" || s == null)
+                throw new SemanticException("The expression is empty");
+
             this.currentIndex = -1;
             this.currentToken = null;
             this.tokens = new List<Token>();
@@ -202,7 +207,7 @@ namespace BLL.SQLProcessing
         }
         public bool matchAnyKeyword()
         {
-            if (this.currentToken != null &&  this.keywords.Contains(this.currentToken.Text.ToLower()))
+            if (this.currentToken != null && ReserveKeyWords.reservedKeywords.Contains(this.currentToken.Text.ToLower()))
             {
                 return true;
             }
@@ -210,7 +215,7 @@ namespace BLL.SQLProcessing
         }
         public bool matchKeyword(string w)
         {
-            if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && this.keywords.Contains(w.ToLower()))
+            if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && ReserveKeyWords.reservedKeywords.Contains(w.ToLower()))
             {
                 string tokenStr = (string)this.currentToken.Value;
                 tokenStr = tokenStr.ToLower();
@@ -241,7 +246,9 @@ namespace BLL.SQLProcessing
         //it should be at when you are creating field Tokens
         public bool matchNumberConstant()
         {
-            if (this.currentToken != null && this.currentToken.Terminal.Name == "unary operator")
+            if (this.currentToken == null)
+                return false;
+            if (this.currentToken.Terminal.Name == "unary operator")
             {
                 if(!matchOrphanUnaryOperator())
                 {
@@ -419,6 +426,8 @@ namespace BLL.SQLProcessing
         }
         public Token getCurrentToken()
         {
+            if(this.currentToken==null)
+                throw new IndexOutOfRangeException();
             if (this.currentIndex <= this.tokens.Count-1)
                 return this.tokens[this.currentIndex];
             else

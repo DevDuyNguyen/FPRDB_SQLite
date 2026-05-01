@@ -36,6 +36,7 @@ namespace BLL.DomainObject
                 return this.lSelectionCondition.isSatisfied(currentTuple, schema) || this.rSelectionCondition.isSatisfied(currentTuple, schema);
             }
         }
+        public override bool isSatisfied(Scan currentTuple, FPRDBSchema schema, out float lowerProb, out float upperProb) => throw new NotSupportedException();
         public override List<SelectionExpression> getAtomicSelectionExpressions()
         {
             List<SelectionExpression> ans= this.lSelectionCondition.getAtomicSelectionExpressions();

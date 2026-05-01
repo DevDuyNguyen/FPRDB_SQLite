@@ -336,6 +336,18 @@ namespace BLL.Services
                 );
             is_system_catalog_table_definition_exist(FPRDB_Rel_FuzzSet);
 
+            SystemCatalogTable fprdb_inDatabaseSQLFile = new SystemCatalogTable(
+                "fprdb_inDatabaseSQLFile",
+                new List<SystemCatalogAttribute>
+                {
+                    new SystemCatalogAttribute("oid", "INTEGER", true),
+                    new SystemCatalogAttribute("fileName", "TEXT", false),
+                    new SystemCatalogAttribute("fileContent", "TEXT", false)
+                },
+                null
+                );
+            is_system_catalog_table_definition_exist(fprdb_inDatabaseSQLFile);
+
             return true;
         }
         public void createDB(string filePath)

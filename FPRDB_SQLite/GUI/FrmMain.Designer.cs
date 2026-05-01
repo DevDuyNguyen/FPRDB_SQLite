@@ -1,4 +1,6 @@
 ﻿using DevExpress.XtraVerticalGrid.Internal;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -85,6 +87,10 @@ namespace FPRDB_SQLite.GUI
             operatorRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             excuteQueryribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             crudDatabaseQueryRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             pageFuzzySet = new DevExpress.XtraBars.Ribbon.RibbonPage();
             discreteFuzzySetribbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             continuousFuzzySetRibbonPageGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -124,6 +130,7 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_EditSchema = new ToolStripMenuItem();
             CTMenuSchNode_OpenSchema = new ToolStripMenuItem();
             CTMenuSchNode_DeleteSchema = new ToolStripMenuItem();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)ribbonControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).BeginInit();
@@ -450,7 +457,6 @@ namespace FPRDB_SQLite.GUI
             // 
             barButtonCreateNew.Caption = "New";
             barButtonCreateNew.Id = 59;
-            barButtonCreateNew.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonCreateNew.ImageOptions.LargeImage");
             barButtonCreateNew.Name = "barButtonCreateNew";
             barButtonCreateNew.ItemClick += barButtonCreateNew_ItemClick;
             // 
@@ -458,7 +464,6 @@ namespace FPRDB_SQLite.GUI
             // 
             barButtonSaveInDB.Caption = "Save";
             barButtonSaveInDB.Id = 60;
-            barButtonSaveInDB.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonSaveInDB.ImageOptions.LargeImage");
             barButtonSaveInDB.Name = "barButtonSaveInDB";
             barButtonSaveInDB.ItemClick += barButtonSaveInDB_ItemClick;
             // 
@@ -466,7 +471,6 @@ namespace FPRDB_SQLite.GUI
             // 
             barButtonDeleteInDB.Caption = "Delete";
             barButtonDeleteInDB.Id = 61;
-            barButtonDeleteInDB.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonDeleteInDB.ImageOptions.LargeImage");
             barButtonDeleteInDB.Name = "barButtonDeleteInDB";
             barButtonDeleteInDB.ItemClick += barButtonDeleteInDB_ItemClick;
             // 
@@ -517,7 +521,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // QueryRibbonPage
             // 
-            QueryRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileQueryRibbonPageGroup, conjunctionRibbonPageGroup, disjunctionRibbonPageGroup, differenceRibbonPageGroup, operatorRibbonPageGroup, excuteQueryribbonPageGroup, crudDatabaseQueryRibbonPageGroup });
+            QueryRibbonPage.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { fileQueryRibbonPageGroup, conjunctionRibbonPageGroup, disjunctionRibbonPageGroup, differenceRibbonPageGroup, operatorRibbonPageGroup, excuteQueryribbonPageGroup, crudDatabaseQueryRibbonPageGroup, ribbonPageGroup1, ribbonPageGroup2 });
             QueryRibbonPage.Name = "QueryRibbonPage";
             QueryRibbonPage.Text = "Query";
             // 
@@ -579,6 +583,34 @@ namespace FPRDB_SQLite.GUI
             crudDatabaseQueryRibbonPageGroup.ItemLinks.Add(barButtonDeleteInDB);
             crudDatabaseQueryRibbonPageGroup.Name = "crudDatabaseQueryRibbonPageGroup";
             crudDatabaseQueryRibbonPageGroup.Text = "Database Query";
+            // 
+            // ribbonPageGroup1
+            // 
+            ribbonPageGroup1.ItemLinks.Add(barButtonItem1);
+            ribbonPageGroup1.Name = "ribbonPageGroup1";
+            ribbonPageGroup1.Text = "Probabilistic Interpretation For Relation On Fuzzy Sets";
+            // 
+            // barButtonItem1
+            // 
+            barButtonItem1.Caption = "Calculate";
+            barButtonItem1.Id = 59;
+            barButtonItem1.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem1.ImageOptions.SvgImage");
+            barButtonItem1.Name = "barButtonItem1";
+            barButtonItem1.ItemClick += barButtonItem1_ItemClick;
+            // 
+            // ribbonPageGroup2
+            // 
+            ribbonPageGroup2.ItemLinks.Add(barButtonItem2);
+            ribbonPageGroup2.Name = "ribbonPageGroup2";
+            ribbonPageGroup2.Text = "Probabilistic Interpretation For Selection Expression";
+            // 
+            // barButtonItem2
+            // 
+            barButtonItem2.Caption = "Calculate";
+            barButtonItem2.Id = 60;
+            barButtonItem2.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem2.ImageOptions.SvgImage");
+            barButtonItem2.Name = "barButtonItem2";
+            barButtonItem2.ItemClick += barButtonItem2_ItemClick;
             // 
             // pageFuzzySet
             // 
@@ -683,6 +715,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // SchemaxtraTabPage
             // 
+            SchemaxtraTabPage.Controls.Add(button1);
             SchemaxtraTabPage.Controls.Add(gridControlScheme);
             SchemaxtraTabPage.Margin = new Padding(6, 4, 6, 4);
             SchemaxtraTabPage.Name = "SchemaxtraTabPage";
@@ -944,6 +977,15 @@ namespace FPRDB_SQLite.GUI
             CTMenuSchNode_DeleteSchema.Size = new Size(122, 24);
             CTMenuSchNode_DeleteSchema.Text = "&Delete";
             // 
+            // button1
+            // 
+            button1.Location = new Point(196, 137);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 1;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            // 
             // frmMain
             // 
             Appearance.Options.UseFont = true;
@@ -1093,6 +1135,11 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup crudDatabaseQueryRibbonPageGroup;
         private DevExpress.XtraBars.BarButtonItem barButtonSaveInDB;
         private DevExpress.XtraBars.BarButtonItem barButtonDeleteInDB;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem2;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private Button button1;
     }
 }
 
