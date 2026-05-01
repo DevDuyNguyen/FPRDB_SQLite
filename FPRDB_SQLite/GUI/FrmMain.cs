@@ -2130,6 +2130,7 @@ namespace FPRDB_SQLite.GUI
                     string expression = uc.GetSelectedQuery();
                     float probabilisticInterpretation = this.sqlProcessor.calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(expression);
                     uc.memoEditMessageUC.Text = probabilisticInterpretation.ToString();
+                    uc.xtraTabControlResult.SelectedTabPage = uc.MessageTabPage;
                 }
                 catch (InvalidOperationException ex)
                 {

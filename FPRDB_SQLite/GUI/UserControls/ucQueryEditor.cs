@@ -21,6 +21,7 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         public DevExpress.XtraEditors.MemoEdit memoEditMessageUC => memoEditMessage;
         public DevExpress.XtraTab.XtraTabControl xtraTabControlResult => xtraTabControlResultQuery;
         public DevExpress.XtraEditors.SplitContainerControl splitContainer => splitContainerControl1;
+        public DevExpress.XtraTab.XtraTabPage MessageTabPage => MessagextraTabPage;
         // Property to check if the current query is temporary (not saved to a file)
         public bool IsTemporary => string.IsNullOrEmpty(FilePath);
         // Varable to store original content for "Dirty" state checking
