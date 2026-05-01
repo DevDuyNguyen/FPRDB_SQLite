@@ -72,6 +72,11 @@ CREATE TABLE fprdb_Constraint (
     FOREIGN KEY (con_referenced_relation_id) REFERENCES fprdb_Relation (oid),
     FOREIGN KEY (con_relschema_id) REFERENCES fprdb_RelationSchema (oid)
 );
+CREATE TABLE fprdb_inDatabaseSQLFile (
+    oid INTEGER PRIMARY KEY AUTOINCREMENT,
+    fileName TEXT,
+    fileContent TEXT
+);
 INSERT INTO fprdb_Type (type_name, type_type) 
 VALUES 
     ('INT', 'b'), 
