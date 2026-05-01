@@ -14,6 +14,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraReports.Design;
 using DevExpress.XtraRichEdit.Import.Html;
 using DevExpress.XtraTab;
 using FPRDB_SQLite.GUI.GUI;
@@ -2146,6 +2147,13 @@ namespace FPRDB_SQLite.GUI
                     {
                         this.inDataBaseSQLFileService.deleteFile(queryName);
                         XtraMessageBox.Show("Query deleted successfully!");
+                        string tabNameToRemove = queryName + ".fprdbsql" + " [Database]";
+                        XtraTabPage pageToRemove = xtraTabControlDatabase.TabPages.FirstOrDefault(p => p.Text.Contains(tabNameToRemove));
+
+                        if (pageToRemove != null)
+                        {
+                            xtraTabControlDatabase.TabPages.Remove(pageToRemove);
+                        }
                         AppStates.listOfInDatabaseSQLFiles = this.inDataBaseSQLFileService.getInDatabaseSQLFileNames();
                         reLoadDatabaseTree();
                     }
