@@ -638,6 +638,14 @@ namespace BLL.SQLProcessing
             return ans;
         }
 
+        public bool isInDatabaseSQLFileExist(string fileName)
+        {
+            using(IDataReader r=this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_inDatabaseSQLFile WHERE fileName='{fileName}'"))
+            {
+                return r.Read();
+            }
+        }
+
 
     }
 }
