@@ -39,6 +39,7 @@ namespace FPRDB_SQLite.GUI
         private DatabaseService databaseService;
         private FPRDBSchemaService fprdbSchemaSerivce;
         private FPRDBRelationService fprdbRelationService;
+        private InDataBaseSQLFileService inDataBaseSQLFileService;
         private string fprdbDotExtension;
         //private SQLFileService sqlFileService;
         private bool isDatabaseLoaded = false;
@@ -64,6 +65,7 @@ namespace FPRDB_SQLite.GUI
             this.sqlProcessor = this.compRoot.getSQLProcessor();
             this.fprdbSchemaSerivce = compRoot.getFPRDBSchemaService();
             this.fprdbRelationService = compRoot.getFPRDBRelationService();
+            this.inDataBaseSQLFileService = compRoot.getInDataBaseSQLFileService();
             //this.sqlFileService = this.compRoot.getSQLFileService();
             InitializeComponent();
             changeStatusTab();
@@ -468,7 +470,7 @@ namespace FPRDB_SQLite.GUI
                     DisplayRelationDetail(_selectedRelation);
                     ribbonControl.SelectedPage = RelationRibbonPage;
                 }
-                if (node.Tag.ToString() == "query")
+                if (node.Tag!=null && node.Tag.ToString() == "query")
                 {
                     foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
                     {
@@ -490,7 +492,7 @@ namespace FPRDB_SQLite.GUI
                             }
                         }
                     }
-                    CreateQueryTab(node.Text, "", "", true);
+                    CreateQueryTab(node.Text, this.inDataBaseSQLFileService.getFileContent(node.Text), "", true);
                     SetQueryTabState(true);
                 }
 
@@ -635,48 +637,43 @@ namespace FPRDB_SQLite.GUI
                 relationRootNode.Nodes.Add(emptyRelNode);
             }
             // Nhánh Query
-            TreeNode instanceNode1 = new TreeNode("Query01");
-            instanceNode1.ImageIndex = 7;
-            instanceNode1.SelectedImageIndex = 7;
-            instanceNode1.Tag = "query";
-            queryRootNode.Nodes.Add(instanceNode1);
+            //TreeNode instanceNode1 = new TreeNode("Query01");
+            //instanceNode1.ImageIndex = 7;
+            //instanceNode1.SelectedImageIndex = 7;
+            //instanceNode1.Tag = "query";
+            //queryRootNode.Nodes.Add(instanceNode1);
 
-            TreeNode instanceNode2 = new TreeNode("Query02");
-            instanceNode2.ImageIndex = 7;
-            instanceNode2.SelectedImageIndex = 7;
-            instanceNode2.Tag = "query";
-            queryRootNode.Nodes.Add(instanceNode2);
-            //AppStates.loadFPRDBQueries = this.databaseService.getFPRDBQueries();
-            //var queries = AppStates.loadFPRDBQueries;
-            //if (queries != null && queries.Count > 0)
-            //{
-            //    // Cuốn sổ ghi nhớ các Quan hệ đã vẽ
-            //    HashSet<string> addedQueries = new HashSet<string>();
+            AppStates.listOfInDatabaseSQLFiles = this.inDataBaseSQLFileService.getInDatabaseSQLFileNames();
+            List<string> queries = AppStates.listOfInDatabaseSQLFiles;
+            if (queries != null && queries.Count > 0)
+            {
+                // Cuốn sổ ghi nhớ các in database quries hệ đã vẽ
+                HashSet<string> addedQueries = new HashSet<string>();
 
-            //    foreach (var query in queries)
-            //    {
-            //        string queryName = query.queryName;
+                foreach (string query in queries)
+                {
+                    string queryName = query;
 
-            //        // LỌC: Nếu Query này đã vẽ rồi thì bỏ qua luôn
-            //        if (addedQueries.Contains(queryName)) continue;
+                    // LỌC: Nếu Query này đã vẽ rồi thì bỏ qua luôn
+                    if (addedQueries.Contains(queryName)) continue;
 
-            //        // Đánh dấu là đã vẽ
-            //        addedQueries.Add(queryName);
+                    // Đánh dấu là đã vẽ
+                    addedQueries.Add(queryName);
 
-            //        TreeNode instanceNode = new TreeNode(queryName);
-            //        instanceNode.ImageIndex = 7;
-            //        instanceNode.SelectedImageIndex = 7;
-            //        instanceNode.Tag = query;
-            //        queryRootNode.Nodes.Add(instanceNode);
-            //    }
-            //}
-            //else
-            //{
-            //    TreeNode emptyQueryNode = new TreeNode("(Chưa có Query nào)");
-            //    emptyQueryNode.ImageIndex = 4;
-            //    emptyQueryNode.SelectedImageIndex = 4;
-            //    queryRootNode.Nodes.Add(emptyQueryNode);
-            //}
+                    TreeNode instanceNode = new TreeNode(queryName);
+                    instanceNode.ImageIndex = 7;
+                    instanceNode.SelectedImageIndex = 7;
+                    instanceNode.Tag = "query";
+                    queryRootNode.Nodes.Add(instanceNode);
+                }
+            }
+            else
+            {
+                TreeNode emptyQueryNode = new TreeNode("(Chưa có Query nào)");
+                emptyQueryNode.ImageIndex = 4;
+                emptyQueryNode.SelectedImageIndex = 4;
+                queryRootNode.Nodes.Add(emptyQueryNode);
+            }
 
             treeView.ExpandAll();
         }
@@ -814,17 +811,43 @@ namespace FPRDB_SQLite.GUI
             }
 
             // Nhánh Query
-            TreeNode instanceNode1 = new TreeNode("Query01");
-            instanceNode1.ImageIndex = 7;
-            instanceNode1.SelectedImageIndex = 7;
-            instanceNode1.Tag = "query";
-            queryRootNode.Nodes.Add(instanceNode1);
+            //TreeNode instanceNode1 = new TreeNode("Query01");
+            //instanceNode1.ImageIndex = 7;
+            //instanceNode1.SelectedImageIndex = 7;
+            //instanceNode1.Tag = "query";
+            //queryRootNode.Nodes.Add(instanceNode1);
 
-            TreeNode instanceNode2 = new TreeNode("Query02");
-            instanceNode2.ImageIndex = 7;
-            instanceNode2.SelectedImageIndex = 7;
-            instanceNode2.Tag = "query";
-            queryRootNode.Nodes.Add(instanceNode2);
+            AppStates.listOfInDatabaseSQLFiles = this.inDataBaseSQLFileService.getInDatabaseSQLFileNames();
+            List<string> queries = AppStates.listOfInDatabaseSQLFiles;
+            if (queries != null && queries.Count > 0)
+            {
+                // Cuốn sổ ghi nhớ các in database quries hệ đã vẽ
+                HashSet<string> addedQueries = new HashSet<string>();
+
+                foreach (string query in queries)
+                {
+                    string queryName = query;
+
+                    // LỌC: Nếu Query này đã vẽ rồi thì bỏ qua luôn
+                    if (addedQueries.Contains(queryName)) continue;
+
+                    // Đánh dấu là đã vẽ
+                    addedQueries.Add(queryName);
+
+                    TreeNode instanceNode = new TreeNode(queryName);
+                    instanceNode.ImageIndex = 7;
+                    instanceNode.SelectedImageIndex = 7;
+                    instanceNode.Tag = "query";
+                    queryRootNode.Nodes.Add(instanceNode);
+                }
+            }
+            else
+            {
+                TreeNode emptyQueryNode = new TreeNode("(Chưa có Query nào)");
+                emptyQueryNode.ImageIndex = 4;
+                emptyQueryNode.SelectedImageIndex = 4;
+                queryRootNode.Nodes.Add(emptyQueryNode);
+            }
 
             treeView.ExpandAll();
         }
@@ -1047,6 +1070,7 @@ namespace FPRDB_SQLite.GUI
         // Hàm lưu file SQL
         private bool SaveCurrentFile(bool isDBFile = false)
         {
+            //bool isDBFile=true-> save cho in database sql file, false-> save cho file-based sql file 
             XtraTabPage currentTab = xtraTabControlDatabase.SelectedTabPage;
 
             if (currentTab != null && currentTab.Controls.Count > 0 && currentTab.Controls[0] is ucQueryEditor uc)
@@ -1057,9 +1081,21 @@ namespace FPRDB_SQLite.GUI
                     {
                         if (uc.IsDBFile)
                         {
-                            XtraMessageBox.Show("Save SQL file in database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            uc.MarkAsSaved(uc.QueryText);
-                            return true;
+                            //uc.IsDBFile=true-> tab query dang duoc chon la query luu trong database
+                            ////uc.IsDBFile=false-> tab query dang duoc chon la query luu duoi dang file
+
+                            try
+                            {
+                                string inDatabaseSQLFileName = currentTab.Text.Substring(0, currentTab.Text.LastIndexOf('.')).Trim();
+                                this.inDataBaseSQLFileService.save(inDatabaseSQLFileName, uc.QueryText);
+                                XtraMessageBox.Show("Save SQL file in database successfully!", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                uc.MarkAsSaved(uc.QueryText);
+                                return true;
+                            }
+                            catch(InvalidOperationException ex)
+                            {
+                                XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         else
                         {
@@ -2063,12 +2099,13 @@ namespace FPRDB_SQLite.GUI
 
         private void barButtonCreateNew_ItemClick(object sender, ItemClickEventArgs e)
         {
-            using (frmNewQuery childForm = new frmNewQuery())
+            using (frmNewQuery childForm = new frmNewQuery(this.compRoot.getInDataBaseSQLFileService()))
             {
                 if (childForm.ShowDialog() == DialogResult.OK)
                 {
                     CreateQueryTab(childForm.QueryName, "", "", true);
                     SetQueryTabState(true);
+                    this.reLoadDatabaseTree();
                 }
             }
         }
@@ -2107,12 +2144,12 @@ namespace FPRDB_SQLite.GUI
                 {
                     try
                     {
-                        //this.fprdbSchemaSerivce.removeFPRDBSchema(schemaToDelete);
+                        this.inDataBaseSQLFileService.deleteFile(queryName);
                         XtraMessageBox.Show("Query deleted successfully!");
-                        //AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                        AppStates.listOfInDatabaseSQLFiles = this.inDataBaseSQLFileService.getInDatabaseSQLFileNames();
                         reLoadDatabaseTree();
                     }
-                    catch (SemanticException ex)
+                    catch (InvalidOperationException ex)
                     {
                         XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }

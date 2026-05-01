@@ -13,5 +13,6 @@ namespace BLL.Interfaces
         public string getFileContent(string fileName);
         public void save(string fileName, String content);
         public void deleteFile(string fileName);
+        public List<string> getInDatabaseSQLFileNames();
     }
 }

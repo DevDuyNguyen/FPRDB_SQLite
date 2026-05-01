@@ -32,6 +32,10 @@ namespace BLL.Services
         {
             this.inDataBaseSQLFileDAO.deleteFile(fileName);
         }
+        public List<string> getInDatabaseSQLFileNames()
+        {
+            return this.inDataBaseSQLFileDAO.getInDatabaseSQLFileNames();
+        }
 
     }
 }

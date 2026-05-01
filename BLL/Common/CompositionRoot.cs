@@ -105,5 +105,6 @@ namespace BLL.Common
         public UpdatePlanner getUpdatePlanner() => this.updatePlanner;
         //delete: for testing
         public MetadataManager getMetaDataManger() => this.metadataMgr;
+        public InDataBaseSQLFileService getInDataBaseSQLFileService() => this.inDataBaseSQLFileService;
     }
 }

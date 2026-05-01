@@ -57,6 +57,19 @@ namespace BLL.DAO
                 $"WHERE fileName='{fileName}'";
             this.dbMgr.executeNonQuery(deleteSQLFileContent);
         }
+        public List<string> getInDatabaseSQLFileNames()
+        {
+            List<string> ans = new List<string>();
+            string getListOfInDatabaseSQLFileNames = "SELECT fileName FROM fprdb_inDatabaseSQLFile";
+            using(IDataReader r = this.dbMgr.executeQuery(getListOfInDatabaseSQLFileNames))
+            {
+                while (r.Read())
+                {
+                    ans.Add(r["fileName"] as string);
+                }
+            }
+            return ans;
+        }
 
     }
 }
