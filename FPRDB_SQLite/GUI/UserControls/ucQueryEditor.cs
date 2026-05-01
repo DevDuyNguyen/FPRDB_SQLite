@@ -29,17 +29,19 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         public Action<bool> OnDirtyStateChanged { get; set; }
         // File path of the current query, empty if it's a temporary file
         public string FilePath { get; set; } = string.Empty;
+        public bool IsDBFile { get; set; } = false;
 
         public ucQueryEditor()
         {
             InitializeComponent();
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Panel1;
         }
-        public void Initialize(string content, string path)
+        public void Initialize(string content, string path, bool isDBFile = false)
         {
             this.FilePath = path;
             this.originalContent = content;
             this.memoEditTxtQuery.Text = content;
+            this.IsDBFile = isDBFile;
         }
 
         public void InsertTextAtCursor(string text)
@@ -62,7 +64,7 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         }
         private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
         {
-            bool isDirty = IsTemporary || (memoEditTxtQuery.Text != originalContent);
+            bool isDirty = (IsTemporary && !IsDBFile) || (memoEditTxtQuery.Text != originalContent);
 
             OnDirtyStateChanged?.Invoke(isDirty);
         }
