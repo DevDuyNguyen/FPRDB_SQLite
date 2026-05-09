@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 
 namespace BLL.SQLProcessing
 {
-    public class SelectScan : UpdateScan
+    public class TheoryCheckSelectScan:SelectionTheoryCheckScan
     {
         private Scan s;
         private SelectionCondition selectionCondition;
         private List<AbstractFuzzyProbabilisticValue> currentTuple;
         private FPRDBSchema schema;
+        private float currentTupleLowerProb, currentTupleUpperProb;
 
-        public SelectScan(Scan s, SelectionCondition selectionCondition, FPRDBSchema schema)
+        public TheoryCheckSelectScan(Scan s, SelectionCondition selectionCondition, FPRDBSchema schema)
         {
             this.s = s;
             this.selectionCondition = selectionCondition;
@@ -26,11 +27,13 @@ namespace BLL.SQLProcessing
         public void beforeFirst() => this.s.beforeFirst();
         public bool next()
         {
+            //float tmpLowerProb, tmpUpperProb;
             while (this.s.next())
             {
-                if (this.selectionCondition.isSatisfied(s, schema))
+                if (this.selectionCondition.isSatisfied(s, schema, out this.currentTupleLowerProb, out this.currentTupleUpperProb))
                 {
                     this.currentTuple = s.getCurrentTuple();
+
                     return true;
                 }
             }
@@ -67,18 +70,7 @@ namespace BLL.SQLProcessing
             return (FuzzyProbabilisticValue<T>)(object)fprobValue;
         }
         public List<AbstractFuzzyProbabilisticValue> getCurrentTuple() => this.currentTuple;
-
-        public void setFieldContent<T>(String fldname, FuzzyProbabilisticValue<T> content)
-        {
-            UpdateScan us = (UpdateScan)s;
-            us.setFieldContent<T>(fldname, content);
-        }
-        public void insert() => throw new NotImplementedException();
-        public void delete()
-        {
-            UpdateScan us = (UpdateScan)s;
-            us.delete();
-        }
+        public (float, float) getCurrentTupleProbabilisticInterpretationForSelectionExpression() => (this.currentTupleLowerProb, this.currentTupleUpperProb);
 
     }
 }

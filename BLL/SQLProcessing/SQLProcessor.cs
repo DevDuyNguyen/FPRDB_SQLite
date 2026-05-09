@@ -154,7 +154,7 @@ namespace BLL.SQLProcessing
             }
             return -1;
         }
-        public SelectPlan calculateProbabilisticInterpretationForSelectionExpressionOnSpecifiedTuples(string expression)
+        public TheoryCheckSelectPlan calculateProbabilisticInterpretationForSelectionExpressionOnSpecifiedTuples(string expression)
         {
             this.parser.parse(expression);
             SelectionExpressionOnSpecifiedTuplesData data = this.parser.selectionExpressionOnSpecifiedTuples();

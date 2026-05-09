@@ -7,6 +7,6 @@ namespace BLL.Interfaces
     {
         public Plan createPlan(QueryData data);
         public float calculateProbabilisticInterpretationForRelationOnFuzzySetsExpression(RelationOnFuzzySetExpressionData data);
-        public SelectPlan createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(SelectionExpressionOnSpecifiedTuplesData data);
+        public TheoryCheckSelectPlan createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(SelectionExpressionOnSpecifiedTuplesData data);
     }
 }
