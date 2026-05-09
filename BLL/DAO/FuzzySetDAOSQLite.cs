@@ -64,15 +64,16 @@ namespace BLL.DAO
             if (fuzzySet.valueSet.Count!=fuzzySet.membershipDegreeSet.Count)
                 throw new InvalidDataException("Fuzzy set number of elements in the universe of discourse doesn't match number of membership degrees");
 
-            isElementXGetAssignedMembershipDegreeMoreThan1<T>(fuzzySet);
-
-            for(int i=0; i<fuzzySet.valueSet.Count; ++i)
+            for (int i = 0; i < fuzzySet.valueSet.Count; ++i)
             {
                 if (fuzzySet.membershipDegreeSet[i] < 0 || fuzzySet.membershipDegreeSet[i] > 1)
                     throw new InvalidDataException("Membership degree must be within [0,1]");
                 if (fuzzySet.valueSet[i] == null)
                     throw new InvalidOperationException("value can't be null");
             }
+
+            isElementXGetAssignedMembershipDegreeMoreThan1<T>(fuzzySet);
+
 
             try
             {
