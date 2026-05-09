@@ -142,6 +142,8 @@ namespace BLL.Common
 
             while (i < leftValues.Count && j < rightValues.Count)
             {
+                //if (leftValues[i] == null || rightValues[j] == null)
+                //    throw new InvalidOperationException("An element x of fuzzy set membership degree function can't be null");
                 if (leftValues[i].CompareTo(rightValues[j])==1)
                 {
                     mergedValues.Add(leftValues[i]);
@@ -158,6 +160,8 @@ namespace BLL.Common
 
             while (i < leftValues.Count)
             {
+                //if (leftValues[i]==null)
+                //    throw new InvalidOperationException("An element x of fuzzy set membership degree function can't be null");
                 mergedValues.Add(leftValues[i]);
                 mergedDegrees.Add(leftDegrees[i]);
                 i++;
@@ -165,6 +169,8 @@ namespace BLL.Common
 
             while (j < rightValues.Count)
             {
+                //if (rightValues[j]==null)
+                //    throw new InvalidOperationException("An element x of fuzzy set membership degree function can't be null");
                 mergedValues.Add(rightValues[j]);
                 mergedDegrees.Add(rightDegrees[j]);
                 j++;
