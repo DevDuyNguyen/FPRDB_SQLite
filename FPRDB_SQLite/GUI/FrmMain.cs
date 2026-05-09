@@ -2222,8 +2222,8 @@ namespace FPRDB_SQLite.GUI
                 try
                 {
                     string expression = uc.GetSelectedQuery();
-                    SelectPlan p = this.sqlProcessor.calculateProbabilisticInterpretationForSelectionExpressionOnSpecifiedTuples(expression);
-                    SelectScan s = (SelectScan)p.open();
+                    TheoryCheckSelectPlan p = this.sqlProcessor.calculateProbabilisticInterpretationForSelectionExpressionOnSpecifiedTuples(expression);
+                    TheoryCheckSelectScan s = (TheoryCheckSelectScan)p.open();
 
                     DataTable resultForGridView = new DataTable();
                     FPRDBSchema schema = p.getSchema();

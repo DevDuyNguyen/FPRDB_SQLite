@@ -106,12 +106,12 @@ namespace BLL.SQLProcessing
             return ProbabilisticInterpretationOfRelationOnFuzzySets.compareFuzzySet(fs1, fs2, data.getCompareOp());
 
         }
-        public SelectPlan createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(SelectionExpressionOnSpecifiedTuplesData data)
+        public TheoryCheckSelectPlan createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(SelectionExpressionOnSpecifiedTuplesData data)
         {
             Plan p = new RelationPlan(data.relation, this.metaDataMgr, this.dbMgr, this.parser);
             AtomicSelectionCondition condition = new AtomicSelectionCondition(data.selectionExpression, 0, 1);
-            p = new SelectPlan(p, condition);
-            return (SelectPlan)p;
+            p = new TheoryCheckSelectPlan(p, condition);
+            return (TheoryCheckSelectPlan)p;
         }
 
     }
