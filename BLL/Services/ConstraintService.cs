@@ -19,8 +19,10 @@ namespace BLL.Services
             this.constraintDAO = constraintDAO;
         }
 
-        public bool checkIntegrityConstraintInsert(FPRDBRelation rel, InsertData data)
+        public bool checkIntegrityConstraintInsert(InsertData data)
         {
+            //The insert fuzzy probabilistic value for a key attribute must be primitive, it is the only possible value in the fuzzy probabilistic value and its interval probability is [1,1]
+            //check identity constraint
             FPRDBRelation relation;
             try
             {

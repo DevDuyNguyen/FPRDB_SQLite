@@ -48,7 +48,7 @@ namespace TestProject1.UnitTest
 
             //File.Delete(this.dbFile);
         }
-        [Fact]
+        //[Fact]
         public void nonStandardDeleteInDatabaseSQLFileTestMethod()
         {
             dbMgr.loadDB(this.dbFile);

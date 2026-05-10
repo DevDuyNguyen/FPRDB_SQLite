@@ -234,11 +234,6 @@ namespace BLL.SQLProcessing
                 }
 
             }
-            //
-            //The insert fuzzy probabilistic value for a key attribute must be primitive, it is the only possible value in the fuzzy probabilistic value and its interval probability is [1,1]
-            //check identity constraint
-            this.constraintService.checkIntegrityConstraintInsert(relation, data);
-
             return true;
 
         }
