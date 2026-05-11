@@ -32,13 +32,20 @@ namespace BLL.SQLProcessing
 
         private SQLSyntaxException createSQLSyntaxException(string message)
         {
-            Token nearToken;
-            nearToken = this.lexer.getCurrentToken();
-            return new SQLSyntaxException(nearToken.Value.ToString(),
-                nearToken.Location.Line,
-                nearToken.Location.Column,
-                message
-            );
+            try
+            {
+                Token nearToken;
+                nearToken = this.lexer.getCurrentToken();
+                return new SQLSyntaxException(nearToken.Value.ToString(),
+                    nearToken.Location.Line,
+                    nearToken.Location.Column,
+                    message
+                );
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                return new SQLSyntaxException(null, -1, -1, message);
+            }
         }
 
         private string schema()

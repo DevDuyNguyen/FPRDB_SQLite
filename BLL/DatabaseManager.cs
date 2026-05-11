@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BLL.Exceptions;
 
 namespace BLL
 {
@@ -22,6 +23,11 @@ namespace BLL
         private string dotExtension=".fprdb";
 
         public string getFPRDBDotExtenstion() => this.dotExtension;
+
+        private UnderlyingStorageEngineCRUDException createStorageMechanismAgnosticExceptionForFailDataCRUD()
+        {
+            return new UnderlyingStorageEngineCRUDException("Something went wrong with the underlying storage mechanism");
+        }
 
         //not done: Moq for mocking
         public void setConnectionString(string str)
@@ -175,10 +181,10 @@ namespace BLL
                 Debug.WriteLine(ex.StackTrace);
                 throw ex;
             }
-            finally
-            {
-                this.connection.Close();
-            }
+            //finally
+            //{
+            //    this.connection.Close();
+            //}
         }
         public string getConnectionString()
         {
@@ -212,11 +218,14 @@ namespace BLL
                     return dbReader;
                 }
             }
-            catch (Exception ex)
+            catch (SQLiteException ex)
             {
-                this.connection.Close();
-                throw ex;
+                throw createStorageMechanismAgnosticExceptionForFailDataCRUD();
             }
+            //finally
+            //{
+            //    this.connection.Close();
+            //}
         }
         public IDataReader executeQuery(IDbCommand sql)
         {
@@ -229,11 +238,14 @@ namespace BLL
                 IDataReader dbReader = sql.ExecuteReader();
                 return dbReader;
             }
-            catch (Exception ex)
+            catch (SQLiteException ex)
             {
-                this.connection.Close();
-                throw ex;
+                throw createStorageMechanismAgnosticExceptionForFailDataCRUD();
             }
+            //finally
+            //{
+            //    this.connection.Close();
+            //}
         }
         public int executeNonQuery(string sql)
         {
@@ -248,14 +260,14 @@ namespace BLL
                     return noRowsAffected;
                 }
             }
-            catch (Exception ex)
+            catch (SQLiteException ex)
             {
-                throw ex;
+                throw createStorageMechanismAgnosticExceptionForFailDataCRUD();
             }
-            finally
-            {
-                this.connection.Close();   
-            }
+            //finally
+            //{
+            //    this.connection.Close();   
+            //}
         }
         public int executeNonQuery(IDbCommand sql)
         {
@@ -268,14 +280,14 @@ namespace BLL
                 int noRowsAffected = sql.ExecuteNonQuery();
                 return noRowsAffected;
             }
-            catch (Exception ex)
+            catch (SQLiteException ex)
             {
-                throw ex;
+                throw createStorageMechanismAgnosticExceptionForFailDataCRUD();
             }
-            finally
-            {
-                this.connection.Close();
-            }
+            //finally
+            //{
+            //    this.connection.Close();
+            //}
         }
         public void loadDB(String filePath)
         {
@@ -305,10 +317,10 @@ namespace BLL
             {
                 throw new IOException("Unable to open the database");
             }
-            finally
-            {
-                this.connection.Close();
-            }
+            //finally
+            //{
+            //    this.connection.Close();
+            //}
         }
         public T executeScalar<T>(string sql)
         {
@@ -321,14 +333,14 @@ namespace BLL
                     return (T)command.ExecuteScalar();
                 }
             }
-            catch(Exception ex)
+            catch (SQLiteException ex)
             {
-                throw ex;
+                throw createStorageMechanismAgnosticExceptionForFailDataCRUD();
             }
-            finally
-            {
-                this.connection.Close();
-            }
+            //finally
+            //{
+            //    this.connection.Close();
+            //}
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Common;
 using BLL.DTO;
+using BLL.Exceptions;
 using BLL.Services;
 using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
@@ -32,33 +33,32 @@ namespace FPRDB_SQLite.GUI
         // Hàm xử lý khi nhấn nút "Search" để tìm kiếm Fuzzy Set theo tên
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            // Lấy thông tin từ ô tìm kiếm
-            string keyword = txtFuzzySetName.Text;
-            //if (string.IsNullOrWhiteSpace(keyword))
-            //{
-            //    XtraMessageBox.Show("Please enter a fuzzy set name to search.");
-            //    return;
-            //}
-            // Xóa danh sách trước đó trong ListBox
-            lstFuzzySetResults.Items.Clear();
-            // Lọc dữ liệu theo keyword
-            this.results = service.findFuzzySet(keyword);
-            if (results.Count == 0)
+            try
             {
-                MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
-                return;
+                // Lấy thông tin từ ô tìm kiếm
+                string keyword = txtFuzzySetName.Text;
+
+                // Xóa danh sách trước đó trong ListBox
+                lstFuzzySetResults.Items.Clear();
+                // Lọc dữ liệu theo keyword
+
+                this.results = service.findFuzzySet(keyword);
+
+                if (results.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
+                    return;
+                }
+
+                foreach (var item in this.results)
+                {
+                    lstFuzzySetResults.Items.Add(item.fuzzySetName);
+                }
             }
-            //ContinuousFuzzySetDTO continuousFuzzySet = new ContinuousFuzzySetDTO(10, 20, 30, 40, "random2");
-            //DiscreteFuzzySetDTO<int> discreteFuzzySet = new DiscreteFuzzySetDTO<int>(
-            //    new List<int>() { 22, 23, 24 },
-            //    new List<float>() { 0.5f, 1, 0.5f },
-            //    "about_23",
-            //    FieldType.INT);
-            //results = new List<FuzzySetDTO>() { continuousFuzzySet, discreteFuzzySet };
-            
-            foreach (var item in this.results)
+
+            catch (UnderlyingStorageEngineCRUDException ex)
             {
-                lstFuzzySetResults.Items.Add(item.fuzzySetName);
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         // Hàm vẽ đồ thị của Continuous Fuzzy Set
@@ -161,7 +161,11 @@ namespace FPRDB_SQLite.GUI
                 {
                     XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
+                catch (UnderlyingStorageEngineCRUDException ex)
+                {
+                    XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
             }
         }
 
@@ -216,6 +220,10 @@ namespace FPRDB_SQLite.GUI
                 catch(InvalidDataException ex)
                 {
                     XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (UnderlyingStorageEngineCRUDException ex)
+                {
+                    XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }

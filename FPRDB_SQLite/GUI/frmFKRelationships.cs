@@ -1,6 +1,7 @@
 ﻿using BLL.Common;
 using BLL.DTO;
 using BLL.Enums;
+using BLL.Exceptions;
 using BLL.Services;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
@@ -245,6 +246,10 @@ namespace FPRDB_SQLite.GUI
             catch (InvalidOperationException ex)
             {
                 XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         // Hàm xử lý khi click "Close" button
