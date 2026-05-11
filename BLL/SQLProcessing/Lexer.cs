@@ -227,7 +227,7 @@ namespace BLL.SQLProcessing
         public void eatKeyword(string w)
         {
             if (!matchKeyword(w))
-                throw new MismatchTokenType("keyword", this.currentToken);
+                throw new MismatchTokenType($"keyword {w}", this.currentToken);
             next();
         }
         //non-orphan unary operator: -1, -12
@@ -387,7 +387,7 @@ namespace BLL.SQLProcessing
 
         public bool matchIdentifier()
         {
-            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier");
+            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && !matchAnyKeyword());
         }
         //not done: this tokenization shouldn't be at here
         //it should be at when you are creating field Tokens

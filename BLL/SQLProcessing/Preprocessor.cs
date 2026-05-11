@@ -78,20 +78,31 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Schema {schemaName} already exists");
             }
+
             if (data.getPrimaryConstraintName() == "" || data.getPrimaryConstraintName() == null
                 || data.getPrimaryConstraintName() == null || data.getPrimarykey().Count == 0)
             {
                 throw new SemanticException($"Schema creation must have primary key");
             }
+
             if (this.metadataMgr.isConstraintExist(constraintName))
             {
                 throw new SemanticException($"Constraint with name {constraintName} already exists");
             }
+
             foreach (string fldName in data.getPrimarykey())
             {
                 if (!FieldTypeUtilities.isPrimitive(data.getFieldByName(fldName).getFieldInfo().getType()))
                     throw new SemanticException("Primary key must be of non fuzzy set type");
             }
+
+            //check if varchar length >0
+            foreach(Field f in data.getFields())
+            {
+                if (f.getFieldInfo().getType() == FieldType.VARCHAR && f.getFieldInfo().getTXTLength() <= 0)
+                    throw new SemanticException("Length of VARCHAR must be positive number");
+            }
+
             return true;
 
         }
