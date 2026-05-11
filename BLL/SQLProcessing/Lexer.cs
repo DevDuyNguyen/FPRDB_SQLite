@@ -387,7 +387,7 @@ namespace BLL.SQLProcessing
 
         public bool matchIdentifier()
         {
-            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier");
+            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && !matchAnyKeyword());
         }
         //not done: this tokenization shouldn't be at here
         //it should be at when you are creating field Tokens

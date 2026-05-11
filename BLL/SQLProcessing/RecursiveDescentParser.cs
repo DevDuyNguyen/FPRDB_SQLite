@@ -92,7 +92,7 @@ namespace BLL.SQLProcessing
                     type = FieldType.VARCHAR;
                     lexer.eatKeyword("VARCHAR");
                     lexer.eatDelimiter("(");
-                    txtLength = (int)lexer.eatNumberConstant();
+                    txtLength = Convert.ToInt32(lexer.eatNumberConstant());
                     lexer.eatDelimiter(")");
 
                 }
