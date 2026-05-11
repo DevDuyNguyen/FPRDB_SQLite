@@ -39,48 +39,27 @@ namespace BLL.SQLProcessing
             if(data is FPRDBSchema)
             {
                 FPRDBSchema createSchemaData = (FPRDBSchema)data;
-                try
+
+                if (this.preProcessor.checkSemanticCreateSchema(createSchemaData))
                 {
-                    if (this.preProcessor.checkSemanticCreateSchema(createSchemaData))
-                    {
-                        this.updatePlanner.executeCreateSchema(createSchemaData);
-                        return true;
-                    }
-                    else
-                        return false;
+                    this.updatePlanner.executeCreateSchema(createSchemaData);
+                    return true;
                 }
-                catch (SemanticException ex)
-                {
-                    throw ex;
-                }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine(ex.StackTrace);
-                    throw new Exception("Something went woring");
-                }
+                else
+                    return false;
+                
             }
             else
             {
                 FPRDBRelation createRelationData = (FPRDBRelation)data;
-                try
+                if (this.preProcessor.checkSemanticCreateRelation(createRelationData))
                 {
-                    if (this.preProcessor.checkSemanticCreateRelation(createRelationData))
-                    {
-                        this.updatePlanner.executeCreateRelation(createRelationData);
-                        return true;
-                    }
-                    else
-                        return false;
+                    this.updatePlanner.executeCreateRelation(createRelationData);
+                    return true;
                 }
-                catch (SemanticException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.StackTrace);
-                    throw new Exception("Something went woring");
-                }
+                else
+                    return false;
+
             }
         }
         public int executeUpdate(string sql)

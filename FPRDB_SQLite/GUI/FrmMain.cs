@@ -1097,6 +1097,10 @@ namespace FPRDB_SQLite.GUI
                             {
                                 XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
+                            catch (UnderlyingStorageEngineCRUDException ex)
+                            {
+                                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
                         }
                         else
                         {
@@ -1405,6 +1409,11 @@ namespace FPRDB_SQLite.GUI
                 uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
                 uc.ViewError();
             }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
+            }
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
@@ -1455,6 +1464,11 @@ namespace FPRDB_SQLite.GUI
             {
                 uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
                 uc.ViewError();
+            }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
             }
             finally
             {
@@ -1548,6 +1562,11 @@ namespace FPRDB_SQLite.GUI
                 uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
                 uc.ViewError();
             }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
+            }
             finally
             {
                 // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
@@ -1626,6 +1645,11 @@ namespace FPRDB_SQLite.GUI
                     {
                         XtraMessageBox.Show(ex.Message, "Invalid Operation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    catch (UnderlyingStorageEngineCRUDException ex)
+                    {
+                        XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //this.DialogResult = DialogResult.Abort;
+                    }
                 }
             }
             catch (Exception ex) { /* Handle ex */ }
@@ -1681,6 +1705,10 @@ namespace FPRDB_SQLite.GUI
                     catch (InvalidOperationException ex)
                     {
                         XtraMessageBox.Show(ex.Message, "Invalid Operation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    catch (UnderlyingStorageEngineCRUDException ex)
+                    {
+                        XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
@@ -2165,6 +2193,10 @@ namespace FPRDB_SQLite.GUI
                     {
                         XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    catch (UnderlyingStorageEngineCRUDException ex)
+                    {
+                        XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex) { }
@@ -2210,6 +2242,11 @@ namespace FPRDB_SQLite.GUI
                 {
                     uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
                     uc.ViewError();
+                }
+                catch (UnderlyingStorageEngineCRUDException ex)
+                {
+                    XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //this.DialogResult = DialogResult.Abort;
                 }
                 finally
                 {
@@ -2312,6 +2349,11 @@ namespace FPRDB_SQLite.GUI
                 {
                     uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
                     uc.ViewError();
+                }
+                catch (UnderlyingStorageEngineCRUDException ex)
+                {
+                    XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //this.DialogResult = DialogResult.Abort;
                 }
                 finally
                 {

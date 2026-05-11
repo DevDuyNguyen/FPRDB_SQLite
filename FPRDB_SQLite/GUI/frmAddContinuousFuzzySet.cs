@@ -52,6 +52,10 @@ namespace FPRDB_SQLite.GUI
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

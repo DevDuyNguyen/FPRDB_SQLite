@@ -57,6 +57,11 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
         }
         // Hàm xử lý khi click "Save" button
         private void btnSave_Click(object sender, EventArgs e)

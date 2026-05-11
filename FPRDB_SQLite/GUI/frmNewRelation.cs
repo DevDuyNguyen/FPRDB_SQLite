@@ -79,6 +79,11 @@ namespace FPRDB_SQLite.GUI
                 XtraMessageBox.Show($"Error: {ex.Message}", "SQL SYNTAX ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //this.DialogResult = DialogResult.Abort;
             }
+            catch (UnderlyingStorageEngineCRUDException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
+            }
 
         }
 
