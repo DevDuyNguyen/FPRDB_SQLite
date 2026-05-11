@@ -231,20 +231,35 @@ namespace BLL.SQLProcessing
             }
             //Check compatible insert value 
             checkCompatibleInsertTypeAndFillFuzzySetConstant(data.fieldList, data.fuzzyProbabilisticValues, schema);
-            //check if [a,b] is within [0,1]
-            //check a<=b where [a,b]
+
+            string tmpStr;
             foreach (FuzzyProbabilisticValueParsingData d in data.fuzzyProbabilisticValues)
             {
                 for (int j = 0; j < d.intervalProbLowerBoundList.Count; ++j)
                 {
+                    //check if [a,b] is within [0,1]
+                    //check a<=b where [a,b]
                     if (d.intervalProbLowerBoundList[j] < 0 || d.intervalProbLowerBoundList[j] > 1
                         || d.intervalProbUpperBoundList[j] < 0 || d.intervalProbUpperBoundList[j] > 1)
                         throw new SemanticException("[a,b] must be within the range of [0,1]");
                     if (d.intervalProbLowerBoundList[j] > d.intervalProbUpperBoundList[j])
                         throw new SemanticException("a must be <= b in [a,b]");
+
+                    /*check if user use string delimiter escaping, current version
+                     * aren't designed with string delimiter escaping
+                     */
+                    if (d.valueList[j] is StringConstant)
+                    {
+                        tmpStr = d.valueList[j].getVal() as string;
+                        if (tmpStr.Contains('\'') || tmpStr.Contains('\"'))
+                            throw new SemanticException("Current version doesn't support string delimiter escaping. Hence the following situation are forbidded \'\" text\"\', \"\' text\'\", \"\" text\"\", \'\' text\'\' ");
+                    }
                 }
 
             }
+
+            
+
             return true;
 
         }

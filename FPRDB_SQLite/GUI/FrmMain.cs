@@ -1622,6 +1622,10 @@ namespace FPRDB_SQLite.GUI
                     {
                         XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    catch (InvalidOperationException ex)
+                    {
+                        XtraMessageBox.Show(ex.Message, "Invalid Operation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex) { /* Handle ex */ }
@@ -1676,7 +1680,7 @@ namespace FPRDB_SQLite.GUI
                     }
                     catch (InvalidOperationException ex)
                     {
-                        XtraMessageBox.Show(ex.Message, "Semantic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        XtraMessageBox.Show(ex.Message, "Invalid Operation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
