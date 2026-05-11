@@ -59,14 +59,24 @@ namespace FPRDB_SQLite.GUI
                     Close();
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "INVALID OPERATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
+            }
             catch (SemanticException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show($"Error: {ex.Message}", "SEMANTIC VIOLATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //this.DialogResult = DialogResult.Abort;
             }
             catch (InvalidDataException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show($"Error: {ex.Message}", "INVALID DATA", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //this.DialogResult = DialogResult.Abort;
+            }
+            catch (SQLSyntaxException ex)
+            {
+                XtraMessageBox.Show($"Error: {ex.Message}", "SQL SYNTAX ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //this.DialogResult = DialogResult.Abort;
             }
 

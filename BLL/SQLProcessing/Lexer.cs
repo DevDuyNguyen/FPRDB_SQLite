@@ -227,7 +227,7 @@ namespace BLL.SQLProcessing
         public void eatKeyword(string w)
         {
             if (!matchKeyword(w))
-                throw new MismatchTokenType("keyword", this.currentToken);
+                throw new MismatchTokenType($"keyword {w}", this.currentToken);
             next();
         }
         //non-orphan unary operator: -1, -12
