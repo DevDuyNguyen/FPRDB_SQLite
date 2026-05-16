@@ -587,7 +587,7 @@ namespace FPRDB_SQLite.GUI
             }
             else
             {
-                TreeNode emptySchemaNode = new TreeNode("(Chưa có Lược đồ nào)");
+                TreeNode emptySchemaNode = new TreeNode("(There're no Schemas)");
                 emptySchemaNode.ImageIndex = 4;
                 emptySchemaNode.SelectedImageIndex = 4;
                 tablesRootNode.Nodes.Add(emptySchemaNode);
@@ -632,7 +632,7 @@ namespace FPRDB_SQLite.GUI
             }
             else
             {
-                TreeNode emptyRelNode = new TreeNode("(Chưa có Quan hệ nào)");
+                TreeNode emptyRelNode = new TreeNode("(There're no Relations)");
                 emptyRelNode.ImageIndex = 4;
                 emptyRelNode.SelectedImageIndex = 4;
                 relationRootNode.Nodes.Add(emptyRelNode);
@@ -670,7 +670,7 @@ namespace FPRDB_SQLite.GUI
             }
             else
             {
-                TreeNode emptyQueryNode = new TreeNode("(Chưa có Query nào)");
+                TreeNode emptyQueryNode = new TreeNode("(There're no Queries)");
                 emptyQueryNode.ImageIndex = 4;
                 emptyQueryNode.SelectedImageIndex = 4;
                 queryRootNode.Nodes.Add(emptyQueryNode);
@@ -760,7 +760,7 @@ namespace FPRDB_SQLite.GUI
             }
             else
             {
-                TreeNode emptySchemaNode = new TreeNode("(Chưa có Lược đồ nào)");
+                TreeNode emptySchemaNode = new TreeNode("(There're no Schemas)");
                 emptySchemaNode.ImageIndex = 4;
                 emptySchemaNode.SelectedImageIndex = 4;
                 tablesRootNode.Nodes.Add(emptySchemaNode);
@@ -805,7 +805,7 @@ namespace FPRDB_SQLite.GUI
             }
             else
             {
-                TreeNode emptyRelNode = new TreeNode("(Chưa có Quan hệ nào)");
+                TreeNode emptyRelNode = new TreeNode("(There're no Relations)");
                 emptyRelNode.ImageIndex = 4;
                 emptyRelNode.SelectedImageIndex = 4;
                 relationRootNode.Nodes.Add(emptyRelNode);
@@ -844,7 +844,7 @@ namespace FPRDB_SQLite.GUI
             }
             else
             {
-                TreeNode emptyQueryNode = new TreeNode("(Chưa có Query nào)");
+                TreeNode emptyQueryNode = new TreeNode("(There're no Queries)");
                 emptyQueryNode.ImageIndex = 4;
                 emptyQueryNode.SelectedImageIndex = 4;
                 queryRootNode.Nodes.Add(emptyQueryNode);
@@ -2074,8 +2074,8 @@ namespace FPRDB_SQLite.GUI
                 {
                     xtraTabControlDatabase.SelectedTabPage = page;
                     DialogResult result = XtraMessageBox.Show(
-                        $"Bạn có muốn lưu thay đổi cho {page.Text.TrimEnd('*')} không?",
-                        "Xác nhận đóng",
+                        $"Do you want to save changes for {page.Text.TrimEnd('*')}?",
+                        "Confirm Close",
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
 
