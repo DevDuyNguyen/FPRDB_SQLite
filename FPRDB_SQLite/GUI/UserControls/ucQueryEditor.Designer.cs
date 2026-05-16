@@ -77,6 +77,8 @@
             memoEditTxtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
             memoEditTxtQuery.Location = new System.Drawing.Point(0, 0);
             memoEditTxtQuery.Name = "memoEditTxtQuery";
+            memoEditTxtQuery.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 21F);
+            memoEditTxtQuery.Properties.Appearance.Options.UseFont = true;
             memoEditTxtQuery.Size = new System.Drawing.Size(762, 129);
             memoEditTxtQuery.TabIndex = 0;
             memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
@@ -143,6 +145,8 @@
             memoEditMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             memoEditMessage.Location = new System.Drawing.Point(0, 0);
             memoEditMessage.Name = "memoEditMessage";
+            memoEditMessage.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 20F);
+            memoEditMessage.Properties.Appearance.Options.UseFont = true;
             memoEditMessage.Properties.ReadOnly = true;
             memoEditMessage.Size = new System.Drawing.Size(760, 192);
             memoEditMessage.TabIndex = 0;

@@ -998,7 +998,7 @@ namespace FPRDB_SQLite.GUI
             Ribbon = ribbonControl;
             StartPosition = FormStartPosition.CenterScreen;
             StatusBar = ribbonStatusBar;
-            Text = "FPRDB Visual Management System";
+            Text = "FPRDB Management System";
             FormClosing += frmMain_FormClosing;
             ((System.ComponentModel.ISupportInitialize)ribbonControl).EndInit();
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel1).EndInit();

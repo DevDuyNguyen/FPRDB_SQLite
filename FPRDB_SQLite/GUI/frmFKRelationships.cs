@@ -159,7 +159,7 @@ namespace FPRDB_SQLite.GUI
         {
             if (isAddNew) 
             {
-                MessageBox.Show("Vui lòng lưu thông tin trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please save the information before proceeding!", "Notifications", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             LoadNewRelation();
@@ -172,8 +172,8 @@ namespace FPRDB_SQLite.GUI
             int currentIndex = lstFKSelected.SelectedIndex;
             string selectedFK = lstFKSelected.SelectedItem.ToString();
 
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa Foreign Key '{selectedFK}' không?",
-                                        "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show($"Are you sure you want to delete Foreign Key '{selectedFK}'?",
+                                        "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -197,7 +197,7 @@ namespace FPRDB_SQLite.GUI
                         lstFKSelected.SelectedIndex = -1;
                     }
 
-                    MessageBox.Show("Đã xóa thành công!");
+                    MessageBox.Show("Delete successfully!");
                     isAddNew = false;
                 }
                 catch (InvalidOperationException ex)
@@ -238,7 +238,7 @@ namespace FPRDB_SQLite.GUI
             try
             {
                 ConstraintDTO newReferentialConstraint= this.service.createReferentialConstraint(fkName, this.rel, referencedRelation, attrs, refAttrs);
-                MessageBox.Show("Lưu thành công!");
+                MessageBox.Show("Save successfully!");
                 lstFKSelected.Items[lstFKSelected.SelectedIndex] = newReferentialConstraint.conName;
                 isAddNew = false;
                 SetUIState(false);
@@ -306,7 +306,7 @@ namespace FPRDB_SQLite.GUI
                     if (cellValue != null && cellValue.ToString() == currentValue)
                     {
                         e.Valid = false;
-                        e.ErrorText = "Giá trị này đã được chọn ở dòng khác!";
+                        e.ErrorText = "This value has been selected in another row!";
                         return;
                     }
                 }
@@ -351,14 +351,14 @@ namespace FPRDB_SQLite.GUI
             // 1. Kiểm tra tên FK
             if (string.IsNullOrWhiteSpace(txtFKName.Text))
             {
-                MessageBox.Show("Vui lòng nhập tên Foreign Key!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a Foreign Key name!", "Notifications", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
             // 2. Kiểm tra bảng cha
             if (cboPKRelName.EditValue == null)
             {
-                MessageBox.Show("Vui lòng chọn bảng tham chiếu (Primary Key Relation)!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a reference table (Primary Key Relation)!", "Notifications", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -372,7 +372,7 @@ namespace FPRDB_SQLite.GUI
 
             if (hasIncompleteRow)
             {
-                MessageBox.Show("Tất cả các dòng mapping phải được chọn đầy đủ cả 2 cột!", "Thông báo");
+                MessageBox.Show("All mapping rows must have both columns selected!", "Notifications");
                 return false;
             }
 
@@ -380,7 +380,7 @@ namespace FPRDB_SQLite.GUI
             bool hasValidPair = list.Any(x => !string.IsNullOrEmpty(x.PKAttr) && !string.IsNullOrEmpty(x.FKAttr));
             if (!hasValidPair)
             {
-                MessageBox.Show("Bạn chưa cấu hình cặp thuộc tính tham chiếu nào!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You have not configured any reference attribute pairs!", "Notifications", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 

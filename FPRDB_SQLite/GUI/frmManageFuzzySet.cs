@@ -46,7 +46,7 @@ namespace FPRDB_SQLite.GUI
 
                 if (results.Count == 0)
                 {
-                    MessageBox.Show("Không tìm thấy kết quả nào phù hợp.");
+                    MessageBox.Show("Cannot find any results.");
                     return;
                 }
 
