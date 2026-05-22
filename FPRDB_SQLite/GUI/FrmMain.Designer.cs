@@ -382,7 +382,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // iExcuteQuery
             // 
-            iExcuteQuery.Caption = "Excute Query";
+            iExcuteQuery.Caption = "Excute Statement";
             iExcuteQuery.Id = 47;
             iExcuteQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
             iExcuteQuery.Name = "iExcuteQuery";
