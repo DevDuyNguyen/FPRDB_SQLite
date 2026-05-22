@@ -36,6 +36,7 @@ namespace BLL.SQLProcessing
             var closedSquareBracket = new KeyTerm("]", "delimiter");
             var openCurlyBracket = new KeyTerm("{", "delimiter");
             var closedCurlyBracket = new KeyTerm("}", "delimiter");
+            var semiColon = new KeyTerm(";", "delimiter");
 
             //var select = ToTerm("SELECT", "keyword");
             //var from = ToTerm("FROM", "keyword");
@@ -91,7 +92,7 @@ namespace BLL.SQLProcessing
             var positive = ToTerm("+", "unary operator");
 
             var any = new NonTerminal("any");
-            any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket | openCurlyBracket | closedCurlyBracket
+            any.Rule = comma | dot | asterisk | openParenthesis | closedParenthesis | openSquareBracket | closedSquareBracket | openCurlyBracket | closedCurlyBracket | semiColon
                 | numberConstant | singleQuoteStringConstant| doubleQuoteStringConstant | booleanConstant | identifier
                 | eq | neq | lt | leq | gt | geq | subseteq | belongTo | rightDoubleArrow
                 | conjunction_ig | conjunction_in | conjunction_pc | conjunction_me 
