@@ -13,6 +13,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDB-SQLite-.net_framework
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDB-SQLite-.net8-Installer", "FPRDB-SQLite-.net8-Installer\FPRDB-SQLite-.net8-Installer.vdproj", "{4B004693-5D5C-9D6F-1004-DFFDE32E0136}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FPRDB_Final_Installer", "FPRDB_Final_Installer\FPRDB_Final_Installer.vdproj", "{263FFE84-B009-5B82-A8DE-A9BF50CB99AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,8 @@ Global
 		{82771888-5B93-7E99-8B39-9F2A15AFEB41}.Release|Any CPU.ActiveCfg = Release
 		{4B004693-5D5C-9D6F-1004-DFFDE32E0136}.Debug|Any CPU.ActiveCfg = Debug
 		{4B004693-5D5C-9D6F-1004-DFFDE32E0136}.Release|Any CPU.ActiveCfg = Release
+		{263FFE84-B009-5B82-A8DE-A9BF50CB99AE}.Debug|Any CPU.ActiveCfg = Debug
+		{263FFE84-B009-5B82-A8DE-A9BF50CB99AE}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
