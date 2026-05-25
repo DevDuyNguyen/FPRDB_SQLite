@@ -1351,6 +1351,7 @@ namespace FPRDB_SQLite.GUI
         {
             if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
+                uc.ClearAllGrids();
                 string sql = uc.GetSelectedQuery();
                 string firstString = sql.Split(' ')[0];
                 switch (firstString.ToUpper())
@@ -1372,6 +1373,23 @@ namespace FPRDB_SQLite.GUI
                 }
             }
         }
+        // Dummy situation for list objects excutionResults
+        //private void executeDemo()
+        //{
+        //    executionResults[];
+        //    foreach (var obj in executionResults)
+        //    {
+        //        if (obj is Plan)
+        //        {
+        //            // Excecuting similar to ExecuteQuery() function then provide data table for uc.CreateNewGridResult(dt)
+        //            // uc.CreateNewGridResult(dt) is responsible for adding new grid and binding data source of that data table
+        //        }
+        //        else if (obj is rowAffected)
+        //        {
+        //            uc.memoEditMessageUC.Text += $"[Number of rows affected]{rowAffected}\r\n";
+        //        }
+        //    }
+        //}
         private void ExecuteDataDefinition(string sql, ucQueryEditor uc)
         {
             try
@@ -1426,7 +1444,7 @@ namespace FPRDB_SQLite.GUI
             try
             {
                 int noRowsAffected = this.sqlProcessor.executeUpdate(sql);
-                uc.memoEditMessageUC.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
+                uc.memoEditMessageUC.Text += $"[Number of rows affected]{noRowsAffected}\r\n";
                 uc.ViewError();
                 if (isReloadGUI)
                 {
@@ -1528,10 +1546,11 @@ namespace FPRDB_SQLite.GUI
 
 
                 }
-                //bind the result to the grid control
-                uc.GridResult.DataSource = resultForGridView;
-                //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
-                uc.GridViewResult.PopulateColumns();
+                ////bind the result to the grid control
+                //uc.GridResult.DataSource = resultForGridView;
+                ////Yêu cầu GridView tự động tạo các cột dựa trên DataTable
+                //uc.GridViewResult.PopulateColumns();
+                uc.CreateNewGridResult(resultForGridView);
 
                 // Ghi thông báo thành công vào MemoEdit
                 uc.ViewResult();

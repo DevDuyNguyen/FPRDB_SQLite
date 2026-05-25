@@ -95,6 +95,8 @@
             // 
             // QueryResultxtraTabPage
             // 
+            QueryResultxtraTabPage.AllowTouchScroll = true;
+            QueryResultxtraTabPage.AutoScroll = true;
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
             QueryResultxtraTabPage.Size = new System.Drawing.Size(760, 192);
