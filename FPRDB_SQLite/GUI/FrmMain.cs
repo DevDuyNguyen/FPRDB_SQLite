@@ -1361,8 +1361,6 @@ namespace FPRDB_SQLite.GUI
                         ExecuteUpdate(sql, false, uc);
                         break;
                     case "DROP":
-                        ExecuteUpdate(sql, true, uc);
-                        break;
                     case "CREATE":
                         ExecuteDataDefinition(sql, uc);
                         break;

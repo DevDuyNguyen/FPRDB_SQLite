@@ -57,7 +57,7 @@ namespace BLL.DAO
         }
         public void removeFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO)
         {
-            this.sqlProcessor.executeUpdate($"DROP SCHEMA {fprdbSchemaDTO.schemaName}");
+            this.sqlProcessor.executeDataDefinition($"DROP SCHEMA {fprdbSchemaDTO.schemaName}");
         }
         public List<FPRDBSchema> findSchema(string name) => throw new NotImplementedException();
         public List<FPRDBRelation> findRelationsOfSchema(FPRDBSchemaDTO schema) => throw new NotImplementedException();

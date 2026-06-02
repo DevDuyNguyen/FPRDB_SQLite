@@ -35,7 +35,7 @@ namespace BLL.SQLProcessing
         public bool executeDataDefinition(string sql)
         {
             this.parser.parse(sql);
-            Object data = this.parser.create();
+            Object data = this.parser.updateCommand();
             if(data is FPRDBSchema)
             {
                 FPRDBSchema createSchemaData = (FPRDBSchema)data;
@@ -49,7 +49,7 @@ namespace BLL.SQLProcessing
                     return false;
                 
             }
-            else
+            else if(data is FPRDBRelation)
             {
                 FPRDBRelation createRelationData = (FPRDBRelation)data;
                 if (this.preProcessor.checkSemanticCreateRelation(createRelationData))
@@ -59,7 +59,28 @@ namespace BLL.SQLProcessing
                 }
                 else
                     return false;
-
+            }
+            else if (data is DropRelationData)
+            {
+                DropRelationData DropData = (DropRelationData)data;
+                if (this.preProcessor.checkSemanticDropRelation(DropData) && this.constraintService.checkIfDropRelationViolateReferentialConstraint(DropData))
+                {
+                    this.updatePlanner.executeDropRelation(DropData.relation);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else //if (data is DropSchemaData)
+            {
+                DropSchemaData DropData = (DropSchemaData)data;
+                if (this.preProcessor.checkSemanticDropSchema(DropData))
+                {
+                    this.updatePlanner.executeDropSchema(DropData.schema);
+                    return true;
+                }
+                else
+                    return false;
             }
         }
         public int executeUpdate(string sql)
@@ -83,24 +104,6 @@ namespace BLL.SQLProcessing
                 if (this.preProcessor.checkSemanticDelete(dData) && this.constraintService.checkIfDeleteTupleViolateReferentialConstraint(dData))
                 {
                     return this.updatePlanner.executeDelete(dData);
-                }
-            }
-            else if(data is DropRelationData)
-            {
-                DropRelationData DropData = (DropRelationData)data;
-                if (this.preProcessor.checkSemanticDropRelation(DropData) && this.constraintService.checkIfDropRelationViolateReferentialConstraint(DropData))
-                {
-                    this.updatePlanner.executeDropRelation(DropData.relation);
-                    return 0;
-                }
-            }
-            else if (data is DropSchemaData)
-            {
-                DropSchemaData DropData = (DropSchemaData)data;
-                if (this.preProcessor.checkSemanticDropSchema(DropData))
-                {
-                    this.updatePlanner.executeDropSchema(DropData.schema);
-                    return 0;
                 }
             }
             else //if(data is ModifyData)

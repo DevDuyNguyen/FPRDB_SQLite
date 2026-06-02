@@ -26,7 +26,7 @@ namespace BLL.DAO
         }
         public void removeFPRDBRelation(FPRDBRelationDTO rel)
         {
-            this.sqlProcessor.executeUpdate($"DROP RELATION {rel.relName}");
+            this.sqlProcessor.executeDataDefinition($"DROP RELATION {rel.relName}");
         }
         public List<FPRDBRelation> findRelation(string name)=>throw new NotImplementedException();
 
