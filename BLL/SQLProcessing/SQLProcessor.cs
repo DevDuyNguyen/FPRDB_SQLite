@@ -147,6 +147,67 @@ namespace BLL.SQLProcessing
             }
             return null;
         }
+        private bool isFPRDBSQLStatementOfDataDefinitionLanguage(string stm)
+        {
+            string firstWord;
+            firstWord = stm.Substring(stm.IndexOf(' '));
+            firstWord = firstWord.ToLower();
+            switch (firstWord)
+            {
+                case "create":
+                case "drop":
+                    return true;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
+        private bool isFPRDBSQLStatementOfDataManipulationLanguage(string stm)
+        {
+            string firstWord;
+            firstWord = stm.Substring(stm.IndexOf(' '));
+            firstWord = firstWord.ToLower();
+            switch (firstWord)
+            {
+                case "insert":
+                case "delete":
+                case "update":
+                    return true;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
+        public List<FPRDBSQLExecutionResult> executeFPRDBSQLStatements(string fprdbSQLStatements)
+        {
+            List<FPRDBSQLExecutionResult> executionResults = new List<FPRDBSQLExecutionResult>();
+            fprdbSQLStatements = fprdbSQLStatements.TrimEnd(';');
+            string[] individualStatements = fprdbSQLStatements.Split(';');
+            string stm;
+
+            for(int i=0; i<individualStatements.Length; ++i)
+            {
+                stm = individualStatements[i].TrimStart(' ');
+
+
+                if (isFPRDBSQLStatementOfDataDefinitionLanguage(stm))
+                {
+                    this.executeDataDefinition(stm);
+                    executionResults.Add(new IntFPRDBSQLExecutionResult(0));
+                }
+                else if (isFPRDBSQLStatementOfDataManipulationLanguage(stm))
+                {
+                    executionResults.Add(new IntFPRDBSQLExecutionResult(this.executeUpdate(stm)));
+                }
+                else
+                {
+                    executionResults.Add(new planFPRDBSQLExecutionResult(this.createQueryPlan(stm)));
+                }
+            }
+            return executionResults;
+        }
 
     }
 }
