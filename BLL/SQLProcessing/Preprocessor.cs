@@ -221,6 +221,14 @@ namespace BLL.SQLProcessing
                 if (!exist)
                     throw new SemanticException($"Attribute {fieldName} doesn't exist in relation {relation.getRelName()} on schema {schema.getSchemaName()}");
             }
+
+            //check if insert include all attributes, because the current version doesn't support NULL value
+            foreach (Field field in schema.getFields())
+            {
+                if (!data.fieldList.Contains(field.getFieldName()))
+                    throw new SemanticException($"Insert must include all attributes, because the current version doesn't support NULL value. Lack attribute: {field.getFieldName()}");
+            }
+
             //The value of key attribute must be exact and precise. Same for foreign key attribute
             checkInsertPrimaryKeyForeignKeyAttributeHasExactPreciseValue(data);
 
