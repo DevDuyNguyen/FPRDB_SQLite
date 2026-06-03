@@ -150,7 +150,11 @@ namespace BLL.SQLProcessing
         private bool isFPRDBSQLStatementOfDataDefinitionLanguage(string stm)
         {
             string firstWord;
-            firstWord = stm.Substring(stm.IndexOf(' '));
+            stm = stm.TrimStart([' ', '\r', '\n']);
+            int index = stm.IndexOf(' ');
+            if (index == -1)
+                return false;
+            firstWord = stm.Substring(0, index);
             firstWord = firstWord.ToLower();
             switch (firstWord)
             {
@@ -166,7 +170,11 @@ namespace BLL.SQLProcessing
         private bool isFPRDBSQLStatementOfDataManipulationLanguage(string stm)
         {
             string firstWord;
-            firstWord = stm.Substring(stm.IndexOf(' '));
+            stm = stm.TrimStart([' ', '\r', '\n']);
+            int index = stm.IndexOf(' ');
+            if (index == -1)
+                return false;
+            firstWord = stm.Substring(0, index);
             firstWord = firstWord.ToLower();
             switch (firstWord)
             {
@@ -183,7 +191,10 @@ namespace BLL.SQLProcessing
         public List<FPRDBSQLExecutionResult> executeFPRDBSQLStatements(string fprdbSQLStatements)
         {
             List<FPRDBSQLExecutionResult> executionResults = new List<FPRDBSQLExecutionResult>();
-            fprdbSQLStatements = fprdbSQLStatements.TrimEnd(';');
+
+            fprdbSQLStatements = fprdbSQLStatements.TrimStart([' ', '\r', '\n']);
+            fprdbSQLStatements = fprdbSQLStatements.TrimEnd([';', ' ', '\r', '\n']);
+
             string[] individualStatements = fprdbSQLStatements.Split(';');
             string stm;
 
@@ -195,15 +206,15 @@ namespace BLL.SQLProcessing
                 if (isFPRDBSQLStatementOfDataDefinitionLanguage(stm))
                 {
                     this.executeDataDefinition(stm);
-                    executionResults.Add(new IntFPRDBSQLExecutionResult(0));
+                    executionResults.Add(new DDL_FPRDB_SQL_ExecutionResult(true));
                 }
                 else if (isFPRDBSQLStatementOfDataManipulationLanguage(stm))
                 {
-                    executionResults.Add(new IntFPRDBSQLExecutionResult(this.executeUpdate(stm)));
+                    executionResults.Add(new DML_FPRDB_SQL_ExecutionResult(this.executeUpdate(stm)));
                 }
                 else
                 {
-                    executionResults.Add(new planFPRDBSQLExecutionResult(this.createQueryPlan(stm)));
+                    executionResults.Add(new DQL_FPRDB_SQL_ExecutionResult(this.createQueryPlan(stm)));
                 }
             }
             return executionResults;

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BLL.DomainObject
 {
-    public class IntFPRDBSQLExecutionResult:FPRDBSQLExecutionResult
+    public class DML_FPRDB_SQL_ExecutionResult : FPRDBSQLExecutionResult
     {
         public int numberTuplesAffected;
 
-        public IntFPRDBSQLExecutionResult(int numberTuplesAffected)
+        public DML_FPRDB_SQL_ExecutionResult(int numberTuplesAffected)
         {
             this.numberTuplesAffected = numberTuplesAffected;
         }

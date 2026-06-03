@@ -86,7 +86,7 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         // Clear previous results before showing new ones
         public void ClearAllGrids()
         {
-            //QueryResultxtraTabPage.Controls.Clear();
+            QueryResultxtraTabPage.Controls.Clear();
             memoEditMessage.Text = string.Empty;
         }
         // Method to create a new grdResultQuery
@@ -107,7 +107,7 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
 
             // Cấu hình GridView hiển thị dữ liệu giống logic cũ của bạn
             gridControl.DataSource = dt;
-            gridView.PopulateColumns();
+            gridView.PopulateColumns(); 
 
             // Tùy chỉnh thêm để giao diện gọn gàng khi xếp chồng
             gridView.OptionsBehavior.Editable = false;
