@@ -545,6 +545,7 @@ namespace BLL.SQLProcessing
                     || fields1[i].getFieldInfo().getType() != fields2[i].getFieldInfo().getType())
                     throw new SemanticException($"Set opeation is incompatible because field {fields1[i].getFieldName()} and field {fields2[i].getFieldName()}");
             }
+
             return true;
         }
         /*Every attribute that is mentioned in the SELECT- or WHERE-clause must be an attribute 

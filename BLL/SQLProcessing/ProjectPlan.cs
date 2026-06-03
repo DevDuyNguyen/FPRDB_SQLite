@@ -1,4 +1,5 @@
-﻿using BLL.DomainObject;
+﻿using BLL.Common;
+using BLL.DomainObject;
 using BLL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,14 +25,25 @@ namespace BLL.SQLProcessing
             }
             else
             {
+                List<string> inputRelationPrimaryKey = schma.getPrimarykey();
+                int primaryKeySize = inputRelationPrimaryKey.Count;
                 foreach (Field field in schma.getFields())
                 {
                     if (fieldList.Contains(field.getFieldName()))
+                    {
                         fields.Add(field);
+                        if (inputRelationPrimaryKey.Contains(field.getFieldName()))
+                            --primaryKeySize;
+                    }
                 }
                 if (fieldList.Count > fields.Count)
                     throw new Exception("Some selected fields aren't included");
-                this.schema = new FPRDBSchema(null, fields, null);
+
+                //strict derived primary key in projection
+                if(primaryKeySize==0)
+                    this.schema = new FPRDBSchema(null, fields, inputRelationPrimaryKey);
+                else
+                    this.schema = new FPRDBSchema(null, fields, null);
             }
             
         }

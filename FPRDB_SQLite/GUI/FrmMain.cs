@@ -1431,6 +1431,12 @@ namespace FPRDB_SQLite.GUI
                     uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
                     uc.ViewError();
                 }
+
+                catch (InvalidOperationException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Invalid Operation Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
                 catch (InvalidCastException ex)
                 {
                     uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
