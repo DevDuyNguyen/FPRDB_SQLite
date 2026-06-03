@@ -1349,29 +1349,134 @@ namespace FPRDB_SQLite.GUI
         }
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            //if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
+            //{
+            //    uc.ClearAllGrids();
+            //    string sql = uc.GetSelectedQuery();
+            //    string firstString = sql.Split(' ')[0];
+            //    switch (firstString.ToUpper())
+            //    {
+            //        case "INSERT":
+            //        case "DELETE":
+            //        case "UPDATE":
+            //            ExecuteUpdate(sql, false, uc);
+            //            break;
+            //        case "DROP":
+            //        case "CREATE":
+            //            ExecuteDataDefinition(sql, uc);
+            //            break;
+            //        default:
+            //            ExecuteQuery(sql, uc);
+            //            break;
+            //    }
+            //}
+
+            bool reloadDatabaseTreeFlag = false;
+            bool showMessageTabFlag = true;
             if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
-                string sql = uc.GetSelectedQuery();
-                string firstString = sql.Split(' ')[0];
-                switch (firstString.ToUpper())
+                uc.ClearAllGrids();
+                string fprdbSQLStatements = uc.GetSelectedQuery();
+
+                try
                 {
-                    case "INSERT":
-                    case "DELETE":
-                    case "UPDATE":
-                        ExecuteUpdate(sql, false, uc);
-                        break;
-                    case "DROP":
-                        ExecuteUpdate(sql, true, uc);
-                        break;
-                    case "CREATE":
-                        ExecuteDataDefinition(sql, uc);
-                        break;
-                    default:
-                        ExecuteQuery(sql, uc);
-                        break;
+                    List<FPRDBSQLExecutionResult> results = this.sqlProcessor.executeFPRDBSQLStatements(fprdbSQLStatements);
+                    if (uc.memoEditMessageUC.Text == null)
+                        uc.memoEditMessageUC.Text = "";
+
+                    foreach (FPRDBSQLExecutionResult res in results)
+                    {
+                        if (res is DDL_FPRDB_SQL_ExecutionResult)
+                        {
+                            reloadDatabaseTreeFlag = true;
+                            uc.memoEditMessageUC.Text += $"Data Definition Language success.\r\n";
+                            showMessageTabFlag = true;
+                        }
+                        else if (res is DML_FPRDB_SQL_ExecutionResult)
+                        {
+                            uc.memoEditMessageUC.Text += $"[Number of tuples affected]: {(res as DML_FPRDB_SQL_ExecutionResult).numberTuplesAffected}.\r\n";
+                            showMessageTabFlag = true;
+                        }
+                        else //if(res is DQL_FPRDB_SQL_ExecutionResult)
+                        {
+                            DataTable resultForGridView = createDataTableForInMemoryScanResultedFromDQLExecution((res as DQL_FPRDB_SQL_ExecutionResult).resultedRelation);
+                            uc.CreateNewGridResult(resultForGridView);
+
+                            // Ghi thông báo thành công vào MemoEdit
+                            uc.memoEditMessageUC.Text += $"Query executed successfully.\r\n";
+                            showMessageTabFlag = false;
+
+                        }
+
+                    }
+                    if (reloadDatabaseTreeFlag)
+                    {
+                        AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+                        this.reLoadDatabaseTree();
+                    }
+                    if (showMessageTabFlag)
+                        uc.ViewError();
+                    else
+                        uc.ViewResult();
                 }
+                catch (SQLSyntaxException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (SemanticException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (InvalidCastException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (MismatchTokenType ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (NotSupportedException ex)
+                {
+                    uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
+                    uc.ViewError();
+                }
+                catch (UnderlyingStorageEngineCRUDException ex)
+                {
+                    XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //this.DialogResult = DialogResult.Abort;
+                }
+                finally
+                {
+                    // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
+                    uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
+                }
+                
+                
             }
+
         }
+        // Dummy situation for list objects excutionResults
+        //private void executeDemo()
+        //{
+        //    executionResults[];
+        //    foreach (var obj in executionResults)
+        //    {
+        //        if (obj is Plan)
+        //        {
+        //            // Excecuting similar to ExecuteQuery() function then provide data table for uc.CreateNewGridResult(dt)
+        //            // uc.CreateNewGridResult(dt) is responsible for adding new grid and binding data source of that data table
+        //        }
+        //        else if (obj is rowAffected)
+        //        {
+        //            uc.memoEditMessageUC.Text += $"[Number of rows affected]{rowAffected}\r\n";
+        //        }
+        //    }
+        //}
         private void ExecuteDataDefinition(string sql, ucQueryEditor uc)
         {
             try
@@ -1426,7 +1531,7 @@ namespace FPRDB_SQLite.GUI
             try
             {
                 int noRowsAffected = this.sqlProcessor.executeUpdate(sql);
-                uc.memoEditMessageUC.Text = $"[Number of rows affected]\r\n{noRowsAffected}";
+                uc.memoEditMessageUC.Text += $"[Number of rows affected]{noRowsAffected}\r\n";
                 uc.ViewError();
                 if (isReloadGUI)
                 {
@@ -1476,6 +1581,105 @@ namespace FPRDB_SQLite.GUI
                 uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
             }
 
+        }
+        private DataTable createDataTableForInMemoryScanResultedFromDQLExecution(InMemoryScan iscan)
+        {
+            DataTable resultForGridView = new DataTable();
+            FPRDBSchema schema = iscan.getFPRDBSchema();
+
+            //create columns for grid view of query result
+            foreach (Field f in schema.getFields())
+            {
+                resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
+            }
+            //Extract the result for grid view
+            string[] tupleForGridView = new string[schema.getFields().Count];
+            Field field;
+            List<Field> fields = schema.getFields();
+            while (iscan.next())
+            {
+                for (int i = 0; i < schema.getFields().Count; ++i)
+                {
+                    field = fields[i];
+                    switch (field.getFieldInfo().getType())
+                    {
+                        case FieldType.INT:
+                        case FieldType.distFS_INT:
+                            tupleForGridView[i] = iscan.getFieldContent<int>(field.getFieldName()).ToString();
+                            break;
+                        case FieldType.FLOAT:
+                        case FieldType.distFS_FLOAT:
+                        case FieldType.contFS:
+                            //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
+                            tupleForGridView[i] = iscan.getFieldContent<float>(field.getFieldName()).ToString();
+                            break;
+                        case FieldType.CHAR:
+                        case FieldType.VARCHAR:
+                        case FieldType.distFS_TEXT:
+                            //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
+                            tupleForGridView[i] = iscan.getFieldContent<string>(field.getFieldName()).ToString();
+                            break;
+                        case FieldType.BOOLEAN:
+                            //tupleForGridView.Add((s.getFieldContent<bool>(field.getFieldName())).ToString());
+                            tupleForGridView[i] = iscan.getFieldContent<bool>(field.getFieldName()).ToString();
+                            break;
+                    }
+                }
+                resultForGridView.Rows.Add(tupleForGridView);
+
+
+            }
+            return resultForGridView;
+        }
+        private DataTable createDataTableForPlanResultedFromDQLExecution(Plan p)
+        {
+            DataTable resultForGridView = new DataTable();
+            FPRDBSchema schema = p.getSchema();
+            Scan s = p.open();
+
+            //create columns for grid view of query result
+            foreach (Field f in schema.getFields())
+            {
+                resultForGridView.Columns.Add(f.getFieldName(), typeof(string));
+            }
+            //Extract the result for grid view
+            string[] tupleForGridView = new string[schema.getFields().Count];
+            Field field;
+            List<Field> fields = schema.getFields();
+            while (s.next())
+            {
+                for (int i = 0; i < schema.getFields().Count; ++i)
+                {
+                    field = fields[i];
+                    switch (field.getFieldInfo().getType())
+                    {
+                        case FieldType.INT:
+                        case FieldType.distFS_INT:
+                            tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
+                            break;
+                        case FieldType.FLOAT:
+                        case FieldType.distFS_FLOAT:
+                        case FieldType.contFS:
+                            //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
+                            tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
+                            break;
+                        case FieldType.CHAR:
+                        case FieldType.VARCHAR:
+                        case FieldType.distFS_TEXT:
+                            //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
+                            tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
+                            break;
+                        case FieldType.BOOLEAN:
+                            //tupleForGridView.Add((s.getFieldContent<bool>(field.getFieldName())).ToString());
+                            tupleForGridView[i] = s.getFieldContent<bool>(field.getFieldName()).ToString();
+                            break;
+                    }
+                }
+                resultForGridView.Rows.Add(tupleForGridView);
+
+
+            }
+            return resultForGridView;
         }
         private void ExecuteQuery(string sql, ucQueryEditor uc)
         {
@@ -1528,10 +1732,7 @@ namespace FPRDB_SQLite.GUI
 
 
                 }
-                //bind the result to the grid control
-                uc.GridResult.DataSource = resultForGridView;
-                //Yêu cầu GridView tự động tạo các cột dựa trên DataTable
-                uc.GridViewResult.PopulateColumns();
+                uc.CreateNewGridResult(resultForGridView);
 
                 // Ghi thông báo thành công vào MemoEdit
                 uc.ViewResult();

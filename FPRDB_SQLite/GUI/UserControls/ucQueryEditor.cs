@@ -83,5 +83,77 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
             }
             return memoEditTxtQuery.Text;
         }
+        // Clear previous results before showing new ones
+        public void ClearAllGrids()
+        {
+            QueryResultxtraTabPage.Controls.Clear();
+            memoEditMessage.Text = string.Empty;
+        }
+        // Method to create a new grdResultQuery
+        public void CreateNewGridResult(DataTable dt)
+        {
+            var panelContainer = new DevExpress.XtraEditors.PanelControl();
+            panelContainer.Height = 280; // Bạn có thể tăng/giảm chiều cao bảng tùy ý
+            panelContainer.Dock = System.Windows.Forms.DockStyle.Top;
+            panelContainer.Padding = new System.Windows.Forms.Padding(5, 5, 5, 15); // Tạo khoảng trống cách bảng dưới
+            panelContainer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            var gridControl = new DevExpress.XtraGrid.GridControl();
+            var gridView = new DevExpress.XtraGrid.Views.Grid.GridView();
+
+            gridControl.MainView = gridView;
+            gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
+            gridControl.Dock = System.Windows.Forms.DockStyle.Fill;
+
+            // Cấu hình GridView hiển thị dữ liệu giống logic cũ của bạn
+            gridControl.DataSource = dt;
+            gridView.PopulateColumns(); 
+
+            // Tùy chỉnh thêm để giao diện gọn gàng khi xếp chồng
+            gridView.OptionsBehavior.Editable = false;
+            gridView.OptionsView.ShowGroupPanel = false; // Tắt khu vực kéo thả nhóm cột
+
+            // 3. Đưa các control vào panel bọc ngoài
+            panelContainer.Controls.Add(gridControl);
+            QueryResultxtraTabPage.Controls.Add(panelContainer);
+
+            panelContainer.BringToFront();
+
+            gridControl.ForceInitialize();
+            int contentHeight = CalculateGridHeight(gridView);
+            panelContainer.Height = contentHeight + panelContainer.Padding.Bottom;
+        }
+        private int CalculateGridHeight(DevExpress.XtraGrid.Views.Grid.GridView view, int maxRowsBeforeScroll = 10)
+        {
+            // Lấy thông tin hiển thị thực tế của Grid (GridInfo)
+            var viewInfo = view.GetViewInfo() as DevExpress.XtraGrid.Views.Grid.ViewInfo.GridViewInfo;
+
+            if (viewInfo == null || viewInfo.RowsInfo.Count == 0)
+            {
+                int estimatedRowHeight = 22;
+                int estimatedHeaderHeight = 28;
+                int rowCount = Math.Min(view.DataRowCount, maxRowsBeforeScroll);
+                return estimatedHeaderHeight + (rowCount * estimatedRowHeight) + 10;
+            }
+
+            // 1. Lấy chiều cao của phần Header cột
+            int headerHeight = viewInfo.ColumnRowHeight;
+
+            // 2. Tính tổng chiều cao của các dòng dữ liệu (Giới hạn tối đa số dòng hiển thị)
+            int rowsHeight = 0;
+            int rowsToCount = Math.Min(view.DataRowCount, maxRowsBeforeScroll);
+
+            for (int i = 0; i < rowsToCount; i++)
+            {
+                // Nếu đã có UI info thì lấy chiều cao chính xác của dòng đó, ngược lại lấy chiều cao mặc định
+                rowsHeight += (i < viewInfo.RowsInfo.Count) ? viewInfo.RowsInfo[i].Bounds.Height : view.RowHeight;
+            }
+
+            // 3. Cộng thêm khoảng sai số của Border (đường viền trên dưới của Grid)
+            int totalHeight = headerHeight + rowsHeight + 8;
+
+            return totalHeight;
+        }
     }
+
 }

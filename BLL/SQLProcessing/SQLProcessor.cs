@@ -35,7 +35,7 @@ namespace BLL.SQLProcessing
         public bool executeDataDefinition(string sql)
         {
             this.parser.parse(sql);
-            Object data = this.parser.create();
+            Object data = this.parser.updateCommand();
             if(data is FPRDBSchema)
             {
                 FPRDBSchema createSchemaData = (FPRDBSchema)data;
@@ -49,7 +49,7 @@ namespace BLL.SQLProcessing
                     return false;
                 
             }
-            else
+            else if(data is FPRDBRelation)
             {
                 FPRDBRelation createRelationData = (FPRDBRelation)data;
                 if (this.preProcessor.checkSemanticCreateRelation(createRelationData))
@@ -59,7 +59,28 @@ namespace BLL.SQLProcessing
                 }
                 else
                     return false;
-
+            }
+            else if (data is DropRelationData)
+            {
+                DropRelationData DropData = (DropRelationData)data;
+                if (this.preProcessor.checkSemanticDropRelation(DropData) && this.constraintService.checkIfDropRelationViolateReferentialConstraint(DropData))
+                {
+                    this.updatePlanner.executeDropRelation(DropData.relation);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else //if (data is DropSchemaData)
+            {
+                DropSchemaData DropData = (DropSchemaData)data;
+                if (this.preProcessor.checkSemanticDropSchema(DropData))
+                {
+                    this.updatePlanner.executeDropSchema(DropData.schema);
+                    return true;
+                }
+                else
+                    return false;
             }
         }
         public int executeUpdate(string sql)
@@ -83,24 +104,6 @@ namespace BLL.SQLProcessing
                 if (this.preProcessor.checkSemanticDelete(dData) && this.constraintService.checkIfDeleteTupleViolateReferentialConstraint(dData))
                 {
                     return this.updatePlanner.executeDelete(dData);
-                }
-            }
-            else if(data is DropRelationData)
-            {
-                DropRelationData DropData = (DropRelationData)data;
-                if (this.preProcessor.checkSemanticDropRelation(DropData) && this.constraintService.checkIfDropRelationViolateReferentialConstraint(DropData))
-                {
-                    this.updatePlanner.executeDropRelation(DropData.relation);
-                    return 0;
-                }
-            }
-            else if (data is DropSchemaData)
-            {
-                DropSchemaData DropData = (DropSchemaData)data;
-                if (this.preProcessor.checkSemanticDropSchema(DropData))
-                {
-                    this.updatePlanner.executeDropSchema(DropData.schema);
-                    return 0;
                 }
             }
             else //if(data is ModifyData)
@@ -143,6 +146,80 @@ namespace BLL.SQLProcessing
                 return this.queryPlanner.createPlanForCalculatingProbabilisticInterpretationForSelectionOnSpeficifiedTuple(data);
             }
             return null;
+        }
+        private bool isFPRDBSQLStatementOfDataDefinitionLanguage(string stm)
+        {
+            string firstWord;
+            stm = stm.TrimStart([' ', '\r', '\n']);
+            int index = stm.IndexOf(' ');
+            if (index == -1)
+                return false;
+            firstWord = stm.Substring(0, index);
+            firstWord = firstWord.ToLower();
+            switch (firstWord)
+            {
+                case "create":
+                case "drop":
+                    return true;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
+        private bool isFPRDBSQLStatementOfDataManipulationLanguage(string stm)
+        {
+            string firstWord;
+            stm = stm.TrimStart([' ', '\r', '\n']);
+            int index = stm.IndexOf(' ');
+            if (index == -1)
+                return false;
+            firstWord = stm.Substring(0, index);
+            firstWord = firstWord.ToLower();
+            switch (firstWord)
+            {
+                case "insert":
+                case "delete":
+                case "update":
+                    return true;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
+        public List<FPRDBSQLExecutionResult> executeFPRDBSQLStatements(string fprdbSQLStatements)
+        {
+            List<FPRDBSQLExecutionResult> executionResults = new List<FPRDBSQLExecutionResult>();
+
+            fprdbSQLStatements = fprdbSQLStatements.TrimStart([' ', '\r', '\n']);
+            fprdbSQLStatements = fprdbSQLStatements.TrimEnd([';', ' ', '\r', '\n']);
+
+            string[] individualStatements = fprdbSQLStatements.Split(';');
+            string stm;
+            Plan tmpPlan;
+
+            for(int i=0; i<individualStatements.Length; ++i)
+            {
+                stm = individualStatements[i].TrimStart(' ');
+
+
+                if (isFPRDBSQLStatementOfDataDefinitionLanguage(stm))
+                {
+                    this.executeDataDefinition(stm);
+                    executionResults.Add(new DDL_FPRDB_SQL_ExecutionResult(true));
+                }
+                else if (isFPRDBSQLStatementOfDataManipulationLanguage(stm))
+                {
+                    executionResults.Add(new DML_FPRDB_SQL_ExecutionResult(this.executeUpdate(stm)));
+                }
+                else
+                {
+                    tmpPlan = this.createQueryPlan(stm);
+                    executionResults.Add(new DQL_FPRDB_SQL_ExecutionResult(new InMemoryScan(tmpPlan)));
+                }
+            }
+            return executionResults;
         }
 
     }

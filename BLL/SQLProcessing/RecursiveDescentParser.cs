@@ -675,17 +675,17 @@ namespace BLL.SQLProcessing
                 {
                     return delete();
                 }
-                else if (lexer.matchKeyword("MODIFY"))
+                else if (lexer.matchKeyword("UPDATE"))
                 {
-                    throw new NotImplementedException();
+                    return modify();
+                }
+                else if (lexer.matchKeyword("CREATE"))
+                {
+                    return create();
                 }
                 else if (lexer.matchKeyword("DROP"))
                 {
                     return drop();
-                }
-                else if (lexer.matchKeyword("UPDATE"))
-                {
-                    return modify();
                 }
                 else
                 {
