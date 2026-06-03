@@ -14,7 +14,7 @@ namespace BLL.SQLProcessing
     public class RelationScan:UpdateScan
     {
         private FPRDBRelation relationInfo;
-        private int currentTupleIndex;
+        private int currentTupleIndex;//index start at 1
         private List<AbstractFuzzyProbabilisticValue> currentTuple;
         private DatabaseManager dbMgr;
         private MetadataManager metaDataMgr;

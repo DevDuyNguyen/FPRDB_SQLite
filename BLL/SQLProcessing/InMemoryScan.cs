@@ -12,7 +12,7 @@ namespace BLL.SQLProcessing
     public class InMemoryScan:Scan
     {
         private FPRDBSchema schema;
-        private int currentTupleIndex;
+        private int currentTupleIndex=-1;//index start at 0
         private List<AbstractFuzzyProbabilisticValue> currentTuple;
         private List<List<AbstractFuzzyProbabilisticValue>> tuples;
 
@@ -20,6 +20,7 @@ namespace BLL.SQLProcessing
         {
             Scan s = p.open();
             this.schema = p.getSchema();
+            this.tuples = new List<List<AbstractFuzzyProbabilisticValue>>();
 
             while (s.next())
             {
