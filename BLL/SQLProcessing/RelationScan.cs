@@ -323,6 +323,7 @@ namespace BLL.SQLProcessing
             int trailingANDIndex = deleteSQL.LastIndexOf("AND");
             deleteSQL = deleteSQL.Substring(0, trailingANDIndex);
             this.dbMgr.executeNonQuery(deleteSQL);
+            this.currentTupleIndex--;
 
         }
 
