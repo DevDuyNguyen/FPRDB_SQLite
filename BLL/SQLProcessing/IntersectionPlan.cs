@@ -20,10 +20,22 @@ namespace BLL.SQLProcessing
             this.p2 = p2;
             if (!isSameSchema(this.p1.getSchema(), this.p2.getSchema()))
             {
-                throw new InvalidDataException("Relations of the intersection doesn't have the same schema structure");
+                throw new InvalidOperationException("Relations of the intersection doesn't have the same schema structure");
             }
             if (!ProbabilisticCombinationStrategyUtilities.isConjunctionStategy(probCombinationStrategy))
-                throw new InvalidDataException("Intersection must be paired with probabilistic conjunction strategy");
+                throw new InvalidOperationException("Intersection must be paired with probabilistic conjunction strategy");
+
+            //check if two input relations have the same primary key
+            List<string> primaryKeyP1 = p1.getSchema().getPrimarykey();
+            List<string> primaryKeyP2 = p2.getSchema().getPrimarykey();
+            if (primaryKeyP1 == null || primaryKeyP2 == null || primaryKeyP1.Count != primaryKeyP2.Count)
+                throw new InvalidOperationException("Input relations don't have the same primary key");
+            foreach (string k in primaryKeyP1)
+            {
+                if (!primaryKeyP2.Contains(k))
+                    throw new InvalidOperationException("Input relations don't have the same primary key");
+            }
+
             this.probCombinationStrategy = probCombinationStrategy;
             this.schema = this.p1.getSchema();
         }
@@ -37,7 +49,7 @@ namespace BLL.SQLProcessing
             {
                 if (!(sch1Fields[i].getFieldName() == sch2Fields[i].getFieldName()
                     && sch1Fields[i].getFieldInfo().getType() == sch2Fields[i].getFieldInfo().getType()
-                    && sch1Fields[i].getFieldInfo().getTXTLength() == sch2Fields[i].getFieldInfo().getTXTLength()
+                    //&& sch1Fields[i].getFieldInfo().getTXTLength() == sch2Fields[i].getFieldInfo().getTXTLength()
                     ))
                 {
                     isSameStructure = false;
