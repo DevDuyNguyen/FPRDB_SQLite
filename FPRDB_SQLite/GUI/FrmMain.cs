@@ -1411,7 +1411,8 @@ namespace FPRDB_SQLite.GUI
                     }
                     if (reloadDatabaseTreeFlag)
                     {
-                        AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                        AppStates
+                            .loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                         AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
                         this.reLoadDatabaseTree();
                     }
