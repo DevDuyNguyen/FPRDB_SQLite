@@ -1,4 +1,5 @@
 ﻿using BLL.Interfaces;
+using BLL.SQLProcessing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ namespace BLL.DomainObject
 {
     public class DQL_FPRDB_SQL_ExecutionResult:FPRDBSQLExecutionResult
     {
-        public Plan plan;
+        public InMemoryScan resultedRelation;
 
-        public DQL_FPRDB_SQL_ExecutionResult(Plan plan)
+        public DQL_FPRDB_SQL_ExecutionResult(InMemoryScan resultedRelation)
         {
-            this.plan=plan;
+            this.resultedRelation= resultedRelation;
         }
     }
 }

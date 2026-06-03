@@ -197,6 +197,7 @@ namespace BLL.SQLProcessing
 
             string[] individualStatements = fprdbSQLStatements.Split(';');
             string stm;
+            Plan tmpPlan;
 
             for(int i=0; i<individualStatements.Length; ++i)
             {
@@ -214,7 +215,8 @@ namespace BLL.SQLProcessing
                 }
                 else
                 {
-                    executionResults.Add(new DQL_FPRDB_SQL_ExecutionResult(this.createQueryPlan(stm)));
+                    tmpPlan = this.createQueryPlan(stm);
+                    executionResults.Add(new DQL_FPRDB_SQL_ExecutionResult(new InMemoryScan(tmpPlan)));
                 }
             }
             return executionResults;
