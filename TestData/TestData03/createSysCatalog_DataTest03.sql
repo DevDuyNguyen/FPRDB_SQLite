@@ -192,7 +192,7 @@ VALUES
     (2, 'pk_DOCTOR1',   'IDENTITY', NULL, NULL, 'D_ID',     NULL, 2),
     (3, 'pk_DOCTOR2',   'IDENTITY', NULL, NULL, 'D_NAME',   NULL, 3),
     (4, 'pk_DIAGNOSE',  'IDENTITY', NULL, NULL, 'P_ID,D_ID', NULL, 4),
-    (5, 'pk_DOCTOR3',   'IDENTITY', NULL, NULL, 'D_ID',     NULL, 5);
+    (5, 'pk_DOCTOR3',   'IDENTITY', NULL, NULL, 'D_NAME',     NULL, 5);
 	
 INSERT INTO fprdb_Relation (oid, rel_name, rel_relation_schema)
 VALUES 
