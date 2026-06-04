@@ -48,6 +48,7 @@ namespace FPRDB_SQLite.GUI
         private bool isSQLFileModified = false;
         private SQLProcessor sqlProcessor;
         private FPRDBRelationDTO _selectedRelation;
+        private FPRDBSchemaDTO _selectedSchema;
         private string _currentEditingColumn;
         private int _currentEditingRow;
         private string _currentEditingColumnType;
@@ -285,9 +286,23 @@ namespace FPRDB_SQLite.GUI
         }
         #endregion
         #region Tab Page Home
+        //Method to check if schema is existed
+        private bool IsSchemaExisted(string schemaName)
+        {
+            var schemas = AppStates.loadFPRDBSchemas;
+            if (schemas == null) return false;
+            return schemas.Any(s => s.schemaName.Equals(schemaName, StringComparison.OrdinalIgnoreCase));
+        }
         // Hàm hiển thị thông tin chi tiết của Schema
         private void DisplaySchemaDetail(FPRDBSchemaDTO schema)
         {
+            if (!IsSchemaExisted(schema.schemaName))
+            {
+                gridControlScheme.DataSource = null;
+                XtraTabPage schemaTab = xtraTabControlDatabase.TabPages[0];
+                schemaTab.Text = "Schema";
+                return;
+            }
             BindingList<SchemaAttribute> list = new BindingList<SchemaAttribute>();
             List<Field> fields = schema.fields;
             List<string> primaryKeys = schema.primarykey;
@@ -342,10 +357,31 @@ namespace FPRDB_SQLite.GUI
             }
             return row;
         }
-
+        // Method to reload the tabs of schema and relation after modifying
+        private void ReloadTabs()
+        {
+            if (_selectedRelation != null)
+                DisplayRelationDetail(_selectedRelation);
+            if (_selectedSchema != null)
+                DisplaySchemaDetail(_selectedSchema);
+        }
+        // Method to check if relation is existed
+        private bool IsRelationExisted(string relName)
+        {
+            var relations = AppStates.loadFPRDBSchemaRelations;
+            if (relations == null) return false;
+            return relations.Any(r => r.relName.Equals(relName, StringComparison.OrdinalIgnoreCase));
+        }
         // Hàm hiển thị nội dung của Relation
         private void DisplayRelationDetail(FPRDBRelationDTO relInfo)
         {
+            if (!IsRelationExisted(relInfo.relName))
+            {
+                gridControlRelation.DataSource = null;
+                XtraTabPage relationTab = xtraTabControlDatabase.TabPages[1];
+                relationTab.Text = "Relation";
+                return;
+            }
             var schema = relInfo.fprdbSchema;
             List<Field> schemaFields = schema.fields;
             // Sử dụng DataTable để hiện thị thông tin Relation
@@ -456,10 +492,11 @@ namespace FPRDB_SQLite.GUI
             {
                 if (node.Tag is FPRDBSchemaDTO schema)
                 {
+                    _selectedSchema = schema;
                     XtraTabPage schemaTab = xtraTabControlDatabase.TabPages[0];
                     schemaTab.Text = schema.schemaName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 0;
-                    DisplaySchemaDetail(schema);
+                    DisplaySchemaDetail(_selectedSchema);
                     ribbonControl.SelectedPage = SchemaRibbonPage;
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
@@ -1396,6 +1433,7 @@ namespace FPRDB_SQLite.GUI
                         {
                             uc.memoEditMessageUC.Text += $"[Number of tuples affected]: {(res as DML_FPRDB_SQL_ExecutionResult).numberTuplesAffected}.\r\n";
                             showMessageTabFlag = true;
+                            ReloadTabs();
                         }
                         else //if(res is DQL_FPRDB_SQL_ExecutionResult)
                         {
@@ -1844,6 +1882,7 @@ namespace FPRDB_SQLite.GUI
                         XtraMessageBox.Show("Schema deleted successfully!");
                         AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                         reLoadDatabaseTree();
+                        ReloadTabs();
                     }
                     catch (SemanticException ex)
                     {
@@ -1905,6 +1944,7 @@ namespace FPRDB_SQLite.GUI
                         XtraMessageBox.Show("Relation deleted successfully!");
                         AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
                         reLoadDatabaseTree();
+                        ReloadTabs();
                     }
                     catch (SemanticException ex)
                     {
