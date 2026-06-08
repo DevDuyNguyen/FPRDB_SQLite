@@ -92,6 +92,8 @@ namespace BLL.SQLProcessing
 
             foreach (string fldName in data.getPrimarykey())
             {
+                if(data.getFieldByName(fldName)==null)
+                    throw new SemanticException($"Key attribute {fldName} doesn't exist in schema definition");
                 if (!FieldTypeUtilities.isPrimitive(data.getFieldByName(fldName).getFieldInfo().getType()))
                     throw new SemanticException("Primary key must be of non fuzzy set type");
             }
