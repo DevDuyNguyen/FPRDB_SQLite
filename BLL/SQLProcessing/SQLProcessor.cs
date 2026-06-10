@@ -34,6 +34,9 @@ namespace BLL.SQLProcessing
 
         public bool executeDataDefinition(string sql)
         {
+            if (sql == default || sql == null)
+                throw new InvalidOperationException("FPRDB-SQL command isn't provided");
+
             this.parser.parse(sql);
             Object data = this.parser.updateCommand();
             if(data is FPRDBSchema)

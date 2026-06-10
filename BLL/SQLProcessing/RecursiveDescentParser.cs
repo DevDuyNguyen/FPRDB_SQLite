@@ -27,6 +27,8 @@ namespace BLL.SQLProcessing
 
         public void parse(String sqlStatement)
         {
+            //if (sqlStatement == default || sqlStatement == null)
+            //    throw new InvalidOperationException("FPRDB-SQL command isn't provided");
             this.lexer.analyze(sqlStatement);
         }
 
