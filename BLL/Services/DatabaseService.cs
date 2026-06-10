@@ -131,7 +131,7 @@ namespace BLL.Services
         }
         private bool isSystemCatalogTableExist(string tableName)
         {
-            using(IDataReader r=this.dbMgr.executeQuery($"select 1 from sqlite_master where type='table' and name='{tableName}';"))
+            using (IDataReader r = this.dbMgr.executeQuery($"select 1 from sqlite_master where type='table' and name='{tableName}';"))
             {
                 return r.Read();
             }
@@ -178,7 +178,7 @@ namespace BLL.Services
 
         private bool is_system_catalog_table_definition_exist(SystemCatalogTable table)
         {
-            
+
             //is system catalog table exist
             if (!isSystemCatalogTableExist(table.name))
                 throw new InvalidFPRDBDatabaseFile($"System catalog table {table.name} doesn't exist");
@@ -498,6 +498,8 @@ namespace BLL.Services
         }
         public void loadDB(String filePath)
         {
+            if (filePath == default || filePath == null)
+                throw new InvalidOperationException("File path isn't provided");
             //file dot extension is .fprdb
             int dotExtensionStartIndex = filePath.LastIndexOf(".");
             if (dotExtensionStartIndex == -1)
