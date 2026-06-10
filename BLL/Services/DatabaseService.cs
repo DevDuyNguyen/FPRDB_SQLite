@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace BLL.Services
 {
@@ -511,8 +512,9 @@ namespace BLL.Services
         }
         public List<string> getFieldTypes()
         {
-            return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
-                "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
+            //return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
+            //    "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
+            return Enum.GetNames(typeof(FieldType)).ToList();
         }
         public List<FieldType> getDefineDomainForDistFuzzSet()
         {
