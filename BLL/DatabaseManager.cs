@@ -36,8 +36,6 @@ namespace BLL
         }
         private void addFPRDBExtenstion(ref string filePath)
         {
-            if (filePath == null || filePath == default)
-                throw new InvalidOperationException("filePath isn't provided");
             int dotExtensionStartIndex = filePath.LastIndexOf('.');
             if (dotExtensionStartIndex != -1)
             {
@@ -54,6 +52,8 @@ namespace BLL
         }
         public void createDB(string filePath)
         {
+            if (filePath == null || filePath == default)
+                throw new InvalidOperationException("filePath isn't provided");
             addFPRDBExtenstion(ref filePath);
             string directoryPath = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directoryPath))

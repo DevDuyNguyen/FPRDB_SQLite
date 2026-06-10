@@ -113,19 +113,19 @@ namespace BLL.SQLProcessing
                 field = fields[i];
                 fieldType = field.getFieldInfo().getType();
                 if (this.commonFields.Contains(field.getFieldName())) {
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                     {
                         FuzzyProbabilisticValue<int> fprobValue1 = this.s1.getFieldContent<int>(field.getFieldName());
                         FuzzyProbabilisticValue<int> fprobValue2 = this.s2.getFieldContent<int>(field.getFieldName());
                         ans.Add(FProbValueCombinationStategy.conjunction<int>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                     }
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                     {
                         FuzzyProbabilisticValue<float> fprobValue1 = this.s1.getFieldContent<float>(field.getFieldName());
                         FuzzyProbabilisticValue<float> fprobValue2 = this.s2.getFieldContent<float>(field.getFieldName());
                         ans.Add(FProbValueCombinationStategy.conjunction<float>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                     }
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                     {
                         FuzzyProbabilisticValue<string> fprobValue1 = this.s1.getFieldContent<string>(field.getFieldName());
                         FuzzyProbabilisticValue<string> fprobValue2 = this.s2.getFieldContent<string>(field.getFieldName());
@@ -142,22 +142,22 @@ namespace BLL.SQLProcessing
                 {
                     if (this.s1.hasField(field.getFieldName()))
                     {
-                        if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                             ans.Add(this.s1.getFieldContent<int>(field.getFieldName()));
-                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType==FieldType.contFS)
+                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType==FieldType.CONT_FUZZYSET)
                             ans.Add(this.s1.getFieldContent<float>(field.getFieldName()));
-                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType==FieldType.distFS_TEXT)
+                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType==FieldType.DIST_FUZZYSET_TEXT)
                             ans.Add(this.s1.getFieldContent<string>(field.getFieldName()));
                         else //if (fieldType == FieldType.BOOLEAN)
                             ans.Add(this.s1.getFieldContent<bool>(field.getFieldName()));
                     }
                     else
                     {
-                        if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                             ans.Add(this.s2.getFieldContent<int>(field.getFieldName()));
-                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                             ans.Add(this.s2.getFieldContent<float>(field.getFieldName()));
-                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                             ans.Add(this.s2.getFieldContent<string>(field.getFieldName()));
                         else //if (fieldType == FieldType.BOOLEAN)
                             ans.Add(this.s2.getFieldContent<bool>(field.getFieldName()));

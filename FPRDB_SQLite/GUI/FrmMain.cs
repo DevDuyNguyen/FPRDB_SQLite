@@ -1628,18 +1628,18 @@ namespace FPRDB_SQLite.GUI
                     switch (field.getFieldInfo().getType())
                     {
                         case FieldType.INT:
-                        case FieldType.distFS_INT:
+                        case FieldType.DIST_FUZZYSET_INT:
                             tupleForGridView[i] = iscan.getFieldContent<int>(field.getFieldName()).ToString();
                             break;
                         case FieldType.FLOAT:
-                        case FieldType.distFS_FLOAT:
-                        case FieldType.contFS:
+                        case FieldType.DIST_FUZZYSET_FLOAT:
+                        case FieldType.CONT_FUZZYSET:
                             //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                             tupleForGridView[i] = iscan.getFieldContent<float>(field.getFieldName()).ToString();
                             break;
                         case FieldType.CHAR:
                         case FieldType.VARCHAR:
-                        case FieldType.distFS_TEXT:
+                        case FieldType.DIST_FUZZYSET_TEXT:
                             //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                             tupleForGridView[i] = iscan.getFieldContent<string>(field.getFieldName()).ToString();
                             break;
@@ -1678,18 +1678,18 @@ namespace FPRDB_SQLite.GUI
                     switch (field.getFieldInfo().getType())
                     {
                         case FieldType.INT:
-                        case FieldType.distFS_INT:
+                        case FieldType.DIST_FUZZYSET_INT:
                             tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                             break;
                         case FieldType.FLOAT:
-                        case FieldType.distFS_FLOAT:
-                        case FieldType.contFS:
+                        case FieldType.DIST_FUZZYSET_FLOAT:
+                        case FieldType.CONT_FUZZYSET:
                             //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                             tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
                             break;
                         case FieldType.CHAR:
                         case FieldType.VARCHAR:
-                        case FieldType.distFS_TEXT:
+                        case FieldType.DIST_FUZZYSET_TEXT:
                             //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                             tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
                             break;
@@ -1731,18 +1731,18 @@ namespace FPRDB_SQLite.GUI
                         switch (field.getFieldInfo().getType())
                         {
                             case FieldType.INT:
-                            case FieldType.distFS_INT:
+                            case FieldType.DIST_FUZZYSET_INT:
                                 tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                                 break;
                             case FieldType.FLOAT:
-                            case FieldType.distFS_FLOAT:
-                            case FieldType.contFS:
+                            case FieldType.DIST_FUZZYSET_FLOAT:
+                            case FieldType.CONT_FUZZYSET:
                                 //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                                 tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
                                 break;
                             case FieldType.CHAR:
                             case FieldType.VARCHAR:
-                            case FieldType.distFS_TEXT:
+                            case FieldType.DIST_FUZZYSET_TEXT:
                                 //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                                 tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
                                 break;
@@ -1963,7 +1963,7 @@ namespace FPRDB_SQLite.GUI
             string fldName = this._currentEditingColumn;
             this.selectedField = this._selectedRelation.fprdbSchema.fields.FirstOrDefault(n => n.getFieldName() == fldName);
             this.selectedFieldType = selectedField.getFieldInfo().getType();
-            this.isSelectedFieldText = selectedFieldType == FieldType.CHAR || selectedFieldType == FieldType.VARCHAR || selectedFieldType == FieldType.distFS_TEXT;
+            this.isSelectedFieldText = selectedFieldType == FieldType.CHAR || selectedFieldType == FieldType.VARCHAR || selectedFieldType == FieldType.DIST_FUZZYSET_TEXT;
 
             LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
         }
@@ -2513,18 +2513,18 @@ namespace FPRDB_SQLite.GUI
                             switch (field.getFieldInfo().getType())
                             {
                                 case FieldType.INT:
-                                case FieldType.distFS_INT:
+                                case FieldType.DIST_FUZZYSET_INT:
                                     tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                                     break;
                                 case FieldType.FLOAT:
-                                case FieldType.distFS_FLOAT:
-                                case FieldType.contFS:
+                                case FieldType.DIST_FUZZYSET_FLOAT:
+                                case FieldType.CONT_FUZZYSET:
                                     //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                                     tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
                                     break;
                                 case FieldType.CHAR:
                                 case FieldType.VARCHAR:
-                                case FieldType.distFS_TEXT:
+                                case FieldType.DIST_FUZZYSET_TEXT:
                                     //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                                     tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
                                     break;

@@ -110,22 +110,22 @@ namespace BLL.SQLProcessing
                 }
                 else if (lexer.matchKeyword("DIST_FUZZYSET_INT"))
                 {
-                    type = FieldType.distFS_INT;
+                    type = FieldType.DIST_FUZZYSET_INT;
                     lexer.eatKeyword("DIST_FUZZYSET_INT");
                 }
                 else if (lexer.matchKeyword("DIST_FUZZYSET_FLOAT"))
                 {
-                    type = FieldType.distFS_FLOAT;
+                    type = FieldType.DIST_FUZZYSET_FLOAT;
                     lexer.eatKeyword("DIST_FUZZYSET_FLOAT");
                 }
                 else if (lexer.matchKeyword("DIST_FUZZYSET_TEXT"))
                 {
-                    type = FieldType.distFS_TEXT;
+                    type = FieldType.DIST_FUZZYSET_TEXT;
                     lexer.eatKeyword("DIST_FUZZYSET_TEXT");
                 }
                 else if (lexer.matchKeyword("CONT_FUZZYSET"))
                 {
-                    type = FieldType.contFS;
+                    type = FieldType.CONT_FUZZYSET;
                     lexer.eatKeyword("CONT_FUZZYSET");
                 }
                 else

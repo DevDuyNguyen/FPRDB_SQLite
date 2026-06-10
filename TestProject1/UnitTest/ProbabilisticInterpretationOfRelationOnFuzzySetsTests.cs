@@ -54,7 +54,7 @@ namespace TestProject1.UnitTest
         {
             //arrange
             ContinuousFuzzySet fs1 = new ContinuousFuzzySet(10, 30, 60, 100, null, -1);
-            DiscreteFuzzySet<float> fs2 = new DiscreteFuzzySet<float>(new List<float> { -1, 121, 30, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.4f }, null, FieldType.distFS_FLOAT, -1);
+            DiscreteFuzzySet<float> fs2 = new DiscreteFuzzySet<float>(new List<float> { -1, 121, 30, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.4f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1);
             //act
             DiscreteFuzzySet<float> actual = ProbabilisticInterpretationOfRelationOnFuzzySets.discretizeContinuousFSFromDiscreteFS<float>(fs1, fs2);
             //assert
@@ -64,8 +64,8 @@ namespace TestProject1.UnitTest
             public equalDistcreteFuzzySets_positive_testdata()
             {
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.distFS_FLOAT, -1),
-                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4}, new List<float> { 0.3f, 1f, 0.3f}, null, FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4}, new List<float> { 0.3f, 1f, 0.3f}, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
                 0.34f
                 );
 
@@ -87,8 +87,8 @@ namespace TestProject1.UnitTest
             public noEqualDistcreteFuzzySets_positive_testdata()
             {
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.distFS_FLOAT, -1),
-                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
                 0.66f
                 );
 
@@ -110,8 +110,8 @@ namespace TestProject1.UnitTest
             public lessThanDistcreteFuzzySets_positive_testdata()
             {
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.distFS_FLOAT, -1),
-                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
                 0.22f
                 );
 
@@ -133,8 +133,8 @@ namespace TestProject1.UnitTest
             public lessThanEqualDistcreteFuzzySets_positive_testdata()
             {
                 Add(
-                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.distFS_FLOAT, -1),
-                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 3, 4, 5, 6 }, new List<float> { 0.2f, 0.5f, 0.9f, 1f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 6, 5, 4 }, new List<float> { 0.3f, 1f, 0.3f }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
                 0.56f
                 );
 
@@ -156,8 +156,8 @@ namespace TestProject1.UnitTest
             public alsoFLOAT_positive_testdata()
             {
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> { 0.2f, 0.5f, 0.9f, 1 }, "high", FieldType.distFS_INT, -1),
-                    new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1.0f, 0.3f }, "about_5", FieldType.distFS_INT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> { 0.2f, 0.5f, 0.9f, 1 }, "high", FieldType.DIST_FUZZYSET_INT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1.0f, 0.3f }, "about_5", FieldType.DIST_FUZZYSET_INT, -1),
                     0.53f
                     );
             }
@@ -201,8 +201,8 @@ namespace TestProject1.UnitTest
                 }
                 //true content:
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1.0f, 0.3f }, "about_5", FieldType.distFS_INT, -1),
-                    new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> { 0.2f, 0.5f, 0.9f, 1 }, "high", FieldType.distFS_INT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 6.0f, 5.0f, 4.0f }, new List<float> { 0.3f, 1.0f, 0.3f }, "about_5", FieldType.DIST_FUZZYSET_INT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 3.0f, 4.0f, 5.0f, 6.0f }, new List<float> { 0.2f, 0.5f, 0.9f, 1 }, "high", FieldType.DIST_FUZZYSET_INT, -1),
                     CompareOperation.EQUAL,
                     0.34f
                     );
@@ -256,14 +256,14 @@ namespace TestProject1.UnitTest
                 ContinuousFuzzySet approx_15 = new ContinuousFuzzySet(10, 15, 15, 20, "approx_15", -1);
                 
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 30}, new List<float> { 1}, null, FieldType.distFS_FLOAT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 30}, new List<float> { 1}, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
                     middle_aged,
                     CompareOperation.ALSO,
                     0.666f
                     );
 
                 Add(
-                    new DiscreteFuzzySet<float>(new List<float> { 38 }, new List<float> { 1 }, null, FieldType.distFS_FLOAT, -1),
+                    new DiscreteFuzzySet<float>(new List<float> { 38 }, new List<float> { 1 }, null, FieldType.DIST_FUZZYSET_FLOAT, -1),
                     middle_aged,
                     CompareOperation.ALSO,
                     1

@@ -29,11 +29,11 @@ namespace BLL.SQLProcessing
                 foreach(Field field in this.selectFields.getFields())
                 {
                     FieldType fieldType = field.getFieldInfo().getType();
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                         tmp1.Add(this.s.getFieldContent<int>(field.getFieldName()));
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                         tmp1.Add(this.s.getFieldContent<float>(field.getFieldName()));
-                    else if (fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                         tmp1.Add(this.s.getFieldContent<string>(field.getFieldName()));
                     else if (fieldType == FieldType.BOOLEAN)
                         tmp1.Add(this.s.getFieldContent<bool>(field.getFieldName()));

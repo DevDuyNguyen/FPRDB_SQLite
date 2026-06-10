@@ -8,9 +8,9 @@ namespace BLL
         CHAR, 
         VARCHAR, 
         BOOLEAN, 
-        distFS_INT, 
-        distFS_FLOAT, 
-        distFS_TEXT, 
-        contFS
+        DIST_FUZZYSET_INT, 
+        DIST_FUZZYSET_FLOAT, 
+        DIST_FUZZYSET_TEXT, 
+        CONT_FUZZYSET
     }
 }

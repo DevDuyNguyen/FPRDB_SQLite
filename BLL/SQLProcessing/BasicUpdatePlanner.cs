@@ -379,11 +379,11 @@ namespace BLL.SQLProcessing
                 //not done: refactor by delegate or c# equivalent of pass function as member in js
                 if(data is FieldFieldModifyData)
                 {
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                         us.setFieldContent<int>(fldName, us.getFieldContent<int>(fldName));
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                         us.setFieldContent<float>(fldName, us.getFieldContent<float>(fldName));
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                         us.setFieldContent<string>(fldName, us.getFieldContent<string>(fldName));
                     else //if (fieldType == FieldType.BOOLEAN)
                         us.setFieldContent<bool>(fldName, us.getFieldContent<bool>(fldName));
@@ -391,17 +391,17 @@ namespace BLL.SQLProcessing
                 else
                 {
                     FuzzyProbabilisticValueParsingData parsed_fprobValue = (FuzzyProbabilisticValueParsingData)data.getAssignValue();
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                     {
                         FuzzyProbabilisticValue<int> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsed_fprobValue, fieldType, this.metaDataMgr);
                         us.setFieldContent<int>(fldName, v);
                     }
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                     {
                         FuzzyProbabilisticValue<float> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsed_fprobValue, fieldType, this.metaDataMgr);
                         us.setFieldContent<float>(fldName, v);
                     }
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                     {
                         FuzzyProbabilisticValue<string> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsed_fprobValue, fieldType, this.metaDataMgr);
                         us.setFieldContent<string>(fldName, v);

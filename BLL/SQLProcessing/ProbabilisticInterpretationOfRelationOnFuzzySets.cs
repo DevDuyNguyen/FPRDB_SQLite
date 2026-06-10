@@ -122,7 +122,7 @@ namespace BLL.SQLProcessing
                     rfs2_memberships.Add(fs2.getMembershipDegree(fs2_left_bottom));
                 }
             }
-            return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.distFS_FLOAT,-1), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.distFS_FLOAT, -1));
+            return (new DiscreteFuzzySet<float>(rfs1_values, rfs1_memberships, null, FieldType.DIST_FUZZYSET_FLOAT,-1), new DiscreteFuzzySet<float>(rfs2_values, rfs2_memberships, null, FieldType.DIST_FUZZYSET_FLOAT, -1));
         }
 
 #if NET8_0_OR_GREATER
@@ -161,7 +161,7 @@ namespace BLL.SQLProcessing
                     }
                 }
             }
-            return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.distFS_FLOAT, -1);
+            return new DiscreteFuzzySet<float>(fs1_Values, fs1_Memberships, null, FieldType.DIST_FUZZYSET_FLOAT, -1);
 
         }
         //not done: mocking for private

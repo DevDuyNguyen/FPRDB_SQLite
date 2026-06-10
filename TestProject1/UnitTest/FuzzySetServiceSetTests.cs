@@ -65,7 +65,7 @@ namespace TestProject1.UnitTest
         {
             public removeFuzzySet_positive_testdata()
             {
-                Add(new DiscreteFuzzySetDTO<int>(null, null, 6, "young", FieldType.contFS));
+                Add(new DiscreteFuzzySetDTO<int>(null, null, 6, "young", FieldType.CONT_FUZZYSET));
             }
         }
         //[Theory]
@@ -81,7 +81,7 @@ namespace TestProject1.UnitTest
         {
             public updateFuzzySet_positive_testdata()
             {
-                Add(new DiscreteFuzzySetDTO<int>(new List<int> { 20, 21, 22, 23 }, new List<float> { 1, 1, 0.5f, 0.5f }, 4, "distFS1", FieldType.distFS_INT));
+                Add(new DiscreteFuzzySetDTO<int>(new List<int> { 20, 21, 22, 23 }, new List<float> { 1, 1, 0.5f, 0.5f }, 4, "distFS1", FieldType.DIST_FUZZYSET_INT));
             }
         }
         //[Theory]

@@ -230,7 +230,7 @@ namespace BLL.DomainObject
                     values.Add(v1);
                     memberships.Add(Math.Min(this.getMembershipDegree(v1), fs.getMembershipDegree(v1)));
                 }
-                return new DiscreteFuzzySet<float>(values, memberships, dfs.getName(), FieldType.distFS_FLOAT, -1);
+                return new DiscreteFuzzySet<float>(values, memberships, dfs.getName(), FieldType.DIST_FUZZYSET_FLOAT, -1);
             }
         }
         public override bool isNormal(){

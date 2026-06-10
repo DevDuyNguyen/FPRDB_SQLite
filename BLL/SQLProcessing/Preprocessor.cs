@@ -142,17 +142,17 @@ namespace BLL.SQLProcessing
                 {
                     if (constant is IntConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT && fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
+                        if (fieldInfo.getType() != FieldType.INT && fieldInfo.getType() != FieldType.DIST_FUZZYSET_INT && fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.DIST_FUZZYSET_FLOAT && fieldInfo.getType() != FieldType.CONT_FUZZYSET)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is FloatConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
+                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.DIST_FUZZYSET_FLOAT && fieldInfo.getType() != FieldType.CONT_FUZZYSET)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is StringConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.VARCHAR && fieldInfo.getType() != FieldType.CHAR && fieldInfo.getType() != FieldType.distFS_TEXT)
+                        if (fieldInfo.getType() != FieldType.VARCHAR && fieldInfo.getType() != FieldType.CHAR && fieldInfo.getType() != FieldType.DIST_FUZZYSET_TEXT)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is BooleanConstant)
@@ -179,9 +179,9 @@ namespace BLL.SQLProcessing
 
                         fsContant.setFuzzySetOID(fuzzySetOID);
                         fsContant.setType(type);
-                        if (fieldInfo.getType() == FieldType.distFS_FLOAT)
+                        if (fieldInfo.getType() == FieldType.DIST_FUZZYSET_FLOAT)
                         {
-                            if (type != FieldType.distFS_FLOAT && type != FieldType.distFS_INT)
+                            if (type != FieldType.DIST_FUZZYSET_FLOAT && type != FieldType.DIST_FUZZYSET_INT)
                                 throw new SemanticException(generalExceptionMessage);
                         }
                         else

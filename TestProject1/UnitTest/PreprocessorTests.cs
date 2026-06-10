@@ -148,22 +148,22 @@ namespace TestProject1.UnitTest
                 Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new FloatConstant(12), CompareOperation.EQUAL, true);
 
                 //Field is dist_INT, constant is float, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FloatConstant(12.1f), CompareOperation.EQUAL, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new FloatConstant(12.1f), CompareOperation.EQUAL, true);
                 //Field is dist_INT, constant is int, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
                 //Field is dist_FLOAT, constant is float, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FloatConstant(12.1f), CompareOperation.EQUAL, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new FloatConstant(12.1f), CompareOperation.EQUAL, true);
                 //Field is dist_FLOAT, constant is int, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new IntConstant(12), CompareOperation.EQUAL, true);
 
                 //Field is dist_FLOAT, constant is dist_INT fuzzy set, ->
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("distFS1"), CompareOperation.ALSO, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new FuzzySetConstant("distFS1"), CompareOperation.ALSO, true);
                 //Field is dist_FLOAT, constant is dist_INT fuzzy set, ->
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("young"), CompareOperation.ALSO, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new FuzzySetConstant("young"), CompareOperation.ALSO, true);
                 //Field is dist_INT, constant is dist_INT fuzzy set, ->
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("distFS1"), CompareOperation.ALSO, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new FuzzySetConstant("distFS1"), CompareOperation.ALSO, true);
                 //Field is dist_INT, constant is dist_INT fuzzy set, ->
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("young"), CompareOperation.ALSO, true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new FuzzySetConstant("young"), CompareOperation.ALSO, true);
 
 
                 //Field is varchar, constant is string, =
@@ -201,21 +201,21 @@ namespace TestProject1.UnitTest
                 Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
 
                 //Field is dist_INT, constant is string, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
                 //Field is dist_INT, constant is bool, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
                 //Field is dist_FLOAT, constant is string, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new StringConstant("aa"), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} aa is invalid"));
                 //Field is dist_FLOAT, constant is bool, =
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new BooleanConstant(true), CompareOperation.EQUAL, new SemanticException($"attr1 {CompareOperation.EQUAL.ToString()} {true.ToString()} is invalid"));
 
                 //Field is dist_FLOAT, constant is dist_TEXT fuzzy set, ->
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
                 //Field is dist_INT, constant is dist_TEXT fuzzy set, ->
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new FuzzySetConstant("distFS2"), CompareOperation.ALSO, new SemanticException($"attr1 {CompareOperation.ALSO.ToString()} distFS2 is invalid"));
 
                 //Fuzzy set doesn't exist
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new FuzzySetConstant("not exist"), CompareOperation.ALSO, new SemanticException($"Fuzzy set not exist doesn't exist"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new FuzzySetConstant("not exist"), CompareOperation.ALSO, new SemanticException($"Fuzzy set not exist doesn't exist"));
                 
 
             }
@@ -244,17 +244,17 @@ namespace TestProject1.UnitTest
                 Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
                 Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
 
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), true);
 
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), true);
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), true);
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr1", new FieldInfo(FieldType.contFS, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr1", new FieldInfo(FieldType.CONT_FUZZYSET, 0)), true);
 
 
-                Add(new Field("attr1", new FieldInfo(FieldType.VARCHAR, 10)), new Field("attr1", new FieldInfo(FieldType.distFS_TEXT, 10)), true);
+                Add(new Field("attr1", new FieldInfo(FieldType.VARCHAR, 10)), new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_TEXT, 10)), true);
 
             }
         }
@@ -282,13 +282,13 @@ namespace TestProject1.UnitTest
                 Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
                 Add(new Field("attr1", new FieldInfo(FieldType.FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
                 
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.VARCHAR, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.BOOLEAN, 0)), new SemanticException($"attr1 = attr2 is invalid"));
                 
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.distFS_TEXT, 0)), new SemanticException($"attr1 = attr2 is invalid"));
-                Add(new Field("attr1", new FieldInfo(FieldType.distFS_INT, 0)), new Field("attr2", new FieldInfo(FieldType.distFS_TEXT, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)), new Field("attr2", new FieldInfo(FieldType.DIST_FUZZYSET_TEXT, 0)), new SemanticException($"attr1 = attr2 is invalid"));
+                Add(new Field("attr1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)), new Field("attr2", new FieldInfo(FieldType.DIST_FUZZYSET_TEXT, 0)), new SemanticException($"attr1 = attr2 is invalid"));
 
             }
         }
@@ -442,7 +442,7 @@ namespace TestProject1.UnitTest
                 FPRDBSchema sch2 = new FPRDBSchema(
                     "sch1",
                     new List<Field> {
-                        new Field("person_id", new FieldInfo(FieldType.distFS_INT,0)),
+                        new Field("person_id", new FieldInfo(FieldType.DIST_FUZZYSET_INT,0)),
                         new Field("name", new FieldInfo(FieldType.VARCHAR, 50))
                         },
                     null

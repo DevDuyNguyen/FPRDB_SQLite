@@ -230,11 +230,11 @@ namespace BLL.DAO
             foreach (string fsName in matchFuzzySetNames)
             {
                 fsType = this.metaDataMgr.getFuzzySetType(fsName);
-                if (fsType == FieldType.distFS_INT)
+                if (fsType == FieldType.DIST_FUZZYSET_INT)
                 {
                     ans.Add(this.metaDataMgr.getFuzzySet<int>(fsName, fsType));
                 }
-                else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+                else if (fsType == FieldType.DIST_FUZZYSET_FLOAT || fsType == FieldType.CONT_FUZZYSET)
                 {
                     ans.Add(this.metaDataMgr.getFuzzySet<float>(fsName, fsType));
                 }
@@ -280,12 +280,12 @@ namespace BLL.DAO
         {
             FieldType fsType = this.metaDataMgr.getFuzzySetTypeByID(oid);
             FuzzySetDTO dto=null;
-            if (fsType == FieldType.distFS_INT)
+            if (fsType == FieldType.DIST_FUZZYSET_INT)
             {
                 FuzzySet<int> tmp = this.metaDataMgr.getFuzzySetByID<int>(oid, fsType);
                 dto = tmp.toDTO();
             }
-            else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+            else if (fsType == FieldType.DIST_FUZZYSET_FLOAT || fsType == FieldType.CONT_FUZZYSET)
             {
                 FuzzySet<float> tmp = this.metaDataMgr.getFuzzySetByID<float>(oid, fsType);
                 dto = tmp.toDTO();

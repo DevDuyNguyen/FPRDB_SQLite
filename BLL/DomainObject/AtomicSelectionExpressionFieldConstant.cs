@@ -96,7 +96,7 @@ namespace BLL.DomainObject
             FieldType fieldType = schema.getFieldByName(field).getFieldInfo().getType();
             Type constantType = this.constant.GetType();
             
-            if(fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+            if(fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
             {
                 if (!(this.constant is IntConstant || this.constant is FuzzySetConstant || this.constant is FloatConstant))
                     throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}");
@@ -104,13 +104,13 @@ namespace BLL.DomainObject
                     return genericCalculateProbabilisticInterpretation<int, float>(currentTuple.getFieldContent<int>(field), FuzzySetUltilities.turnConstantToFuzzySet<float>(this.constant, this.metaDataMgr));
                 return genericCalculateProbabilisticInterpretation<int>(currentTuple.getFieldContent<int>(field),FuzzySetUltilities.turnConstantToFuzzySet<int>(this.constant, this.metaDataMgr));
             }
-            else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType==FieldType.contFS)
+            else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType==FieldType.CONT_FUZZYSET)
             {
                 if(!(this.constant is FloatConstant || this.constant is IntConstant || this.constant is FuzzySetConstant))
                     throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}"); 
                 return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(field), FuzzySetUltilities.turnConstantToFuzzySet<float>(this.constant, this.metaDataMgr));
             }
-            else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+            else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
             {
                 if (!(this.constant is StringConstant || this.constant is FuzzySetConstant))
                     throw new InvalidCastException($"Can't compare field of type {fieldType.ToString()} with constant type {constantType.Name}");

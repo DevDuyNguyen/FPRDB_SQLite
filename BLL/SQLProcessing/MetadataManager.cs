@@ -250,11 +250,11 @@ namespace BLL.SQLProcessing
                 if ((string)reader["fuzzy_set_category"]== "DISCRETE")
                 {
                     if ((string)reader["type_name"] == FieldType.INT.ToString())
-                        type = FieldType.distFS_INT;
+                        type = FieldType.DIST_FUZZYSET_INT;
                     else if ((string)reader["type_name"] == FieldType.FLOAT.ToString())
-                        type = FieldType.distFS_FLOAT;
+                        type = FieldType.DIST_FUZZYSET_FLOAT;
                     else if ((string)reader["type_name"] == FieldType.VARCHAR.ToString())
-                        type = FieldType.distFS_TEXT;
+                        type = FieldType.DIST_FUZZYSET_TEXT;
                     else {
                         throw new Exception($"Fuzzy set {name} has supported domain type");
                     }
@@ -263,7 +263,7 @@ namespace BLL.SQLProcessing
                 {
                     if ((string)reader["type_name"] != FieldType.FLOAT.ToString())
                         throw new Exception($"Fuzzy set {name} has supported domain type");
-                    type = FieldType.contFS;
+                    type = FieldType.CONT_FUZZYSET;
                 }
             }
             return type;
@@ -297,11 +297,11 @@ namespace BLL.SQLProcessing
                 if ((string)reader["fuzzy_set_category"] == "DISCRETE")
                 {
                     if ((string)reader["type_name"] == FieldType.INT.ToString())
-                        type = FieldType.distFS_INT;
+                        type = FieldType.DIST_FUZZYSET_INT;
                     else if ((string)reader["type_name"] == FieldType.FLOAT.ToString())
-                        type = FieldType.distFS_FLOAT;
+                        type = FieldType.DIST_FUZZYSET_FLOAT;
                     else if ((string)reader["type_name"] == FieldType.VARCHAR.ToString())
-                        type = FieldType.distFS_TEXT;
+                        type = FieldType.DIST_FUZZYSET_TEXT;
                     else
                     {
                         throw new Exception($"Fuzzy set with id {oid} doesn't supported domain type");
@@ -311,7 +311,7 @@ namespace BLL.SQLProcessing
                 {
                     if ((string)reader["type_name"] != FieldType.FLOAT.ToString())
                         throw new Exception($"Fuzzy set with id {oid} has supported domain type");
-                    type = FieldType.contFS;
+                    type = FieldType.CONT_FUZZYSET;
                 }
             }
             return type;
@@ -361,13 +361,13 @@ namespace BLL.SQLProcessing
             string sql;
             Type t = typeof(T);
             if (
-                (fuzzSetType == FieldType.distFS_INT && t != typeof(int))
-                || ((fuzzSetType == FieldType.distFS_FLOAT && t != typeof(float)))
-                || (fuzzSetType == FieldType.distFS_TEXT && t != typeof(string))
-                || (fuzzSetType == FieldType.contFS && t != typeof(float))
+                (fuzzSetType == FieldType.DIST_FUZZYSET_INT && t != typeof(int))
+                || ((fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT && t != typeof(float)))
+                || (fuzzSetType == FieldType.DIST_FUZZYSET_TEXT && t != typeof(string))
+                || (fuzzSetType == FieldType.CONT_FUZZYSET && t != typeof(float))
                 )
                 throw new InvalidCastException($"Fuzzy set type {fuzzSetType.ToString()} isn't compatible with defininng domain {t.Name}");
-            if(fuzzSetType != FieldType.contFS)
+            if(fuzzSetType != FieldType.CONT_FUZZYSET)
             {
                 sql = $@"
                     SELECT fuzzset_x,fuzzset_membership_degree, fs.oid as ""fs_oid""
@@ -419,9 +419,9 @@ namespace BLL.SQLProcessing
         }
         public BaseFuzzySet getFuzzySet(string name, FieldType fuzzSetType)
         {
-            if (fuzzSetType == FieldType.distFS_INT)
+            if (fuzzSetType == FieldType.DIST_FUZZYSET_INT)
                 return this.getFuzzySet<int>(name, fuzzSetType);
-            else if (fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.contFS)
+            else if (fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT || fuzzSetType == FieldType.CONT_FUZZYSET)
                 return this.getFuzzySet<float>(name, fuzzSetType);
             else //if(fuzzSetType==FieldType.distFS_TEXT)
                 return this.getFuzzySet<string>(name, fuzzSetType);
@@ -432,10 +432,10 @@ namespace BLL.SQLProcessing
             string sql;
             Type t = typeof(T);
             if (
-                (fuzzSetType == FieldType.distFS_INT && t != typeof(int))
-                || ((fuzzSetType == FieldType.distFS_FLOAT && t != typeof(float)))
-                || (fuzzSetType == FieldType.distFS_TEXT && t != typeof(string))
-                || (fuzzSetType == FieldType.contFS && t != typeof(float))
+                (fuzzSetType == FieldType.DIST_FUZZYSET_INT && t != typeof(int))
+                || ((fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT && t != typeof(float)))
+                || (fuzzSetType == FieldType.DIST_FUZZYSET_TEXT && t != typeof(string))
+                || (fuzzSetType == FieldType.CONT_FUZZYSET && t != typeof(float))
                 )
                 throw new InvalidCastException($"Fuzzy set type {fuzzSetType.ToString()} isn't compatible with defininng domain {t.Name}");
             string fsName;
@@ -445,7 +445,7 @@ namespace BLL.SQLProcessing
                     throw new QueryDataNotExistException($"Fuzzy set with id {fs_oid} doesn't exist");
                 fsName = (string)r["fuzzset_name"];
             }
-            if (fuzzSetType != FieldType.contFS)
+            if (fuzzSetType != FieldType.CONT_FUZZYSET)
             {
                 sql = $@"
                     SELECT fuzzset_x,fuzzset_membership_degree, fs.oid as ""fs_oid""

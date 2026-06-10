@@ -31,7 +31,7 @@ namespace TestProject1.UnitTest
                     "rel",
                     new List<Field> { 
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("age", new FieldInfo(FieldType.contFS, 0))
+                        new Field("age", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                     },
                     new List<string> { "id" },
                     11
@@ -68,7 +68,7 @@ namespace TestProject1.UnitTest
                     "rel",
                     new List<Field> {
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("age", new FieldInfo(FieldType.contFS, 0))
+                        new Field("age", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                     },
                     new List<string> { "id" },
                     11
@@ -108,7 +108,7 @@ namespace TestProject1.UnitTest
                     "rel",
                     new List<Field> {
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        new Field("id", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                     },
                     new List<string> { "id" },
                     11
@@ -227,7 +227,7 @@ namespace TestProject1.UnitTest
                         "rel",
                         new List<Field> {
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        new Field("id", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                         },
                         new List<string> { "id" },
                         11
@@ -285,7 +285,7 @@ namespace TestProject1.UnitTest
                         "rel",
                         new List<Field> {
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        new Field("id", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                         },
                         new List<string> { "id" },
                         11
@@ -365,7 +365,7 @@ namespace TestProject1.UnitTest
                         "rel",
                         new List<Field> {
                         new Field("id", new FieldInfo(FieldType.INT, 0)),
-                        new Field("id", new FieldInfo(FieldType.contFS, 0))
+                        new Field("id", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                         },
                         new List<string> { "id" },
                         11

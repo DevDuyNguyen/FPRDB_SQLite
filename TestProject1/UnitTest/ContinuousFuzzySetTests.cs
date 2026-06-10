@@ -18,7 +18,7 @@ namespace TestProject1.UnitTest
 
                 Add(
                 new ContinuousFuzzySet(19, 20, 30, 40, null, -1),
-                new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f, 1f }, "fs1", FieldType.distFS_FLOAT, -1),
+                new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f, 1f }, "fs1", FieldType.DIST_FUZZYSET_FLOAT, -1),
                 false
                 );
 
@@ -56,7 +56,7 @@ namespace TestProject1.UnitTest
             public StandardIntersection_postive_negative_testdata()
             {
                 var young = new ContinuousFuzzySet(19, 20, 30, 40, "young", -1);
-                var fs1 = new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f}, "fs1", FieldType.distFS_FLOAT, -1);
+                var fs1 = new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { 0.2f, 0.3f, 0.3f}, "fs1", FieldType.DIST_FUZZYSET_FLOAT, -1);
                 var upperYoung= new ContinuousFuzzySet(18, 19, 25, 40, "young1", -1);
                 var lowerYoung = new ContinuousFuzzySet(20, 25, 30, 40, "young1", -1);
                 var approx_25= new ContinuousFuzzySet(19, 25, 25, 40, "approx_25", -1);
@@ -65,7 +65,7 @@ namespace TestProject1.UnitTest
                 Add(
                 young,
                 fs1,
-                 new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { young.getMembershipDegree(0.2f), young.getMembershipDegree(0.3f), young.getMembershipDegree(0.3f) }, "fs1", FieldType.distFS_FLOAT, -1)
+                 new DiscreteFuzzySet<float>(new List<float> { 2.1f, 3.2f, 1.3f }, new List<float> { young.getMembershipDegree(0.2f), young.getMembershipDegree(0.3f), young.getMembershipDegree(0.3f) }, "fs1", FieldType.DIST_FUZZYSET_FLOAT, -1)
                 );
 
                 Add(

@@ -522,7 +522,7 @@ namespace BLL.Services
         {
             List<string> names = new List<string>();
             string sql;
-            if(fsType == FieldType.contFS)
+            if(fsType == FieldType.CONT_FUZZYSET)
             {
                 sql = @"
                     SELECT fs.fuzzset_name
@@ -532,7 +532,7 @@ namespace BLL.Services
             }
             else
             {
-                if (fsType == FieldType.distFS_INT)
+                if (fsType == FieldType.DIST_FUZZYSET_INT)
                 {
                     sql = @"
                         SELECT fs.fuzzset_name
@@ -542,7 +542,7 @@ namespace BLL.Services
                         WHERE type.type_name='INT'
                     ";
                 }
-                else if (fsType == FieldType.distFS_FLOAT)
+                else if (fsType == FieldType.DIST_FUZZYSET_FLOAT)
                 {
                     sql = @"
                         SELECT fs.fuzzset_name
@@ -552,7 +552,7 @@ namespace BLL.Services
                         WHERE type.type_name='FLOAT'
                     ";
                 }
-                else if (fsType == FieldType.distFS_TEXT)
+                else if (fsType == FieldType.DIST_FUZZYSET_TEXT)
                 {
                     sql = @"
                         SELECT fs.fuzzset_name

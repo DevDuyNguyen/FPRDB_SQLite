@@ -30,10 +30,10 @@ namespace TestProject1.IntegrationTest
         [InlineData("CHAR", FieldType.CHAR, 0)]
         [InlineData("VARCHAR (50)", FieldType.VARCHAR, 50)]
         [InlineData("BOOLEAN", FieldType.BOOLEAN, 0)]
-        [InlineData("DIST_FUZZYSET_INT", FieldType.distFS_INT, 0)]
-        [InlineData("DIST_FUZZYSET_FLOAT", FieldType.distFS_FLOAT, 0)]
-        [InlineData("DIST_FUZZYSET_TEXT", FieldType.distFS_TEXT, 0)]
-        [InlineData("CONT_FUZZYSET", FieldType.contFS, 0)]
+        [InlineData("DIST_FUZZYSET_INT", FieldType.DIST_FUZZYSET_INT, 0)]
+        [InlineData("DIST_FUZZYSET_FLOAT", FieldType.DIST_FUZZYSET_FLOAT, 0)]
+        [InlineData("DIST_FUZZYSET_TEXT", FieldType.DIST_FUZZYSET_TEXT, 0)]
+        [InlineData("CONT_FUZZYSET", FieldType.CONT_FUZZYSET, 0)]
         public void Parser_typeDef_success(string str
             ,FieldType fieldType
             ,int txtLength)
@@ -53,10 +53,10 @@ namespace TestProject1.IntegrationTest
         [InlineData("gender CHAR", "gender", FieldType.CHAR, 0)]
         [InlineData("name VARCHAR (50)", "name", FieldType.VARCHAR, 50)]
         [InlineData("alive BOOLEAN", "alive", FieldType.BOOLEAN, 0)]
-        [InlineData("young DIST_FUZZYSET_INT", "young", FieldType.distFS_INT, 0)]
-        [InlineData("about22.2 DIST_FUZZYSET_FLOAT", "about22.2", FieldType.distFS_FLOAT, 0)]
-        [InlineData("nothing DIST_FUZZYSET_TEXT", "nothing", FieldType.distFS_TEXT, 0)]
-        [InlineData("hot CONT_FUZZYSET", "hot", FieldType.contFS, 0)]
+        [InlineData("young DIST_FUZZYSET_INT", "young", FieldType.DIST_FUZZYSET_INT, 0)]
+        [InlineData("about22.2 DIST_FUZZYSET_FLOAT", "about22.2", FieldType.DIST_FUZZYSET_FLOAT, 0)]
+        [InlineData("nothing DIST_FUZZYSET_TEXT", "nothing", FieldType.DIST_FUZZYSET_TEXT, 0)]
+        [InlineData("hot CONT_FUZZYSET", "hot", FieldType.CONT_FUZZYSET, 0)]
         public void Parser_fieldDef_success(string str, string fieldName, FieldType type, int txtLength)
         {
             //arrange
@@ -73,7 +73,7 @@ namespace TestProject1.IntegrationTest
         [InlineData("ID INT, name VARCHAR (50), about22.2 DIST_FUZZYSET_FLOAT",
             "ID", FieldType.INT, 0,
             "name", FieldType.VARCHAR, 50,
-            "about22.2", FieldType.distFS_FLOAT, 0)]
+            "about22.2", FieldType.DIST_FUZZYSET_FLOAT, 0)]
         public void Parser_fieldDefs_success(string str,
             string fieldName1, FieldType type1, int txtLength1,
             string fieldName2, FieldType type2, int txtLength2,
@@ -143,7 +143,7 @@ namespace TestProject1.IntegrationTest
             "schema1",
             "id", FieldType.INT, 0,
             "name", FieldType.VARCHAR, 50,
-            "income", FieldType.contFS, 0,
+            "income", FieldType.CONT_FUZZYSET, 0,
             new object[] { "id" }
         )]
         public void Parser_createSchema_success(string str,
