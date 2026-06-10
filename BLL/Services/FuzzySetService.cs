@@ -120,9 +120,11 @@ namespace BLL.Services
         }
         public void updateFuzzySet(FuzzySetDTO fuzzySet)
         {
-            if (fuzzySet.oid == null || fuzzySet.oid == default)
-                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
-            
+            if (fuzzySet == null)
+                throw new InvalidOperationException("Parameter fuzzySet isn't provided");
+            //if (fuzzySet.oid == null || fuzzySet.oid == default)
+            //    throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+
             FuzzySetDTO checkFuzzySet = this.fuzzySetDAO.getExactFuzzySet(fuzzySet.oid);
             //user want to update fuzzyset name, check if that name already exist
             if (fuzzySet.fuzzySetName != checkFuzzySet.fuzzySetName)

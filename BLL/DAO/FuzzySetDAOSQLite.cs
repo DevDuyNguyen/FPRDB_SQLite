@@ -280,6 +280,9 @@ namespace BLL.DAO
         }
         public FuzzySetDTO getExactFuzzySet(int oid)
         {
+            if (oid == null || oid == default)
+                throw new InvalidOperationException($"Fuzzy set oid isn't provided");
+
             FieldType fsType = this.metaDataMgr.getFuzzySetTypeByID(oid);
             FuzzySetDTO dto=null;
             if (fsType == FieldType.DIST_FUZZYSET_INT)

@@ -42,6 +42,8 @@ namespace BLL.SQLProcessing
         }
         public bool isFuzzySetWithNameExist(string name)
         {
+            if (name == default || name == null)
+                throw new InvalidOperationException("Parameter name isn't provided");
             try
             {
                 string sql = $"select 1 from fprdb_FuzzySet where fuzzset_name='{name}'";
@@ -270,6 +272,9 @@ namespace BLL.SQLProcessing
         }
         public FieldType getFuzzySetTypeByID(int oid)
         {
+            if (oid == null || oid == default)
+                throw new InvalidOperationException($"Fuzzy set oid isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($@"
                 SELECT 
 	                'DISCRETE' AS 'fuzzy_set_category',
@@ -294,6 +299,7 @@ namespace BLL.SQLProcessing
             {
                 if (!reader.Read())
                     throw new QueryDataNotExistException($"Fuzzy set with id {oid} doesn't exist");
+                
                 if ((string)reader["fuzzy_set_category"] == "DISCRETE")
                 {
                     if ((string)reader["type_name"] == FieldType.INT.ToString())
@@ -304,13 +310,13 @@ namespace BLL.SQLProcessing
                         type = FieldType.DIST_FUZZYSET_TEXT;
                     else
                     {
-                        throw new Exception($"Fuzzy set with id {oid} doesn't supported domain type");
+                        throw new Exception($"Fuzzy set with id {oid} has unsupported domain type");
                     }
                 }
                 else
                 {
                     if ((string)reader["type_name"] != FieldType.FLOAT.ToString())
-                        throw new Exception($"Fuzzy set with id {oid} has supported domain type");
+                        throw new Exception($"Fuzzy set with id {oid} has unsupported domain type");
                     type = FieldType.CONT_FUZZYSET;
                 }
             }
