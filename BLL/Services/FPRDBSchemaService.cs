@@ -24,6 +24,8 @@ namespace BLL.Services
 
         public bool defineFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO)
         {
+            if (fprdbSchemaDTO == null)
+                throw new InvalidOperationException("Parameter fprdbSchemaDTO isn't provided");
             if (fprdbSchemaDTO.fields.Count == 0)
                 throw new InvalidOperationException($"Creation for FPRDB schema {fprdbSchemaDTO.schemaName} doesn't have any attribute");
 

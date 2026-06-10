@@ -1,4 +1,5 @@
 ﻿using BLL.Common;
+using BLL.DAO;
 using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Enums;
@@ -78,7 +79,8 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Schema {schemaName} already exists");
             }
-
+            if (data.getFields().Count == 0)
+                throw new InvalidOperationException($"Creation for FPRDB schema {data.getSchemaName()} doesn't have any attribute");
             if (data.getPrimaryConstraintName() == "" || data.getPrimaryConstraintName() == null
                 || data.getPrimaryConstraintName() == null || data.getPrimarykey().Count == 0)
             {
