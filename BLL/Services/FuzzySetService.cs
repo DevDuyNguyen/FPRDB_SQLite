@@ -26,7 +26,7 @@ namespace BLL.Services
         {
             return fuzzyset.isValid();
         }
-        
+
 
         private bool isValidFuzzySetName(string name)
         {
@@ -75,6 +75,8 @@ namespace BLL.Services
         }
         public List<FuzzySetDTO> findFuzzySet(string name)
         {
+            //null or empty name is valid, no need for Validating Null At Boundary
+
             List<FuzzySetDTO> ans = new List<FuzzySetDTO>();
             List<BaseFuzzySet> fsList = this.fuzzySetDAO.findFuzzySet(name);
             foreach(BaseFuzzySet fs in fsList)
