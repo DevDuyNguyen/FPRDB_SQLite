@@ -81,7 +81,7 @@ namespace BLL.DAO
                 using(IDataReader r = this.databaseManager.executeQuery(checkIfFuzzSetExist))
                 {
                     if (r.Read())
-                        throw new InvalidDataException($"Fuzz set {fuzzySet.fuzzySetName} already exists");
+                        throw new InvalidDataException($"Fuzzy set {fuzzySet.fuzzySetName} already exists");
                 }
 
                 string fieldTypeName = fuzzySet.fuzzySetType.ToString();
@@ -149,7 +149,7 @@ namespace BLL.DAO
                 using (IDataReader r = this.databaseManager.executeQuery(checkIfFuzzSetExist))
                 {
                     if (r.Read())
-                        throw new InvalidDataException($"Fuzz set {fuzzySet.fuzzySetName} already exists");
+                        throw new InvalidDataException($"Fuzzy set {fuzzySet.fuzzySetName} already exists");
                 }
 
                 string fieldTypeName = fuzzySet.fuzzySetType.ToString();

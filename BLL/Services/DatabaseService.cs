@@ -192,7 +192,7 @@ namespace BLL.Services
             return true;
         }
 
-        private bool isValidFPRDBDatabaseFileStructure(string filePath)
+        private bool isValidFPRDBDatabaseFileStructure()
         {
             //the structure follows the System catalog
             SystemCatalogTable fprdb_RelationSchema = new SystemCatalogTable(
@@ -414,7 +414,6 @@ namespace BLL.Services
                         );
                         fields.Add(field);
                     }
-                    // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
                     while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
 
                     schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey, currentRelSchemaId));
@@ -510,7 +509,7 @@ namespace BLL.Services
             //is a database file of sqlite
             this.dbMgr.loadDB(filePath);
             //check if the selected file follow the designed system catalog of FPRDB
-            isValidFPRDBDatabaseFileStructure(filePath);
+            isValidFPRDBDatabaseFileStructure();
         }
         public List<string> getFieldTypes()
         {

@@ -57,28 +57,21 @@ namespace BLL.Services
         public FuzzySetDTO createFuzzySet<T>(FuzzySetDTO fuzzySet)
             where T : IComparable<T>
         {
-            try
+            if (fuzzySet == null)
+                throw new InvalidOperationException("Parameter createFuzzySet::fuzzyset can't be null");
+            isValidFuzzySetName(fuzzySet.fuzzySetName);
+            FuzzySetDTO dto;
+            if (fuzzySet is DiscreteFuzzySetDTO<T>)
             {
-                isValidFuzzySetName(fuzzySet.fuzzySetName);
-                FuzzySetDTO dto;
-                if (fuzzySet is DiscreteFuzzySetDTO<T>)
-                {
-                    FuzzySet<T> fs = this.fuzzySetDAO.createDiscreteFuzzySet<T>((DiscreteFuzzySetDTO<T>)fuzzySet);
-                    dto = fs.toDTO();
-                    
-                }
-                else
-                {
-                    FuzzySet<float> fs = this.fuzzySetDAO.createContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
-                    dto = fs.toDTO();
-                }
-                return dto;
-
+                FuzzySet<T> fs = this.fuzzySetDAO.createDiscreteFuzzySet<T>((DiscreteFuzzySetDTO<T>)fuzzySet);
+                dto = fs.toDTO();
             }
-            catch(SQLExecutionException ex)
+            else
             {
-                throw ex;
+                FuzzySet<float> fs = this.fuzzySetDAO.createContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
+                dto = fs.toDTO();
             }
+            return dto;
         }
         public List<FuzzySetDTO> findFuzzySet(string name)
         {
