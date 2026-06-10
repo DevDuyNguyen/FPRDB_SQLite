@@ -98,6 +98,9 @@ namespace BLL.Services
         }
         public void removeFuzzySet(FuzzySetDTO fuzzySet)
         {
+            if (fuzzySet == null)
+                throw new InvalidOperationException("Parameter fuzzySet can't be null");
+
             List<FPRDBRelation> usingRelations = this.fuzzySetDAO.getUsingRelations(fuzzySet);
             if(usingRelations!=null && usingRelations.Count > 0)
             {

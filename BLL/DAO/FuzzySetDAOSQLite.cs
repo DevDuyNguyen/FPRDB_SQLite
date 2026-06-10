@@ -248,6 +248,8 @@ namespace BLL.DAO
         }
         public List<FPRDBRelation> getUsingRelations(FuzzySetDTO fuzzySet)
         {
+            if(fuzzySet?.fuzzySetName==null)
+                throw new InvalidOperationException("Parameter fuzzySet.fuzzySetName can't be null");
             int fsOID = this.metaDataMgr.getFuzzySetOID(fuzzySet.fuzzySetName);
             List<int> usingRelationOIDs = new List<int>();
             IDataReader r;
