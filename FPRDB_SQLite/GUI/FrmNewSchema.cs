@@ -39,11 +39,13 @@ namespace FPRDB_SQLite.GUI
         }
         private CompositionRoot compRoot;
         private FPRDBSchemaService fprdbSchemaService;
+        private DatabaseService dbService;
         public frmNewSchema(CompositionRoot compRoot)
         {
             InitializeComponent();
             this.compRoot = compRoot;
             this.fprdbSchemaService = compRoot.getFPRDBSchemaService();
+            this.dbService = compRoot.getDatabaseService();
             InitGrid();
         }
         // Hàm khởi tạo GridControl
@@ -77,7 +79,7 @@ namespace FPRDB_SQLite.GUI
                 FPRDBSchemaDTO schema = convertGridToSchema(schemaName, rows);
                 if(this.fprdbSchemaService.defineFPRDBSchema(schema))
                 {
-                    AppStates.loadFPRDBSchemas.Add(schema);
+                    AppStates.loadFPRDBSchemas=this.dbService.getFPRDBSchemas();
                     XtraMessageBox.Show("Schema added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     Close();

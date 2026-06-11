@@ -54,7 +54,7 @@ namespace FPRDB_SQLite.GUI
                 {
                     XtraMessageBox.Show("Relation added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     
-                    AppStates.loadFPRDBSchemaRelations.Add(rel);
+                    AppStates.loadFPRDBSchemaRelations=this.databaseService.getFPRDBRelations();
                     this.DialogResult = DialogResult.OK;
                     Close();
                 }
