@@ -1,4 +1,4 @@
-﻿using BLL;
+using BLL;
 using BLL.Common;
 using BLL.DomainObject;
 using BLL.DTO;
@@ -48,6 +48,7 @@ namespace FPRDB_SQLite.GUI
         private bool isSQLFileModified = false;
         private SQLProcessor sqlProcessor;
         private FPRDBRelationDTO _selectedRelation;
+        private FPRDBSchemaDTO _selectedSchema;
         private string _currentEditingColumn;
         private int _currentEditingRow;
         private string _currentEditingColumnType;
@@ -76,6 +77,45 @@ namespace FPRDB_SQLite.GUI
             foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
             {
                 page.ShowCloseButton = DevExpress.Utils.DefaultBoolean.False;
+            }
+
+            // Set fixed panel so navigation tree width remains constant during window resizing/maximizing
+            RelationsplitContainerControl.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.Panel1;
+            
+            // Move treeView out of layoutControl1 to Panel1 directly so it docks Fill and auto-stretches without leaving blank spaces
+            layoutControlItem1.Control = null;
+            layoutControl1.Controls.Remove(treeView);
+            layoutControl1.Dispose();
+            RelationsplitContainerControl.Panel1.Controls.Clear();
+            RelationsplitContainerControl.Panel1.Controls.Add(treeView);
+            treeView.Dock = DockStyle.Fill;
+            treeView.BringToFront();
+            RelationsplitContainerControl.Panel1.PerformLayout();
+            RelationsplitContainerControl.SplitterPosition = 350;
+
+            // Limit manual splitter dragging to not exceed 600px
+            RelationsplitContainerControl.SplitterPositionChanged += RelationsplitContainerControl_SplitterPositionChanged;
+
+            // Set main form window state to maximized to always open in full screen
+            this.WindowState = FormWindowState.Maximized;
+        }
+
+        private bool _isEnforcingSplitterLimit = false;
+        private void RelationsplitContainerControl_SplitterPositionChanged(object sender, EventArgs e)
+        {
+            if (_isEnforcingSplitterLimit) return;
+            const int MaxSplitterPosition = 350; // 350px maximum width
+            if (RelationsplitContainerControl.SplitterPosition > MaxSplitterPosition)
+            {
+                try
+                {
+                    _isEnforcingSplitterLimit = true;
+                    RelationsplitContainerControl.SplitterPosition = MaxSplitterPosition;
+                }
+                finally
+                {
+                    _isEnforcingSplitterLimit = false;
+                }
             }
         }
         // Hàm để enable/disable tab và các nút khi load database
@@ -285,9 +325,23 @@ namespace FPRDB_SQLite.GUI
         }
         #endregion
         #region Tab Page Home
+        //Method to check if schema is existed
+        private bool IsSchemaExisted(string schemaName)
+        {
+            var schemas = AppStates.loadFPRDBSchemas;
+            if (schemas == null) return false;
+            return schemas.Any(s => s.schemaName.Equals(schemaName, StringComparison.OrdinalIgnoreCase));
+        }
         // Hàm hiển thị thông tin chi tiết của Schema
         private void DisplaySchemaDetail(FPRDBSchemaDTO schema)
         {
+            if (!IsSchemaExisted(schema.schemaName))
+            {
+                gridControlScheme.DataSource = null;
+                XtraTabPage schemaTab = xtraTabControlDatabase.TabPages[0];
+                schemaTab.Text = "Schema";
+                return;
+            }
             BindingList<SchemaAttribute> list = new BindingList<SchemaAttribute>();
             List<Field> fields = schema.fields;
             List<string> primaryKeys = schema.primarykey;
@@ -342,10 +396,55 @@ namespace FPRDB_SQLite.GUI
             }
             return row;
         }
-
+        // Method to reload the tabs of schema and relation after modifying
+        private void ReloadTabs()
+        {
+            if (_selectedRelation != null)
+            {
+                var updatedRelation = AppStates.loadFPRDBSchemaRelations?.FirstOrDefault(r => r.relName.Equals(_selectedRelation.relName, StringComparison.OrdinalIgnoreCase));
+                if (updatedRelation != null)
+                {
+                    _selectedRelation = updatedRelation;
+                    DisplayRelationDetail(_selectedRelation);
+                }
+                else
+                {
+                    DisplayRelationDetail(_selectedRelation);
+                    _selectedRelation = null;
+                }
+            }
+            if (_selectedSchema != null)
+            {
+                var updatedSchema = AppStates.loadFPRDBSchemas?.FirstOrDefault(s => s.schemaName.Equals(_selectedSchema.schemaName, StringComparison.OrdinalIgnoreCase));
+                if (updatedSchema != null)
+                {
+                    _selectedSchema = updatedSchema;
+                    DisplaySchemaDetail(_selectedSchema);
+                }
+                else
+                {
+                    DisplaySchemaDetail(_selectedSchema);
+                    _selectedSchema = null;
+                }
+            }
+        }
+        // Method to check if relation is existed
+        private bool IsRelationExisted(string relName)
+        {
+            var relations = AppStates.loadFPRDBSchemaRelations;
+            if (relations == null) return false;
+            return relations.Any(r => r.relName.Equals(relName, StringComparison.OrdinalIgnoreCase));
+        }
         // Hàm hiển thị nội dung của Relation
         private void DisplayRelationDetail(FPRDBRelationDTO relInfo)
         {
+            if (!IsRelationExisted(relInfo.relName))
+            {
+                gridControlRelation.DataSource = null;
+                XtraTabPage relationTab = xtraTabControlDatabase.TabPages[1];
+                relationTab.Text = "Relation";
+                return;
+            }
             var schema = relInfo.fprdbSchema;
             List<Field> schemaFields = schema.fields;
             // Sử dụng DataTable để hiện thị thông tin Relation
@@ -456,10 +555,11 @@ namespace FPRDB_SQLite.GUI
             {
                 if (node.Tag is FPRDBSchemaDTO schema)
                 {
+                    _selectedSchema = schema;
                     XtraTabPage schemaTab = xtraTabControlDatabase.TabPages[0];
                     schemaTab.Text = schema.schemaName;
                     xtraTabControlDatabase.SelectedTabPageIndex = 0;
-                    DisplaySchemaDetail(schema);
+                    DisplaySchemaDetail(_selectedSchema);
                     ribbonControl.SelectedPage = SchemaRibbonPage;
                 }
                 if (node.Tag is FPRDBRelationDTO relation)
@@ -1372,6 +1472,7 @@ namespace FPRDB_SQLite.GUI
             //}
 
             bool reloadDatabaseTreeFlag = false;
+            bool reloadTabsFlag = false;
             bool showMessageTabFlag = true;
             if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
@@ -1384,16 +1485,18 @@ namespace FPRDB_SQLite.GUI
                     if (uc.memoEditMessageUC.Text == null)
                         uc.memoEditMessageUC.Text = "";
 
-                    foreach (FPRDBSQLExecutionResult res in results)
+                    foreach (FPRDBSQLExecutionResult res in results.AsEnumerable().Reverse())
                     {
                         if (res is DDL_FPRDB_SQL_ExecutionResult)
                         {
                             reloadDatabaseTreeFlag = true;
+                            reloadTabsFlag = true;
                             uc.memoEditMessageUC.Text += $"Data Definition Language success.\r\n";
                             showMessageTabFlag = true;
                         }
                         else if (res is DML_FPRDB_SQL_ExecutionResult)
                         {
+                            reloadTabsFlag = true;
                             uc.memoEditMessageUC.Text += $"[Number of tuples affected]: {(res as DML_FPRDB_SQL_ExecutionResult).numberTuplesAffected}.\r\n";
                             showMessageTabFlag = true;
                         }
@@ -1411,10 +1514,13 @@ namespace FPRDB_SQLite.GUI
                     }
                     if (reloadDatabaseTreeFlag)
                     {
-                        AppStates
-                            .loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                        AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                         AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
                         this.reLoadDatabaseTree();
+                    }
+                    if (reloadTabsFlag)
+                    {
+                        ReloadTabs();
                     }
                     if (showMessageTabFlag)
                         uc.ViewError();
@@ -1844,6 +1950,7 @@ namespace FPRDB_SQLite.GUI
                         XtraMessageBox.Show("Schema deleted successfully!");
                         AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                         reLoadDatabaseTree();
+                        ReloadTabs();
                     }
                     catch (SemanticException ex)
                     {
@@ -1905,6 +2012,7 @@ namespace FPRDB_SQLite.GUI
                         XtraMessageBox.Show("Relation deleted successfully!");
                         AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
                         reLoadDatabaseTree();
+                        ReloadTabs();
                     }
                     catch (SemanticException ex)
                     {

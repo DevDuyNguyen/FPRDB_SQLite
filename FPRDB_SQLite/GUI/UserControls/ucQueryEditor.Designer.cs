@@ -1,4 +1,4 @@
-﻿namespace FPRDB_SQLite.GUI.GUI.UserControls
+namespace FPRDB_SQLite.GUI.GUI.UserControls
 {
     partial class ucQueryEditor
     {
@@ -55,6 +55,7 @@
             // splitContainerControl1
             // 
             splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainerControl1.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
             splitContainerControl1.Horizontal = false;
             splitContainerControl1.Location = new System.Drawing.Point(0, 0);
             splitContainerControl1.Name = "splitContainerControl1";
@@ -62,14 +63,16 @@
             // splitContainerControl1.Panel1
             // 
             splitContainerControl1.Panel1.Controls.Add(memoEditTxtQuery);
+            splitContainerControl1.Panel1.MinSize = 50;
             splitContainerControl1.Panel1.Text = "Panel1";
             // 
             // splitContainerControl1.Panel2
             // 
             splitContainerControl1.Panel2.Controls.Add(xtraTabControlResultQuery);
+            splitContainerControl1.Panel2.MinSize = 50;
             splitContainerControl1.Panel2.Text = "Panel2";
             splitContainerControl1.Size = new System.Drawing.Size(762, 363);
-            splitContainerControl1.SplitterPosition = 129;
+            splitContainerControl1.SplitterPosition = 181;
             splitContainerControl1.TabIndex = 1;
             // 
             // memoEditTxtQuery
@@ -79,7 +82,7 @@
             memoEditTxtQuery.Name = "memoEditTxtQuery";
             memoEditTxtQuery.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 21F);
             memoEditTxtQuery.Properties.Appearance.Options.UseFont = true;
-            memoEditTxtQuery.Size = new System.Drawing.Size(762, 129);
+            memoEditTxtQuery.Size = new System.Drawing.Size(762, 181);
             memoEditTxtQuery.TabIndex = 0;
             memoEditTxtQuery.TextChanged += memoEditTxtQuery_TextChanged;
             // 
@@ -89,7 +92,7 @@
             xtraTabControlResultQuery.Location = new System.Drawing.Point(0, 0);
             xtraTabControlResultQuery.Name = "xtraTabControlResultQuery";
             xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
-            xtraTabControlResultQuery.Size = new System.Drawing.Size(762, 222);
+            xtraTabControlResultQuery.Size = new System.Drawing.Size(762, 170);
             xtraTabControlResultQuery.TabIndex = 0;
             xtraTabControlResultQuery.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { QueryResultxtraTabPage, MessagextraTabPage });
             // 
@@ -99,7 +102,7 @@
             QueryResultxtraTabPage.AutoScroll = true;
             QueryResultxtraTabPage.Controls.Add(gridControlResultQuery);
             QueryResultxtraTabPage.Name = "QueryResultxtraTabPage";
-            QueryResultxtraTabPage.Size = new System.Drawing.Size(760, 192);
+            QueryResultxtraTabPage.Size = new System.Drawing.Size(760, 140);
             QueryResultxtraTabPage.Text = "Query Result";
             // 
             // gridControlResultQuery
@@ -114,7 +117,7 @@
             gridControlResultQuery.Location = new System.Drawing.Point(0, 0);
             gridControlResultQuery.MainView = gridViewResultQuery;
             gridControlResultQuery.Name = "gridControlResultQuery";
-            gridControlResultQuery.Size = new System.Drawing.Size(760, 192);
+            gridControlResultQuery.Size = new System.Drawing.Size(760, 140);
             gridControlResultQuery.TabIndex = 0;
             gridControlResultQuery.UseEmbeddedNavigator = true;
             gridControlResultQuery.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridViewResultQuery });
@@ -139,7 +142,7 @@
             // 
             MessagextraTabPage.Controls.Add(memoEditMessage);
             MessagextraTabPage.Name = "MessagextraTabPage";
-            MessagextraTabPage.Size = new System.Drawing.Size(760, 192);
+            MessagextraTabPage.Size = new System.Drawing.Size(760, 171);
             MessagextraTabPage.Text = "Message";
             // 
             // memoEditMessage
@@ -150,7 +153,7 @@
             memoEditMessage.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 20F);
             memoEditMessage.Properties.Appearance.Options.UseFont = true;
             memoEditMessage.Properties.ReadOnly = true;
-            memoEditMessage.Size = new System.Drawing.Size(760, 192);
+            memoEditMessage.Size = new System.Drawing.Size(760, 171);
             memoEditMessage.TabIndex = 0;
             // 
             // ucQueryEditor
