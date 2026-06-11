@@ -50,8 +50,20 @@ namespace BLL.DAO
             using (IDataReader r = this.databaseMgr.executeQuery(sql))
             {
                 List<ConstraintDTO> ans = new List<ConstraintDTO>();
+                
                 while(r.Read())
                 {
+                    if(r["con_referenced_relation_id"] ==  null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB database file, con_referenced_relation_id can't be null");
+                    if(r["oid"]==null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB database file, oid of constraint can't be null");
+                    if (r["con_name"] == null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB database file, con_name of constraint can't be null");
+                    if (r["con_attributes"] == null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB database file, con_attributes of constraint can't be null");
+                    if (r["con_referenced_attributes"] == null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB database file, con_referenced_attributes of constraint can't be null");
+
                     referenced_rel_oid = Convert.ToInt32(r["con_referenced_relation_id"]);
                     referenced_rel = (this.metaDataMgr.getRelationByID(referenced_rel_oid)).toDTO();
                     ans.Add(new ConstraintDTO(
@@ -80,19 +92,12 @@ namespace BLL.DAO
             if (fprdbRelation.oid == -1 || referencedFPRDBRelation.oid == -1)
                 throw new InvalidOperationException("oid of involed relations aren't provided");
             //check if referencedAttributes are primary key in fprdbRelation
-            bool isKeyAttribute;
+            if(referencedAttributes.Count!= referencedFPRDBRelation.fprdbSchema.primarykey.Count)
+                throw new InvalidOperationException($"Field referenced attributes isn't primary key in relation {referencedFPRDBRelation.relName}");
             foreach(string attrName in referencedAttributes)
             {
-                isKeyAttribute = false;
-                foreach(Field f in referencedFPRDBRelation.fprdbSchema.fields)
-                {
-                    if (attrName == f.getFieldName())
-                    {
-                        isKeyAttribute = true;
-                        break;
-                    }
-                }
-                if (!isKeyAttribute)
+
+                if(!referencedFPRDBRelation.fprdbSchema.primarykey.Contains(attrName))
                     throw new InvalidOperationException($"Field {attrName} isn't a key attribute in relation {referencedFPRDBRelation.relName}");
             }
             //check attributes mapping to referencedAttributes

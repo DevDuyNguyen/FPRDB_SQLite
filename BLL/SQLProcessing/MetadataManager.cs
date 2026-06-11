@@ -618,6 +618,9 @@ namespace BLL.SQLProcessing
         }
         public bool isConstraintNameExist(string name)
         {
+            if (name == default || name == null)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             using(IDataReader r=this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_Constraint WHERE con_name='{name}'"))
             {   
                 return r.Read();
