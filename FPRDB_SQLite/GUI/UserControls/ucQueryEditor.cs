@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,12 +56,16 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         {
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
+            // Đặt splitter ở vị trí 50% chiều cao
+            splitContainerControl1.SplitterPosition = splitContainerControl1.Height / 2;
         }
         public void ViewError()
         {
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             gridControlResultQuery.DataSource = null;
+            // Đặt splitter ở vị trí 50% chiều cao
+            splitContainerControl1.SplitterPosition = splitContainerControl1.Height / 2;
         }
         private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
         {
@@ -92,10 +96,19 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         // Method to create a new grdResultQuery
         public void CreateNewGridResult(DataTable dt)
         {
+            // Nếu đang thêm kết quả thứ 2, chuyển panel đầu từ Fill → Top
+            // BringToFront() giữ panel đầu tiên ở vị trí trên cùng (z-order front = top vật lý)
+            if (QueryResultxtraTabPage.Controls.Count == 1)
+            {
+                var firstPanel = QueryResultxtraTabPage.Controls[0];
+                firstPanel.Dock = System.Windows.Forms.DockStyle.Top;
+                firstPanel.BringToFront();
+            }
+
+            bool isFirstGrid = QueryResultxtraTabPage.Controls.Count == 0;
+
             var panelContainer = new DevExpress.XtraEditors.PanelControl();
-            panelContainer.Height = 280; // Bạn có thể tăng/giảm chiều cao bảng tùy ý
-            panelContainer.Dock = System.Windows.Forms.DockStyle.Top;
-            panelContainer.Padding = new System.Windows.Forms.Padding(5, 5, 5, 15); // Tạo khoảng trống cách bảng dưới
+            panelContainer.Padding = new System.Windows.Forms.Padding(5, 5, 5, 15);
             panelContainer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
             var gridControl = new DevExpress.XtraGrid.GridControl();
@@ -105,54 +118,96 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
             gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
             gridControl.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            // Cấu hình GridView hiển thị dữ liệu giống logic cũ của bạn
             gridControl.DataSource = dt;
-            gridView.PopulateColumns(); 
-
-            // Tùy chỉnh thêm để giao diện gọn gàng khi xếp chồng
+            gridView.PopulateColumns();
             gridView.OptionsBehavior.Editable = false;
-            gridView.OptionsView.ShowGroupPanel = false; // Tắt khu vực kéo thả nhóm cột
+            gridView.OptionsView.ShowGroupPanel = false;
 
-            // 3. Đưa các control vào panel bọc ngoài
             panelContainer.Controls.Add(gridControl);
+
+            // Thêm vào cuối danh sách để đảm bảo thứ tự từ trên xuống dưới
+            // (Controls[0] = kết quả đầu tiên ở trên cùng)
             QueryResultxtraTabPage.Controls.Add(panelContainer);
 
-            panelContainer.BringToFront();
 
             gridControl.ForceInitialize();
-            int contentHeight = CalculateGridHeight(gridView);
+
+            if (isFirstGrid)
+            {
+                // Chỉ 1 kết quả → fill toàn bộ vùng tab
+                panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            }
+            else
+            {
+                // Nhiều kết quả → xếp chồng Top dưới panel đầu tiên
+                // Panel1 đã BringToFront (trên cùng), panel mới Controls.Add sẽ tự nằm phía sau/dưới
+                panelContainer.Dock = System.Windows.Forms.DockStyle.Top;
+            }
+
+            QueryResultxtraTabPage.Update();
+            QueryResultxtraTabPage.PerformLayout();
+
+            // Bây giờ, tính toán chiều cao dựa trên gridView đã được xếp vị trí chuẩn
+            int contentHeight = CalculateGridHeight(gridView, 5);
+
+            // Gán chiều cao chính xác cho Panel (nếu là first grid thì Dock=Fill sẽ ghi đè lên giá trị này, 
+            // nhưng khi dock chuyển sang Top thì chiều cao chính xác đã được lưu sẵn)
             panelContainer.Height = contentHeight + panelContainer.Padding.Bottom;
+
+            // Làm mới lại giao diện lần cuối để tránh hiện tượng vỡ hình
+            panelContainer.Update();
         }
-        private int CalculateGridHeight(DevExpress.XtraGrid.Views.Grid.GridView view, int maxRowsBeforeScroll = 10)
+        private int CalculateGridHeight(DevExpress.XtraGrid.Views.Grid.GridView view, int maxRowsBeforeScroll = 5)
         {
             // Lấy thông tin hiển thị thực tế của Grid (GridInfo)
+            int rowHeight = view.RowHeight;
+            if (rowHeight <= 0)
+            {
+                // Tính toán chiều cao dòng dựa trên Font chữ hiện tại nếu RowHeight = -1
+                using (Graphics g = view.GridControl.CreateGraphics())
+                {
+                    var font = view.Appearance.Row.Font ?? view.GridControl.Font;
+                    rowHeight = (int)Math.Ceiling(g.MeasureString("W", font).Height) + 7; // 7px cho padding trên dưới
+                }
+            }
+
+            // Ensure a minimum row height of 28px (typical for modern DevExpress skins)
+            if (rowHeight < 28)
+            {
+                rowHeight = 28;
+            }
+
+            // 2. Xác định chiều cao Header (Default khoảng 28)
             var viewInfo = view.GetViewInfo() as DevExpress.XtraGrid.Views.Grid.ViewInfo.GridViewInfo;
-
-            if (viewInfo == null || viewInfo.RowsInfo.Count == 0)
+            int headerHeight = (viewInfo != null && viewInfo.ColumnRowHeight > 0) ? viewInfo.ColumnRowHeight : rowHeight + 8;
+            if (headerHeight < 30)
             {
-                int estimatedRowHeight = 22;
-                int estimatedHeaderHeight = 28;
-                int rowCount = Math.Min(view.DataRowCount, maxRowsBeforeScroll);
-                return estimatedHeaderHeight + (rowCount * estimatedRowHeight) + 10;
+                headerHeight = 30;
             }
 
-            // 1. Lấy chiều cao của phần Header cột
-            int headerHeight = viewInfo.ColumnRowHeight;
+            // 3. Tính tổng số dòng cần hiển thị
+            int dataRowCount = view.DataRowCount;
+            if (dataRowCount == 0) return headerHeight + 20; // Trả về chiều cao cơ bản nếu bảng trống
 
-            // 2. Tính tổng chiều cao của các dòng dữ liệu (Giới hạn tối đa số dòng hiển thị)
-            int rowsHeight = 0;
-            int rowsToCount = Math.Min(view.DataRowCount, maxRowsBeforeScroll);
+            int rowsToDisplay = Math.Min(dataRowCount, maxRowsBeforeScroll);
+            int totalRowsHeight = 0;
 
-            for (int i = 0; i < rowsToCount; i++)
+            // Ưu tiên lấy chiều cao thực tế của các dòng đã render, nếu thiếu thì bù bằng rowHeight chuẩn
+            for (int i = 0; i < rowsToDisplay; i++)
             {
-                // Nếu đã có UI info thì lấy chiều cao chính xác của dòng đó, ngược lại lấy chiều cao mặc định
-                rowsHeight += (i < viewInfo.RowsInfo.Count) ? viewInfo.RowsInfo[i].Bounds.Height : view.RowHeight;
+                if (viewInfo != null && i < viewInfo.RowsInfo.Count && viewInfo.RowsInfo[i].Bounds.Height > 0)
+                {
+                    totalRowsHeight += viewInfo.RowsInfo[i].Bounds.Height;
+                }
+                else
+                {
+                    totalRowsHeight += rowHeight;
+                }
             }
 
-            // 3. Cộng thêm khoảng sai số của Border (đường viền trên dưới của Grid)
-            int totalHeight = headerHeight + rowsHeight + 8;
-
-            return totalHeight;
+            // 4. Cộng thêm khoảng sai số viền (Border) và khoảng trống dự phòng nhỏ (khoảng 10px)
+            int finalHeight = headerHeight + totalRowsHeight + 10;
+            return finalHeight;
         }
     }
 

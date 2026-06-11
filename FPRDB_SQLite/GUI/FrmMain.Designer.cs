@@ -98,7 +98,10 @@ namespace FPRDB_SQLite.GUI
             ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             TreeView_imageList = new ImageList(components);
             RelationsplitContainerControl = new DevExpress.XtraEditors.SplitContainerControl();
+            layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             treeView = new TreeView();
+            Root = new DevExpress.XtraLayout.LayoutControlGroup();
+            layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             xtraTabControlDatabase = new DevExpress.XtraTab.XtraTabControl();
             SchemaxtraTabPage = new DevExpress.XtraTab.XtraTabPage();
             gridControlScheme = new DevExpress.XtraGrid.GridControl();
@@ -137,6 +140,10 @@ namespace FPRDB_SQLite.GUI
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl.Panel2).BeginInit();
             RelationsplitContainerControl.Panel2.SuspendLayout();
             RelationsplitContainerControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
+            layoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Root).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)xtraTabControlDatabase).BeginInit();
             xtraTabControlDatabase.SuspendLayout();
             SchemaxtraTabPage.SuspendLayout();
@@ -681,7 +688,7 @@ namespace FPRDB_SQLite.GUI
             // 
             // RelationsplitContainerControl.Panel1
             // 
-            RelationsplitContainerControl.Panel1.Controls.Add(treeView);
+            RelationsplitContainerControl.Panel1.Controls.Add(layoutControl1);
             RelationsplitContainerControl.Panel1.Text = "Panel1";
             // 
             // RelationsplitContainerControl.Panel2
@@ -692,6 +699,17 @@ namespace FPRDB_SQLite.GUI
             RelationsplitContainerControl.SplitterPosition = 250;
             RelationsplitContainerControl.TabIndex = 5;
             // 
+            // layoutControl1
+            // 
+            layoutControl1.Controls.Add(treeView);
+            layoutControl1.Dock = DockStyle.Fill;
+            layoutControl1.Location = new Point(0, 0);
+            layoutControl1.Name = "layoutControl1";
+            layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new Rectangle(768, 123, 812, 500);
+            layoutControl1.Root = Root;
+            layoutControl1.Size = new Size(250, 356);
+            layoutControl1.TabIndex = 3;
+            // 
             // treeView
             // 
             treeView.Dock = DockStyle.Fill;
@@ -699,12 +717,34 @@ namespace FPRDB_SQLite.GUI
             treeView.ImageIndex = 0;
             treeView.ImageList = TreeView_imageList;
             treeView.ItemHeight = 22;
-            treeView.Location = new Point(0, 0);
+            treeView.Location = new Point(12, 12);
             treeView.Name = "treeView";
             treeView.SelectedImageIndex = 0;
-            treeView.Size = new Size(250, 356);
+            treeView.Size = new Size(226, 332);
             treeView.TabIndex = 2;
             treeView.MouseDown += treeView_MouseDown;
+            // 
+            // Root
+            // 
+            Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            Root.GroupBordersVisible = false;
+            Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem1 });
+            Root.Name = "Root";
+            Root.Size = new Size(250, 356);
+            Root.TextVisible = false;
+            // 
+            // layoutControlItem1
+            // 
+            layoutControlItem1.Control = treeView;
+            layoutControlItem1.ImageOptions.Alignment = ContentAlignment.MiddleCenter;
+            layoutControlItem1.Location = new Point(0, 0);
+            layoutControlItem1.MaxSize = new Size(600, 0);
+            layoutControlItem1.MinSize = new Size(29, 29);
+            layoutControlItem1.Name = "layoutControlItem1";
+            layoutControlItem1.Size = new Size(230, 336);
+            layoutControlItem1.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
+            layoutControlItem1.TextSize = new Size(0, 0);
+            layoutControlItem1.TextVisible = false;
             // 
             // xtraTabControlDatabase
             // 
@@ -1007,6 +1047,10 @@ namespace FPRDB_SQLite.GUI
             RelationsplitContainerControl.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)RelationsplitContainerControl).EndInit();
             RelationsplitContainerControl.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)layoutControl1).EndInit();
+            layoutControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)Root).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).EndInit();
             ((System.ComponentModel.ISupportInitialize)xtraTabControlDatabase).EndInit();
             xtraTabControlDatabase.ResumeLayout(false);
             SchemaxtraTabPage.ResumeLayout(false);
@@ -1134,6 +1178,9 @@ namespace FPRDB_SQLite.GUI
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem2;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private DevExpress.XtraLayout.LayoutControl layoutControl1;
+        private DevExpress.XtraLayout.LayoutControlGroup Root;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
     }
 }
 
