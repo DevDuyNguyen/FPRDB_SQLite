@@ -523,6 +523,9 @@ namespace BLL.Services
         }
         public List<string> getFuzzySetNameByType(FieldType fsType)
         {
+            if (fsType == null)
+                throw new InvalidOperationException("Parameter fsType isn't provided");
+
             List<string> names = new List<string>();
             string sql;
             if(fsType == FieldType.CONT_FUZZYSET)
@@ -575,6 +578,9 @@ namespace BLL.Services
             {
                 while (r.Read())
                 {
+                    if (r["fuzzset_name"] == null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB databaser file, fuzzset_name can't be null");
+
                     names.Add(r["fuzzset_name"] as string);
                 }
             }

@@ -173,6 +173,8 @@ namespace BLL.SQLProcessing
                         {
                             type = this.metadataMgr.getFuzzySetType(fsName);
                             fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
+                            if (fuzzySetOID == -1)
+                                throw new SemanticException($"Fuzzy set {fsName} doesn't exist in FPRDB database file");
                         }
                         catch (QueryDataNotExistException ex)
                         {
@@ -269,8 +271,6 @@ namespace BLL.SQLProcessing
                 }
 
             }
-
-            
 
             return true;
 

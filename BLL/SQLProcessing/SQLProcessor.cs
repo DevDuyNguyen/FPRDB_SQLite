@@ -88,6 +88,9 @@ namespace BLL.SQLProcessing
         }
         public int executeUpdate(string sql)
         {
+            if (sql == default || sql == null)
+                throw new InvalidOperationException("Parameter sql isn't provided");
+
             this.parser.parse(sql);
             Object data = this.parser.updateCommand();
             if(data is InsertData)

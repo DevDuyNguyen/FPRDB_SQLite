@@ -234,6 +234,9 @@ namespace BLL.SQLProcessing
         }
         public FieldType getFuzzySetType(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($@"
                 SELECT 
 	                'DISCRETE' AS 'fuzzy_set_category',
@@ -333,13 +336,19 @@ namespace BLL.SQLProcessing
         }
         public int getFuzzySetOID(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($"SELECT OID FROM fprdb_FuzzySet WHERE fuzzset_name='{name}'");
             int oid=-1;
             using (reader)
             {
                 if (reader.Read())
+                {
+                    if (reader["oid"] == null)
+                        throw new InvalidOperationException("Something went wrong with FPRDB database file, oid of fuzzy set can't be null");
                     oid = Convert.ToInt32(reader["oid"]);
-                
+                }
             }
             return oid;
         }
