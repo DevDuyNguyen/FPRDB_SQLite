@@ -22,6 +22,9 @@ namespace BLL.Services
         }
         public void removeFPRDBRelation(FPRDBRelationDTO rel)
         {
+            if (rel == null)
+                throw new InvalidOperationException("Parameter rel isn't provided");
+
             this.fprdbRelationDAO.removeFPRDBRelation(rel);
         }
 

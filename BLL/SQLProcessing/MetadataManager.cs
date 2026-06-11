@@ -91,6 +91,9 @@ namespace BLL.SQLProcessing
         }
         public FPRDBRelation getRelation(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             string getRelationSQL = $@"
                 SELECT
 	                rel.oid as 'rel.oid',
@@ -509,6 +512,9 @@ namespace BLL.SQLProcessing
         }
         public int getRelationOID(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             int relOid=-1;
             string getOIDofRelation = $"select oid from fprdb_Relation where rel_name='{name}'";
             using(IDataReader r = this.databaseMgr.executeQuery(getOIDofRelation))
