@@ -354,6 +354,16 @@ namespace BLL.SQLProcessing
         }
         public bool isTupleExist(List<string> primaryKey, List<string> value, string relationName)
         {
+            if (relationName == null || relationName == default)
+                throw new InvalidOperationException("Parameter relationName isn't provided");
+            if(primaryKey.Count!=value.Count)
+            {
+                throw new InvalidOperationException("Number of elements in parameter primaryKey doesn't match parameter value");
+                if(primaryKey.Count==0)
+                    throw new InvalidOperationException("Number of element in parameter primaryKey can't be 0");
+            }
+            
+
             string sql = $@"
                 SELECT 1 FROM {relationName}
                 WHERE
