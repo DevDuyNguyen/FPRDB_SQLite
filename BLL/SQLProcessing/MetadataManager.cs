@@ -628,6 +628,9 @@ namespace BLL.SQLProcessing
         }
         public ConstraintDTO getConstraintByName(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             string sql = $"SELECT * FROM fprdb_Constraint WHERE con_name='{name}'";
             ConstraintDTO ans = null;
             using (IDataReader r = this.databaseMgr.executeQuery(sql))
@@ -635,6 +638,18 @@ namespace BLL.SQLProcessing
                 r.Read();
                 FPRDBRelationDTO referencingRelation = this.getRelationByID(Convert.ToInt32(r["con_relation_id"])).toDTO();
                 FPRDBRelationDTO referencedRelation = this.getRelationByID(Convert.ToInt32(r["con_referenced_relation_id"])).toDTO();
+
+                if(r["oid"]==null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, oid of constraint cann't be null");
+                if (r["con_name"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_name of constraint cann't be null");
+                if (r["con_type"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_type of constraint cann't be null");
+                if (r["con_attributes"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_attributes of constraint cann't be null");
+                if (r["con_referenced_attributes"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_referenced_attributes of constraint cann't be null");
+
 #if NET8_0_OR_GREATER
                 ans = new ConstraintDTO(
                             Convert.ToInt32(r["oid"]),

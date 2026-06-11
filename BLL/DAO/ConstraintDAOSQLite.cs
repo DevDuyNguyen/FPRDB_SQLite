@@ -96,7 +96,6 @@ namespace BLL.DAO
                 throw new InvalidOperationException($"Field referenced attributes isn't primary key in relation {referencedFPRDBRelation.relName}");
             foreach(string attrName in referencedAttributes)
             {
-
                 if(!referencedFPRDBRelation.fprdbSchema.primarykey.Contains(attrName))
                     throw new InvalidOperationException($"Field {attrName} isn't a key attribute in relation {referencedFPRDBRelation.relName}");
             }
