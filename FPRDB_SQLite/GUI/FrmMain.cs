@@ -400,9 +400,33 @@ namespace FPRDB_SQLite.GUI
         private void ReloadTabs()
         {
             if (_selectedRelation != null)
-                DisplayRelationDetail(_selectedRelation);
+            {
+                var updatedRelation = AppStates.loadFPRDBSchemaRelations?.FirstOrDefault(r => r.relName.Equals(_selectedRelation.relName, StringComparison.OrdinalIgnoreCase));
+                if (updatedRelation != null)
+                {
+                    _selectedRelation = updatedRelation;
+                    DisplayRelationDetail(_selectedRelation);
+                }
+                else
+                {
+                    DisplayRelationDetail(_selectedRelation);
+                    _selectedRelation = null;
+                }
+            }
             if (_selectedSchema != null)
-                DisplaySchemaDetail(_selectedSchema);
+            {
+                var updatedSchema = AppStates.loadFPRDBSchemas?.FirstOrDefault(s => s.schemaName.Equals(_selectedSchema.schemaName, StringComparison.OrdinalIgnoreCase));
+                if (updatedSchema != null)
+                {
+                    _selectedSchema = updatedSchema;
+                    DisplaySchemaDetail(_selectedSchema);
+                }
+                else
+                {
+                    DisplaySchemaDetail(_selectedSchema);
+                    _selectedSchema = null;
+                }
+            }
         }
         // Method to check if relation is existed
         private bool IsRelationExisted(string relName)
@@ -1448,6 +1472,7 @@ namespace FPRDB_SQLite.GUI
             //}
 
             bool reloadDatabaseTreeFlag = false;
+            bool reloadTabsFlag = false;
             bool showMessageTabFlag = true;
             if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
             {
@@ -1465,14 +1490,15 @@ namespace FPRDB_SQLite.GUI
                         if (res is DDL_FPRDB_SQL_ExecutionResult)
                         {
                             reloadDatabaseTreeFlag = true;
+                            reloadTabsFlag = true;
                             uc.memoEditMessageUC.Text += $"Data Definition Language success.\r\n";
                             showMessageTabFlag = true;
                         }
                         else if (res is DML_FPRDB_SQL_ExecutionResult)
                         {
+                            reloadTabsFlag = true;
                             uc.memoEditMessageUC.Text += $"[Number of tuples affected]: {(res as DML_FPRDB_SQL_ExecutionResult).numberTuplesAffected}.\r\n";
                             showMessageTabFlag = true;
-                            ReloadTabs();
                         }
                         else //if(res is DQL_FPRDB_SQL_ExecutionResult)
                         {
@@ -1488,10 +1514,13 @@ namespace FPRDB_SQLite.GUI
                     }
                     if (reloadDatabaseTreeFlag)
                     {
-                        AppStates
-                            .loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+                        AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
                         AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
                         this.reLoadDatabaseTree();
+                    }
+                    if (reloadTabsFlag)
+                    {
+                        ReloadTabs();
                     }
                     if (showMessageTabFlag)
                         uc.ViewError();
