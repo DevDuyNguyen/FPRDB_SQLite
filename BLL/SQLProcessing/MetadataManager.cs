@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,23 +23,25 @@ namespace BLL.SQLProcessing
 
         public MetadataManager(DatabaseManager databaseMgr)
         {
+            if (databaseMgr == null)
+                throw new InvalidOperationException("Parameter databaseMgr isn't provided");
+
             this.databaseMgr = databaseMgr;
         }
 
         public bool isSchemaExist(string name)
         {
-            try
+            if (name == default || name == null)
+                throw new InvalidOperationException("Schema name isn't provided");
+
+            string sql = $"select 1 from fprdb_RelationSchema where relschema_name='{name}'";
+            bool ans;
+            using (IDataReader reader = this.databaseMgr.executeQuery(sql))
             {
-                string sql = $"select 1 from fprdb_RelationSchema where relschema_name='{name}'";
-                IDataReader reader = this.databaseMgr.executeQuery(sql);
-                bool ans = reader.Read();
-                reader.Close();
-                return ans;
+                ans = reader.Read();
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return ans;
+  
         }
         public bool isFuzzySetWithNameExist(string name)
         {
@@ -518,18 +521,27 @@ namespace BLL.SQLProcessing
         }
         public int getSchemaOID(string name)
         {
+            if (name == default || name == null)
+                throw new InvalidOperationException("Schema name isn't provided");
+
             int schemaOID = -1;
             using (IDataReader r = this.databaseMgr.executeQuery($"select oid from fprdb_RelationSchema where relschema_name='{name}'"))
             {
                 if (r.Read())
                 {
-                    schemaOID = Convert.ToInt32(r["oid"]);
+                    object tmp = r["oid"];
+                    if (tmp == null)
+                        throw new InvalidOperationException("Something went wrong with the underlying FPRDB database file, oid can't be NULL");
+                    schemaOID = Convert.ToInt32(tmp);
                 }
             }
             return schemaOID;
         }
         public bool isRelationOnSchemaExist(string schemaName)
         {
+            if (schemaName == default || schemaName == null)
+                throw new InvalidOperationException("Schema name isn't provided");
+
             int schemaOID=getSchemaOID(schemaName);
             if(schemaOID==-1)
                 throw new QueryDataNotExistException($"Schema {schemaName} doesn't exist");

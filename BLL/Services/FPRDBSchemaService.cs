@@ -45,6 +45,9 @@ namespace BLL.Services
         }
         public void removeFPRDBSchema(FPRDBSchemaDTO fprdbSchemaDTO)
         {
+            if (fprdbSchemaDTO == null)
+                throw new InvalidOperationException("Parameter fprdbSchemaDTO isn't provided");
+
             this.fprdbSchemaDAO.removeFPRDBSchema(fprdbSchemaDTO);
         }
     }
