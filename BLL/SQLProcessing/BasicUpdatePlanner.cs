@@ -107,13 +107,19 @@ namespace BLL.SQLProcessing
         }
         public bool executeCreateRelation(FPRDBRelation data)
         {
+
             //create sqlite table for relation
             IDataReader reader;
             long schemaID;
             using (reader = this.dbMgr.executeQuery($"SELECT oid from fprdb_RelationSchema where relschema_name='{data.getSchemaName()}'"))
             {
                 reader.Read();
-                schemaID = (long)reader["oid"];
+                object tmp = reader["oid"];
+
+                if (tmp == null)
+                    throw new InvalidOperationException("Something is wrong with the FPRDB database file, oid can't be null value");
+
+                schemaID = (long)tmp;
             }
             //string getAttributes = $@"SELECT attr.*, type.type_name 
             //    FROM fprdb_Attribute as attr
@@ -221,11 +227,15 @@ namespace BLL.SQLProcessing
             List<string> fieldNames = new List<string>();
             using (reader)
             {
+                string tmp;
                 if (!reader.Read())
                     throw new SQLExecutionException($"Schema {data.getSchemaName()} has no attribute");
                 do
                 {
-                    fieldNames.Add((string)reader["att_name"]);
+                    tmp = (string)reader["att_name"];
+                    if (tmp == default || tmp==null)
+                        throw new InvalidOperationException("Something is wrong with the FPRDB database file, attribute name can't be null value or empty string");
+                    fieldNames.Add(tmp);
                 }
                 while (reader.Read());
             }

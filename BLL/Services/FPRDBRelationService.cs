@@ -15,10 +15,9 @@ namespace BLL.Services
 
         public bool createFPRDBRelation(FPRDBRelationDTO rel)
         {
-            if (rel.relName == "" || rel.relName == null)
-                throw new InvalidDataException("Relation name is empty");
-            if (rel.schemaName == "" || rel.schemaName == null)
-                throw new InvalidDataException("Schema name is empty");
+            if (rel == null)
+                throw new InvalidOperationException("Parameter rel isn't provided");
+
             return this.fprdbRelationDAO.createFPRDBRelation(rel);
         }
         public void removeFPRDBRelation(FPRDBRelationDTO rel)

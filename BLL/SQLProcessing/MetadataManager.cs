@@ -78,6 +78,9 @@ namespace BLL.SQLProcessing
 
         public bool isRelationExist(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_Relation WHERE rel_name='{name}'");
             bool ans;
             using (reader)

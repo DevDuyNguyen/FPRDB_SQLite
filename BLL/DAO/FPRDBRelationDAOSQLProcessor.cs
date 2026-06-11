@@ -21,6 +21,11 @@ namespace BLL.DAO
 
         public bool createFPRDBRelation(FPRDBRelationDTO rel)
         {
+            if (rel.relName == "" || rel.relName == null)
+                throw new InvalidDataException("Relation name is empty");
+            if (rel.schemaName == "" || rel.schemaName == null)
+                throw new InvalidDataException("Schema name is empty");
+
             string fprdbSQL = $"CREATE RELATION {rel.relName} on {rel.schemaName}";
             return this.sqlProcessor.executeDataDefinition(fprdbSQL);
         }
