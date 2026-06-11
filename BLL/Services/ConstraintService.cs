@@ -106,6 +106,9 @@ namespace BLL.Services
         }
         public void removeConstraint(int oid)
         {
+            if (oid < 1)
+                throw new InvalidOperationException("The provided oid is invalid (valid:oid>=1)");
+
             this.constraintDAO.removeConstraint(oid);
         }
         public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data)
