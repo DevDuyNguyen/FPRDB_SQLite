@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,12 +56,16 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         {
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             xtraTabControlResultQuery.SelectedTabPage = QueryResultxtraTabPage;
+            // Đặt splitter ở vị trí 50% chiều cao
+            splitContainerControl1.SplitterPosition = splitContainerControl1.Height / 2;
         }
         public void ViewError()
         {
             splitContainerControl1.PanelVisibility = SplitPanelVisibility.Both;
             xtraTabControlResultQuery.SelectedTabPage = MessagextraTabPage;
             gridControlResultQuery.DataSource = null;
+            // Đặt splitter ở vị trí 50% chiều cao
+            splitContainerControl1.SplitterPosition = splitContainerControl1.Height / 2;
         }
         private void memoEditTxtQuery_TextChanged(object sender, EventArgs e)
         {
@@ -92,10 +96,19 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
         // Method to create a new grdResultQuery
         public void CreateNewGridResult(DataTable dt)
         {
+            // Nếu đang thêm kết quả thứ 2, chuyển panel đầu từ Fill → Top
+            // BringToFront() giữ panel đầu tiên ở vị trí trên cùng (z-order front = top vật lý)
+            if (QueryResultxtraTabPage.Controls.Count == 1)
+            {
+                var firstPanel = QueryResultxtraTabPage.Controls[0];
+                firstPanel.Dock = System.Windows.Forms.DockStyle.Top;
+                firstPanel.BringToFront();
+            }
+
+            bool isFirstGrid = QueryResultxtraTabPage.Controls.Count == 0;
+
             var panelContainer = new DevExpress.XtraEditors.PanelControl();
-            panelContainer.Height = 280; // Bạn có thể tăng/giảm chiều cao bảng tùy ý
-            panelContainer.Dock = System.Windows.Forms.DockStyle.Top;
-            panelContainer.Padding = new System.Windows.Forms.Padding(5, 5, 5, 15); // Tạo khoảng trống cách bảng dưới
+            panelContainer.Padding = new System.Windows.Forms.Padding(5, 5, 5, 15);
             panelContainer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
             var gridControl = new DevExpress.XtraGrid.GridControl();
@@ -105,23 +118,32 @@ namespace FPRDB_SQLite.GUI.GUI.UserControls
             gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView });
             gridControl.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            // Cấu hình GridView hiển thị dữ liệu giống logic cũ của bạn
             gridControl.DataSource = dt;
-            gridView.PopulateColumns(); 
-
-            // Tùy chỉnh thêm để giao diện gọn gàng khi xếp chồng
+            gridView.PopulateColumns();
             gridView.OptionsBehavior.Editable = false;
-            gridView.OptionsView.ShowGroupPanel = false; // Tắt khu vực kéo thả nhóm cột
+            gridView.OptionsView.ShowGroupPanel = false;
 
-            // 3. Đưa các control vào panel bọc ngoài
             panelContainer.Controls.Add(gridControl);
+
+            // Thêm vào cuối danh sách để đảm bảo thứ tự từ trên xuống dưới
+            // (Controls[0] = kết quả đầu tiên ở trên cùng)
             QueryResultxtraTabPage.Controls.Add(panelContainer);
-
-            panelContainer.BringToFront();
-
+            
             gridControl.ForceInitialize();
             int contentHeight = CalculateGridHeight(gridView);
             panelContainer.Height = contentHeight + panelContainer.Padding.Bottom;
+
+            if (isFirstGrid)
+            {
+                // Chỉ 1 kết quả → fill toàn bộ vùng tab
+                panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            }
+            else
+            {
+                // Nhiều kết quả → xếp chồng Top dưới panel đầu tiên
+                // Panel1 đã BringToFront (trên cùng), panel mới Controls.Add sẽ tự nằm phía sau/dưới
+                panelContainer.Dock = System.Windows.Forms.DockStyle.Top;
+            }
         }
         private int CalculateGridHeight(DevExpress.XtraGrid.Views.Grid.GridView view, int maxRowsBeforeScroll = 10)
         {

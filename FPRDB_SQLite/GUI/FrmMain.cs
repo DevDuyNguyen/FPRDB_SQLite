@@ -1,4 +1,4 @@
-﻿using BLL;
+using BLL;
 using BLL.Common;
 using BLL.DomainObject;
 using BLL.DTO;
@@ -77,6 +77,45 @@ namespace FPRDB_SQLite.GUI
             foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
             {
                 page.ShowCloseButton = DevExpress.Utils.DefaultBoolean.False;
+            }
+
+            // Set fixed panel so navigation tree width remains constant during window resizing/maximizing
+            RelationsplitContainerControl.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.Panel1;
+            
+            // Move treeView out of layoutControl1 to Panel1 directly so it docks Fill and auto-stretches without leaving blank spaces
+            layoutControlItem1.Control = null;
+            layoutControl1.Controls.Remove(treeView);
+            layoutControl1.Dispose();
+            RelationsplitContainerControl.Panel1.Controls.Clear();
+            RelationsplitContainerControl.Panel1.Controls.Add(treeView);
+            treeView.Dock = DockStyle.Fill;
+            treeView.BringToFront();
+            RelationsplitContainerControl.Panel1.PerformLayout();
+            RelationsplitContainerControl.SplitterPosition = 350;
+
+            // Limit manual splitter dragging to not exceed 600px
+            RelationsplitContainerControl.SplitterPositionChanged += RelationsplitContainerControl_SplitterPositionChanged;
+
+            // Set main form window state to maximized to always open in full screen
+            this.WindowState = FormWindowState.Maximized;
+        }
+
+        private bool _isEnforcingSplitterLimit = false;
+        private void RelationsplitContainerControl_SplitterPositionChanged(object sender, EventArgs e)
+        {
+            if (_isEnforcingSplitterLimit) return;
+            const int MaxSplitterPosition = 350; // 350px maximum width
+            if (RelationsplitContainerControl.SplitterPosition > MaxSplitterPosition)
+            {
+                try
+                {
+                    _isEnforcingSplitterLimit = true;
+                    RelationsplitContainerControl.SplitterPosition = MaxSplitterPosition;
+                }
+                finally
+                {
+                    _isEnforcingSplitterLimit = false;
+                }
             }
         }
         // Hàm để enable/disable tab và các nút khi load database
@@ -1421,7 +1460,7 @@ namespace FPRDB_SQLite.GUI
                     if (uc.memoEditMessageUC.Text == null)
                         uc.memoEditMessageUC.Text = "";
 
-                    foreach (FPRDBSQLExecutionResult res in results)
+                    foreach (FPRDBSQLExecutionResult res in results.AsEnumerable().Reverse())
                     {
                         if (res is DDL_FPRDB_SQL_ExecutionResult)
                         {
