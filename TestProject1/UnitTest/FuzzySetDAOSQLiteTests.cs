@@ -82,7 +82,7 @@ namespace TestProject1.UnitTest
         {
             public getUsingRelations_positive_testdata()
             {
-                Add(new DiscreteFuzzySetDTO<int>(null, null, "young", FieldType.distFS_INT));
+                Add(new DiscreteFuzzySetDTO<int>(null, null, "young", FieldType.DIST_FUZZYSET_INT));
             }
         }
         //[Theory]
@@ -98,7 +98,7 @@ namespace TestProject1.UnitTest
         {
             public removeFuzzySet_positive_testdata()
             {
-                Add(new DiscreteFuzzySetDTO<int>(null, null, 1,"distFS1", FieldType.distFS_INT));
+                Add(new DiscreteFuzzySetDTO<int>(null, null, 1,"distFS1", FieldType.DIST_FUZZYSET_INT));
             }
         }
         //[Theory]
@@ -123,7 +123,7 @@ namespace TestProject1.UnitTest
         {
             public updateDiscreteFuzzySet_positive_testdata()
             {
-                Add(new DiscreteFuzzySetDTO<int>(new List<int> { 10,11,12,13}, new List<float>{ 0,1,0,1}, 4, "distFS1", FieldType.distFS_INT));
+                Add(new DiscreteFuzzySetDTO<int>(new List<int> { 10,11,12,13}, new List<float>{ 0,1,0,1}, 4, "distFS1", FieldType.DIST_FUZZYSET_INT));
             }
         }
         //[Theory]

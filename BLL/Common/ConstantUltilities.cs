@@ -54,9 +54,9 @@ namespace BLL.Common
             {
                 string fsName = (c as FuzzySetConstant).getVal() as string;
                 FieldType fuzzySetType = metaDataMgr.getFuzzySetType(fsName);
-                if (fuzzySetType is FieldType.distFS_INT)
+                if (fuzzySetType is FieldType.DIST_FUZZYSET_INT)
                     return typeof(int);
-                else if (fuzzySetType is FieldType.distFS_FLOAT|| fuzzySetType is FieldType.contFS)
+                else if (fuzzySetType is FieldType.DIST_FUZZYSET_FLOAT|| fuzzySetType is FieldType.CONT_FUZZYSET)
                     return typeof(float);
                 else //if (fuzzySetType is FieldType.distFS_TEXT)
                     return typeof(string);

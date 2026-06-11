@@ -238,6 +238,7 @@ namespace FPRDB_SQLite.GUI
             try
             {
                 ConstraintDTO newReferentialConstraint= this.service.createReferentialConstraint(fkName, this.rel, referencedRelation, attrs, refAttrs);
+                relationships.Add(newReferentialConstraint);
                 MessageBox.Show("Save successfully!");
                 lstFKSelected.Items[lstFKSelected.SelectedIndex] = newReferentialConstraint.conName;
                 isAddNew = false;

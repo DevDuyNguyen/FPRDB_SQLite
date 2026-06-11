@@ -1447,6 +1447,12 @@ namespace FPRDB_SQLite.GUI
             //    XtraMessageBox.Show("Lỗi hiển thị dữ liệu giả: \n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //}
         }
+        private void triggerReloadDatabaseTree()
+        {
+            AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
+            AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
+            this.reLoadDatabaseTree();
+        }
         private void iExcuteQuery_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //if (xtraTabControlDatabase.SelectedTabPage?.Controls[0] is ucQueryEditor uc)
@@ -1514,9 +1520,7 @@ namespace FPRDB_SQLite.GUI
                     }
                     if (reloadDatabaseTreeFlag)
                     {
-                        AppStates.loadFPRDBSchemas = this.databaseService.getFPRDBSchemas();
-                        AppStates.loadFPRDBSchemaRelations = this.databaseService.getFPRDBRelations();
-                        this.reLoadDatabaseTree();
+                        triggerReloadDatabaseTree();
                     }
                     if (reloadTabsFlag)
                     {
@@ -1529,37 +1533,51 @@ namespace FPRDB_SQLite.GUI
                 }
                 catch (SQLSyntaxException ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     uc.memoEditMessageUC.Text = $"[SQL Syntax Error]\r\n{ex.Message}";
                     uc.ViewError();
                 }
                 catch (SemanticException ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     uc.memoEditMessageUC.Text = $"[SQL Semantic Error]\r\n{ex.Message}";
                     uc.ViewError();
                 }
 
                 catch (InvalidOperationException ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     uc.memoEditMessageUC.Text = $"[Invalid Operation Error]\r\n{ex.Message}";
                     uc.ViewError();
                 }
                 catch (InvalidCastException ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     uc.memoEditMessageUC.Text = $"[Invalid Cast Exception Error]\r\n{ex.Message}";
                     uc.ViewError();
                 }
                 catch (MismatchTokenType ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     uc.memoEditMessageUC.Text = $"[Token Mismatch]\r\n{ex.Message}";
                     uc.ViewError();
                 }
                 catch (NotSupportedException ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     uc.memoEditMessageUC.Text = $"[Not Supported]\r\n{ex.Message}";
                     uc.ViewError();
                 }
                 catch (UnderlyingStorageEngineCRUDException ex)
                 {
+                    triggerReloadDatabaseTree();
+
                     XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     //this.DialogResult = DialogResult.Abort;
                 }
@@ -1717,18 +1735,18 @@ namespace FPRDB_SQLite.GUI
                     switch (field.getFieldInfo().getType())
                     {
                         case FieldType.INT:
-                        case FieldType.distFS_INT:
+                        case FieldType.DIST_FUZZYSET_INT:
                             tupleForGridView[i] = iscan.getFieldContent<int>(field.getFieldName()).ToString();
                             break;
                         case FieldType.FLOAT:
-                        case FieldType.distFS_FLOAT:
-                        case FieldType.contFS:
+                        case FieldType.DIST_FUZZYSET_FLOAT:
+                        case FieldType.CONT_FUZZYSET:
                             //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                             tupleForGridView[i] = iscan.getFieldContent<float>(field.getFieldName()).ToString();
                             break;
                         case FieldType.CHAR:
                         case FieldType.VARCHAR:
-                        case FieldType.distFS_TEXT:
+                        case FieldType.DIST_FUZZYSET_TEXT:
                             //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                             tupleForGridView[i] = iscan.getFieldContent<string>(field.getFieldName()).ToString();
                             break;
@@ -1767,18 +1785,18 @@ namespace FPRDB_SQLite.GUI
                     switch (field.getFieldInfo().getType())
                     {
                         case FieldType.INT:
-                        case FieldType.distFS_INT:
+                        case FieldType.DIST_FUZZYSET_INT:
                             tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                             break;
                         case FieldType.FLOAT:
-                        case FieldType.distFS_FLOAT:
-                        case FieldType.contFS:
+                        case FieldType.DIST_FUZZYSET_FLOAT:
+                        case FieldType.CONT_FUZZYSET:
                             //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                             tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
                             break;
                         case FieldType.CHAR:
                         case FieldType.VARCHAR:
-                        case FieldType.distFS_TEXT:
+                        case FieldType.DIST_FUZZYSET_TEXT:
                             //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                             tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
                             break;
@@ -1820,18 +1838,18 @@ namespace FPRDB_SQLite.GUI
                         switch (field.getFieldInfo().getType())
                         {
                             case FieldType.INT:
-                            case FieldType.distFS_INT:
+                            case FieldType.DIST_FUZZYSET_INT:
                                 tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                                 break;
                             case FieldType.FLOAT:
-                            case FieldType.distFS_FLOAT:
-                            case FieldType.contFS:
+                            case FieldType.DIST_FUZZYSET_FLOAT:
+                            case FieldType.CONT_FUZZYSET:
                                 //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                                 tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
                                 break;
                             case FieldType.CHAR:
                             case FieldType.VARCHAR:
-                            case FieldType.distFS_TEXT:
+                            case FieldType.DIST_FUZZYSET_TEXT:
                                 //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                                 tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
                                 break;
@@ -2054,7 +2072,7 @@ namespace FPRDB_SQLite.GUI
             string fldName = this._currentEditingColumn;
             this.selectedField = this._selectedRelation.fprdbSchema.fields.FirstOrDefault(n => n.getFieldName() == fldName);
             this.selectedFieldType = selectedField.getFieldInfo().getType();
-            this.isSelectedFieldText = selectedFieldType == FieldType.CHAR || selectedFieldType == FieldType.VARCHAR || selectedFieldType == FieldType.distFS_TEXT;
+            this.isSelectedFieldText = selectedFieldType == FieldType.CHAR || selectedFieldType == FieldType.VARCHAR || selectedFieldType == FieldType.DIST_FUZZYSET_TEXT;
 
             LoadFuzzyProbalisticValueDetail(fuzzyProbalisticValue);
         }
@@ -2604,18 +2622,18 @@ namespace FPRDB_SQLite.GUI
                             switch (field.getFieldInfo().getType())
                             {
                                 case FieldType.INT:
-                                case FieldType.distFS_INT:
+                                case FieldType.DIST_FUZZYSET_INT:
                                     tupleForGridView[i] = s.getFieldContent<int>(field.getFieldName()).ToString();
                                     break;
                                 case FieldType.FLOAT:
-                                case FieldType.distFS_FLOAT:
-                                case FieldType.contFS:
+                                case FieldType.DIST_FUZZYSET_FLOAT:
+                                case FieldType.CONT_FUZZYSET:
                                     //tupleForGridView.Add((s.getFieldContent<float>(field.getFieldName())).ToString());
                                     tupleForGridView[i] = s.getFieldContent<float>(field.getFieldName()).ToString();
                                     break;
                                 case FieldType.CHAR:
                                 case FieldType.VARCHAR:
-                                case FieldType.distFS_TEXT:
+                                case FieldType.DIST_FUZZYSET_TEXT:
                                     //tupleForGridView.Add((s.getFieldContent<string>(field.getFieldName())).ToString());
                                     tupleForGridView[i] = s.getFieldContent<string>(field.getFieldName()).ToString();
                                     break;

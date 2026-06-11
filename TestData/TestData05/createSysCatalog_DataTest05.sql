@@ -84,7 +84,7 @@ VALUES
     ('CHAR', 'b'), 
     ('VARCHAR', 'b'), 
     ('BOOLEAN', 'b'), 
-    ('distFS_INT', 'fs'), 
-    ('distFS_FLOAT', 'fs'), 
-    ('distFS_TEXT', 'fs'), 
-    ('contFS', 'fs');
+    ('DIST_FUZZYSET_INT', 'fs'), 
+    ('DIST_FUZZYSET_FLOAT', 'fs'), 
+    ('DIST_FUZZYSET_TEXT', 'fs'), 
+    ('CONT_FUZZYSET', 'fs');

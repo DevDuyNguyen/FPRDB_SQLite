@@ -107,13 +107,19 @@ namespace BLL.SQLProcessing
         }
         public bool executeCreateRelation(FPRDBRelation data)
         {
+
             //create sqlite table for relation
             IDataReader reader;
             long schemaID;
             using (reader = this.dbMgr.executeQuery($"SELECT oid from fprdb_RelationSchema where relschema_name='{data.getSchemaName()}'"))
             {
                 reader.Read();
-                schemaID = (long)reader["oid"];
+                object tmp = reader["oid"];
+
+                if (tmp == null)
+                    throw new InvalidOperationException("Something is wrong with the FPRDB database file, oid can't be null value");
+
+                schemaID = (long)tmp;
             }
             //string getAttributes = $@"SELECT attr.*, type.type_name 
             //    FROM fprdb_Attribute as attr
@@ -221,11 +227,15 @@ namespace BLL.SQLProcessing
             List<string> fieldNames = new List<string>();
             using (reader)
             {
+                string tmp;
                 if (!reader.Read())
                     throw new SQLExecutionException($"Schema {data.getSchemaName()} has no attribute");
                 do
                 {
-                    fieldNames.Add((string)reader["att_name"]);
+                    tmp = (string)reader["att_name"];
+                    if (tmp == default || tmp==null)
+                        throw new InvalidOperationException("Something is wrong with the FPRDB database file, attribute name can't be null value or empty string");
+                    fieldNames.Add(tmp);
                 }
                 while (reader.Read());
             }
@@ -379,11 +389,11 @@ namespace BLL.SQLProcessing
                 //not done: refactor by delegate or c# equivalent of pass function as member in js
                 if(data is FieldFieldModifyData)
                 {
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                         us.setFieldContent<int>(fldName, us.getFieldContent<int>(fldName));
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                         us.setFieldContent<float>(fldName, us.getFieldContent<float>(fldName));
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                         us.setFieldContent<string>(fldName, us.getFieldContent<string>(fldName));
                     else //if (fieldType == FieldType.BOOLEAN)
                         us.setFieldContent<bool>(fldName, us.getFieldContent<bool>(fldName));
@@ -391,17 +401,17 @@ namespace BLL.SQLProcessing
                 else
                 {
                     FuzzyProbabilisticValueParsingData parsed_fprobValue = (FuzzyProbabilisticValueParsingData)data.getAssignValue();
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                     {
                         FuzzyProbabilisticValue<int> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsed_fprobValue, fieldType, this.metaDataMgr);
                         us.setFieldContent<int>(fldName, v);
                     }
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                     {
                         FuzzyProbabilisticValue<float> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsed_fprobValue, fieldType, this.metaDataMgr);
                         us.setFieldContent<float>(fldName, v);
                     }
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                     {
                         FuzzyProbabilisticValue<string> v = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsed_fprobValue, fieldType, this.metaDataMgr);
                         us.setFieldContent<string>(fldName, v);

@@ -36,8 +36,6 @@ namespace BLL
         }
         private void addFPRDBExtenstion(ref string filePath)
         {
-            if (filePath == null || filePath == default)
-                throw new InvalidOperationException("filePath isn't provided");
             int dotExtensionStartIndex = filePath.LastIndexOf('.');
             if (dotExtensionStartIndex != -1)
             {
@@ -54,6 +52,8 @@ namespace BLL
         }
         public void createDB(string filePath)
         {
+            if (filePath == null || filePath == default)
+                throw new InvalidOperationException("filePath isn't provided");
             addFPRDBExtenstion(ref filePath);
             string directoryPath = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directoryPath))
@@ -160,10 +160,10 @@ namespace BLL
                 ('CHAR', 'b'),
                 ('VARCHAR', 'b'),
                 ('BOOLEAN', 'b'),
-                ('distFS_INT', 'fs'),
-                ('distFS_FLOAT', 'fs'),
-                ('distFS_TEXT', 'fs'),
-                ('contFS', 'fs');";
+                ('DIST_FUZZYSET_INT', 'fs'),
+                ('DIST_FUZZYSET_FLOAT', 'fs'),
+                ('DIST_FUZZYSET_TEXT', 'fs'),
+                ('CONT_FUZZYSET', 'fs');";
 
             string statemt = create_fprdb_RelationSchema + create_fprdb_Relation + create_fprdb_Type +
                 create_fprdb_Attribute + create_fprdb_FuzzySet + create_fprdb_DiscreteFuzzySet

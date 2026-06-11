@@ -62,7 +62,7 @@ namespace TestProject1.IntegrationTest
                     new List<float> { 1, 0.5f },
                     new List<float> { 1, 0.5f }
                     ),
-                FieldType.distFS_INT,
+                FieldType.DIST_FUZZYSET_INT,
                 compRoot.getMetaDataManger()
                 );
             FuzzyProbabilisticValue<float> actual3 = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(
@@ -71,7 +71,7 @@ namespace TestProject1.IntegrationTest
                     new List<float> { 1, 0.5f },
                     new List<float> { 1, 0.5f }
                     ),
-                FieldType.contFS,
+                FieldType.CONT_FUZZYSET,
                 compRoot.getMetaDataManger()
                 );
         }

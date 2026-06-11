@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,26 +23,30 @@ namespace BLL.SQLProcessing
 
         public MetadataManager(DatabaseManager databaseMgr)
         {
+            if (databaseMgr == null)
+                throw new InvalidOperationException("Parameter databaseMgr isn't provided");
+
             this.databaseMgr = databaseMgr;
         }
 
         public bool isSchemaExist(string name)
         {
-            try
+            if (name == default || name == null)
+                throw new InvalidOperationException("Schema name isn't provided");
+
+            string sql = $"select 1 from fprdb_RelationSchema where relschema_name='{name}'";
+            bool ans;
+            using (IDataReader reader = this.databaseMgr.executeQuery(sql))
             {
-                string sql = $"select 1 from fprdb_RelationSchema where relschema_name='{name}'";
-                IDataReader reader = this.databaseMgr.executeQuery(sql);
-                bool ans = reader.Read();
-                reader.Close();
-                return ans;
+                ans = reader.Read();
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return ans;
+  
         }
         public bool isFuzzySetWithNameExist(string name)
         {
+            if (name == default || name == null)
+                throw new InvalidOperationException("Parameter name isn't provided");
             try
             {
                 string sql = $"select 1 from fprdb_FuzzySet where fuzzset_name='{name}'";
@@ -73,6 +78,9 @@ namespace BLL.SQLProcessing
 
         public bool isRelationExist(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_Relation WHERE rel_name='{name}'");
             bool ans;
             using (reader)
@@ -83,6 +91,9 @@ namespace BLL.SQLProcessing
         }
         public FPRDBRelation getRelation(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             string getRelationSQL = $@"
                 SELECT
 	                rel.oid as 'rel.oid',
@@ -223,6 +234,9 @@ namespace BLL.SQLProcessing
         }
         public FieldType getFuzzySetType(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($@"
                 SELECT 
 	                'DISCRETE' AS 'fuzzy_set_category',
@@ -250,11 +264,11 @@ namespace BLL.SQLProcessing
                 if ((string)reader["fuzzy_set_category"]== "DISCRETE")
                 {
                     if ((string)reader["type_name"] == FieldType.INT.ToString())
-                        type = FieldType.distFS_INT;
+                        type = FieldType.DIST_FUZZYSET_INT;
                     else if ((string)reader["type_name"] == FieldType.FLOAT.ToString())
-                        type = FieldType.distFS_FLOAT;
+                        type = FieldType.DIST_FUZZYSET_FLOAT;
                     else if ((string)reader["type_name"] == FieldType.VARCHAR.ToString())
-                        type = FieldType.distFS_TEXT;
+                        type = FieldType.DIST_FUZZYSET_TEXT;
                     else {
                         throw new Exception($"Fuzzy set {name} has supported domain type");
                     }
@@ -263,13 +277,16 @@ namespace BLL.SQLProcessing
                 {
                     if ((string)reader["type_name"] != FieldType.FLOAT.ToString())
                         throw new Exception($"Fuzzy set {name} has supported domain type");
-                    type = FieldType.contFS;
+                    type = FieldType.CONT_FUZZYSET;
                 }
             }
             return type;
         }
         public FieldType getFuzzySetTypeByID(int oid)
         {
+            if (oid == null || oid == default)
+                throw new InvalidOperationException($"Fuzzy set oid isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($@"
                 SELECT 
 	                'DISCRETE' AS 'fuzzy_set_category',
@@ -294,42 +311,59 @@ namespace BLL.SQLProcessing
             {
                 if (!reader.Read())
                     throw new QueryDataNotExistException($"Fuzzy set with id {oid} doesn't exist");
+                
                 if ((string)reader["fuzzy_set_category"] == "DISCRETE")
                 {
                     if ((string)reader["type_name"] == FieldType.INT.ToString())
-                        type = FieldType.distFS_INT;
+                        type = FieldType.DIST_FUZZYSET_INT;
                     else if ((string)reader["type_name"] == FieldType.FLOAT.ToString())
-                        type = FieldType.distFS_FLOAT;
+                        type = FieldType.DIST_FUZZYSET_FLOAT;
                     else if ((string)reader["type_name"] == FieldType.VARCHAR.ToString())
-                        type = FieldType.distFS_TEXT;
+                        type = FieldType.DIST_FUZZYSET_TEXT;
                     else
                     {
-                        throw new Exception($"Fuzzy set with id {oid} doesn't supported domain type");
+                        throw new Exception($"Fuzzy set with id {oid} has unsupported domain type");
                     }
                 }
                 else
                 {
                     if ((string)reader["type_name"] != FieldType.FLOAT.ToString())
-                        throw new Exception($"Fuzzy set with id {oid} has supported domain type");
-                    type = FieldType.contFS;
+                        throw new Exception($"Fuzzy set with id {oid} has unsupported domain type");
+                    type = FieldType.CONT_FUZZYSET;
                 }
             }
             return type;
         }
         public int getFuzzySetOID(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             IDataReader reader = this.databaseMgr.executeQuery($"SELECT OID FROM fprdb_FuzzySet WHERE fuzzset_name='{name}'");
             int oid=-1;
             using (reader)
             {
                 if (reader.Read())
+                {
+                    if (reader["oid"] == null)
+                        throw new InvalidOperationException("Something went wrong with FPRDB database file, oid of fuzzy set can't be null");
                     oid = Convert.ToInt32(reader["oid"]);
-                
+                }
             }
             return oid;
         }
         public bool isTupleExist(List<string> primaryKey, List<string> value, string relationName)
         {
+            if (relationName == null || relationName == default)
+                throw new InvalidOperationException("Parameter relationName isn't provided");
+            if(primaryKey.Count!=value.Count)
+            {
+                throw new InvalidOperationException("Number of elements in parameter primaryKey doesn't match parameter value");
+                if(primaryKey.Count==0)
+                    throw new InvalidOperationException("Number of element in parameter primaryKey can't be 0");
+            }
+            
+
             string sql = $@"
                 SELECT 1 FROM {relationName}
                 WHERE
@@ -361,13 +395,13 @@ namespace BLL.SQLProcessing
             string sql;
             Type t = typeof(T);
             if (
-                (fuzzSetType == FieldType.distFS_INT && t != typeof(int))
-                || ((fuzzSetType == FieldType.distFS_FLOAT && t != typeof(float)))
-                || (fuzzSetType == FieldType.distFS_TEXT && t != typeof(string))
-                || (fuzzSetType == FieldType.contFS && t != typeof(float))
+                (fuzzSetType == FieldType.DIST_FUZZYSET_INT && t != typeof(int))
+                || ((fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT && t != typeof(float)))
+                || (fuzzSetType == FieldType.DIST_FUZZYSET_TEXT && t != typeof(string))
+                || (fuzzSetType == FieldType.CONT_FUZZYSET && t != typeof(float))
                 )
                 throw new InvalidCastException($"Fuzzy set type {fuzzSetType.ToString()} isn't compatible with defininng domain {t.Name}");
-            if(fuzzSetType != FieldType.contFS)
+            if(fuzzSetType != FieldType.CONT_FUZZYSET)
             {
                 sql = $@"
                     SELECT fuzzset_x,fuzzset_membership_degree, fs.oid as ""fs_oid""
@@ -419,9 +453,9 @@ namespace BLL.SQLProcessing
         }
         public BaseFuzzySet getFuzzySet(string name, FieldType fuzzSetType)
         {
-            if (fuzzSetType == FieldType.distFS_INT)
+            if (fuzzSetType == FieldType.DIST_FUZZYSET_INT)
                 return this.getFuzzySet<int>(name, fuzzSetType);
-            else if (fuzzSetType == FieldType.distFS_FLOAT || fuzzSetType == FieldType.contFS)
+            else if (fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT || fuzzSetType == FieldType.CONT_FUZZYSET)
                 return this.getFuzzySet<float>(name, fuzzSetType);
             else //if(fuzzSetType==FieldType.distFS_TEXT)
                 return this.getFuzzySet<string>(name, fuzzSetType);
@@ -432,10 +466,10 @@ namespace BLL.SQLProcessing
             string sql;
             Type t = typeof(T);
             if (
-                (fuzzSetType == FieldType.distFS_INT && t != typeof(int))
-                || ((fuzzSetType == FieldType.distFS_FLOAT && t != typeof(float)))
-                || (fuzzSetType == FieldType.distFS_TEXT && t != typeof(string))
-                || (fuzzSetType == FieldType.contFS && t != typeof(float))
+                (fuzzSetType == FieldType.DIST_FUZZYSET_INT && t != typeof(int))
+                || ((fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT && t != typeof(float)))
+                || (fuzzSetType == FieldType.DIST_FUZZYSET_TEXT && t != typeof(string))
+                || (fuzzSetType == FieldType.CONT_FUZZYSET && t != typeof(float))
                 )
                 throw new InvalidCastException($"Fuzzy set type {fuzzSetType.ToString()} isn't compatible with defininng domain {t.Name}");
             string fsName;
@@ -445,7 +479,7 @@ namespace BLL.SQLProcessing
                     throw new QueryDataNotExistException($"Fuzzy set with id {fs_oid} doesn't exist");
                 fsName = (string)r["fuzzset_name"];
             }
-            if (fuzzSetType != FieldType.contFS)
+            if (fuzzSetType != FieldType.CONT_FUZZYSET)
             {
                 sql = $@"
                     SELECT fuzzset_x,fuzzset_membership_degree, fs.oid as ""fs_oid""
@@ -497,6 +531,9 @@ namespace BLL.SQLProcessing
         }
         public int getRelationOID(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             int relOid=-1;
             string getOIDofRelation = $"select oid from fprdb_Relation where rel_name='{name}'";
             using(IDataReader r = this.databaseMgr.executeQuery(getOIDofRelation))
@@ -512,18 +549,27 @@ namespace BLL.SQLProcessing
         }
         public int getSchemaOID(string name)
         {
+            if (name == default || name == null)
+                throw new InvalidOperationException("Schema name isn't provided");
+
             int schemaOID = -1;
             using (IDataReader r = this.databaseMgr.executeQuery($"select oid from fprdb_RelationSchema where relschema_name='{name}'"))
             {
                 if (r.Read())
                 {
-                    schemaOID = Convert.ToInt32(r["oid"]);
+                    object tmp = r["oid"];
+                    if (tmp == null)
+                        throw new InvalidOperationException("Something went wrong with the underlying FPRDB database file, oid can't be NULL");
+                    schemaOID = Convert.ToInt32(tmp);
                 }
             }
             return schemaOID;
         }
         public bool isRelationOnSchemaExist(string schemaName)
         {
+            if (schemaName == default || schemaName == null)
+                throw new InvalidOperationException("Schema name isn't provided");
+
             int schemaOID=getSchemaOID(schemaName);
             if(schemaOID==-1)
                 throw new QueryDataNotExistException($"Schema {schemaName} doesn't exist");
@@ -597,6 +643,10 @@ namespace BLL.SQLProcessing
         }
         public bool isConstraintNameExist(string name)
         {
+            if (name == default || name == null)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
+
             using(IDataReader r=this.databaseMgr.executeQuery($"SELECT 1 FROM fprdb_Constraint WHERE con_name='{name}'"))
             {   
                 return r.Read();
@@ -604,6 +654,9 @@ namespace BLL.SQLProcessing
         }
         public ConstraintDTO getConstraintByName(string name)
         {
+            if (name == null || name == default)
+                throw new InvalidOperationException("Parameter name isn't provided");
+
             string sql = $"SELECT * FROM fprdb_Constraint WHERE con_name='{name}'";
             ConstraintDTO ans = null;
             using (IDataReader r = this.databaseMgr.executeQuery(sql))
@@ -611,6 +664,18 @@ namespace BLL.SQLProcessing
                 r.Read();
                 FPRDBRelationDTO referencingRelation = this.getRelationByID(Convert.ToInt32(r["con_relation_id"])).toDTO();
                 FPRDBRelationDTO referencedRelation = this.getRelationByID(Convert.ToInt32(r["con_referenced_relation_id"])).toDTO();
+
+                if(r["oid"]==null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, oid of constraint cann't be null");
+                if (r["con_name"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_name of constraint cann't be null");
+                if (r["con_type"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_type of constraint cann't be null");
+                if (r["con_attributes"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_attributes of constraint cann't be null");
+                if (r["con_referenced_attributes"] == null)
+                    throw new InvalidOperationException("Something went wrong with FPRDB database file, con_referenced_attributes of constraint cann't be null");
+
 #if NET8_0_OR_GREATER
                 ans = new ConstraintDTO(
                             Convert.ToInt32(r["oid"]),

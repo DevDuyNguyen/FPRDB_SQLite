@@ -81,7 +81,7 @@ namespace BLL.DAO
                 using(IDataReader r = this.databaseManager.executeQuery(checkIfFuzzSetExist))
                 {
                     if (r.Read())
-                        throw new InvalidDataException($"Fuzz set {fuzzySet.fuzzySetName} already exists");
+                        throw new InvalidDataException($"Fuzzy set {fuzzySet.fuzzySetName} already exists");
                 }
 
                 string fieldTypeName = fuzzySet.fuzzySetType.ToString();
@@ -149,7 +149,7 @@ namespace BLL.DAO
                 using (IDataReader r = this.databaseManager.executeQuery(checkIfFuzzSetExist))
                 {
                     if (r.Read())
-                        throw new InvalidDataException($"Fuzz set {fuzzySet.fuzzySetName} already exists");
+                        throw new InvalidDataException($"Fuzzy set {fuzzySet.fuzzySetName} already exists");
                 }
 
                 string fieldTypeName = fuzzySet.fuzzySetType.ToString();
@@ -230,11 +230,11 @@ namespace BLL.DAO
             foreach (string fsName in matchFuzzySetNames)
             {
                 fsType = this.metaDataMgr.getFuzzySetType(fsName);
-                if (fsType == FieldType.distFS_INT)
+                if (fsType == FieldType.DIST_FUZZYSET_INT)
                 {
                     ans.Add(this.metaDataMgr.getFuzzySet<int>(fsName, fsType));
                 }
-                else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+                else if (fsType == FieldType.DIST_FUZZYSET_FLOAT || fsType == FieldType.CONT_FUZZYSET)
                 {
                     ans.Add(this.metaDataMgr.getFuzzySet<float>(fsName, fsType));
                 }
@@ -248,6 +248,8 @@ namespace BLL.DAO
         }
         public List<FPRDBRelation> getUsingRelations(FuzzySetDTO fuzzySet)
         {
+            if(fuzzySet?.fuzzySetName==null)
+                throw new InvalidOperationException("Parameter fuzzySet.fuzzySetName can't be null");
             int fsOID = this.metaDataMgr.getFuzzySetOID(fuzzySet.fuzzySetName);
             List<int> usingRelationOIDs = new List<int>();
             IDataReader r;
@@ -278,14 +280,17 @@ namespace BLL.DAO
         }
         public FuzzySetDTO getExactFuzzySet(int oid)
         {
+            if (oid == null || oid == default)
+                throw new InvalidOperationException($"Fuzzy set oid isn't provided");
+
             FieldType fsType = this.metaDataMgr.getFuzzySetTypeByID(oid);
             FuzzySetDTO dto=null;
-            if (fsType == FieldType.distFS_INT)
+            if (fsType == FieldType.DIST_FUZZYSET_INT)
             {
                 FuzzySet<int> tmp = this.metaDataMgr.getFuzzySetByID<int>(oid, fsType);
                 dto = tmp.toDTO();
             }
-            else if (fsType == FieldType.distFS_FLOAT || fsType == FieldType.contFS)
+            else if (fsType == FieldType.DIST_FUZZYSET_FLOAT || fsType == FieldType.CONT_FUZZYSET)
             {
                 FuzzySet<float> tmp = this.metaDataMgr.getFuzzySetByID<float>(oid, fsType);
                 dto = tmp.toDTO();

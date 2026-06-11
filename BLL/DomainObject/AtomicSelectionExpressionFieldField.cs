@@ -88,15 +88,15 @@ public AtomicSelectionExpressionFieldField(string lField, string rField, Probabi
 
             if (left_fieldType == right_fieldType)
             {
-                if (left_fieldType == FieldType.INT || left_fieldType == FieldType.distFS_INT)
+                if (left_fieldType == FieldType.INT || left_fieldType == FieldType.DIST_FUZZYSET_INT)
                 {
                     return genericCalculateProbabilisticInterpretation<int>(currentTuple.getFieldContent<int>(lField), currentTuple.getFieldContent<int>(rField));
                 }
-                else if (left_fieldType == FieldType.FLOAT || left_fieldType == FieldType.distFS_FLOAT || left_fieldType == FieldType.contFS)
+                else if (left_fieldType == FieldType.FLOAT || left_fieldType == FieldType.DIST_FUZZYSET_FLOAT || left_fieldType == FieldType.CONT_FUZZYSET)
                 {
                     return genericCalculateProbabilisticInterpretation<float>(currentTuple.getFieldContent<float>(lField), currentTuple.getFieldContent<float>(rField));
                 }
-                else if (left_fieldType == FieldType.CHAR || left_fieldType == FieldType.VARCHAR || left_fieldType == FieldType.distFS_TEXT)
+                else if (left_fieldType == FieldType.CHAR || left_fieldType == FieldType.VARCHAR || left_fieldType == FieldType.DIST_FUZZYSET_TEXT)
                 {
                     return genericCalculateProbabilisticInterpretation<string>(currentTuple.getFieldContent<string>(lField), currentTuple.getFieldContent<string>(rField));
                 }

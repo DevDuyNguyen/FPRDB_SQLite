@@ -34,9 +34,9 @@ namespace TestProject1.DataTesting
                 "sche1",
                 new List<Field> {
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
-                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
-                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
-                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                    new Field("att1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                 },
                 new List<string> { "id" }
                 );
@@ -67,9 +67,9 @@ namespace TestProject1.DataTesting
                 "sche1",
                 new List<Field> { 
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
-                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
-                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
-                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                    new Field("att1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                 },
                 new List<string> { "id"}
                 );
@@ -100,9 +100,9 @@ namespace TestProject1.DataTesting
                 "sche1",
                 new List<Field> {
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
-                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
-                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
-                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                    new Field("att1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                 },
                 new List<string> { "id" }
                 );
@@ -135,9 +135,9 @@ namespace TestProject1.DataTesting
                 "sche1",
                 new List<Field> {
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
-                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
-                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
-                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                    new Field("att1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                 },
                 new List<string> { "id" }
                 );
@@ -169,9 +169,9 @@ namespace TestProject1.DataTesting
                 "sche1",
                 new List<Field> {
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
-                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
-                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
-                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                    new Field("att1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                 },
                 new List<string> { "id" }
                 );
@@ -203,9 +203,9 @@ namespace TestProject1.DataTesting
                 "sche1",
                 new List<Field> {
                     new Field("id", new FieldInfo(FieldType.INT, 0)),
-                    new Field("att1", new FieldInfo(FieldType.distFS_INT, 0)),
-                    new Field("att2", new FieldInfo(FieldType.distFS_FLOAT, 0)),
-                    new Field("att3", new FieldInfo(FieldType.contFS, 0))
+                    new Field("att1", new FieldInfo(FieldType.DIST_FUZZYSET_INT, 0)),
+                    new Field("att2", new FieldInfo(FieldType.DIST_FUZZYSET_FLOAT, 0)),
+                    new Field("att3", new FieldInfo(FieldType.CONT_FUZZYSET, 0))
                 },
                 new List<string> { "id" }
                 );

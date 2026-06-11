@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace BLL.Services
 {
@@ -130,7 +131,7 @@ namespace BLL.Services
         }
         private bool isSystemCatalogTableExist(string tableName)
         {
-            using(IDataReader r=this.dbMgr.executeQuery($"select 1 from sqlite_master where type='table' and name='{tableName}';"))
+            using (IDataReader r = this.dbMgr.executeQuery($"select 1 from sqlite_master where type='table' and name='{tableName}';"))
             {
                 return r.Read();
             }
@@ -177,7 +178,7 @@ namespace BLL.Services
 
         private bool is_system_catalog_table_definition_exist(SystemCatalogTable table)
         {
-            
+
             //is system catalog table exist
             if (!isSystemCatalogTableExist(table.name))
                 throw new InvalidFPRDBDatabaseFile($"System catalog table {table.name} doesn't exist");
@@ -191,7 +192,7 @@ namespace BLL.Services
             return true;
         }
 
-        private bool isValidFPRDBDatabaseFileStructure(string filePath)
+        private bool isValidFPRDBDatabaseFileStructure()
         {
             //the structure follows the System catalog
             SystemCatalogTable fprdb_RelationSchema = new SystemCatalogTable(
@@ -413,7 +414,6 @@ namespace BLL.Services
                         );
                         fields.Add(field);
                     }
-                    // SỬA LỖI 2: Chỗ này lúc nãy là (int) làm sập code, giờ đã sửa thành Convert.ToInt64
                     while ((hasNext = reader.Read()) && Convert.ToInt64(reader["rsch.oid"]) == currentRelSchemaId);
 
                     schemas.Add(new FPRDBSchemaDTO(currentSchemaName, fields, primaryKey, currentRelSchemaId));
@@ -497,6 +497,8 @@ namespace BLL.Services
         }
         public void loadDB(String filePath)
         {
+            if (filePath == default || filePath == null)
+                throw new InvalidOperationException("File path isn't provided");
             //file dot extension is .fprdb
             int dotExtensionStartIndex = filePath.LastIndexOf(".");
             if (dotExtensionStartIndex == -1)
@@ -507,12 +509,13 @@ namespace BLL.Services
             //is a database file of sqlite
             this.dbMgr.loadDB(filePath);
             //check if the selected file follow the designed system catalog of FPRDB
-            isValidFPRDBDatabaseFileStructure(filePath);
+            isValidFPRDBDatabaseFileStructure();
         }
         public List<string> getFieldTypes()
         {
-            return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
-                "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
+            //return new List<string>{"INT", "FLOAT", "CHAR", "VARCHAR", "BOOLEAN",
+            //    "DIST_FUZZYSET_INT", "DIST_FUZZYSET_FLOAT", "DIST_FUZZYSET_TEXT", "CONT_FUZZYSET"};
+            return Enum.GetNames(typeof(FieldType)).ToList();
         }
         public List<FieldType> getDefineDomainForDistFuzzSet()
         {
@@ -520,9 +523,12 @@ namespace BLL.Services
         }
         public List<string> getFuzzySetNameByType(FieldType fsType)
         {
+            if (fsType == null)
+                throw new InvalidOperationException("Parameter fsType isn't provided");
+
             List<string> names = new List<string>();
             string sql;
-            if(fsType == FieldType.contFS)
+            if(fsType == FieldType.CONT_FUZZYSET)
             {
                 sql = @"
                     SELECT fs.fuzzset_name
@@ -532,7 +538,7 @@ namespace BLL.Services
             }
             else
             {
-                if (fsType == FieldType.distFS_INT)
+                if (fsType == FieldType.DIST_FUZZYSET_INT)
                 {
                     sql = @"
                         SELECT fs.fuzzset_name
@@ -542,7 +548,7 @@ namespace BLL.Services
                         WHERE type.type_name='INT'
                     ";
                 }
-                else if (fsType == FieldType.distFS_FLOAT)
+                else if (fsType == FieldType.DIST_FUZZYSET_FLOAT)
                 {
                     sql = @"
                         SELECT fs.fuzzset_name
@@ -552,7 +558,7 @@ namespace BLL.Services
                         WHERE type.type_name='FLOAT'
                     ";
                 }
-                else if (fsType == FieldType.distFS_TEXT)
+                else if (fsType == FieldType.DIST_FUZZYSET_TEXT)
                 {
                     sql = @"
                         SELECT fs.fuzzset_name
@@ -572,6 +578,9 @@ namespace BLL.Services
             {
                 while (r.Read())
                 {
+                    if (r["fuzzset_name"] == null)
+                        throw new InvalidOperationException("Something went wrong with the FPRDB databaser file, fuzzset_name can't be null");
+
                     names.Add(r["fuzzset_name"] as string);
                 }
             }

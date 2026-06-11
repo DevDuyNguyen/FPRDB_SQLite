@@ -86,17 +86,17 @@ namespace BLL.SQLProcessing
                         this.parser.parse(content);
                         FuzzyProbabilisticValueParsingData parsingData = this.parser.fuzzyProbabilisticValue();
                         FieldType fieldType = fields[i].getFieldInfo().getType();
-                        if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                        if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                         {
                             FuzzyProbabilisticValue<int> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<int>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
                         }
-                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                        else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                         {
                             FuzzyProbabilisticValue<float> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
                         }
-                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                        else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                         {
                             FuzzyProbabilisticValue<string> fprobValue = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<string>(parsingData, fieldType, this.metaDataMgr);
                             tmp.Add(fprobValue);
@@ -161,17 +161,17 @@ namespace BLL.SQLProcessing
             //check if domain of content matches the domain of Field named fldname
             if (typeof(T) == typeof(int))
             {
-                if (fieldType != FieldType.INT && fieldType != FieldType.distFS_INT && fieldType != FieldType.FLOAT && fieldType != FieldType.distFS_FLOAT && fieldType != FieldType.contFS)
+                if (fieldType != FieldType.INT && fieldType != FieldType.DIST_FUZZYSET_INT && fieldType != FieldType.FLOAT && fieldType != FieldType.DIST_FUZZYSET_FLOAT && fieldType != FieldType.CONT_FUZZYSET)
                     throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of int");
             }
             else if (typeof(T) == typeof(float))
             {
-                if (fieldType != FieldType.FLOAT && fieldType != FieldType.distFS_FLOAT && fieldType != FieldType.contFS)
+                if (fieldType != FieldType.FLOAT && fieldType != FieldType.DIST_FUZZYSET_FLOAT && fieldType != FieldType.CONT_FUZZYSET)
                     throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of float");
             }
             else if (typeof(T) == typeof(string))
             {
-                if (fieldType != FieldType.CHAR && fieldType != FieldType.VARCHAR && fieldType != FieldType.distFS_TEXT)
+                if (fieldType != FieldType.CHAR && fieldType != FieldType.VARCHAR && fieldType != FieldType.DIST_FUZZYSET_TEXT)
                     throw new InvalidCastException($"Fuzzy probabilistic value of {fldname} doesn't contain possible value defined on domain of string");
             }
             else if (typeof(T) == typeof(bool))
@@ -285,17 +285,17 @@ namespace BLL.SQLProcessing
                 switch (field.getFieldInfo().getType())
                 {
                     case FieldType.INT:
-                    case FieldType.distFS_INT:
+                    case FieldType.DIST_FUZZYSET_INT:
                         decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<int>((FuzzyProbabilisticValue<int>)this.currentTuple[i], relOid);
                         break;
                     case FieldType.FLOAT:
-                    case FieldType.distFS_FLOAT:
-                    case FieldType.contFS:
+                    case FieldType.DIST_FUZZYSET_FLOAT:
+                    case FieldType.CONT_FUZZYSET:
                         decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<float>((FuzzyProbabilisticValue<float>)this.currentTuple[i], relOid);
                         break;
                     case FieldType.VARCHAR:
                     case FieldType.CHAR:
-                    case FieldType.distFS_TEXT:
+                    case FieldType.DIST_FUZZYSET_TEXT:
                         decreaseNoFuzzySetRelatedToCurrentRelationBaseOn_FProbValue<string>((FuzzyProbabilisticValue<string>)this.currentTuple[i], relOid);
                         break;
                     case FieldType.BOOLEAN:

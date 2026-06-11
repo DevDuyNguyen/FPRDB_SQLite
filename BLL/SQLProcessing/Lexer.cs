@@ -147,8 +147,8 @@ namespace BLL.SQLProcessing
 
         public void analyze(string s)
         {
-            if (s == "" || s == null)
-                throw new SemanticException("The expression is empty");
+            //if (s == "" || s == null)
+            //    throw new SemanticException("The expression is empty");
 
             this.currentIndex = -1;
             this.currentToken = null;

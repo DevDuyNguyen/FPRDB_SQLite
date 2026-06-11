@@ -26,7 +26,7 @@ namespace BLL.Services
         {
             return fuzzyset.isValid();
         }
-        
+
 
         private bool isValidFuzzySetName(string name)
         {
@@ -57,31 +57,26 @@ namespace BLL.Services
         public FuzzySetDTO createFuzzySet<T>(FuzzySetDTO fuzzySet)
             where T : IComparable<T>
         {
-            try
+            if (fuzzySet == null)
+                throw new InvalidOperationException("Parameter createFuzzySet::fuzzyset can't be null");
+            isValidFuzzySetName(fuzzySet.fuzzySetName);
+            FuzzySetDTO dto;
+            if (fuzzySet is DiscreteFuzzySetDTO<T>)
             {
-                isValidFuzzySetName(fuzzySet.fuzzySetName);
-                FuzzySetDTO dto;
-                if (fuzzySet is DiscreteFuzzySetDTO<T>)
-                {
-                    FuzzySet<T> fs = this.fuzzySetDAO.createDiscreteFuzzySet<T>((DiscreteFuzzySetDTO<T>)fuzzySet);
-                    dto = fs.toDTO();
-                    
-                }
-                else
-                {
-                    FuzzySet<float> fs = this.fuzzySetDAO.createContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
-                    dto = fs.toDTO();
-                }
-                return dto;
-
+                FuzzySet<T> fs = this.fuzzySetDAO.createDiscreteFuzzySet<T>((DiscreteFuzzySetDTO<T>)fuzzySet);
+                dto = fs.toDTO();
             }
-            catch(SQLExecutionException ex)
+            else
             {
-                throw ex;
+                FuzzySet<float> fs = this.fuzzySetDAO.createContinuousFuzzySet((ContinuousFuzzySetDTO)fuzzySet);
+                dto = fs.toDTO();
             }
+            return dto;
         }
         public List<FuzzySetDTO> findFuzzySet(string name)
         {
+            //null or empty name is valid, no need for Validating Null At Boundary
+
             List<FuzzySetDTO> ans = new List<FuzzySetDTO>();
             List<BaseFuzzySet> fsList = this.fuzzySetDAO.findFuzzySet(name);
             foreach(BaseFuzzySet fs in fsList)
@@ -103,6 +98,9 @@ namespace BLL.Services
         }
         public void removeFuzzySet(FuzzySetDTO fuzzySet)
         {
+            if (fuzzySet == null)
+                throw new InvalidOperationException("Parameter fuzzySet can't be null");
+
             List<FPRDBRelation> usingRelations = this.fuzzySetDAO.getUsingRelations(fuzzySet);
             if(usingRelations!=null && usingRelations.Count > 0)
             {
@@ -122,9 +120,11 @@ namespace BLL.Services
         }
         public void updateFuzzySet(FuzzySetDTO fuzzySet)
         {
-            if (fuzzySet.oid == null || fuzzySet.oid == default)
-                throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
-            
+            if (fuzzySet == null)
+                throw new InvalidOperationException("Parameter fuzzySet isn't provided");
+            //if (fuzzySet.oid == null || fuzzySet.oid == default)
+            //    throw new InvalidOperationException($"Fuzzy set {fuzzySet.fuzzySetName}'s oid isn't provided");
+
             FuzzySetDTO checkFuzzySet = this.fuzzySetDAO.getExactFuzzySet(fuzzySet.oid);
             //user want to update fuzzyset name, check if that name already exist
             if (fuzzySet.fuzzySetName != checkFuzzySet.fuzzySetName)

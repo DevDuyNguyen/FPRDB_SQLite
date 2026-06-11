@@ -35,12 +35,12 @@ namespace BLL.Common
                 string fuzzySetName = value.ToString();
                 FieldType fuzzSetType;
                 if (c is IntConstant)
-                    fuzzSetType = FieldType.distFS_INT;
+                    fuzzSetType = FieldType.DIST_FUZZYSET_INT;
                 else if (c is FloatConstant)
-                    fuzzSetType = FieldType.distFS_FLOAT;
+                    fuzzSetType = FieldType.DIST_FUZZYSET_FLOAT;
                 else if (c is StringConstant)
                 {
-                    fuzzSetType = FieldType.distFS_TEXT;
+                    fuzzSetType = FieldType.DIST_FUZZYSET_TEXT;
                     fuzzySetName = $"\"{fuzzySetName}\"";
                     //valueSet[0] = (T)Convert.ChangeType($"\"{valueSet[0]}\"",typeof(T));
                 }
@@ -70,7 +70,7 @@ namespace BLL.Common
                 FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
                 FieldType fuzzSetType = metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
                 if (FieldTypeUtilities.isContinuousFuzzySet(fuzzSetType))
-                    return metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
+                    return metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.CONT_FUZZYSET);
                 else
                 {
                     return metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);
@@ -113,7 +113,7 @@ namespace BLL.Common
             {
                 values.Add(Convert.ToSingle(v));
             }
-            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.distFS_FLOAT, fs.getOID());
+            return new DiscreteFuzzySet<float>(values, fs.membershipDegreeSet, fs.getName(), FieldType.DIST_FUZZYSET_FLOAT, fs.getOID());
         }
         public static Type getDefiningDomain(BaseFuzzySet fs)
         {

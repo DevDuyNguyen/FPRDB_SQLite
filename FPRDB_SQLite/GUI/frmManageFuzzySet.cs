@@ -187,13 +187,13 @@ namespace FPRDB_SQLite.GUI
 
                         switch (discreteFuzzySetInfo.getFuzzySetType())
                         {
-                            case FieldType.distFS_INT:
+                            case FieldType.DIST_FUZZYSET_INT:
                                 updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<int>();
                                 break;
-                            case FieldType.distFS_FLOAT:
+                            case FieldType.DIST_FUZZYSET_FLOAT:
                                 updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<float>();
                                 break;
-                            case FieldType.distFS_TEXT:
+                            case FieldType.DIST_FUZZYSET_TEXT:
                                 updatedFuzzySet = discreteFuzzySetInfo.getDiscreteFuzzySet<string>();
                                 break;
                         }

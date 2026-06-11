@@ -81,16 +81,34 @@ namespace BLL.Services
             
 
         }
-        public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string>  referencedAttributes)
+        public ConstraintDTO createReferentialConstraint(string conName, FPRDBRelationDTO fprdbRelation, FPRDBRelationDTO referencedFPRDBRelation, List<string> attributes, List<string> referencedAttributes)
         {
+            if (conName == default || conName == null)
+                throw new InvalidOperationException("Parameter conName isn't provided");
+            if (fprdbRelation == null)
+                throw new InvalidOperationException("Parameter fprdbRelation isn't provided");
+            if (referencedFPRDBRelation == null)
+                throw new InvalidOperationException("Parameter referencedFPRDBRelation isn't provided");
+            if (attributes == null || attributes.Count==0)
+                throw new InvalidOperationException("Parameter attributes isn't provided");
+            if (referencedAttributes == null || referencedAttributes.Count==0)
+                throw new InvalidOperationException("Parameter referencedAttributes isn't provided");
+
+
             return this.constraintDAO.createReferentialConstraint(conName, fprdbRelation, referencedFPRDBRelation, attributes, referencedAttributes);
         }
         public List<ConstraintDTO> getReferenrialConstraints(FPRDBRelationDTO fprdbRelationDTO)
         {
+            if (fprdbRelationDTO == null)
+                throw new InvalidOperationException("Parameter fprdbRelationDTO isn't provided");
+
             return this.constraintDAO.getReferenrialConstraints(fprdbRelationDTO);
         }
         public void removeConstraint(int oid)
         {
+            if (oid < 1)
+                throw new InvalidOperationException("The provided oid is invalid (valid:oid>=1)");
+
             this.constraintDAO.removeConstraint(oid);
         }
         public bool checkIfInsertTupleViolateReferentialConstraint(InsertData data)

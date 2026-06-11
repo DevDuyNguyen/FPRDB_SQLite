@@ -63,17 +63,17 @@ namespace BLL.SQLProcessing
                 foreach(string keyAttrName in primaryKey)
                 {
                     fieldType = this.schema.getFieldByName(keyAttrName).getFieldInfo().getType();
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                     {
                         keyAttrS1 = this.s1.getFieldContent<int>(keyAttrName);
                         keyAttrS2 = this.s2.getFieldContent<int>(keyAttrName);
                     }
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                     {
                         keyAttrS1 = this.s1.getFieldContent<float>(keyAttrName);
                         keyAttrS2 = this.s2.getFieldContent<float>(keyAttrName);
                     }
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                     {
                         keyAttrS1 = this.s1.getFieldContent<string>(keyAttrName);
                         keyAttrS2 = this.s2.getFieldContent<string>(keyAttrName);
@@ -128,15 +128,15 @@ namespace BLL.SQLProcessing
                 fieldType = field.getFieldInfo().getType();
                 if (primaryKey.Contains(field.getFieldName()))
                 {
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                     {
                         ans.Add(this.s1.getFieldContent<int>(field.getFieldName()));
                     }
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                     {
                         ans.Add(this.s1.getFieldContent<float>(field.getFieldName()));
                     }
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                     {
                         ans.Add(this.s1.getFieldContent<string>(field.getFieldName()));
                     }
@@ -148,19 +148,19 @@ namespace BLL.SQLProcessing
                 else
                 {
                     
-                    if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+                    if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
                     {
                         FuzzyProbabilisticValue<int> fprobValue1 = this.s1.getFieldContent<int>(field.getFieldName());
                         FuzzyProbabilisticValue<int> fprobValue2 = this.s2.getFieldContent<int>(field.getFieldName());
                         ans.Add(FProbValueCombinationStategy.conjunction<int>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                     }
-                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+                    else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
                     {
                         FuzzyProbabilisticValue<float> fprobValue1 = this.s1.getFieldContent<float>(field.getFieldName());
                         FuzzyProbabilisticValue<float> fprobValue2 = this.s2.getFieldContent<float>(field.getFieldName());
                         ans.Add(FProbValueCombinationStategy.conjunction<float>(fprobValue1, fprobValue2, this.probCombinationStrategy));
                     }
-                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+                    else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
                     {
                         FuzzyProbabilisticValue<string> fprobValue1 = this.s1.getFieldContent<string>(field.getFieldName());
                         FuzzyProbabilisticValue<string> fprobValue2 = this.s2.getFieldContent<string>(field.getFieldName());

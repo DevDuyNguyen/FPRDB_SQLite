@@ -21,8 +21,8 @@ namespace BLL.Common
             FieldType fuzzSetType;
             Type t = typeof(T);
             if (
-                ((fieldType == FieldType.INT || fieldType == FieldType.distFS_INT) && t != typeof(int))
-                || ((fieldType == FieldType.FLOAT || fieldType == FieldType.contFS || fieldType == FieldType.distFS_FLOAT) && t != typeof(float))
+                ((fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT) && t != typeof(int))
+                || ((fieldType == FieldType.FLOAT || fieldType == FieldType.CONT_FUZZYSET || fieldType == FieldType.DIST_FUZZYSET_FLOAT) && t != typeof(float))
                 || ((fieldType == FieldType.VARCHAR || fieldType == FieldType.CHAR) && t != typeof(string))
                 || ((fieldType == FieldType.BOOLEAN) && t != typeof(bool))
             )

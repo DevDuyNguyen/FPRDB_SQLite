@@ -25,9 +25,9 @@ namespace TestProject1.IntegrationTest
             MetadataManager metaMgr = compRoot.getMetaDataManger();
             compRoot.getDBMgr().loadDB(this.dbFile);
             //act
-            FuzzySet<int> actual1 = metaMgr.getFuzzySet<int>("distFS1", FieldType.distFS_INT);
-            FuzzySet<string> actual2 = metaMgr.getFuzzySet<string>("distFS2", FieldType.distFS_TEXT);
-            FuzzySet<float> actual3 = metaMgr.getFuzzySet<float>("contFS1", FieldType.contFS);
+            FuzzySet<int> actual1 = metaMgr.getFuzzySet<int>("distFS1", FieldType.DIST_FUZZYSET_INT);
+            FuzzySet<string> actual2 = metaMgr.getFuzzySet<string>("distFS2", FieldType.DIST_FUZZYSET_TEXT);
+            FuzzySet<float> actual3 = metaMgr.getFuzzySet<float>("contFS1", FieldType.CONT_FUZZYSET);
         }
     }
 }

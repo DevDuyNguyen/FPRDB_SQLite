@@ -1,4 +1,5 @@
 ﻿using BLL.Common;
+using BLL.DAO;
 using BLL.DomainObject;
 using BLL.DTO;
 using BLL.Enums;
@@ -78,7 +79,8 @@ namespace BLL.SQLProcessing
             {
                 throw new SemanticException($"Schema {schemaName} already exists");
             }
-
+            if (data.getFields().Count == 0)
+                throw new InvalidOperationException($"Creation for FPRDB schema {data.getSchemaName()} doesn't have any attribute");
             if (data.getPrimaryConstraintName() == "" || data.getPrimaryConstraintName() == null
                 || data.getPrimaryConstraintName() == null || data.getPrimarykey().Count == 0)
             {
@@ -92,6 +94,8 @@ namespace BLL.SQLProcessing
 
             foreach (string fldName in data.getPrimarykey())
             {
+                if(data.getFieldByName(fldName)==null)
+                    throw new SemanticException($"Key attribute {fldName} doesn't exist in schema definition");
                 if (!FieldTypeUtilities.isPrimitive(data.getFieldByName(fldName).getFieldInfo().getType()))
                     throw new SemanticException("Primary key must be of non fuzzy set type");
             }
@@ -140,17 +144,17 @@ namespace BLL.SQLProcessing
                 {
                     if (constant is IntConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.INT && fieldInfo.getType() != FieldType.distFS_INT && fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
+                        if (fieldInfo.getType() != FieldType.INT && fieldInfo.getType() != FieldType.DIST_FUZZYSET_INT && fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.DIST_FUZZYSET_FLOAT && fieldInfo.getType() != FieldType.CONT_FUZZYSET)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is FloatConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.distFS_FLOAT && fieldInfo.getType() != FieldType.contFS)
+                        if (fieldInfo.getType() != FieldType.FLOAT && fieldInfo.getType() != FieldType.DIST_FUZZYSET_FLOAT && fieldInfo.getType() != FieldType.CONT_FUZZYSET)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is StringConstant)
                     {
-                        if (fieldInfo.getType() != FieldType.VARCHAR && fieldInfo.getType() != FieldType.CHAR && fieldInfo.getType() != FieldType.distFS_TEXT)
+                        if (fieldInfo.getType() != FieldType.VARCHAR && fieldInfo.getType() != FieldType.CHAR && fieldInfo.getType() != FieldType.DIST_FUZZYSET_TEXT)
                             throw new SemanticException(generalExceptionMessage);
                     }
                     else if (constant is BooleanConstant)
@@ -169,6 +173,8 @@ namespace BLL.SQLProcessing
                         {
                             type = this.metadataMgr.getFuzzySetType(fsName);
                             fuzzySetOID = this.metadataMgr.getFuzzySetOID(fsName);
+                            if (fuzzySetOID == -1)
+                                throw new SemanticException($"Fuzzy set {fsName} doesn't exist in FPRDB database file");
                         }
                         catch (QueryDataNotExistException ex)
                         {
@@ -177,9 +183,9 @@ namespace BLL.SQLProcessing
 
                         fsContant.setFuzzySetOID(fuzzySetOID);
                         fsContant.setType(type);
-                        if (fieldInfo.getType() == FieldType.distFS_FLOAT)
+                        if (fieldInfo.getType() == FieldType.DIST_FUZZYSET_FLOAT)
                         {
-                            if (type != FieldType.distFS_FLOAT && type != FieldType.distFS_INT)
+                            if (type != FieldType.DIST_FUZZYSET_FLOAT && type != FieldType.DIST_FUZZYSET_INT)
                                 throw new SemanticException(generalExceptionMessage);
                         }
                         else
@@ -265,8 +271,6 @@ namespace BLL.SQLProcessing
                 }
 
             }
-
-            
 
             return true;
 
