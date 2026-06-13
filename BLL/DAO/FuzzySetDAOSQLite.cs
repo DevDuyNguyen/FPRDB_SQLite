@@ -168,13 +168,13 @@ namespace BLL.DAO
                     SELECT 
                         FS.oid,
                         FS.fuzzset_name,
-                        contFS.fuzzset_bottom_left,
-                        contFS.fuzzset_top_left,
-                        contFS.fuzzset_top_right,
-                        contFS.fuzzset_bottom_right
+                        CONT_FUZZYSET.fuzzset_bottom_left,
+                        CONT_FUZZYSET.fuzzset_top_left,
+                        CONT_FUZZYSET.fuzzset_top_right,
+                        CONT_FUZZYSET.fuzzset_bottom_right
                     FROM fprdb_FuzzySet AS FS
-                    JOIN fprdb_ContinousFuzzySet AS contFS 
-                        ON FS.oid = contFS.oid
+                    JOIN fprdb_ContinousFuzzySet AS CONT_FUZZYSET 
+                        ON FS.oid = CONT_FUZZYSET.oid
                     WHERE FS.fuzzset_name = '{fuzzySet.fuzzySetName}';
                     ";
 
@@ -238,7 +238,7 @@ namespace BLL.DAO
                 {
                     ans.Add(this.metaDataMgr.getFuzzySet<float>(fsName, fsType));
                 }
-                else //if (fsType == FieldType.distFS_TEXT)
+                else //if (fsType == FieldType.DIST_FUZZYSET_TEXT)
                 {
                     ans.Add(this.metaDataMgr.getFuzzySet<string>(fsName, fsType));
                 }
@@ -295,7 +295,7 @@ namespace BLL.DAO
                 FuzzySet<float> tmp = this.metaDataMgr.getFuzzySetByID<float>(oid, fsType);
                 dto = tmp.toDTO();
             }
-            else //if (fsType == FieldType.distFS_TEXT)
+            else //if (fsType == FieldType.DIST_FUZZYSET_TEXT)
             {
                 FuzzySet<string> tmp = this.metaDataMgr.getFuzzySetByID<string>(oid, fsType);
                 dto = tmp.toDTO();

@@ -61,7 +61,7 @@ namespace BLL.Common
                 //    FuzzySetConstant fuzz_c = (FuzzySetConstant)c;
                 //    FieldType fuzzSetType = metaDataMgr.getFuzzySetType((string)fuzz_c.getVal());
                 //    if (FieldTypeUltilities.isContinuousFuzzySet(fuzzSetType))
-                //        return metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.contFS);
+                //        return metaDataMgr.getFuzzySet<T>((string)c.getVal(), FieldType.CONT_FUZZYSET);
                 //    else
                 //    {
                 //        return metaDataMgr.getFuzzySet<T>((string)c.getVal(), fuzzSetType);

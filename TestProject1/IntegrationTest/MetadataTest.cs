@@ -27,7 +27,7 @@ namespace TestProject1.IntegrationTest
             //act
             FuzzySet<int> actual1 = metaMgr.getFuzzySet<int>("distFS1", FieldType.DIST_FUZZYSET_INT);
             FuzzySet<string> actual2 = metaMgr.getFuzzySet<string>("distFS2", FieldType.DIST_FUZZYSET_TEXT);
-            FuzzySet<float> actual3 = metaMgr.getFuzzySet<float>("contFS1", FieldType.CONT_FUZZYSET);
+            FuzzySet<float> actual3 = metaMgr.getFuzzySet<float>("CONT_FUZZYSET1", FieldType.CONT_FUZZYSET);
         }
     }
 }

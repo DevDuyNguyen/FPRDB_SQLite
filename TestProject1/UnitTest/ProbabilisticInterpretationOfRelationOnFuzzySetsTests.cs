@@ -41,8 +41,8 @@ namespace TestProject1.UnitTest
 
         //        Add(
         //            fs1,
-        //            new DiscreteFuzzySet<float>(new List<float> { 1, 2, 3, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.4f }, FieldType.distFS_FLOAT),
-        //            new DiscreteFuzzySet<float>(values, memberships, FieldType.distFS_FLOAT)
+        //            new DiscreteFuzzySet<float>(new List<float> { 1, 2, 3, 4 }, new List<float> { 0.1f, 0.2f, 0.3f, 0.4f }, FieldType.DIST_FUZZYSET_FLOAT),
+        //            new DiscreteFuzzySet<float>(values, memberships, FieldType.DIST_FUZZYSET_FLOAT)
         //            );
         //    }
 

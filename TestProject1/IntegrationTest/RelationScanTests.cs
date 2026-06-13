@@ -33,7 +33,7 @@ namespace TestProject1.IntegrationTest
             FuzzySet<bool> actual4 = FuzzySetUltilities.turnConstantToFuzzySet<bool>(new BooleanConstant(false), compRoot.getMetaDataManger());
             FuzzySet<int> actual5 = FuzzySetUltilities.turnConstantToFuzzySet<int>(new FuzzySetConstant("distFS1"), compRoot.getMetaDataManger());
             FuzzySet<string> actual6 = FuzzySetUltilities.turnConstantToFuzzySet<string>(new FuzzySetConstant("distFS2"), compRoot.getMetaDataManger());
-            FuzzySet<float> actual7 = FuzzySetUltilities.turnConstantToFuzzySet<float>(new FuzzySetConstant("contFS1"), compRoot.getMetaDataManger());
+            FuzzySet<float> actual7 = FuzzySetUltilities.turnConstantToFuzzySet<float>(new FuzzySetConstant("CONT_FUZZYSET1"), compRoot.getMetaDataManger());
         }
         //[Fact]
         public void RelationScan_turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue_success()
@@ -67,7 +67,7 @@ namespace TestProject1.IntegrationTest
                 );
             FuzzyProbabilisticValue<float> actual3 = FuzzyProbabilisticValueUtilities.turnFuzzyProbabilisticValueParsingDataToFuzzyProbabilisticValue<float>(
                 new FuzzyProbabilisticValueParsingData(
-                    new List<Constant> { new FloatConstant(1.1f), new FuzzySetConstant("contFS1") },
+                    new List<Constant> { new FloatConstant(1.1f), new FuzzySetConstant("CONT_FUZZYSET1") },
                     new List<float> { 1, 0.5f },
                     new List<float> { 1, 0.5f }
                     ),

@@ -131,17 +131,17 @@ namespace BLL.SQLProcessing
             //        foreach (string keyAttrName in primaryKey)
             //        {
             //            fieldType = this.schema.getFieldByName(keyAttrName).getFieldInfo().getType();
-            //            if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+            //            if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
             //            {
             //                keyAttrS1 = this.s1.getFieldContent<int>(keyAttrName);
             //                keyAttrS2 = this.s2.getFieldContent<int>(keyAttrName);
             //            }
-            //            else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+            //            else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
             //            {
             //                keyAttrS1 = this.s1.getFieldContent<float>(keyAttrName);
             //                keyAttrS2 = this.s2.getFieldContent<float>(keyAttrName);
             //            }
-            //            else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+            //            else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
             //            {
             //                keyAttrS1 = this.s1.getFieldContent<string>(keyAttrName);
             //                keyAttrS2 = this.s2.getFieldContent<string>(keyAttrName);
@@ -215,17 +215,17 @@ namespace BLL.SQLProcessing
             //        foreach (string keyAttrName in primaryKey)
             //        {
             //            fieldType = this.schema.getFieldByName(keyAttrName).getFieldInfo().getType();
-            //            if (fieldType == FieldType.INT || fieldType == FieldType.distFS_INT)
+            //            if (fieldType == FieldType.INT || fieldType == FieldType.DIST_FUZZYSET_INT)
             //            {
             //                keyAttrS1 = this.s1.getFieldContent<int>(keyAttrName);
             //                keyAttrS2 = this.s2.getFieldContent<int>(keyAttrName);
             //            }
-            //            else if (fieldType == FieldType.FLOAT || fieldType == FieldType.distFS_FLOAT || fieldType == FieldType.contFS)
+            //            else if (fieldType == FieldType.FLOAT || fieldType == FieldType.DIST_FUZZYSET_FLOAT || fieldType == FieldType.CONT_FUZZYSET)
             //            {
             //                keyAttrS1 = this.s1.getFieldContent<float>(keyAttrName);
             //                keyAttrS2 = this.s2.getFieldContent<float>(keyAttrName);
             //            }
-            //            else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.distFS_TEXT)
+            //            else if (fieldType == FieldType.CHAR || fieldType == FieldType.VARCHAR || fieldType == FieldType.DIST_FUZZYSET_TEXT)
             //            {
             //                keyAttrS1 = this.s1.getFieldContent<string>(keyAttrName);
             //                keyAttrS2 = this.s2.getFieldContent<string>(keyAttrName);

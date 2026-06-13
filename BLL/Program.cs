@@ -248,7 +248,7 @@ namespace BLL
             DatabaseManager dbMgr = compRoot.getDBMgr();
             dbMgr.loadDB(dbFile);
             MetadataManager metaDataMgr = compRoot.getMetaDataManger();
-            int oid = metaDataMgr.getFuzzySetOID("contFS1");
+            int oid = metaDataMgr.getFuzzySetOID("CONT_FUZZYSET1");
         }
         static void MetaDataManager_isTupleExist_success()
         {
