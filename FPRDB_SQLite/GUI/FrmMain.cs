@@ -198,10 +198,10 @@ namespace FPRDB_SQLite.GUI
             gridView4.BestFitColumns();
 
             GridColumn col = gridView4.Columns["Value"];
-            if (_currentEditingColumnType == "distFS_INT"
-                || _currentEditingColumnType == "distFS_FLOAT"
-                || _currentEditingColumnType == "distFS_TEXT"
-                || _currentEditingColumnType == "contFS")
+            if (_currentEditingColumnType == "DIST_FUZZYSET_INT"
+                || _currentEditingColumnType == "DIST_FUZZYSET_FLOAT"
+                || _currentEditingColumnType == "DIST_FUZZYSET_TEXT"
+                || _currentEditingColumnType == "CONT_FUZZYSET")
             {
                 col.OptionsColumn.AllowEdit = true;
                 var btnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
