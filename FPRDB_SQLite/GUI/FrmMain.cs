@@ -502,6 +502,11 @@ namespace FPRDB_SQLite.GUI
             }
 
             relationContent.AcceptChanges();
+
+            // Unsubscribe to prevent premature focus event triggering when DataSource is set and columns are populated
+            gridView3.FocusedRowChanged -= gridView3_FocusedRowChanged;
+            gridView3.FocusedColumnChanged -= gridView3_FocusedColumnChanged;
+
             gridControlRelation.DataSource = relationContent;
 
             gridView3.Columns.Clear();
@@ -525,6 +530,12 @@ namespace FPRDB_SQLite.GUI
             gridControlRelation.EmbeddedNavigator.ButtonClick -= Navigator_ButtonClick;
             gridControlRelation.EmbeddedNavigator.ButtonClick += Navigator_ButtonClick;
 
+            // Re-subscribe to focus events
+            gridView3.FocusedRowChanged += gridView3_FocusedRowChanged;
+            gridView3.FocusedColumnChanged += gridView3_FocusedColumnChanged;
+
+            // Manually trigger the focus logic once everything is successfully initialized
+            gridView3_FocusedColumnChanged(null, null);
         }
         // Hàm xử lý sự kiện khi click "Select top 100 tuples"
         private void barButtonSelectTuples_ItemClick(object sender, ItemClickEventArgs e)
