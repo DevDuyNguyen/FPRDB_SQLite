@@ -415,9 +415,9 @@ namespace BLL.SQLProcessing
             //            throw new SemanticException(errorMess);
             //        string fsName = (c as FuzzySetConstant).getVal() as string;
             //        FieldType fsType = metadataMgr.getFuzzySetType(fsName);
-            //        if (fieldType1 == FieldType.INT && !(fsType!=FieldType.distFS_INT) && !(fsType != FieldType.distFS_FLOAT))
+            //        if (fieldType1 == FieldType.INT && !(fsType!=FieldType.DIST_FUZZYSET_INT) && !(fsType != FieldType.DIST_FUZZYSET_FLOAT))
             //            throw new SemanticException(errorMess);
-            //        else if (fieldType1 == FieldType.FLOAT && !(fsType != FieldType.distFS_INT) && !(fsType != FieldType.distFS_FLOAT))
+            //        else if (fieldType1 == FieldType.FLOAT && !(fsType != FieldType.DIST_FUZZYSET_INT) && !(fsType != FieldType.DIST_FUZZYSET_FLOAT))
             //            throw new SemanticException(errorMess);
             //        else if (FieldTypeUtilities.getDomainType(fieldType1) != ConstantUltilities.getDomainType(c, metaDataMgr))
             //            throw new SemanticException(errorMess);

@@ -63,21 +63,21 @@ namespace GUI.GUI
 
         //    switch (typeFS)
         //    {
-        //        case "distFS_INT":
+        //        case "DIST_FUZZYSET_INT":
         //            filtered = fuzzySets
         //                .OfType<DiscreteFuzzySetDTO<int>>()
         //                .Cast<FuzzySetDTO>()
         //                .ToList();
         //            break;
 
-        //        case "distFS_FLOAT":
+        //        case "DIST_FUZZYSET_FLOAT":
         //            filtered = fuzzySets
         //                .OfType<DiscreteFuzzySetDTO<float>>()
         //                .Cast<FuzzySetDTO>()
         //                .ToList();
         //            break;
 
-        //        case "distFS_TEXT":
+        //        case "DIST_FUZZYSET_TEXT":
         //            filtered = fuzzySets
         //                .OfType<DiscreteFuzzySetDTO<string>>()
         //                .Cast<FuzzySetDTO>()

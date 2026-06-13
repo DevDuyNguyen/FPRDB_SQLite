@@ -251,8 +251,8 @@ namespace BLL.SQLProcessing
                 SELECT 
 	                'CONTINUOUS' AS 'fuzzy_set_category',
 	                type.type_name
-                FROM fprdb_ContinousFuzzySet as contFS
-                JOIN fprdb_FuzzySet as FS ON contFS.oid=FS.oid
+                FROM fprdb_ContinousFuzzySet as CONT_FUZZYSET
+                JOIN fprdb_FuzzySet as FS ON CONT_FUZZYSET.oid=FS.oid
                 JOIN fprdb_Type as type ON type.oid=FS.fuzzset_type_id
                 WHERE fuzzset_name='{name}';
             ");
@@ -301,10 +301,10 @@ namespace BLL.SQLProcessing
                 SELECT 
 	                'CONTINUOUS' AS 'fuzzy_set_category',
 	                type.type_name
-                FROM fprdb_ContinousFuzzySet as contFS
-                JOIN fprdb_FuzzySet as FS ON contFS.oid=FS.oid
+                FROM fprdb_ContinousFuzzySet as CONT_FUZZYSET
+                JOIN fprdb_FuzzySet as FS ON CONT_FUZZYSET.oid=FS.oid
                 JOIN fprdb_Type as type ON type.oid=FS.fuzzset_type_id
-                WHERE contFS.oid={oid};
+                WHERE CONT_FUZZYSET.oid={oid};
             ");
             FieldType type;
             using (reader)
@@ -433,8 +433,8 @@ namespace BLL.SQLProcessing
             {
                 sql = $@"
                     SELECT fuzzset_bottom_left,fuzzset_top_left,fuzzset_top_right,fuzzset_bottom_right, fs.oid as ""fs_oid""
-                    FROM fprdb_ContinousFuzzySet as contFS
-                    JOIN fprdb_FuzzySet as fs on fs.oid=contFS.oid
+                    FROM fprdb_ContinousFuzzySet as CONT_FUZZYSET
+                    JOIN fprdb_FuzzySet as fs on fs.oid=CONT_FUZZYSET.oid
                     where fs.fuzzset_name='{name}';
                 ";
                 IDataReader reader = this.databaseMgr.executeQuery(sql);
@@ -457,7 +457,7 @@ namespace BLL.SQLProcessing
                 return this.getFuzzySet<int>(name, fuzzSetType);
             else if (fuzzSetType == FieldType.DIST_FUZZYSET_FLOAT || fuzzSetType == FieldType.CONT_FUZZYSET)
                 return this.getFuzzySet<float>(name, fuzzSetType);
-            else //if(fuzzSetType==FieldType.distFS_TEXT)
+            else //if(fuzzSetType==FieldType.DIST_FUZZYSET_TEXT)
                 return this.getFuzzySet<string>(name, fuzzSetType);
 
         }
@@ -511,8 +511,8 @@ namespace BLL.SQLProcessing
             {
                 sql = $@"
                     SELECT fuzzset_bottom_left,fuzzset_top_left,fuzzset_top_right,fuzzset_bottom_right, fs.oid as ""fs_oid""
-                    FROM fprdb_ContinousFuzzySet as contFS
-                    JOIN fprdb_FuzzySet as fs on fs.oid=contFS.oid
+                    FROM fprdb_ContinousFuzzySet as CONT_FUZZYSET
+                    JOIN fprdb_FuzzySet as fs on fs.oid=CONT_FUZZYSET.oid
                     where fs.oid={fs_oid};
                 ";
                 IDataReader reader = this.databaseMgr.executeQuery(sql);

@@ -58,7 +58,7 @@ namespace BLL.Common
                     return typeof(int);
                 else if (fuzzySetType is FieldType.DIST_FUZZYSET_FLOAT|| fuzzySetType is FieldType.CONT_FUZZYSET)
                     return typeof(float);
-                else //if (fuzzySetType is FieldType.distFS_TEXT)
+                else //if (fuzzySetType is FieldType.DIST_FUZZYSET_TEXT)
                     return typeof(string);
 
             }

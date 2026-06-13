@@ -769,7 +769,7 @@ namespace TestProject1.UnitTest
                         1
                         )
                     );
-                Add(data2, new SemanticException($"Can't assign the content of contFS field to VARCHAR field"));
+                Add(data2, new SemanticException($"Can't assign the content of CONT_FUZZYSET field to VARCHAR field"));
 
                 data1 = new FieldFuzzProbValueModifyData(
                     new FuzzyProbabilisticValueParsingData(

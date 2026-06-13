@@ -8,11 +8,11 @@ namespace BLL.Common
     {
         //static public bool isPrimitive(FieldType type)
         //{
-        //    return !(type == FieldType.distFS_INT || type == FieldType.distFS_FLOAT || type == FieldType.distFS_TEXT || type == FieldType.contFS);
+        //    return !(type == FieldType.DIST_FUZZYSET_INT || type == FieldType.DIST_FUZZYSET_FLOAT || type == FieldType.DIST_FUZZYSET_TEXT || type == FieldType.CONT_FUZZYSET);
         //}
         //static public bool isContinuousFuzzySet(FieldType type)
         //{
-        //    return type == FieldType.contFS;
+        //    return type == FieldType.CONT_FUZZYSET;
         //}
         public static string fromFieldTypeEnumToSQLFieldType(FieldType type)
         {
