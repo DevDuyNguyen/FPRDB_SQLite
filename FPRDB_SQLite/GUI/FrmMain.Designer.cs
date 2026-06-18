@@ -186,6 +186,7 @@ namespace FPRDB_SQLite.GUI
             // buttonNew_pageHome
             // 
             buttonNew_pageHome.Caption = "New";
+            buttonNew_pageHome.Hint = "Create new database";
             buttonNew_pageHome.Id = 9;
             buttonNew_pageHome.ImageOptions.LargeImage = (Image)resources.GetObject("buttonNew_pageHome.ImageOptions.LargeImage");
             buttonNew_pageHome.Name = "buttonNew_pageHome";
@@ -194,6 +195,7 @@ namespace FPRDB_SQLite.GUI
             // buttonOpen_pageHome
             // 
             buttonOpen_pageHome.Caption = "Open";
+            buttonOpen_pageHome.Hint = "Open existing database";
             buttonOpen_pageHome.Id = 10;
             buttonOpen_pageHome.ImageOptions.LargeImage = (Image)resources.GetObject("buttonOpen_pageHome.ImageOptions.LargeImage");
             buttonOpen_pageHome.Name = "buttonOpen_pageHome";
@@ -202,6 +204,7 @@ namespace FPRDB_SQLite.GUI
             // iAddDiscrete
             // 
             iAddDiscrete.Caption = "Add";
+            iAddDiscrete.Hint = "Create new discrete fuzzy set";
             iAddDiscrete.Id = 15;
             iAddDiscrete.ImageOptions.LargeImage = (Image)resources.GetObject("iAddDiscrete.ImageOptions.LargeImage");
             iAddDiscrete.Name = "iAddDiscrete";
@@ -211,6 +214,7 @@ namespace FPRDB_SQLite.GUI
             // iAddContinuous
             // 
             iAddContinuous.Caption = "Add";
+            iAddContinuous.Hint = "Create new continuous fuzzy set";
             iAddContinuous.Id = 17;
             iAddContinuous.ImageOptions.LargeImage = (Image)resources.GetObject("iAddContinuous.ImageOptions.LargeImage");
             iAddContinuous.Name = "iAddContinuous";
@@ -220,6 +224,7 @@ namespace FPRDB_SQLite.GUI
             // iNewSchema
             // 
             iNewSchema.Caption = "Create Schema";
+            iNewSchema.Hint = "Create new FPRDB schema";
             iNewSchema.Id = 19;
             iNewSchema.ImageOptions.LargeImage = (Image)resources.GetObject("iNewSchema.ImageOptions.LargeImage");
             iNewSchema.Name = "iNewSchema";
@@ -227,7 +232,8 @@ namespace FPRDB_SQLite.GUI
             // 
             // iDeleteSchema
             // 
-            iDeleteSchema.Caption = "Delete";
+            iDeleteSchema.Caption = "Delete Schema";
+            iDeleteSchema.Hint = "Delete the selected schema";
             iDeleteSchema.Id = 22;
             iDeleteSchema.ImageOptions.LargeImage = (Image)resources.GetObject("iDeleteSchema.ImageOptions.LargeImage");
             iDeleteSchema.Name = "iDeleteSchema";
@@ -236,6 +242,7 @@ namespace FPRDB_SQLite.GUI
             // iSearchFuzzySet
             // 
             iSearchFuzzySet.Caption = "Search";
+            iSearchFuzzySet.Hint = "List all or search existing fuzzy sets";
             iSearchFuzzySet.Id = 24;
             iSearchFuzzySet.ImageOptions.LargeImage = (Image)resources.GetObject("iSearchFuzzySet.ImageOptions.LargeImage");
             iSearchFuzzySet.Name = "iSearchFuzzySet";
@@ -244,6 +251,7 @@ namespace FPRDB_SQLite.GUI
             // iNewRelation
             // 
             iNewRelation.Caption = "Create Relation";
+            iNewRelation.Hint = "Create new FPRDB relation";
             iNewRelation.Id = 25;
             iNewRelation.ImageOptions.LargeImage = (Image)resources.GetObject("iNewRelation.ImageOptions.LargeImage");
             iNewRelation.Name = "iNewRelation";
@@ -251,7 +259,8 @@ namespace FPRDB_SQLite.GUI
             // 
             // iDeleteRelation
             // 
-            iDeleteRelation.Caption = "Delete";
+            iDeleteRelation.Caption = "Delete Relation";
+            iDeleteRelation.Hint = "Delete the selected relation";
             iDeleteRelation.Id = 27;
             iDeleteRelation.ImageOptions.LargeImage = (Image)resources.GetObject("iDeleteRelation.ImageOptions.LargeImage");
             iDeleteRelation.Name = "iDeleteRelation";
@@ -267,6 +276,7 @@ namespace FPRDB_SQLite.GUI
             // iNewQuery
             // 
             iNewQuery.Caption = "New";
+            iNewQuery.Hint = "Create file-based FPRDB-SQL file";
             iNewQuery.Id = 30;
             iNewQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iNewQuery.ImageOptions.LargeImage");
             iNewQuery.Name = "iNewQuery";
@@ -275,6 +285,7 @@ namespace FPRDB_SQLite.GUI
             // iOpenQuery
             // 
             iOpenQuery.Caption = "Open";
+            iOpenQuery.Hint = "Open existing file-based FPRDB-SQL file";
             iOpenQuery.Id = 31;
             iOpenQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iOpenQuery.ImageOptions.LargeImage");
             iOpenQuery.Name = "iOpenQuery";
@@ -283,6 +294,7 @@ namespace FPRDB_SQLite.GUI
             // iSaveQuery
             // 
             iSaveQuery.Caption = "Save";
+            iSaveQuery.Hint = "Save the selected FPRDB-SQL file";
             iSaveQuery.Id = 32;
             iSaveQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iSaveQuery.ImageOptions.LargeImage");
             iSaveQuery.Name = "iSaveQuery";
@@ -380,6 +392,7 @@ namespace FPRDB_SQLite.GUI
             // iExcuteQuery
             // 
             iExcuteQuery.Caption = "Excute Statement";
+            iExcuteQuery.Hint = "Execute FPRDB-SQL statements";
             iExcuteQuery.Id = 47;
             iExcuteQuery.ImageOptions.LargeImage = (Image)resources.GetObject("iExcuteQuery.ImageOptions.LargeImage");
             iExcuteQuery.Name = "iExcuteQuery";
@@ -431,6 +444,7 @@ namespace FPRDB_SQLite.GUI
             // iExportFS
             // 
             iExportFS.Caption = "Export Fuzzy Set";
+            iExportFS.Hint = "Exporting the fuzzy sets in the current database";
             iExportFS.Id = 56;
             iExportFS.Name = "iExportFS";
             iExportFS.ItemClick += iExportFS_ItemClick;
@@ -438,6 +452,7 @@ namespace FPRDB_SQLite.GUI
             // iImportFS
             // 
             iImportFS.Caption = "Import Fuzzy Set";
+            iImportFS.Hint = "Import fuzzy sets into the current database";
             iImportFS.Id = 57;
             iImportFS.Name = "iImportFS";
             iImportFS.ItemClick += iImportFS_ItemClick;
@@ -452,6 +467,7 @@ namespace FPRDB_SQLite.GUI
             // barButtonCreateNew
             // 
             barButtonCreateNew.Caption = "New";
+            barButtonCreateNew.Hint = "Create new in-database FPRDB-SQL file";
             barButtonCreateNew.Id = 59;
             barButtonCreateNew.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonCreateNew.ImageOptions.LargeImage");
             barButtonCreateNew.Name = "barButtonCreateNew";
@@ -460,6 +476,7 @@ namespace FPRDB_SQLite.GUI
             // barButtonSaveInDB
             // 
             barButtonSaveInDB.Caption = "Save";
+            barButtonSaveInDB.Hint = "Save the selected in-database FPRDB-SQL file";
             barButtonSaveInDB.Id = 60;
             barButtonSaveInDB.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonSaveInDB.ImageOptions.LargeImage");
             barButtonSaveInDB.Name = "barButtonSaveInDB";
@@ -468,6 +485,7 @@ namespace FPRDB_SQLite.GUI
             // barButtonDeleteInDB
             // 
             barButtonDeleteInDB.Caption = "Delete";
+            barButtonDeleteInDB.Hint = "Delete the selected in-database FPRDB-SQL file";
             barButtonDeleteInDB.Id = 61;
             barButtonDeleteInDB.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonDeleteInDB.ImageOptions.LargeImage");
             barButtonDeleteInDB.Name = "barButtonDeleteInDB";
@@ -478,7 +496,7 @@ namespace FPRDB_SQLite.GUI
             closdeDatabaseButton.Caption = "Close";
             closdeDatabaseButton.Hint = "Close the current database";
             closdeDatabaseButton.Id = 62;
-            closdeDatabaseButton.ImageOptions.LargeImage = (Image)resources.GetObject("barButtonItem3.ImageOptions.LargeImage");
+            closdeDatabaseButton.ImageOptions.LargeImage = (Image)resources.GetObject("closdeDatabaseButton.ImageOptions.LargeImage");
             closdeDatabaseButton.Name = "closdeDatabaseButton";
             closdeDatabaseButton.ItemClick += closdeDatabaseButton_ItemClick;
             // 
@@ -598,6 +616,7 @@ namespace FPRDB_SQLite.GUI
             // barButtonItem1
             // 
             barButtonItem1.Caption = "Calculate";
+            barButtonItem1.Hint = "Calculate probabilistic interpretation of relation on fuzzy sets";
             barButtonItem1.Id = 59;
             barButtonItem1.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem1.ImageOptions.SvgImage");
             barButtonItem1.Name = "barButtonItem1";
@@ -613,6 +632,7 @@ namespace FPRDB_SQLite.GUI
             // barButtonItem2
             // 
             barButtonItem2.Caption = "Calculate";
+            barButtonItem2.Hint = "Calculate probabilistic interpretation of selection expression on specified FPRDB relation";
             barButtonItem2.Id = 60;
             barButtonItem2.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem2.ImageOptions.SvgImage");
             barButtonItem2.Name = "barButtonItem2";
