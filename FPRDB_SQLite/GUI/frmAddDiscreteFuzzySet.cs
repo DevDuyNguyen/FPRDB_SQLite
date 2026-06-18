@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using GUI.HandlingException;
+using GUI.GlobalStates;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -18,6 +20,9 @@ namespace FPRDB_SQLite.GUI
         List<FieldType> defineDomain4FuzzySet;
         public frmAddDiscreteFuzzySet(CompositionRoot compRoot)
         {
+            if (AppStates.isAppStateFullyLoaded() == false)
+                throw new InvalidOperationException("AppState isn't loaded");
+
             this.compRoot = compRoot;
             this.service = this.compRoot.getFuzzySetService();
             this.dbService = this.compRoot.getDatabaseService();
@@ -44,7 +49,7 @@ namespace FPRDB_SQLite.GUI
             }
             catch (InvalidOperationException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);   
                 return false;
             }
             catch (SQLExecutionException ex)

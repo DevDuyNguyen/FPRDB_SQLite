@@ -15,6 +15,7 @@ namespace GUI.GlobalStates
         public static List<FPRDBRelationDTO> loadFPRDBSchemaRelations;
         public static List<string> listOfInDatabaseSQLFiles;
         public static int maxSelectTop = 100;
+
         public static void clear()
         {
             createSChemaFieldTypes = null;
@@ -22,5 +23,11 @@ namespace GUI.GlobalStates
             loadFPRDBSchemaRelations = null;
             listOfInDatabaseSQLFiles = null;
         }
+        public static bool isAppStateFullyLoaded()
+        {
+            return createSChemaFieldTypes != null && loadFPRDBSchemas != null && loadFPRDBSchemaRelations != null && listOfInDatabaseSQLFiles != null;
+        }
+
+
     }
 }

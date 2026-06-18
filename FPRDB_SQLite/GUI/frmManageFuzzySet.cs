@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GUI.HandlingException;
+using GUI.GlobalStates;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -25,6 +27,9 @@ namespace FPRDB_SQLite.GUI
         private FuzzySetDTO selectedFuzzySet;
         public frmManageFuzzySet(CompositionRoot compRoot)
         {
+            if (AppStates.isAppStateFullyLoaded() == false)
+                throw new InvalidOperationException("AppState isn't loaded");
+
             InitializeComponent();
             this.compRoot = compRoot;
             this.service = compRoot.getFuzzySetService();
@@ -55,7 +60,10 @@ namespace FPRDB_SQLite.GUI
                     lstFuzzySetResults.Items.Add(item.fuzzySetName);
                 }
             }
-
+            catch (InvalidOperationException ex)
+            {
+                HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);
+            }
             catch (UnderlyingStorageEngineCRUDException ex)
             {
                 XtraMessageBox.Show($"Error: {ex.Message}", "UNDERLYING STORAGE MECHANISM ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -159,7 +167,7 @@ namespace FPRDB_SQLite.GUI
                 }
                 catch(InvalidOperationException ex)
                 {
-                    XtraMessageBox.Show(ex.Message, "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);
                 }
                 catch (UnderlyingStorageEngineCRUDException ex)
                 {
@@ -211,7 +219,7 @@ namespace FPRDB_SQLite.GUI
                 }
                 catch(InvalidOperationException ex)
                 {
-                    XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);
                 }
                 catch(FormatException ex)
                 {
