@@ -488,14 +488,18 @@ namespace FPRDB_SQLite.GUI
             // iCloseSchema
             // 
             iCloseSchema.Caption = "Close Schema";
+            iCloseSchema.Hint = "Close the selected schema";
             iCloseSchema.Id = 62;
+            iCloseSchema.ImageOptions.LargeImage = (Image)resources.GetObject("iCloseSchema.ImageOptions.LargeImage");
             iCloseSchema.Name = "iCloseSchema";
             iCloseSchema.ItemClick += iCloseSchema_ItemClick;
             // 
             // iCloseRel
             // 
             iCloseRel.Caption = "Close Relation";
+            iCloseRel.Hint = "Close the selected relation";
             iCloseRel.Id = 63;
+            iCloseRel.ImageOptions.LargeImage = (Image)resources.GetObject("iCloseRel.ImageOptions.LargeImage");
             iCloseRel.Name = "iCloseRel";
             iCloseRel.ItemClick += iCloseRel_ItemClick;
             // 
