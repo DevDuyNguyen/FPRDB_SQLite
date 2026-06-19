@@ -2837,6 +2837,21 @@ namespace FPRDB_SQLite.GUI
 
             //them code cua cau Dong Quan voi cac file FPRDB-SQL
 
+            
+        }
+
+        private void iCloseSchema_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            XtraTabPage page = xtraTabControlDatabase.TabPages[0];
+            page.Text = "Schema";
+            gridControlScheme.DataSource = null;
+        }
+
+        private void iCloseRel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            XtraTabPage page = xtraTabControlDatabase.TabPages[1];
+            page.Text = "Relation";
+            gridControlRelation.DataSource = null;
         }
     }
 }
