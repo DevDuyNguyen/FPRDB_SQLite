@@ -1,20 +1,22 @@
 ﻿using BLL.Common;
 using BLL.DomainObject;
+using BLL.DTO;
+using BLL.Exceptions;
 using BLL.Services;
 using DevExpress.XtraEditors;
+using GUI.GlobalStates;
+using GUI.HandlingException;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GUI.GlobalStates;
-using BLL.Exceptions;
-using BLL.DTO;
-using System.IO;
+using GUI.HandlingException;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -26,6 +28,9 @@ namespace FPRDB_SQLite.GUI
         private FPRDBRelationService fprdbRelationService;
         public frmNewRelation(CompositionRoot compRoot)
         {
+            if (AppStates.ISAppStateFullyLoad == false)
+                throw new InvalidOperationException("AppState isn't fully loaded");
+
             InitializeComponent();
             this.compRoot = compRoot;
             this.databaseService = compRoot.getDatabaseService();
@@ -61,7 +66,8 @@ namespace FPRDB_SQLite.GUI
             }
             catch (InvalidOperationException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "INVALID OPERATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);
                 //this.DialogResult = DialogResult.Abort;
             }
             catch (SemanticException ex)

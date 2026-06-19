@@ -194,8 +194,8 @@ namespace BLL.SQLProcessing
         }
         public bool matchDelimiter(string delimiter)
         {
-            if (this.currentToken!=null && this.currentToken.Terminal.Name == "delimiter"
-                && this.currentToken.Text==delimiter)
+            if (this.currentToken!=null && (this.currentToken.Terminal.Name == "delimiter"
+                && this.currentToken.Text==delimiter))
                 return true;
             else
                 return false;
@@ -216,7 +216,7 @@ namespace BLL.SQLProcessing
         }
         public bool matchKeyword(string w)
         {
-            if (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && ReserveKeyWords.reservedKeywords.Contains(w.ToLower()))
+            if (this.currentToken != null && (this.currentToken.Terminal.Name == "identifier" && ReserveKeyWords.reservedKeywords.Contains(w.ToLower())))
             {
                 string tokenStr = (string)this.currentToken.Value;
                 tokenStr = tokenStr.ToLower();
@@ -293,8 +293,8 @@ namespace BLL.SQLProcessing
 
         public bool matchStringConstant()
         {
-            if (this.currentToken != null && this.currentToken.Terminal.Name == "singleQuoteStringConstant"
-                || this.currentToken.Terminal.Name == "doubleQuoteStringConstant")
+            if (this.currentToken != null && (this.currentToken.Terminal.Name == "singleQuoteStringConstant"
+                || this.currentToken.Terminal.Name == "doubleQuoteStringConstant"))
             {
                 return true;
             }
@@ -388,7 +388,7 @@ namespace BLL.SQLProcessing
 
         public bool matchIdentifier()
         {
-            return (this.currentToken != null && this.currentToken.Terminal.Name == "identifier" && !matchAnyKeyword());
+            return (this.currentToken != null && (this.currentToken.Terminal.Name == "identifier" && !matchAnyKeyword()));
         }
         //not done: this tokenization shouldn't be at here
         //it should be at when you are creating field Tokens

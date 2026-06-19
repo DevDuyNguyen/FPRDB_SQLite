@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using GUI.GlobalStates;
 using BLL.Exceptions;
 using System.IO;
+using GUI.HandlingException;
 
 namespace FPRDB_SQLite.GUI
 {
@@ -42,6 +43,9 @@ namespace FPRDB_SQLite.GUI
         private DatabaseService dbService;
         public frmNewSchema(CompositionRoot compRoot)
         {
+            if (AppStates.ISAppStateFullyLoad == false)
+                throw new InvalidOperationException("AppState isn't fully loaded");
+
             InitializeComponent();
             this.compRoot = compRoot;
             this.fprdbSchemaService = compRoot.getFPRDBSchemaService();
@@ -51,6 +55,7 @@ namespace FPRDB_SQLite.GUI
         // Hàm khởi tạo GridControl
         private void InitGrid()
         {
+
             grdcSchemaAttribute.DataSource = new BindingList<SchemaAttribute>();
             grdvSchemaAttribute.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Bottom;
             repositoryItemComboBox1.Items.AddRange(AppStates.createSChemaFieldTypes);
@@ -87,7 +92,7 @@ namespace FPRDB_SQLite.GUI
             }
             catch (InvalidOperationException ex)
             {
-                XtraMessageBox.Show($"Error: {ex.Message}", "INVALID OPERATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);
                 //this.DialogResult = DialogResult.Abort;
             }
             catch (SemanticException ex)

@@ -207,6 +207,9 @@ namespace BLL
         public IDataReader executeQuery(string sql)
         {
             //not done: Moq for mocking
+
+            if (this.connection == null)
+                throw new InvalidOperationException("Database isn't loaded");
             
             try
             {
@@ -229,6 +232,9 @@ namespace BLL
         }
         public IDataReader executeQuery(IDbCommand sql)
         {
+            if (this.connection == null)
+                throw new InvalidOperationException("Database isn't loaded");
+
             //not done: Moq for mocking
             sql.Connection = this.connection;
             try
@@ -250,6 +256,9 @@ namespace BLL
         public int executeNonQuery(string sql)
         {
             //not done: Moq for mocking
+            if (this.connection == null)
+                throw new InvalidOperationException("Database isn't loaded");
+
             try
             {
                 using(IDbCommand command = new SQLiteCommand(sql, (SQLiteConnection)this.connection))
@@ -272,6 +281,9 @@ namespace BLL
         public int executeNonQuery(IDbCommand sql)
         {
             //not done: Moq for mocking
+            if (this.connection == null)
+                throw new InvalidOperationException("Database isn't loaded");
+
             sql.Connection = this.connection;
             try
             {
@@ -324,6 +336,9 @@ namespace BLL
         }
         public T executeScalar<T>(string sql)
         {
+            if (this.connection == null)
+                throw new InvalidOperationException("Database isn't loaded");
+
             try
             {
                 if (this.connection.State != ConnectionState.Open)
@@ -342,7 +357,11 @@ namespace BLL
             //    this.connection.Close();
             //}
         }
-
+        public void closeDB()
+        {
+            this.connection = null;
+            this.connectionString = null;
+        }
 
 
     }

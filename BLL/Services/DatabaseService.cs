@@ -358,10 +358,13 @@ namespace BLL.Services
         public string getDatabaseName()
         {
             string name = this.dbMgr.getConnectionString();
+            if (name == null)
+                return null;
+
             name = Path.GetFileName(name);
             int index = name.LastIndexOf(".");
             if (index == -1)
-                return "";
+                return null;
             name = name.Substring(0, index);
             return name;
         }
@@ -585,6 +588,10 @@ namespace BLL.Services
                 }
             }
             return names;
+        }
+        public void closeDB()
+        {
+            this.dbMgr.closeDB();
         }
 
     }
