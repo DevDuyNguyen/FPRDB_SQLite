@@ -81,7 +81,7 @@ namespace FPRDB_SQLite.GUI
 
             // Set fixed panel so navigation tree width remains constant during window resizing/maximizing
             RelationsplitContainerControl.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.Panel1;
-            
+
             // Move treeView out of layoutControl1 to Panel1 directly so it docks Fill and auto-stretches without leaving blank spaces
             layoutControlItem1.Control = null;
             layoutControl1.Controls.Remove(treeView);
@@ -582,7 +582,7 @@ namespace FPRDB_SQLite.GUI
                     DisplayRelationDetail(_selectedRelation);
                     ribbonControl.SelectedPage = RelationRibbonPage;
                 }
-                if (node.Tag!=null && node.Tag.ToString() == "query")
+                if (node.Tag != null && node.Tag.ToString() == "query")
                 {
                     foreach (XtraTabPage page in xtraTabControlDatabase.TabPages)
                     {
@@ -1204,7 +1204,7 @@ namespace FPRDB_SQLite.GUI
                                 uc.MarkAsSaved(uc.QueryText);
                                 return true;
                             }
-                            catch(InvalidOperationException ex)
+                            catch (InvalidOperationException ex)
                             {
                                 XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
@@ -1597,8 +1597,8 @@ namespace FPRDB_SQLite.GUI
                     // Đảm bảo splitContainer luôn hiện để xem được kết quả/lỗi
                     uc.splitContainer.PanelVisibility = SplitPanelVisibility.Both;
                 }
-                
-                
+
+
             }
 
         }
@@ -2622,7 +2622,7 @@ namespace FPRDB_SQLite.GUI
                     resultForGridView.Columns.Add("Probabilistic Interpretation", typeof(string));
 
                     //Extract the result for grid view
-                    string[] tupleForGridView = new string[schema.getFields().Count+1];
+                    string[] tupleForGridView = new string[schema.getFields().Count + 1];
                     Field field;
                     List<Field> fields = schema.getFields();
                     while (s.next())
@@ -2707,6 +2707,20 @@ namespace FPRDB_SQLite.GUI
                 }
 
             }
+        }
+
+        private void iCloseSchema_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            XtraTabPage page = xtraTabControlDatabase.TabPages[0];
+            page.Text = "Schema";
+            gridControlScheme.DataSource = null;
+        }
+
+        private void iCloseRel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            XtraTabPage page = xtraTabControlDatabase.TabPages[1];
+            page.Text = "Relation";
+            gridControlRelation.DataSource = null;
         }
     }
 }
