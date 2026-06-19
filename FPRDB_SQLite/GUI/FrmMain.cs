@@ -2821,10 +2821,22 @@ namespace FPRDB_SQLite.GUI
                 this.databaseService.closeDB();
                 AppStates.clear();
                 this.unLoadDatabaseTree();
+                for (int i = xtraTabControlDatabase.TabPages.Count - 1; i >= 0; i--)
+                {
+                    XtraTabPage page = xtraTabControlDatabase.TabPages[i];
+                    if (page?.Tag?.ToString() == "QueryTab")
+                    {
+                        CloseTabPage(page);
+                        xtraTabControlDatabase.TabPages.Remove(page);
+                    }
+                }
+                isDatabaseLoaded = false;
+                changeStatusTab();
                 AppStates.ISAppStateFullyLoad = false;
             }
 
             //them code cua cau Dong Quan voi cac file FPRDB-SQL
+
         }
     }
 }
