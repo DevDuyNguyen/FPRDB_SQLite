@@ -1016,6 +1016,8 @@ namespace FPRDB_SQLite.GUI
                     LoadDatabaseTree();
                     //load field types
                     AppStates.createSChemaFieldTypes = this.databaseService.getFieldTypes();
+
+                    AppStates.ISAppStateFullyLoad = true;
                 }
                 catch (InvalidFPRDBDatabaseFile ex)
                 {
@@ -1055,6 +1057,8 @@ namespace FPRDB_SQLite.GUI
                     LoadDatabaseTree();
                     //load field types
                     AppStates.createSChemaFieldTypes = this.databaseService.getFieldTypes();
+
+                    AppStates.ISAppStateFullyLoad = true;
                 }
             }
             catch (FileNotFoundException ex)
@@ -1533,7 +1537,7 @@ namespace FPRDB_SQLite.GUI
             //            break;
             //    }
             //}
-            if (AppStates.isAppStateFullyLoaded()==false)
+            if (AppStates.ISAppStateFullyLoad == false)
             {
                 XtraMessageBox.Show("Database isn't loaded", "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2634,7 +2638,7 @@ namespace FPRDB_SQLite.GUI
 
         private void barButtonItem1_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
             {
                 XtraMessageBox.Show("Database isn't loaded", "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2694,7 +2698,7 @@ namespace FPRDB_SQLite.GUI
 
         private void barButtonItem2_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
             {
                 XtraMessageBox.Show("Database isn't loaded", "Invalid Operation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2808,7 +2812,7 @@ namespace FPRDB_SQLite.GUI
 
         private void closdeDatabaseButton_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
                 return;
 
             DialogResult result = XtraMessageBox.Show($"Are you sure want to close database {this.databaseService.getDatabaseName()}?", "Close The Current Database", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -2817,6 +2821,7 @@ namespace FPRDB_SQLite.GUI
                 this.databaseService.closeDB();
                 AppStates.clear();
                 this.unLoadDatabaseTree();
+                AppStates.ISAppStateFullyLoad = false;
             }
 
             //them code cua cau Dong Quan voi cac file FPRDB-SQL

@@ -20,7 +20,7 @@ namespace FPRDB_SQLite.GUI
         List<FieldType> defineDomain4FuzzySet;
         public frmAddDiscreteFuzzySet(CompositionRoot compRoot)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
                 throw new InvalidOperationException("AppState isn't loaded");
 
             this.compRoot = compRoot;

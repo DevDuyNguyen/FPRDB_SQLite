@@ -28,7 +28,7 @@ namespace FPRDB_SQLite.GUI
         private FPRDBRelationService fprdbRelationService;
         public frmNewRelation(CompositionRoot compRoot)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
                 throw new InvalidOperationException("AppState isn't fully loaded");
 
             InitializeComponent();

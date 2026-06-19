@@ -27,7 +27,7 @@ namespace FPRDB_SQLite.GUI
         private FuzzySetDTO selectedFuzzySet;
         public frmManageFuzzySet(CompositionRoot compRoot)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
                 throw new InvalidOperationException("AppState isn't loaded");
 
             InitializeComponent();

@@ -43,7 +43,7 @@ namespace FPRDB_SQLite.GUI
         private DatabaseService dbService;
         public frmNewSchema(CompositionRoot compRoot)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
                 throw new InvalidOperationException("AppState isn't fully loaded");
 
             InitializeComponent();

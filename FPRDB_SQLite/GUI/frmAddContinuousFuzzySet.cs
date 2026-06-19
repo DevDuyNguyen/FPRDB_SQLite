@@ -16,7 +16,7 @@ namespace FPRDB_SQLite.GUI
         private FuzzySetService service;
         public frmAddContinuousFuzzySet(CompositionRoot compRoot)
         {
-            if (AppStates.isAppStateFullyLoaded() == false)
+            if (AppStates.ISAppStateFullyLoad == false)
                 throw new InvalidOperationException("AppState isn't loaded");
 
             this.compRoot = compRoot;
