@@ -15,6 +15,20 @@ namespace GUI.GlobalStates
         public static List<FPRDBRelationDTO> loadFPRDBSchemaRelations;
         public static List<string> listOfInDatabaseSQLFiles;
         public static int maxSelectTop = 100;
+        private static bool iSAppStateFullyLoad=false;
+        public static bool ISAppStateFullyLoad
+        {
+            get { return iSAppStateFullyLoad; }
+            set 
+            {
+                if ((bool)value == iSAppStateFullyLoad)
+                {
+                    throw new InvalidOperationException("New state of iSAppStateFullyLoad must be different from the current state");
+                }
+                iSAppStateFullyLoad = value;
+            }
+        }
+
         public static void clear()
         {
             createSChemaFieldTypes = null;
@@ -22,5 +36,8 @@ namespace GUI.GlobalStates
             loadFPRDBSchemaRelations = null;
             listOfInDatabaseSQLFiles = null;
         }
+        
+
+
     }
 }

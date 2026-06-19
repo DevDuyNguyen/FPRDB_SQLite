@@ -2,6 +2,7 @@
 using BLL.Services;
 using DevExpress.XtraEditors;
 using GUI.GlobalStates;
+using GUI.HandlingException;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GUI.HandlingException;
 
 namespace FPRDB_SQLite.GUI.GUI
 {
@@ -42,7 +44,7 @@ namespace FPRDB_SQLite.GUI.GUI
             }
             catch(InvalidOperationException ex)
             {
-                XtraMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                HandlingExceptionViaErrorNotification.handlingInvalidOperationException(ex);
             }
             catch (UnderlyingStorageEngineCRUDException ex)
             {
