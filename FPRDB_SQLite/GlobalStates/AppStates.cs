@@ -25,6 +25,7 @@ namespace GUI.GlobalStates
                 //{
                 //    throw new InvalidOperationException("New state of iSAppStateFullyLoad must be different from the current state");
                 //}
+
                 iSAppStateFullyLoad = value;
             }
         }
