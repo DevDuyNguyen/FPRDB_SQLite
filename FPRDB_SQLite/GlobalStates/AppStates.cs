@@ -21,10 +21,11 @@ namespace GUI.GlobalStates
             get { return iSAppStateFullyLoad; }
             set 
             {
-                if ((bool)value == iSAppStateFullyLoad)
-                {
-                    throw new InvalidOperationException("New state of iSAppStateFullyLoad must be different from the current state");
-                }
+                //if ((bool)value == iSAppStateFullyLoad)
+                //{
+                //    throw new InvalidOperationException("New state of iSAppStateFullyLoad must be different from the current state");
+                //}
+
                 iSAppStateFullyLoad = value;
             }
         }
