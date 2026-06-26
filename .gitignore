@@ -41,8 +41,6 @@ node_modules/
 package-lock.json
 yarn.lock
 
-#FPRDB database file
-*.fprdb
 
 #Exclude build file from setup project
 Setup1/Debug
